@@ -1,0 +1,55 @@
+<?php
+
+namespace NextDeveloper\IAM\Services;
+
+use NextDeveloper\IAM\Database\Models\IamUser;
+use NextDeveloper\IAM\Services\AbstractServices\AbstractIamUserService;
+
+/**
+* This class is responsible from managing the data for IamUser
+*
+* Class IamUserService.
+*
+* @package NextDeveloper\IAM\Database\Models
+*/
+class IamUserService extends AbstractIamUserService {
+
+    // EDIT AFTER HERE - WARNING: ABOVE THIS LINE MAY BE REGENERATED AND YOU MAY LOSE CODE
+
+    /**
+     * Registers the user just by email address
+     *
+     * @param $email
+     * @return User
+     * @throws \Exception
+     */
+    public static function createWithEmail($email) : IamUser
+    {
+        return self::create([
+            'email' =>  $email
+        ]);
+    }
+
+    /**
+     * Manipulating the function here
+     *
+     * @param array $data
+     * @return User
+     * @throws \Exception
+     */
+    public static function create(array $data) : IamUser {
+        if(!array_key_exists('language_id', $data)) {
+            $lang = Language::where('code', App::currentLocale())->first();
+
+            $data['language_id'] = $lang->id;
+        }
+
+        return parent::create($data);
+    }
+
+    public static function getByEmail($email) : ?IamUser {
+        $user = IamUser::where('email', $email)->first();
+
+        return $user;
+    }
+}
