@@ -14,7 +14,7 @@ use NextDeveloper\Commons\Database\Traits\UuidId;
  *
  * @package NextDeveloper\IAM\Database\Models
  */
-class IamUser extends Model
+class IamUser extends \NextDeveloper\IAM\Database\Abstract\AuthorizationModel
 {
     use Filterable, UuidId;
     use SoftDeletes;

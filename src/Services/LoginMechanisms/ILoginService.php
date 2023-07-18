@@ -8,11 +8,10 @@
  * file that was distributed with this source code.
  */
 
-namespace NextDeveloper\Authentication\Services\LoginMechanisms;
+namespace NextDeveloper\IAM\Services\LoginMechanisms;
 
-
-use NextDeveloper\Accounts\Database\Models\User;
-use NextDeveloper\Authentication\Database\Models\AuthenticationLoginMechanism;
+use NextDeveloper\IAM\Database\Models\IamUser;
+use NextDeveloper\IAM\Database\Models\IamLoginMechanism;
 
 /**
  * Interface ILoginService
@@ -26,19 +25,19 @@ interface ILoginService
      * Here we check if the user credentials are correct. Even if the credentials are correct or not we will log
      * this attempt.
      *
-     * @param AuthenticationLoginMechanism $mechanism
+     * @param IamLoginMechanism $mechanism
      * @param array $loginData
      * @return true
      */
-    public function attempt(AuthenticationLoginMechanism $mechanism, array $loginData) : bool;
+    public function attempt(IamLoginMechanism $mechanism, array $loginData) : bool;
 
     /**
      * Generates a password and updates the login mechanism objects
      *
-     * @param AuthenticationLoginMechanism $mechanism
+     * @param IamLoginMechanism $mechanism
      * @return string
      */
-    public function generatePassword(AuthenticationLoginMechanism $mechanism) : string;
+    public function generatePassword(IamLoginMechanism $mechanism) : string;
 
     /**
      * Here we will create one time email type of login mechanism. To do that we need to first check if we have
@@ -46,7 +45,7 @@ interface ILoginService
      * created we will return the mechanism, if not we will create and return the mechanism.
      *
      * @param User $user
-     * @return AuthenticationLoginMechanism
+     * @return IamLoginMechanism
      */
-    public function create(User $user) : AuthenticationLoginMechanism;
+    public function create(IamUser $user) : IamLoginMechanism;
 }

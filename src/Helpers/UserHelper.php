@@ -4,18 +4,18 @@ namespace NextDeveloper\IAM\Helpers;
 
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\Auth;
-use NextDeveloper\Accounts\Database\Models\User;
-use NextDeveloper\Accounts\Database\Models\Account;
-use NextDeveloper\Accounts\Services\AccountService;
+use NextDeveloper\IAM\Database\Models\IamUser;
+use NextDeveloper\IAM\Database\Models\IamAccount;
+use NextDeveloper\IAM\Services\IamAccountService;
 
 class UserHelper
 {
     /**
      * This function returns the User object for the current logged in user.
      *
-     * @return User
+     * @return IamUser
      */
-    public static function me() : User {
+    public static function me() : ?IamUser {
         /**
          * This will return the User object of the logged in user
          */
@@ -23,14 +23,14 @@ class UserHelper
         return Auth::guard( 'api' )->user();
     }
 
-    public static function currentAccount() : Account
+    public static function currentAccount() : IamAccount
     {
         //  Will change
-        $account = Account::where('owner_id', self::me()->id)->first();
+        $account = IamAccount::where('owner_id', self::me()->id)->first();
 
         //  Here if there is no account for this User, we are fixing that problem.
         if(!$account) {
-            $account = AccountService::createForUser(self::me());
+            $account = IamAccountService::createForUser(self::me());
         }
 
         return $account;

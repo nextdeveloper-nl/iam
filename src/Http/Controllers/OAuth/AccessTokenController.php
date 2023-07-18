@@ -1,6 +1,6 @@
 <?php
 
-namespace NextDeveloper\Authentication\Http\Controllers;
+namespace NextDeveloper\IAM\Http\Controllers\OAuth;
 
 use Laravel\Passport\Http\Controllers\HandlesOAuthErrors;
 use Laravel\Passport\TokenRepository;

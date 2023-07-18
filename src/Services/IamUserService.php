@@ -2,6 +2,9 @@
 
 namespace NextDeveloper\IAM\Services;
 
+use Illuminate\Support\Facades\App;
+use NextDeveloper\IAM\Services\Registration\RegistrationService;
+use NextDeveloper\Commons\Database\Models\CommonLanguage;
 use NextDeveloper\IAM\Database\Models\IamUser;
 use NextDeveloper\IAM\Services\AbstractServices\AbstractIamUserService;
 
@@ -20,26 +23,30 @@ class IamUserService extends AbstractIamUserService {
      * Registers the user just by email address
      *
      * @param $email
-     * @return User
+     * @return IamUser
      * @throws \Exception
      */
     public static function createWithEmail($email) : IamUser
     {
-        return self::create([
+        $user = self::create([
             'email' =>  $email
         ]);
+
+        $user = RegistrationService::registerUser($user);
+
+        return $user;
     }
 
     /**
      * Manipulating the function here
      *
      * @param array $data
-     * @return User
+     * @return IamUser
      * @throws \Exception
      */
     public static function create(array $data) : IamUser {
         if(!array_key_exists('language_id', $data)) {
-            $lang = Language::where('code', App::currentLocale())->first();
+            $lang = CommonLanguage::where('code', App::currentLocale())->first();
 
             $data['language_id'] = $lang->id;
         }

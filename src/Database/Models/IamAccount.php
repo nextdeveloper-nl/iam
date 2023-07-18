@@ -14,7 +14,7 @@ use NextDeveloper\Commons\Database\Traits\UuidId;
  *
  * @package NextDeveloper\IAM\Database\Models
  */
-class IamAccount extends Model
+class IamAccount extends \NextDeveloper\IAM\Database\Abstract\AuthorizationModel
 {
     use Filterable, UuidId;
     use SoftDeletes;
@@ -97,9 +97,19 @@ class IamAccount extends Model
         parent::observe(IamAccountObserver::class);
     }
 
+    public function iamAccountType()
+    {
+        return $this->belongsTo(IamAccountType::class);
+    }
+    
     public function iamBackend()
     {
         return $this->hasMany(IamBackend::class);
+    }
+
+    public function iamRoles()
+    {
+        return $this->hasMany(IamRole::class);
     }
 
     // EDIT AFTER HERE - WARNING: ABOVE THIS LINE MAY BE REGENERATED AND YOU MAY LOSE CODE

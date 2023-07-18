@@ -1,17 +1,30 @@
 <?php
 
-namespace NextDeveloper\Authentication\Services\Registration;
+namespace NextDeveloper\IAM\Services\Registration;
 
-use NextDeveloper\Accounts\Database\Models\User;
-use NextDeveloper\Authentication\Services\LoginMechanisms\OneTimeEmail;
+use NextDeveloper\IAM\Authorization\Roles\MemberRole;
+use NextDeveloper\IAM\Database\Models\IamUser;
+use NextDeveloper\IAM\Services\IamRoleService;
+use NextDeveloper\IAM\Services\LoginMechanisms\OneTimeEmail;
 
 class RegistrationService
 {
-    public static function registerUser(User $user)
+    /**
+     * This function will register the user to the system. Which means it will create the first default login
+     * mechanism for the user, so that the user can login.
+     *
+     * @param IamUser $user
+     * @return IamUser
+     */
+    public static function registerUser(IamUser $user) : IamUser
     {
         $loginMechanism = new OneTimeEmail();
         $mechanism = $loginMechanism->create($user);
         $loginMechanism->generatePassword($mechanism);
 
+        $role = IamRoleService::createRoleFromAuthorizationScope(new MemberRole());
+        $result = IamRoleService::assignUserToRole($user, $role);
+
+        return $user;
     }
 }

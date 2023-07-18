@@ -8,16 +8,15 @@
  * file that was distributed with this source code.
  */
 
-namespace NextDeveloper\Authentication\Services\LoginMechanisms;
+namespace NextDeveloper\IAM\Services\LoginMechanisms;
 
 
 use DateInterval;
 use Illuminate\Support\Facades\DB;
 use League\OAuth2\Server\Grant\AbstractGrant;
 use League\OAuth2\Server\ResponseTypes\ResponseTypeInterface;
-use NextDeveloper\Authentication\Database\Models\AuthenticationLoginMechanism;
+use NextDeveloper\IAM\Database\Models\IamLoginMechanism;
 use Psr\Http\Message\ServerRequestInterface;
-use function Symfony\Component\String\s;
 
 /**
  * Interface ILoginService
@@ -30,7 +29,7 @@ class AbstractLogin extends AbstractGrant
     /**
      * Generates a password and updates the login mechanism objects
      *
-     * @param AuthenticationLoginMechanism $mechanism
+     * @param IamLoginMechanism $mechanism
      * @return string
      */
     public static function generateStrongPassword() : string {
@@ -70,8 +69,8 @@ class AbstractLogin extends AbstractGrant
      * @param $identifier
      * @return void
      */
-    public function removeOldTokens($clientId, $identifier) {
-        $sql = 'delete from oauth_access_tokens where id != "' . $identifier . '" and client_id = "' . $clientId . '";';
+    public function removeOldTokens($clientId, $identifier, $userId) {
+        $sql = 'delete from oauth_access_tokens where id != "' . $identifier . '" and client_id = "' . $clientId . '" and user_id = ' . $userId . ';';
 
         DB::delete($sql);
     }
