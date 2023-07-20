@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\Auth;
 use NextDeveloper\IAM\Database\Models\IamUser;
 use NextDeveloper\IAM\Database\Models\IamAccount;
+use NextDeveloper\IAM\Exceptions\CannotFindUserException;
 use NextDeveloper\IAM\Services\IamAccountService;
 
 class UserHelper
@@ -21,6 +22,28 @@ class UserHelper
          */
 
         return Auth::guard( 'api' )->user();
+    }
+
+    /**
+     * @throws CannotFindUserException
+     */
+    public static function masterAccount(IamUser $user = null) : IamAccount
+    {
+        if(!$user) {
+            $user = self::me();
+        }
+
+        if(!$user) {
+            throw new CannotFindUserException();
+        }
+
+        $account = IamAccount::where('owner_id', $user->id)->first();
+
+        if(!$account) {
+            $account = IamAccountService::createForUser($user);
+        }
+
+        return $account;
     }
 
     public static function currentAccount() : IamAccount

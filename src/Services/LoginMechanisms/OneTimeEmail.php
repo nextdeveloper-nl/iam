@@ -6,6 +6,7 @@ use DateInterval;
 use League\OAuth2\Server\Exception\OAuthServerException;
 use League\OAuth2\Server\Exception\UniqueTokenIdentifierConstraintViolationException;
 use League\OAuth2\Server\ResponseTypes\ResponseTypeInterface;
+use NextDeveloper\IAM\Authorization\Roles\MemberRole;
 use NextDeveloper\IAM\Database\Models\IamLoginMechanism;
 use NextDeveloper\IAM\Database\Models\IamUser;
 use NextDeveloper\IAM\Services\IamRoleService;
@@ -89,6 +90,9 @@ class OneTimeEmail extends AbstractLogin implements ILoginService
         //$responseType->setRefreshToken($refreshToken);
 
         $this->removeOldTokens($client->getIdentifier(), $accessToken->getIdentifier(), $user->id);
+
+        // We need to make role checking here. If the role is not assigned to user, we need to assign member role
+        IamUserService::assignUserToRole($user, new MemberRole());
 
         return $responseType;
     }
