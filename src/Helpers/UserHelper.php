@@ -9,6 +9,9 @@ use NextDeveloper\IAM\Database\Models\IamAccount;
 use NextDeveloper\IAM\Exceptions\CannotFindUserException;
 use NextDeveloper\IAM\Services\IamAccountService;
 
+//  This is just an alias for UserHelper for fast coding.
+class U extends UserHelper {}
+
 class UserHelper
 {
     /**
@@ -40,12 +43,17 @@ class UserHelper
         $account = IamAccount::where('owner_id', $user->id)->first();
 
         if(!$account) {
-            $account = IamAccountService::createForUser($user);
+            $account = IamAccountService::createInitialAccount($user);
         }
 
         return $account;
     }
 
+    /**
+     * Returns the current account for the logged in user
+     *
+     * @return IamAccount
+     */
     public static function currentAccount() : IamAccount
     {
         //  Will change
@@ -53,7 +61,7 @@ class UserHelper
 
         //  Here if there is no account for this User, we are fixing that problem.
         if(!$account) {
-            $account = IamAccountService::createForUser(self::me());
+            $account = IamAccountService::createInitialAccount(self::me());
         }
 
         return $account;
@@ -81,5 +89,18 @@ class UserHelper
         /**
          * This will return all users under master account and team accounts
          */
+    }
+
+    /**
+     * Returns the user with the given email address
+     *
+     * @param $email
+     * @return IamUser
+     */
+    public static function getWithEmail($email) : IamUser
+    {
+        $users = IamUser::where('email', $email)->first();
+
+        return $users;
     }
 }

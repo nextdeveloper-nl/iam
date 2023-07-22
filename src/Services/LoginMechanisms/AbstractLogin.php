@@ -16,6 +16,7 @@ use Illuminate\Support\Facades\DB;
 use League\OAuth2\Server\Grant\AbstractGrant;
 use League\OAuth2\Server\ResponseTypes\ResponseTypeInterface;
 use NextDeveloper\IAM\Database\Models\IamLoginMechanism;
+use NextDeveloper\IAM\Database\Models\IamUser;
 use Psr\Http\Message\ServerRequestInterface;
 
 /**
@@ -73,5 +74,23 @@ class AbstractLogin extends AbstractGrant
         $sql = 'delete from oauth_access_tokens where id != "' . $identifier . '" and client_id = "' . $clientId . '" and user_id = ' . $userId . ';';
 
         DB::delete($sql);
+    }
+
+    /**
+     * Returns the latest login mechanism for relates user
+     *
+     * @param IamUser $user
+     * @param $mechanismName
+     * @return IamLoginMechanism|null
+     */
+    public static function getLatestMechanism(IamUser $user, $mechanismName) : ?IamLoginMechanism
+    {
+        $mechanism = IamLoginMechanism::where('user_id', $user->id)
+            ->where('login_mechanism', $mechanismName)
+            ->where('is_active', 1)
+            ->where('is_latest', 1)
+            ->first();
+
+        return $mechanism;
     }
 }

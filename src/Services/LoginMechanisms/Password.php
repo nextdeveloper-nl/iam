@@ -2,14 +2,48 @@
 
 namespace NextDeveloper\Authentication\Services\OAuth2\LoginMechanisms;
 
-class Password implements ILoginService
+use NextDeveloper\IAM\Database\Models\IamLoginMechanism;
+use NextDeveloper\IAM\Database\Models\IamUser;
+use NextDeveloper\IAM\Services\LoginMechanisms\AbstractLogin;
+use NextDeveloper\IAM\Services\LoginMechanisms\ILoginService;
+
+class Password extends AbstractLogin implements ILoginService
 {
+    const LOGINNAME = 'OneTimeEmail';
+
+    public static function create(IamUser $user) : IamLoginMechanism
+    {
+        //  We will create a password login mechanism
+    }
+
+    public static function update(IamUser $user, $password) : IamLoginMechanism
+    {
+        //  Here we will update the password hash of latest password mechanism
+        //  We will be using Argos2 hash mechanism for this.
+    }
+
+    public static function getLatestMechanism(IamUser $user) : IamLoginMechanism
+    {
+        //  Here we return the latest Password mechanism
+    }
+
     public function attempt()
     {
         // TODO: Implement attempt() method.
     }
 
-    public function __construct($configuration, $loginData)
+    /**
+     * Returns the identifier of the grant
+     *
+     * @return string grant type
+     */
+    public function getIdentifier()
     {
+        return 'password';
+    }
+
+    public function generatePassword(IamLoginMechanism $mechanism): string
+    {
+        // TODO: Implement generatePassword() method.
     }
 }

@@ -2,8 +2,10 @@
 
 namespace NextDeveloper\IAM\Services;
 
+use Helpers\i18n;
 use NextDeveloper\IAM\Database\Models\IamAccount;
 use NextDeveloper\IAM\Database\Models\IamUser;
+use NextDeveloper\IAM\Helpers\UserHelper;
 use NextDeveloper\IAM\Services\AbstractServices\AbstractIamAccountService;
 
 /**
@@ -17,13 +19,30 @@ class IamAccountService extends AbstractIamAccountService {
 
     // EDIT AFTER HERE - WARNING: ABOVE THIS LINE MAY BE REGENERATED AND YOU MAY LOSE CODE
 
-    public static function createForUser(IamUser $user) : IamAccount
+    /**
+     * This function creates the initial account for the given user
+     *
+     * @param IamUser $user
+     * @return IamAccount
+     * @throws \Exception
+     */
+    public static function createInitialAccount(IamUser $user) : IamAccount
     {
         if($user->name == '')
-            $name = 'My personal account';
+            $name = i18n::t('My personal account');
 
         $accountData = [
             'name'      =>  $name,
+            'owner_id'  =>  $user->id
+        ];
+
+        return self::create($accountData);
+    }
+
+    public static function createAccount($accountName, IamUser $user) : IamAccount
+    {
+        $accountData = [
+            'name'  =>  $accountName,
             'owner_id'  =>  $user->id
         ];
 

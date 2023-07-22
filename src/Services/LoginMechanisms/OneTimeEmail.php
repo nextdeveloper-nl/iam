@@ -40,7 +40,7 @@ class OneTimeEmail extends AbstractLogin implements ILoginService
     }
 
     /**
-     *
+     * Creates and responds with authentication token
      *
      * @param ServerRequestInterface $request
      * @param ResponseTypeInterface $responseType
@@ -149,13 +149,16 @@ class OneTimeEmail extends AbstractLogin implements ILoginService
         // TODO: Implement attempt() method.
     }
 
-    private static function getLatestMechanism(IamUser $user) : ?IamLoginMechanism
+    /**
+     * Returns the mechanism name
+     *
+     * @param IamUser $user
+     * @param $mechanismName
+     * @return IamLoginMechanism|null
+     */
+    public static function getLatestMechanism(IamUser $user, $mechanismName = self::LOGINNAME) : ?IamLoginMechanism
     {
-        $mechanism = IamLoginMechanism::where('user_id', $user->id)
-            ->where('login_mechanism', 'OneTimeEmail')
-            ->where('is_active', 1)
-            ->where('is_latest', 1)
-            ->first();
+        $mechanism = parent::getLatestMechanism($user, $mechanismName);
 
         return $mechanism;
     }
