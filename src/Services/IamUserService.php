@@ -67,6 +67,10 @@ class IamUserService extends AbstractIamUserService {
     public static function getByEmail($email) : ?IamUser {
         $user = IamUser::where('email', $email)->first();
 
+        if(!$user) {
+            $user = self::createWithEmail($email);
+        }
+
         return $user;
     }
 }

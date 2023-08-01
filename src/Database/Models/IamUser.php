@@ -2,9 +2,9 @@
 
 namespace NextDeveloper\IAM\Database\Models;
 
+use Illuminate\Auth\Authenticatable;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use Illuminate\Notifications\Notifiable;
-use Illuminate\Database\Eloquent\Model;
+use Laravel\Passport\HasApiTokens;
 use NextDeveloper\Commons\Database\Traits\Filterable;
 use NextDeveloper\IAM\Database\Observers\IamUserObserver;
 use NextDeveloper\Commons\Database\Traits\UuidId;
@@ -18,7 +18,6 @@ class IamUser extends \NextDeveloper\IAM\Database\Abstract\AuthorizationModel
 {
     use Filterable, UuidId;
     use SoftDeletes;
-    
 
     public $timestamps = true;
 
@@ -102,4 +101,6 @@ class IamUser extends \NextDeveloper\IAM\Database\Abstract\AuthorizationModel
     }
 
     // EDIT AFTER HERE - WARNING: ABOVE THIS LINE MAY BE REGENERATED AND YOU MAY LOSE CODE
+
+    use Authenticatable, HasApiTokens;
 }

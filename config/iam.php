@@ -9,11 +9,9 @@ return [
     ],
     'roles' =>  [
         'member'    =>  [
-            'weight'    =>  1,
             'AuthorizationModel' => '\NextDeveloper\IAM\Database\Abstract\AuthorizationModel::class'
         ],
         'system-admin'  =>  [
-            'weight'    =>  100,
             'AuthorizationModel' => '\NextDeveloper\IAM\Database\Abstract\AuthorizationModel::class'
         ]
     ]
