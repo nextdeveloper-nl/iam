@@ -10,6 +10,10 @@ use NextDeveloper\IAM\Database\Filters\IamLoginLogQueryFilter;
 
 use NextDeveloper\IAM\Events\IamLoginLog\IamLoginLogCreatedEvent;
 use NextDeveloper\IAM\Events\IamLoginLog\IamLoginLogCreatingEvent;
+use NextDeveloper\IAM\Events\IamLoginLog\IamLoginLogUpdatedEvent;
+use NextDeveloper\IAM\Events\IamLoginLog\IamLoginLogUpdatingEvent;
+use NextDeveloper\IAM\Events\IamLoginLog\IamLoginLogDeletedEvent;
+use NextDeveloper\IAM\Events\IamLoginLog\IamLoginLogDeletingEvent;
 
 /**
 * This class is responsible from managing the data for IamLoginLog

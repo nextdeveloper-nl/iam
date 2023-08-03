@@ -2,56 +2,25 @@
 
 namespace NextDeveloper\IAM\Database\Models;
 
-use Illuminate\Notifications\Notifiable;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Model;
 use NextDeveloper\Commons\Database\Traits\Filterable;
-use NextDeveloper\IAM\Database\Observers\IamLoginLogObserver;
+use NextDeveloper\IAM\Database\Observers\IamUserObserver;
 use NextDeveloper\Commons\Database\Traits\UuidId;
 
 /**
- * Class IamLoginLog.
+ * Class IamUser.
  *
  * @package NextDeveloper\IAM\Database\Models
  */
-class IamLoginLog extends Model
+class IamUserRoleOverview extends Model
 {
     use Filterable, UuidId;
-
+    use SoftDeletes;
 
     public $timestamps = true;
 
-    protected $table = 'iam_login_logs';
-
-
-    /**
-     * @var array
-     */
-    protected $guarded = [];
-
-    /**
-     *  Here we have the fulltext fields. We can use these for fulltext search if enabled.
-     */
-    protected $fullTextFields = [
-
-    ];
-
-    /**
-     * @var array
-     */
-    protected $appends = [
-
-    ];
-
-    /**
-     * We are casting fields to objects so that we can work on them better
-     * @var array
-     */
-    protected $casts = [
-        'id' => 'integer',
-        'uuid' => 'string',
-        'user_id' => 'integer',
-        'created_at' => 'datetime',
-    ];
+    protected $table = 'iam_user_role_overview';
 
     /**
      * We are casting data fields.
@@ -59,13 +28,8 @@ class IamLoginLog extends Model
      */
     protected $dates = [
         'created_at',
-    ];
-
-    /**
-     * @var array
-     */
-    protected $with = [
-
+        'updated_at',
+        'deleted_at',
     ];
 
     /**
@@ -81,15 +45,18 @@ class IamLoginLog extends Model
         parent::boot();
 
 //  We create and add Observer even if we wont use it.
-        parent::observe(IamLoginLogObserver::class);
+        parent::observe(IamUserObserver::class);
 
         self::registerScopes();
     }
 
+    /**
+     * @return void
+     */
     public static function registerScopes()
     {
         $globalScopes = config('iam.scopes.global');
-        $modelScopes = config('iam.scopes.iam_login_logs');
+        $modelScopes = config('iam.scopes.iam_users');
 
         if (!$modelScopes) $modelScopes = [];
         if (!$globalScopes) $globalScopes = [];
@@ -105,11 +72,4 @@ class IamLoginLog extends Model
             }
         }
     }
-
-    public function iamUser()
-    {
-        return $this->belongsTo(IamUser::class);
-    }
-
-    // EDIT AFTER HERE - WARNING: ABOVE THIS LINE MAY BE REGENERATED AND YOU MAY LOSE CODE
 }

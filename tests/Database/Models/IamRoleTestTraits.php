@@ -54,7 +54,7 @@ trait IamRoleTestTraits
         $response = $this->http->request('POST', '/iam/iamrole', [
             'form_params'   =>  [
                 'name'  =>  'a',
-                'label'  =>  'a',
+                'class'  =>  'a',
                 'description'  =>  'a',
                 'level'  =>  '1',
                             ],
@@ -354,11 +354,11 @@ trait IamRoleTestTraits
         $this->assertTrue(true);
     }
 
-    public function test_iamrole_event_label_filter()
+    public function test_iamrole_event_class_filter()
     {
         try {
             $request = new Request([
-                'label'  =>  'a'
+                'class'  =>  'a'
             ]);
 
             $filter = new IamRoleQueryFilter($request);

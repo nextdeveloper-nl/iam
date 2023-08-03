@@ -10,6 +10,10 @@ use NextDeveloper\IAM\Database\Filters\IamPermissionQueryFilter;
 
 use NextDeveloper\IAM\Events\IamPermission\IamPermissionCreatedEvent;
 use NextDeveloper\IAM\Events\IamPermission\IamPermissionCreatingEvent;
+use NextDeveloper\IAM\Events\IamPermission\IamPermissionUpdatedEvent;
+use NextDeveloper\IAM\Events\IamPermission\IamPermissionUpdatingEvent;
+use NextDeveloper\IAM\Events\IamPermission\IamPermissionDeletedEvent;
+use NextDeveloper\IAM\Events\IamPermission\IamPermissionDeletingEvent;
 
 /**
 * This class is responsible from managing the data for IamPermission

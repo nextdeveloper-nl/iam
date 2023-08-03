@@ -2,10 +2,6 @@
 
 namespace NextDeveloper\IAM\Services;
 
-use Helpers\i18n;
-use NextDeveloper\IAM\Database\Models\IamAccount;
-use NextDeveloper\IAM\Database\Models\IamUser;
-use NextDeveloper\IAM\Helpers\UserHelper;
 use NextDeveloper\IAM\Services\AbstractServices\AbstractIamAccountService;
 
 /**
@@ -46,6 +42,10 @@ class IamAccountService extends AbstractIamAccountService {
             'owner_id'  =>  $user->id
         ];
 
-        return self::create($accountData);
+        $account = self::create($accountData);
+
+        $relation = $user->iamAccount()->attach($account->id);
+
+        return $account;
     }
 }

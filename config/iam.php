@@ -14,5 +14,6 @@ return [
         'system-admin'  =>  [
             'AuthorizationModel' => '\NextDeveloper\IAM\Database\Abstract\AuthorizationModel::class'
         ]
-    ]
+    ],
+    'scopes'    =>  []
 ];

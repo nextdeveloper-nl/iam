@@ -7,6 +7,9 @@ use Illuminate\Database\Eloquent\Model;
 
 class SystemAdminRole extends AbstractRole implements IAuthorizationRole
 {
+    public const NAME = 'system-admin';
+
+    public const LEVEL = 1;
 
     public function apply(Builder $builder, Model $model)
     {

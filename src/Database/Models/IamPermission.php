@@ -16,7 +16,7 @@ use NextDeveloper\Commons\Database\Traits\UuidId;
 class IamPermission extends Model
 {
     use Filterable, UuidId;
-    
+
 
     public $timestamps = true;
 
@@ -32,14 +32,14 @@ class IamPermission extends Model
      *  Here we have the fulltext fields. We can use these for fulltext search if enabled.
      */
     protected $fullTextFields = [
-        
+
     ];
 
     /**
      * @var array
      */
     protected $appends = [
-        
+
     ];
 
     /**
@@ -47,17 +47,17 @@ class IamPermission extends Model
      * @var array
      */
     protected $casts = [
-        'id'         => 'integer',
-		'uuid'       => 'string',
-		'namespace'  => 'string',
-		'service'    => 'string',
-		'method'     => 'string',
-		'name'       => 'string',
-		'is_active'  => 'boolean',
-		'created_by' => 'integer',
-		'updated_by' => 'integer',
-		'created_at' => 'datetime',
-		'updated_at' => 'datetime',
+        'id' => 'integer',
+        'uuid' => 'string',
+        'namespace' => 'string',
+        'service' => 'string',
+        'method' => 'string',
+        'name' => 'string',
+        'is_active' => 'boolean',
+        'created_by' => 'integer',
+        'updated_by' => 'integer',
+        'created_at' => 'datetime',
+        'updated_at' => 'datetime',
     ];
 
     /**
@@ -66,7 +66,7 @@ class IamPermission extends Model
      */
     protected $dates = [
         'created_at',
-		'updated_at',
+        'updated_at',
     ];
 
     /**
@@ -88,9 +88,31 @@ class IamPermission extends Model
     {
         parent::boot();
 
-        //  We create and add Observer even if we wont use it.
+//  We create and add Observer even if we wont use it.
         parent::observe(IamPermissionObserver::class);
+
+        self::registerScopes();
     }
 
-    // EDIT AFTER HERE - WARNING: ABOVE THIS LINE MAY BE REGENERATED AND YOU MAY LOSE CODE
+    public static function registerScopes()
+    {
+        $globalScopes = config('iam.scopes.global');
+        $modelScopes = config('iam.scopes.iam_permissions');
+
+        if (!$modelScopes) $modelScopes = [];
+        if (!$globalScopes) $globalScopes = [];
+
+        $scopes = array_merge(
+            $globalScopes,
+            $modelScopes
+        );
+
+        if ($scopes) {
+            foreach ($scopes as $scope) {
+                static::addGlobalScope(app($scope));
+            }
+        }
+    }
+
+// EDIT AFTER HERE - WARNING: ABOVE THIS LINE MAY BE REGENERATED AND YOU MAY LOSE CODE
 }

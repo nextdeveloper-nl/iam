@@ -16,7 +16,7 @@ use NextDeveloper\Commons\Database\Traits\UuidId;
 class IamAccountType extends Model
 {
     use Filterable, UuidId;
-    
+
 
     public $timestamps = false;
 
@@ -32,14 +32,14 @@ class IamAccountType extends Model
      *  Here we have the fulltext fields. We can use these for fulltext search if enabled.
      */
     protected $fullTextFields = [
-        
+
     ];
 
     /**
      * @var array
      */
     protected $appends = [
-        
+
     ];
 
     /**
@@ -47,11 +47,11 @@ class IamAccountType extends Model
      * @var array
      */
     protected $casts = [
-        'id'          => 'integer',
-		'uuid'        => 'string',
-		'name'        => 'string',
-		'description' => 'string',
-		'country_id'  => 'integer',
+        'id' => 'integer',
+        'uuid' => 'string',
+        'name' => 'string',
+        'description' => 'string',
+        'country_id' => 'integer',
     ];
 
     /**
@@ -59,7 +59,7 @@ class IamAccountType extends Model
      * @var array
      */
     protected $dates = [
-        
+
     ];
 
     /**
@@ -81,9 +81,31 @@ class IamAccountType extends Model
     {
         parent::boot();
 
-        //  We create and add Observer even if we wont use it.
+//  We create and add Observer even if we wont use it.
         parent::observe(IamAccountTypeObserver::class);
+
+        self::registerScopes();
     }
 
-    // EDIT AFTER HERE - WARNING: ABOVE THIS LINE MAY BE REGENERATED AND YOU MAY LOSE CODE
+    public static function registerScopes()
+    {
+        $globalScopes = config('iam.scopes.global');
+        $modelScopes = config('iam.scopes.iam_account_types');
+
+        if (!$modelScopes) $modelScopes = [];
+        if (!$globalScopes) $globalScopes = [];
+
+        $scopes = array_merge(
+            $globalScopes,
+            $modelScopes
+        );
+
+        if ($scopes) {
+            foreach ($scopes as $scope) {
+                static::addGlobalScope(app($scope));
+            }
+        }
+    }
+
+// EDIT AFTER HERE - WARNING: ABOVE THIS LINE MAY BE REGENERATED AND YOU MAY LOSE CODE
 }

@@ -17,12 +17,12 @@ Route::prefix('account-types')->group(function () {
         Route::delete('/{iam-account-types}', 'IamAccountType\IamAccountTypeController@destroy');
     });
 
-Route::prefix('backend')->group(function () {
+Route::prefix('backends')->group(function () {
         Route::get('/', 'IamBackend\IamBackendController@index');
-        Route::get('/{iam-backend}', 'IamBackend\IamBackendController@show');
+        Route::get('/{iam-backends}', 'IamBackend\IamBackendController@show');
         Route::post('/', 'IamBackend\IamBackendController@store');
-        Route::put('/{iam-backend}', 'IamBackend\IamBackendController@update');
-        Route::delete('/{iam-backend}', 'IamBackend\IamBackendController@destroy');
+        Route::put('/{iam-backends}', 'IamBackend\IamBackendController@update');
+        Route::delete('/{iam-backends}', 'IamBackend\IamBackendController@destroy');
     });
 
 Route::prefix('login-logs')->group(function () {
@@ -57,6 +57,14 @@ Route::prefix('roles')->group(function () {
         Route::delete('/{iam-roles}', 'IamRole\IamRoleController@destroy');
     });
 
+Route::prefix('role-user')->group(function () {
+        Route::get('/', 'IamRoleUser\IamRoleUserController@index');
+        Route::get('/{iam-role-user}', 'IamRoleUser\IamRoleUserController@show');
+        Route::post('/', 'IamRoleUser\IamRoleUserController@store');
+        Route::put('/{iam-role-user}', 'IamRoleUser\IamRoleUserController@update');
+        Route::delete('/{iam-role-user}', 'IamRoleUser\IamRoleUserController@destroy');
+    });
+
 Route::prefix('users')->group(function () {
         Route::get('/', 'IamUser\IamUserController@index');
         Route::get('/{iam-users}', 'IamUser\IamUserController@show');
@@ -70,5 +78,12 @@ Route::prefix('users')->group(function () {
     Route::prefix('authenticate')->group(function () {
         Route::post('/oauth/token', 'OAuth\AccessTokenController@issueToken');
         Route::post('/login', 'OAuth\AccessTokenController@issueToken');
+    });
+
+    Route::prefix('my')->middleware('auth:api')->group(function() {
+        //  List my roles
+        Route::get('roles', 'IamRole\IamMyRoleController@index');
+        //  Set the active role
+        Route::put('roles', 'IamRole\IamMyRoleController@update');
     });
 });

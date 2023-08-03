@@ -4,27 +4,25 @@ namespace NextDeveloper\IAM\Http\Transformers;
 
 use NextDeveloper\IAM\Database\Models\IamRoleUser;
 use NextDeveloper\Commons\Http\Transformers\AbstractTransformer;
+use NextDeveloper\IAM\Database\Models\IamUserRoleOverview;
 
 /**
  * Class IamRoleUserTransformer. This class is being used to manipulate the data we are serving to the customer
  *
  * @package NextDeveloper\IAM\Http\Transformers
  */
-class IamRoleUserTransformer extends AbstractTransformer {
+class IamUserRoleOverviewTransformer extends AbstractTransformer {
 
     /**
      * @param IamRoleUser $model
      *
      * @return array
      */
-    public function transform(IamRoleUser $model) {
+    public function transform(IamUserRoleOverview $model) {
         return $this->buildPayload([
-            'id'  =>  $model->id,
-            'role_id'  =>  $model->role_id,
-            'user_id'  =>  $model->user_id,
-            'account_id'  =>  $model->account_id,
-            'is_active'  =>  $model->is_active,
-            'role_data'  =>  $model->role_data,
+            'id'  =>  $model->uuid,
+            'name'  =>  $model->name,
+            'is_active'  =>  $model->is_active
         ]);
     }
     // EDIT AFTER HERE - WARNING: ABOVE THIS LINE MAY BE REGENERATED AND YOU MAY LOSE CODE

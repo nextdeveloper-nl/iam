@@ -10,6 +10,10 @@ use NextDeveloper\IAM\Database\Filters\IamAccountQueryFilter;
 
 use NextDeveloper\IAM\Events\IamAccount\IamAccountCreatedEvent;
 use NextDeveloper\IAM\Events\IamAccount\IamAccountCreatingEvent;
+use NextDeveloper\IAM\Events\IamAccount\IamAccountUpdatedEvent;
+use NextDeveloper\IAM\Events\IamAccount\IamAccountUpdatingEvent;
+use NextDeveloper\IAM\Events\IamAccount\IamAccountDeletedEvent;
+use NextDeveloper\IAM\Events\IamAccount\IamAccountDeletingEvent;
 
 /**
 * This class is responsible from managing the data for IamAccount

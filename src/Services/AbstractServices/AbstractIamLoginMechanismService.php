@@ -10,6 +10,10 @@ use NextDeveloper\IAM\Database\Filters\IamLoginMechanismQueryFilter;
 
 use NextDeveloper\IAM\Events\IamLoginMechanism\IamLoginMechanismCreatedEvent;
 use NextDeveloper\IAM\Events\IamLoginMechanism\IamLoginMechanismCreatingEvent;
+use NextDeveloper\IAM\Events\IamLoginMechanism\IamLoginMechanismUpdatedEvent;
+use NextDeveloper\IAM\Events\IamLoginMechanism\IamLoginMechanismUpdatingEvent;
+use NextDeveloper\IAM\Events\IamLoginMechanism\IamLoginMechanismDeletedEvent;
+use NextDeveloper\IAM\Events\IamLoginMechanism\IamLoginMechanismDeletingEvent;
 
 /**
 * This class is responsible from managing the data for IamLoginMechanism

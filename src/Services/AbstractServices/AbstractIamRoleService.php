@@ -10,6 +10,10 @@ use NextDeveloper\IAM\Database\Filters\IamRoleQueryFilter;
 
 use NextDeveloper\IAM\Events\IamRole\IamRoleCreatedEvent;
 use NextDeveloper\IAM\Events\IamRole\IamRoleCreatingEvent;
+use NextDeveloper\IAM\Events\IamRole\IamRoleUpdatedEvent;
+use NextDeveloper\IAM\Events\IamRole\IamRoleUpdatingEvent;
+use NextDeveloper\IAM\Events\IamRole\IamRoleDeletedEvent;
+use NextDeveloper\IAM\Events\IamRole\IamRoleDeletingEvent;
 
 /**
 * This class is responsible from managing the data for IamRole

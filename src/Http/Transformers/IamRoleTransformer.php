@@ -21,11 +21,9 @@ class IamRoleTransformer extends AbstractTransformer {
         return $this->buildPayload([
             'id'  =>  $model->uuid,
             'name'  =>  $model->name,
-            'label'  =>  $model->label,
-            'level'  =>  $model->level == 1 ? true : false,
+            'class'  =>  $model->class,
+            'level'  =>  $model->level,
             'description'  =>  $model->description,
-            'account_id'  =>  $model->account_id,
-            'user_id'  =>  $model->user_id,
             'created_at'  =>  $model->created_at,
             'updated_at'  =>  $model->updated_at,
             'deleted_at'  =>  $model->deleted_at,

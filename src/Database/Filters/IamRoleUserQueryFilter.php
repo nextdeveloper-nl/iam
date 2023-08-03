@@ -18,12 +18,17 @@ class IamRoleUserQueryFilter extends AbstractQueryFilter
     */
     protected $builder;
 
-    public function accountRoleId($value)
+    public function isActive()
     {
-        $accountRole = AccountRole::where('uuid', $value)->first();
+        return $this->builder->where('is_active', true);
+    }
+    
+    public function roleId($value)
+    {
+        $role = Role::where('uuid', $value)->first();
 
-        if($accountRole) {
-            return $this->builder->where('account_role_id', '=', $accountRole->id);
+        if($role) {
+            return $this->builder->where('role_id', '=', $role->id);
         }
     }
 

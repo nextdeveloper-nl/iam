@@ -10,6 +10,10 @@ use NextDeveloper\IAM\Database\Filters\IamBackendQueryFilter;
 
 use NextDeveloper\IAM\Events\IamBackend\IamBackendCreatedEvent;
 use NextDeveloper\IAM\Events\IamBackend\IamBackendCreatingEvent;
+use NextDeveloper\IAM\Events\IamBackend\IamBackendUpdatedEvent;
+use NextDeveloper\IAM\Events\IamBackend\IamBackendUpdatingEvent;
+use NextDeveloper\IAM\Events\IamBackend\IamBackendDeletedEvent;
+use NextDeveloper\IAM\Events\IamBackend\IamBackendDeletingEvent;
 
 /**
 * This class is responsible from managing the data for IamBackend

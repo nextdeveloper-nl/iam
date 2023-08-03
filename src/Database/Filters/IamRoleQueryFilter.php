@@ -4,8 +4,7 @@ namespace NextDeveloper\IAM\Database\Filters;
 
 use Illuminate\Database\Eloquent\Builder;
 use NextDeveloper\Commons\Database\Filters\AbstractQueryFilter;
-                use NextDeveloper\Accounts\Database\Models\User;
-    
+
 
 /**
  * This class automatically puts where clause on database so that use can filter
@@ -23,9 +22,9 @@ class IamRoleQueryFilter extends AbstractQueryFilter
         return $this->builder->where('name', 'like', '%' . $value . '%');
     }
     
-    public function label($value)
+    public function class($value)
     {
-        return $this->builder->where('label', 'like', '%' . $value . '%');
+        return $this->builder->where('class', 'like', '%' . $value . '%');
     }
     
     public function description($value)
@@ -74,24 +73,6 @@ class IamRoleQueryFilter extends AbstractQueryFilter
     public function deletedAtEnd($date) 
     {
         return $this->builder->where( 'deleted_at', '<=', $date );
-    }
-
-    public function accountId($value)
-    {
-        $account = Account::where('uuid', $value)->first();
-
-        if($account) {
-            return $this->builder->where('account_id', '=', $account->id);
-        }
-    }
-
-    public function userId($value)
-    {
-        $user = User::where('uuid', $value)->first();
-
-        if($user) {
-            return $this->builder->where('user_id', '=', $user->id);
-        }
     }
 
     // EDIT AFTER HERE - WARNING: ABOVE THIS LINE MAY BE REGENERATED AND YOU MAY LOSE CODE

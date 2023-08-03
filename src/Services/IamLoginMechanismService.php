@@ -2,9 +2,6 @@
 
 namespace NextDeveloper\IAM\Services;
 
-use Illuminate\Database\Eloquent\Collection;
-use NextDeveloper\IAM\Database\Models\IamLoginMechanism;
-use NextDeveloper\IAM\Database\Models\IamUser;
 use NextDeveloper\IAM\Services\AbstractServices\AbstractIamLoginMechanismService;
 
 /**

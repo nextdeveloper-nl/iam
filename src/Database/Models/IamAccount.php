@@ -14,11 +14,11 @@ use NextDeveloper\Commons\Database\Traits\UuidId;
  *
  * @package NextDeveloper\IAM\Database\Models
  */
-class IamAccount extends \NextDeveloper\IAM\Database\Abstract\AuthorizationModel
+class IamAccount extends Model
 {
     use Filterable, UuidId;
     use SoftDeletes;
-    
+
 
     public $timestamps = true;
 
@@ -34,14 +34,14 @@ class IamAccount extends \NextDeveloper\IAM\Database\Abstract\AuthorizationModel
      *  Here we have the fulltext fields. We can use these for fulltext search if enabled.
      */
     protected $fullTextFields = [
-        
+
     ];
 
     /**
      * @var array
      */
     protected $appends = [
-        
+
     ];
 
     /**
@@ -49,19 +49,19 @@ class IamAccount extends \NextDeveloper\IAM\Database\Abstract\AuthorizationModel
      * @var array
      */
     protected $casts = [
-        'id'              => 'integer',
-		'uuid'            => 'string',
-		'name'            => 'string',
-		'domain_id'       => 'integer',
-		'country_id'      => 'integer',
-		'currency_id'     => 'integer',
-		'phone_number'    => 'string',
-		'description'     => 'string',
-		'owner_id'        => 'integer',
-		'account_type_id' => 'integer',
-		'created_at'      => 'datetime',
-		'updated_at'      => 'datetime',
-		'deleted_at'      => 'datetime',
+        'id' => 'integer',
+        'uuid' => 'string',
+        'name' => 'string',
+        'domain_id' => 'integer',
+        'country_id' => 'integer',
+        'currency_id' => 'integer',
+        'phone_number' => 'string',
+        'description' => 'string',
+        'owner_id' => 'integer',
+        'account_type_id' => 'integer',
+        'created_at' => 'datetime',
+        'updated_at' => 'datetime',
+        'deleted_at' => 'datetime',
     ];
 
     /**
@@ -70,8 +70,8 @@ class IamAccount extends \NextDeveloper\IAM\Database\Abstract\AuthorizationModel
      */
     protected $dates = [
         'created_at',
-		'updated_at',
-		'deleted_at',
+        'updated_at',
+        'deleted_at',
     ];
 
     /**
@@ -93,24 +93,51 @@ class IamAccount extends \NextDeveloper\IAM\Database\Abstract\AuthorizationModel
     {
         parent::boot();
 
-        //  We create and add Observer even if we wont use it.
+//  We create and add Observer even if we wont use it.
         parent::observe(IamAccountObserver::class);
+
+        self::registerScopes();
+    }
+
+    public static function registerScopes()
+    {
+        $globalScopes = config('iam.scopes.global');
+        $modelScopes = config('iam.scopes.iam_accounts');
+
+        if (!$modelScopes) $modelScopes = [];
+        if (!$globalScopes) $globalScopes = [];
+
+        $scopes = array_merge(
+            $globalScopes,
+            $modelScopes
+        );
+
+        if ($scopes) {
+            foreach ($scopes as $scope) {
+                static::addGlobalScope(app($scope));
+            }
+        }
     }
 
     public function iamAccountType()
     {
         return $this->belongsTo(IamAccountType::class);
     }
-    
-    public function iamBackend()
+
+    public function iamBackends()
     {
         return $this->hasMany(IamBackend::class);
     }
 
-    public function iamRoles()
+    public function iamRoleUser()
     {
-        return $this->hasMany(IamRole::class);
+        return $this->hasMany(IamRoleUser::class);
     }
 
     // EDIT AFTER HERE - WARNING: ABOVE THIS LINE MAY BE REGENERATED AND YOU MAY LOSE CODE
+
+    public function iamUser()
+    {
+        return $this->belongsToMany(IamAccount::class, 'iam_account_user', 'account_id', 'user_id');
+    }
 }

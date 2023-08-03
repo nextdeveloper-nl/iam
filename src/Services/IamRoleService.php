@@ -11,12 +11,12 @@ use NextDeveloper\IAM\Helpers\UserHelper;
 use NextDeveloper\IAM\Services\AbstractServices\AbstractIamRoleService;
 
 /**
- * This class is responsible from managing the data for IamRole
- *
- * Class IamRoleService.
- *
- * @package NextDeveloper\IAM\Database\Models
- */
+* This class is responsible from managing the data for IamRole
+*
+* Class IamRoleService.
+*
+* @package NextDeveloper\IAM\Database\Models
+*/
 class IamRoleService extends AbstractIamRoleService {
 
     // EDIT AFTER HERE - WARNING: ABOVE THIS LINE MAY BE REGENERATED AND YOU MAY LOSE CODE
@@ -70,29 +70,116 @@ class IamRoleService extends AbstractIamRoleService {
      */
     public static function assignUserToRole(IamUser $user, IamRole $role, IamAccount $account = null) : bool
     {
+        //  No one can be a system admin
+        if($role->name == 'system-admin') {
+            return false;
+        }
+
         //  Getting the roles of user
-        $isExists = IamRoleUser::where('user_id', $user->id)
+        $role = IamRoleUser::where('user_id', $user->id)
             ->where('role_id', $role->id);
 
         if($account) {
-            $isExists = $isExists->where('account_id', $account->id);
+            $role = $role->where('account_id', $account->id);
         } else {
             $account = UserHelper::masterAccount($user);
+            $role = $role->where('account_id', $account->id);
         }
 
-        try {
-            IamRoleUser::create([
-                'user_id'       =>  $user->id,
-                'account_id'    =>  $account->id,
-                'role_id'       =>  $role->id
-            ]);
-        } catch (\Exception $e) {
-            if($e->getCode() == 23000) {
-                //  We discard this because it means this relation is already exists.
-                return true;
-            }
+        $role = $role->first();
+
+        if($role) {
+            self::setRoleAsActive($role);
+
+            return true;
         }
+
+        IamRoleUser::create([
+            'user_id'       =>  $user->id,
+            'account_id'    =>  $account->id,
+            'role_id'       =>  $role->id
+        ]);
         
         return true;
+    }
+
+    public static function getUserRole(IamUser $user, IamAccount $account) : IamRole
+    {
+        $role = $user->iamRole()
+            ->wherePivot('account_id', $account->id)
+            ->where('is_active', 1)
+            ->orderBy('level', 'asc')
+            ->first();
+
+        //  If the user dont have any roles, we are creating the Member role for the user
+        if(!$role) {
+            $role = self::getRole(new MemberRole());
+
+            self::assignUserToRole($user, $role);
+
+            return self::getUserRole($user, $account);
+        }
+
+        return $role;
+    }
+
+    /**
+     * Sets the related IamUserRole as active
+     *
+     * @param IamRoleUser $roleUser
+     * @return IamRoleUser
+     */
+    public static function setRoleAsActive(IamRoleUser $roleUser) : IamRoleUser
+    {
+        //  Mark all other roles as not active
+        $roles = IamRoleUser::where('user_id', $roleUser->user_id)
+            ->where('account_id', $roleUser->account_id)
+            ->update([
+                'is_active' =>  0
+            ]);
+
+        //  Update the requested role as active
+        IamRoleUser::where('user_id', $roleUser->user_id)
+            ->where('account_id', $roleUser->account_id)
+            ->where('role_id', $roleUser->role_id)
+            ->update([
+                'is_active' =>  1
+            ]);
+
+        //  Get the relation again
+        $roleUser = IamRoleUser::where('user_id', $roleUser->user_id)
+            ->where('account_id', $roleUser->account_id)
+            ->where('role_id', $roleUser->role_id)
+            ->first();
+
+        return $roleUser;
+    }
+
+    public static function setRoleAsActiveById($iamRoleId, IamUser $user, IamAccount $account) : IamRoleUser
+    {
+        $role = IamRole::where('uuid', $iamRoleId)->first();
+
+        //  Mark all other roles as not active
+        $roles = IamRoleUser::where('user_id', $user->id)
+            ->where('account_id', $account->id)
+            ->update([
+                'is_active' =>  0
+            ]);
+
+        //  Update the requested role as active
+        $roles = IamRoleUser::where('user_id', $user->id)
+            ->where('account_id', $account->id)
+            ->where('role_id', $role->id)
+            ->update([
+                'is_active' =>  1
+            ]);
+
+        //  Get the relation again
+        $roles = IamRoleUser::where('user_id', $user->id)
+            ->where('account_id', $account->id)
+            ->where('role_id', $role->id)
+            ->first();
+
+        return $roles;
     }
 }

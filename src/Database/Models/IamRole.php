@@ -18,7 +18,7 @@ class IamRole extends Model
 {
     use Filterable, UuidId;
     use SoftDeletes;
-    
+
 
     public $timestamps = true;
 
@@ -34,14 +34,14 @@ class IamRole extends Model
      *  Here we have the fulltext fields. We can use these for fulltext search if enabled.
      */
     protected $fullTextFields = [
-        
+
     ];
 
     /**
      * @var array
      */
     protected $appends = [
-        
+
     ];
 
     /**
@@ -49,17 +49,15 @@ class IamRole extends Model
      * @var array
      */
     protected $casts = [
-        'id'          => 'integer',
-		'uuid'        => 'string',
-		'name'        => 'string',
-		'label'       => 'string',
-		'level'       => 'boolean',
-		'description' => 'string',
-		'account_id'  => 'integer',
-		'user_id'     => 'integer',
-		'created_at'  => 'datetime',
-		'updated_at'  => 'datetime',
-		'deleted_at'  => 'datetime',
+        'id' => 'integer',
+        'uuid' => 'string',
+        'name' => 'string',
+        'class' => 'string',
+        'level' => 'boolean',
+        'description' => 'string',
+        'created_at' => 'datetime',
+        'updated_at' => 'datetime',
+        'deleted_at' => 'datetime',
     ];
 
     /**
@@ -68,8 +66,8 @@ class IamRole extends Model
      */
     protected $dates = [
         'created_at',
-		'updated_at',
-		'deleted_at',
+        'updated_at',
+        'deleted_at',
     ];
 
     /**
@@ -91,14 +89,36 @@ class IamRole extends Model
     {
         parent::boot();
 
-        //  We create and add Observer even if we wont use it.
+//  We create and add Observer even if we wont use it.
         parent::observe(IamRoleObserver::class);
+
+        self::registerScopes();
     }
 
-    public function iamAccount()
+    public static function registerScopes()
     {
-        return $this->belongsTo(IamAccount::class);
+        $globalScopes = config('iam.scopes.global');
+        $modelScopes = config('iam.scopes.iam_roles');
+
+        if (!$modelScopes) $modelScopes = [];
+        if (!$globalScopes) $globalScopes = [];
+
+        $scopes = array_merge(
+            $globalScopes,
+            $modelScopes
+        );
+
+        if ($scopes) {
+            foreach ($scopes as $scope) {
+                static::addGlobalScope(app($scope));
+            }
+        }
     }
-    
+
+    public function iamRoleUser()
+    {
+        return $this->hasMany(IamRoleUser::class);
+    }
+
     // EDIT AFTER HERE - WARNING: ABOVE THIS LINE MAY BE REGENERATED AND YOU MAY LOSE CODE
 }

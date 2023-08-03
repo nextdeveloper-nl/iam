@@ -56,15 +56,28 @@ class UserHelper
      */
     public static function currentAccount() : IamAccount
     {
-        //  Will change
-        $account = IamAccount::where('owner_id', self::me()->id)->first();
+        $current = self::me()->iamAccount()->wherePivot('is_active', 1)->first();
 
-        //  Here if there is no account for this User, we are fixing that problem.
-        if(!$account) {
-            $account = IamAccountService::createInitialAccount(self::me());
+        if(!$current) {
+            self::me()->iamAccount()->attach(
+                self::masterAccount()->id
+            );
+
+            $current = self::me()->iamAccount()->wherePivot('is_active', 1)->first();
         }
 
-        return $account;
+        return $current;
+    }
+
+    /**
+     * Switches the accounts to the given account, if the user is a member of that account
+     *
+     * @param IamAccount $account
+     * @return IamAccount
+     */
+    public static function switchAccountTo(IamAccount $account) : IamAccount
+    {
+        return self::currentAccount();
     }
 
     /**
@@ -102,5 +115,10 @@ class UserHelper
         $users = IamUser::where('email', $email)->first();
 
         return $users;
+    }
+
+    public static function hasAccount($accountId) : ?IamAccount
+    {
+
     }
 }
