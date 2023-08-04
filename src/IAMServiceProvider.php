@@ -117,6 +117,7 @@ class IAMServiceProvider extends AbstractServiceProvider {
     protected function registerRoutes() {
         if ( ! $this->app->routesAreCached()) {
             $this->app['router']
+                ->middleware('auth:api')
                 ->namespace('NextDeveloper\IAM\Http\Controllers')
                 ->group(__DIR__.DIRECTORY_SEPARATOR.'Http'.DIRECTORY_SEPARATOR.'api.routes.php');
         }

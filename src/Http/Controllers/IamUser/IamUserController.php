@@ -5,6 +5,7 @@ namespace NextDeveloper\IAM\Http\Controllers\IamUser;
 use Illuminate\Http\Request;
 use NextDeveloper\Generator\Common\AbstractController;
 use NextDeveloper\Generator\Http\Traits\ResponsableFactory;
+use NextDeveloper\IAM\Helpers\UserHelper;
 use NextDeveloper\IAM\Http\Requests\IamUser\IamUserUpdateRequest;
 use NextDeveloper\IAM\Database\Filters\IamUserQueryFilter;
 use NextDeveloper\IAM\Services\IamUserService;
@@ -36,6 +37,8 @@ class IamUserController extends AbstractController
     * @throws \Laravel\Octane\Exceptions\DdException
     */
     public function show($ref) {
+        if($ref == 'me')
+            return $this->me();
         //  Here we are not using Laravel Route Model Binding. Please check routeBinding.md file
         //  in NextDeveloper Platform Project
         $model = IamUserService::getByRef($ref);
@@ -85,5 +88,20 @@ class IamUserController extends AbstractController
     }
 
     // EDIT AFTER HERE - WARNING: ABOVE THIS LINE MAY BE REGENERATED AND YOU MAY LOSE CODE
+
+    /**
+     * This method returns the logged in user information
+     *
+     * @param $iamUserId
+     * @return mixed|null
+     * @throws \Laravel\Octane\Exceptions\DdException
+     */
+    public function me() {
+        //  Here we are not using Laravel Route Model Binding. Please check routeBinding.md file
+        //  in NextDeveloper Platform Project
+        $model = UserHelper::me();
+
+        return ResponsableFactory::makeResponse($this, $model);
+    }
 
 }

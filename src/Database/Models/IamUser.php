@@ -21,7 +21,6 @@ class IamUser extends Model
     use Filterable, UuidId;
     use SoftDeletes;
 
-
     public $timestamps = true;
 
     protected $table = 'iam_users';
