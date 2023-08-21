@@ -10,109 +10,114 @@ use NextDeveloper\IAM\Database\Observers\IamRoleObserver;
 use NextDeveloper\Commons\Database\Traits\UuidId;
 
 /**
- * Class IamRole.
- *
- * @package NextDeveloper\IAM\Database\Models
- */
+* Class IamRole.
+*
+* @package NextDeveloper\IAM\Database\Models
+*/
 class IamRole extends Model
 {
-    use Filterable, UuidId;
-    use SoftDeletes;
+use Filterable, UuidId;
+	use SoftDeletes;
 
 
-    public $timestamps = true;
+	public $timestamps = true;
 
-    protected $table = 'iam_roles';
+protected $table = 'iam_roles';
 
 
-    /**
-     * @var array
-     */
-    protected $guarded = [];
+/**
+* @var array
+*/
+protected $guarded = [];
 
-    /**
-     *  Here we have the fulltext fields. We can use these for fulltext search if enabled.
-     */
-    protected $fullTextFields = [
+/**
+*  Here we have the fulltext fields. We can use these for fulltext search if enabled.
+*/
+protected $fullTextFields = [
 
-    ];
+];
 
-    /**
-     * @var array
-     */
-    protected $appends = [
+/**
+* @var array
+*/
+protected $appends = [
 
-    ];
+];
 
-    /**
-     * We are casting fields to objects so that we can work on them better
-     * @var array
-     */
-    protected $casts = [
-        'id' => 'integer',
-        'uuid' => 'string',
-        'name' => 'string',
-        'class' => 'string',
-        'level' => 'boolean',
-        'description' => 'string',
-        'created_at' => 'datetime',
-        'updated_at' => 'datetime',
-        'deleted_at' => 'datetime',
-    ];
+/**
+* We are casting fields to objects so that we can work on them better
+* @var array
+*/
+protected $casts = [
+'id'          => 'integer',
+		'uuid'        => 'string',
+		'name'        => 'string',
+		'class'       => 'string',
+		'level'       => 'boolean',
+		'description' => 'string',
+		'created_at'  => 'datetime',
+		'updated_at'  => 'datetime',
+		'deleted_at'  => 'datetime',
+];
 
-    /**
-     * We are casting data fields.
-     * @var array
-     */
-    protected $dates = [
-        'created_at',
-        'updated_at',
-        'deleted_at',
-    ];
+/**
+* We are casting data fields.
+* @var array
+*/
+protected $dates = [
+'created_at',
+		'updated_at',
+		'deleted_at',
+];
 
-    /**
-     * @var array
-     */
-    protected $with = [
+/**
+* @var array
+*/
+protected $with = [
 
-    ];
+];
 
-    /**
-     * @var int
-     */
-    protected $perPage = 20;
+/**
+* @var int
+*/
+protected $perPage = 20;
 
-    /**
-     * @return void
-     */
-    public static function boot()
-    {
-        parent::boot();
+/**
+* @return void
+*/
+public static function boot()
+{
+parent::boot();
 
 //  We create and add Observer even if we wont use it.
-        parent::observe(IamRoleObserver::class);
+parent::observe(IamRoleObserver::class);
 
-        self::registerScopes();
-    }
+self::registerScopes();
+}
 
-    public static function registerScopes()
+public static function registerScopes()
+{
+$globalScopes = config('iam.scopes.global');
+$modelScopes = config('iam.scopes.iam_roles');
+
+if(!$modelScopes) $modelScopes = [];
+if (!$globalScopes) $globalScopes = [];
+
+$scopes = array_merge(
+$globalScopes,
+$modelScopes
+);
+
+if($scopes) {
+foreach ($scopes as $scope) {
+static::addGlobalScope(app($scope));
+}
+}
+}
+
+public function iamRolePermission()
     {
-        $globalScopes = config('iam.scopes.global');
-        $modelScopes = config('iam.scopes.iam_roles');
-
-        if (!$modelScopes) $modelScopes = [];
-        if (!$globalScopes) $globalScopes = [];
-
-        $scopes = array_merge(
-            $globalScopes,
-            $modelScopes
-        );
-
-        if ($scopes) {
-            foreach ($scopes as $scope) {
-                static::addGlobalScope(app($scope));
-            }
-        }
+        return $this->hasMany(IamRolePermission::class);
     }
 
     public function iamRoleUser()
@@ -120,5 +125,5 @@ class IamRole extends Model
         return $this->hasMany(IamRoleUser::class);
     }
 
-    // EDIT AFTER HERE - WARNING: ABOVE THIS LINE MAY BE REGENERATED AND YOU MAY LOSE CODE
+    // EDIT AFTER HERE - WARNING: ABOVE THIS LINE MAY BE REGENERATED AND YOU MAY LOSE CODE\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n
 }

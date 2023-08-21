@@ -121,6 +121,10 @@ class IAMServiceProvider extends AbstractServiceProvider {
                 ->namespace('NextDeveloper\IAM\Http\Controllers')
                 ->group(__DIR__.DIRECTORY_SEPARATOR.'Http'.DIRECTORY_SEPARATOR.'api.routes.php');
         }
+
+        $this->app['router']
+            ->namespace('NextDeveloper\IAM\WebSockets\Handlers')
+            ->group(__DIR__.DIRECTORY_SEPARATOR.'WebSockets'.DIRECTORY_SEPARATOR.'socket.routes.php');
     }
 
     /**

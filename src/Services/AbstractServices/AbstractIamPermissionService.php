@@ -5,6 +5,10 @@ namespace NextDeveloper\IAM\Services\AbstractServices;
 use Illuminate\Http\Request;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
+use Illuminate\Support\Str;
+use NextDeveloper\IAM\Helpers\UserHelper;
+use NextDeveloper\Commons\Common\Cache\CacheHelper;
+use NextDeveloper\Commons\Helpers\DatabaseHelper;
 use NextDeveloper\IAM\Database\Models\IamPermission;
 use NextDeveloper\IAM\Database\Filters\IamPermissionQueryFilter;
 
@@ -57,11 +61,6 @@ class AbstractIamPermissionService {
             return $model->paginate($perPage);
         else
             return $model->get();
-
-        if(!$model && $enablePaginate)
-            return IamPermission::paginate($perPage);
-        else
-            return IamPermission::get();
     }
 
     public static function getAll() {
@@ -100,6 +99,7 @@ class AbstractIamPermissionService {
     public static function create(array $data) {
         event( new IamPermissionCreatingEvent() );
 
+                
         try {
             $model = IamPermission::create($data);
         } catch(\Exception $e) {
@@ -108,7 +108,7 @@ class AbstractIamPermissionService {
 
         event( new IamPermissionCreatedEvent($model) );
 
-        return $model;
+        return $model->fresh();
     }
 
     /**
@@ -124,7 +124,8 @@ class AbstractIamPermissionService {
     public static function update($id, array $data) {
         $model = IamPermission::where('uuid', $id)->first();
 
-        event( new IamPermissionsUpdateingEvent($model) );
+        
+        event( new IamPermissionUpdatingEvent($model) );
 
         try {
            $model = $model->update($data);
@@ -132,9 +133,11 @@ class AbstractIamPermissionService {
            throw $e;
         }
 
-        event( new IamPermissionsUpdatedEvent($model) );
+        event( new IamPermissionUpdatedEvent($model) );
+        
+        CacheHelper::deleteKeys('IamPermission', $id);
 
-        return $model;
+        return $model->fresh();
     }
 
     /**
@@ -150,7 +153,7 @@ class AbstractIamPermissionService {
     public static function delete($id, array $data) {
         $model = IamPermission::where('uuid', $id)->first();
 
-        event( new IamPermissionsDeletingEvent() );
+        event( new IamPermissionDeletingEvent() );
 
         try {
             $model = $model->delete();
@@ -158,7 +161,9 @@ class AbstractIamPermissionService {
             throw $e;
         }
 
-        event( new IamPermissionsDeletedEvent($model) );
+        event( new IamPermissionDeletedEvent($model) );
+        
+        CacheHelper::deleteKeys('IamPermission', $id);
 
         return $model;
     }

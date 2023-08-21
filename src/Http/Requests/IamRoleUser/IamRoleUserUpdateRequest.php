@@ -12,12 +12,12 @@ class IamRoleUserUpdateRequest extends AbstractFormRequest
      */
     public function rules() {
         return [
-            'role_id'    => 'nullable|exists:roles,uuid|uuid',
-			'user_id'    => 'nullable|exists:users,uuid|uuid',
-			'account_id' => 'nullable|exists:accounts,uuid|uuid',
-			'is_active'  => 'boolean',
-			'role_data'  => 'nullable',
+            'iam_role_id'    => 'nullable|exists:iam_roles,uuid|uuid',
+			'iam_user_id'    => 'nullable|exists:iam_users,uuid|uuid',
+			'iam_account_id' => 'nullable|exists:iam_accounts,uuid|uuid',
+			'is_active'      => 'boolean',
+			'role_data'      => 'nullable',
         ];
     }
-    // EDIT AFTER HERE - WARNING: ABOVE THIS LINE MAY BE REGENERATED AND YOU MAY LOSE CODE
+    // EDIT AFTER HERE - WARNING: ABOVE THIS LINE MAY BE REGENERATED AND YOU MAY LOSE CODE\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n
 }

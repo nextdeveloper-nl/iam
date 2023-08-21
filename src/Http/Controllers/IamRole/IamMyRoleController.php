@@ -26,7 +26,7 @@ class IamMyRoleController extends AbstractController
     * @return \Illuminate\Http\JsonResponse
     */
     public function index(IamRoleQueryFilter $filter, Request $request) {
-        $data = IamUserRoleOverview::where('user_id', UserHelper::me()->id)->get();
+        $data = IamUserRoleOverview::where('iam_user_id', UserHelper::me()->id)->get();
 
         return ResponsableFactory::makeResponse($this, $data);
     }
@@ -40,15 +40,13 @@ class IamMyRoleController extends AbstractController
     * @throws \NextDeveloper\Commons\Exceptions\CannotCreateModelException
     */
     public function update(IamRoleUpdateRequest $request) {
-        $iamRoleId = $request->get('role_id');
+        $iamRoleId = $request->get('iam_role_id');
 
         if($iamRoleId == null)
             return $this->errorUnprocessable('Cannot get the role ID. Please provide role_id parameter
 with x-www-form-urlencoded type of request.');
 
-        $roles = IamRoleService::setRoleAsActiveById($iamRoleId, UserHelper::me(), UserHelper::currentAccount());
-
-        $data = IamUserRoleOverview::where('user_id', UserHelper::me()->id)->get();
+        $data = UserHelper::switchToRoleByRoleId(UserHelper::me(), $iamRoleId);
 
         return ResponsableFactory::makeResponse($this, $data);
     }

@@ -2,15 +2,18 @@
 
 namespace NextDeveloper\IAM\Http\Transformers;
 
+use Illuminate\Support\Facades\Cache;
+use NextDeveloper\Commons\Common\Cache\CacheHelper;
 use NextDeveloper\IAM\Database\Models\IamUser;
 use NextDeveloper\Commons\Http\Transformers\AbstractTransformer;
+use NextDeveloper\IAM\Http\Transformers\AbstractTransformers\AbstractIamUserTransformer;
 
 /**
  * Class IamUserTransformer. This class is being used to manipulate the data we are serving to the customer
  *
  * @package NextDeveloper\IAM\Http\Transformers
  */
-class IamUserTransformer extends AbstractTransformer {
+class IamUserTransformer extends AbstractIamUserTransformer {
 
     /**
      * @param IamUser $model
@@ -18,24 +21,20 @@ class IamUserTransformer extends AbstractTransformer {
      * @return array
      */
     public function transform(IamUser $model) {
-        return $this->buildPayload([
-            'id'  =>  $model->uuid,
-            'name'  =>  $model->name,
-            'surname'  =>  $model->surname,
-            'email'  =>  $model->email,
-            'fullname'  =>  $model->fullname,
-            'username'  =>  $model->username,
-            'about'  =>  $model->about,
-            'gender'  =>  $model->gender,
-            'birthday'  =>  $model->birthday,
-            'nin'  =>  $model->nin,
-            'cell_phone'  =>  $model->cell_phone,
-            'language_id'  =>  $model->language_id,
-            'country_id'  =>  $model->country_id,
-            'created_at'  =>  $model->created_at,
-            'updated_at'  =>  $model->updated_at,
-            'deleted_at'  =>  $model->deleted_at,
-        ]);
+        $transformed = Cache::get(
+            CacheHelper::getKey('IamUser', $model->uuid, 'Transformed')
+        );
+
+        if($transformed)
+            return $transformed;
+
+        $transformed = parent::transform($model);
+
+        Cache::set(
+            CacheHelper::getKey('IamUser', $model->uuid, 'Transformed'),
+            $transformed
+        );
+
+        return parent::transform($model);
     }
-    // EDIT AFTER HERE - WARNING: ABOVE THIS LINE MAY BE REGENERATED AND YOU MAY LOSE CODE
 }

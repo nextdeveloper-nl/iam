@@ -12,9 +12,9 @@ class IamLoginLogUpdateRequest extends AbstractFormRequest
      */
     public function rules() {
         return [
-            'user_id' => 'nullable|exists:users,uuid|uuid',
-			'log'     => 'nullable',
+            'iam_user_id' => 'nullable|exists:iam_users,uuid|uuid',
+			'log'         => 'nullable',
         ];
     }
-    // EDIT AFTER HERE - WARNING: ABOVE THIS LINE MAY BE REGENERATED AND YOU MAY LOSE CODE
+    // EDIT AFTER HERE - WARNING: ABOVE THIS LINE MAY BE REGENERATED AND YOU MAY LOSE CODE\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n
 }

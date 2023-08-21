@@ -5,6 +5,10 @@ namespace NextDeveloper\IAM\Services\AbstractServices;
 use Illuminate\Http\Request;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
+use Illuminate\Support\Str;
+use NextDeveloper\IAM\Helpers\UserHelper;
+use NextDeveloper\Commons\Common\Cache\CacheHelper;
+use NextDeveloper\Commons\Helpers\DatabaseHelper;
 use NextDeveloper\IAM\Database\Models\IamBackend;
 use NextDeveloper\IAM\Database\Filters\IamBackendQueryFilter;
 
@@ -57,11 +61,6 @@ class AbstractIamBackendService {
             return $model->paginate($perPage);
         else
             return $model->get();
-
-        if(!$model && $enablePaginate)
-            return IamBackend::paginate($perPage);
-        else
-            return IamBackend::get();
     }
 
     public static function getAll() {
@@ -100,6 +99,17 @@ class AbstractIamBackendService {
     public static function create(array $data) {
         event( new IamBackendCreatingEvent() );
 
+                if (array_key_exists('iam_account_id', $data))
+            $data['iam_account_id'] = DatabaseHelper::uuidToId(
+                '\NextDeveloper\IAM\Database\Models\IamAccount',
+                $data['iam_account_id']
+            );
+	        if (array_key_exists('iaas_virtual_machine_id', $data))
+            $data['iaas_virtual_machine_id'] = DatabaseHelper::uuidToId(
+                '\NextDeveloper\\Database\Models\IaasVirtualMachine',
+                $data['iaas_virtual_machine_id']
+            );
+	        
         try {
             $model = IamBackend::create($data);
         } catch(\Exception $e) {
@@ -108,7 +118,7 @@ class AbstractIamBackendService {
 
         event( new IamBackendCreatedEvent($model) );
 
-        return $model;
+        return $model->fresh();
     }
 
     /**
@@ -124,7 +134,18 @@ class AbstractIamBackendService {
     public static function update($id, array $data) {
         $model = IamBackend::where('uuid', $id)->first();
 
-        event( new IamBackendsUpdateingEvent($model) );
+                if (array_key_exists('iam_account_id', $data))
+            $data['iam_account_id'] = DatabaseHelper::uuidToId(
+                '\NextDeveloper\IAM\Database\Models\IamAccount',
+                $data['iam_account_id']
+            );
+	        if (array_key_exists('iaas_virtual_machine_id', $data))
+            $data['iaas_virtual_machine_id'] = DatabaseHelper::uuidToId(
+                '\NextDeveloper\\Database\Models\IaasVirtualMachine',
+                $data['iaas_virtual_machine_id']
+            );
+	
+        event( new IamBackendUpdatingEvent($model) );
 
         try {
            $model = $model->update($data);
@@ -132,9 +153,11 @@ class AbstractIamBackendService {
            throw $e;
         }
 
-        event( new IamBackendsUpdatedEvent($model) );
+        event( new IamBackendUpdatedEvent($model) );
+        
+        CacheHelper::deleteKeys('IamBackend', $id);
 
-        return $model;
+        return $model->fresh();
     }
 
     /**
@@ -150,7 +173,7 @@ class AbstractIamBackendService {
     public static function delete($id, array $data) {
         $model = IamBackend::where('uuid', $id)->first();
 
-        event( new IamBackendsDeletingEvent() );
+        event( new IamBackendDeletingEvent() );
 
         try {
             $model = $model->delete();
@@ -158,7 +181,9 @@ class AbstractIamBackendService {
             throw $e;
         }
 
-        event( new IamBackendsDeletedEvent($model) );
+        event( new IamBackendDeletedEvent($model) );
+        
+        CacheHelper::deleteKeys('IamBackend', $id);
 
         return $model;
     }

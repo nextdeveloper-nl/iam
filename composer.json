@@ -8,7 +8,8 @@
     "require": {
         "php": ">=8.2.0",
         "league/fractal": "*",
-        "monolog/monolog": "*"
+        "monolog/monolog": "*",
+        "beyondcode/laravel-websockets": "*"
     },
     "require-dev": {
         "illuminate/support": "5.5.*",

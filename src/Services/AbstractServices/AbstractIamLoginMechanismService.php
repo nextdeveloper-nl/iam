@@ -5,6 +5,10 @@ namespace NextDeveloper\IAM\Services\AbstractServices;
 use Illuminate\Http\Request;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
+use Illuminate\Support\Str;
+use NextDeveloper\IAM\Helpers\UserHelper;
+use NextDeveloper\Commons\Common\Cache\CacheHelper;
+use NextDeveloper\Commons\Helpers\DatabaseHelper;
 use NextDeveloper\IAM\Database\Models\IamLoginMechanism;
 use NextDeveloper\IAM\Database\Filters\IamLoginMechanismQueryFilter;
 
@@ -57,11 +61,6 @@ class AbstractIamLoginMechanismService {
             return $model->paginate($perPage);
         else
             return $model->get();
-
-        if(!$model && $enablePaginate)
-            return IamLoginMechanism::paginate($perPage);
-        else
-            return IamLoginMechanism::get();
     }
 
     public static function getAll() {
@@ -100,6 +99,12 @@ class AbstractIamLoginMechanismService {
     public static function create(array $data) {
         event( new IamLoginMechanismCreatingEvent() );
 
+                if (array_key_exists('iam_user_id', $data))
+            $data['iam_user_id'] = DatabaseHelper::uuidToId(
+                '\NextDeveloper\IAM\Database\Models\IamUser',
+                $data['iam_user_id']
+            );
+	        
         try {
             $model = IamLoginMechanism::create($data);
         } catch(\Exception $e) {
@@ -108,7 +113,7 @@ class AbstractIamLoginMechanismService {
 
         event( new IamLoginMechanismCreatedEvent($model) );
 
-        return $model;
+        return $model->fresh();
     }
 
     /**
@@ -124,7 +129,13 @@ class AbstractIamLoginMechanismService {
     public static function update($id, array $data) {
         $model = IamLoginMechanism::where('uuid', $id)->first();
 
-        event( new IamLoginMechanismsUpdateingEvent($model) );
+                if (array_key_exists('iam_user_id', $data))
+            $data['iam_user_id'] = DatabaseHelper::uuidToId(
+                '\NextDeveloper\IAM\Database\Models\IamUser',
+                $data['iam_user_id']
+            );
+	
+        event( new IamLoginMechanismUpdatingEvent($model) );
 
         try {
            $model = $model->update($data);
@@ -132,9 +143,11 @@ class AbstractIamLoginMechanismService {
            throw $e;
         }
 
-        event( new IamLoginMechanismsUpdatedEvent($model) );
+        event( new IamLoginMechanismUpdatedEvent($model) );
+        
+        CacheHelper::deleteKeys('IamLoginMechanism', $id);
 
-        return $model;
+        return $model->fresh();
     }
 
     /**
@@ -150,7 +163,7 @@ class AbstractIamLoginMechanismService {
     public static function delete($id, array $data) {
         $model = IamLoginMechanism::where('uuid', $id)->first();
 
-        event( new IamLoginMechanismsDeletingEvent() );
+        event( new IamLoginMechanismDeletingEvent() );
 
         try {
             $model = $model->delete();
@@ -158,7 +171,9 @@ class AbstractIamLoginMechanismService {
             throw $e;
         }
 
-        event( new IamLoginMechanismsDeletedEvent($model) );
+        event( new IamLoginMechanismDeletedEvent($model) );
+        
+        CacheHelper::deleteKeys('IamLoginMechanism', $id);
 
         return $model;
     }

@@ -9,7 +9,7 @@ use NextDeveloper\IAM\Helpers\UserHelper;
 
 class AnonymousRole extends AbstractRole implements IAuthorizationRole
 {
-    public const NAME = 'member';
+    public const NAME = 'anonymous';
 
     public const LEVEL = 255;
 

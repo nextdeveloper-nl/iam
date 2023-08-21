@@ -5,6 +5,10 @@ namespace NextDeveloper\IAM\Services\AbstractServices;
 use Illuminate\Http\Request;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
+use Illuminate\Support\Str;
+use NextDeveloper\IAM\Helpers\UserHelper;
+use NextDeveloper\Commons\Common\Cache\CacheHelper;
+use NextDeveloper\Commons\Helpers\DatabaseHelper;
 use NextDeveloper\IAM\Database\Models\IamUser;
 use NextDeveloper\IAM\Database\Filters\IamUserQueryFilter;
 
@@ -57,11 +61,6 @@ class AbstractIamUserService {
             return $model->paginate($perPage);
         else
             return $model->get();
-
-        if(!$model && $enablePaginate)
-            return IamUser::paginate($perPage);
-        else
-            return IamUser::get();
     }
 
     public static function getAll() {
@@ -100,6 +99,17 @@ class AbstractIamUserService {
     public static function create(array $data) {
         event( new IamUserCreatingEvent() );
 
+                if (array_key_exists('common_language_id', $data))
+            $data['common_language_id'] = DatabaseHelper::uuidToId(
+                '\NextDeveloper\Commons\Database\Models\CommonLanguage',
+                $data['common_language_id']
+            );
+	        if (array_key_exists('common_country_id', $data))
+            $data['common_country_id'] = DatabaseHelper::uuidToId(
+                '\NextDeveloper\Commons\Database\Models\CommonCountry',
+                $data['common_country_id']
+            );
+	        
         try {
             $model = IamUser::create($data);
         } catch(\Exception $e) {
@@ -108,7 +118,7 @@ class AbstractIamUserService {
 
         event( new IamUserCreatedEvent($model) );
 
-        return $model;
+        return $model->fresh();
     }
 
     /**
@@ -124,7 +134,18 @@ class AbstractIamUserService {
     public static function update($id, array $data) {
         $model = IamUser::where('uuid', $id)->first();
 
-        event( new IamUsersUpdateingEvent($model) );
+                if (array_key_exists('common_language_id', $data))
+            $data['common_language_id'] = DatabaseHelper::uuidToId(
+                '\NextDeveloper\Commons\Database\Models\CommonLanguage',
+                $data['common_language_id']
+            );
+	        if (array_key_exists('common_country_id', $data))
+            $data['common_country_id'] = DatabaseHelper::uuidToId(
+                '\NextDeveloper\Commons\Database\Models\CommonCountry',
+                $data['common_country_id']
+            );
+	
+        event( new IamUserUpdatingEvent($model) );
 
         try {
            $model = $model->update($data);
@@ -132,9 +153,11 @@ class AbstractIamUserService {
            throw $e;
         }
 
-        event( new IamUsersUpdatedEvent($model) );
+        event( new IamUserUpdatedEvent($model) );
+        
+        CacheHelper::deleteKeys('IamUser', $id);
 
-        return $model;
+        return $model->fresh();
     }
 
     /**
@@ -150,7 +173,7 @@ class AbstractIamUserService {
     public static function delete($id, array $data) {
         $model = IamUser::where('uuid', $id)->first();
 
-        event( new IamUsersDeletingEvent() );
+        event( new IamUserDeletingEvent() );
 
         try {
             $model = $model->delete();
@@ -158,7 +181,9 @@ class AbstractIamUserService {
             throw $e;
         }
 
-        event( new IamUsersDeletedEvent($model) );
+        event( new IamUserDeletedEvent($model) );
+        
+        CacheHelper::deleteKeys('IamUser', $id);
 
         return $model;
     }

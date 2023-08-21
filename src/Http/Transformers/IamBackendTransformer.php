@@ -2,15 +2,18 @@
 
 namespace NextDeveloper\IAM\Http\Transformers;
 
+use Illuminate\Support\Facades\Cache;
+use NextDeveloper\Commons\Common\Cache\CacheHelper;
 use NextDeveloper\IAM\Database\Models\IamBackend;
 use NextDeveloper\Commons\Http\Transformers\AbstractTransformer;
+use NextDeveloper\IAM\Http\Transformers\AbstractTransformers\AbstractIamBackendTransformer;
 
 /**
  * Class IamBackendTransformer. This class is being used to manipulate the data we are serving to the customer
  *
  * @package NextDeveloper\IAM\Http\Transformers
  */
-class IamBackendTransformer extends AbstractTransformer {
+class IamBackendTransformer extends AbstractIamBackendTransformer {
 
     /**
      * @param IamBackend $model
@@ -18,34 +21,20 @@ class IamBackendTransformer extends AbstractTransformer {
      * @return array
      */
     public function transform(IamBackend $model) {
-        return $this->buildPayload([
-            'id'  =>  $model->uuid,
-            'account_id'  =>  $model->account_id,
-            'virtual_machine_id'  =>  $model->virtual_machine_id,
-            'name'  =>  $model->name,
-            'type'  =>  $model->type,
-            'ldap_server_name'  =>  $model->ldap_server_name,
-            'ldap_server_url'  =>  $model->ldap_server_url,
-            'ldap_server_port'  =>  $model->ldap_server_port,
-            'ldap_base_dn'  =>  $model->ldap_base_dn,
-            'ldap_bind_username'  =>  $model->ldap_bind_username,
-            'ldap_bind_password'  =>  $model->ldap_bind_password,
-            'default_filter'  =>  $model->default_filter,
-            'default_memberof'  =>  $model->default_memberof,
-            'default_group'  =>  $model->default_group,
-            'default_userid_field'  =>  $model->default_userid_field,
-            'default_password_field'  =>  $model->default_password_field,
-            'default_email_field'  =>  $model->default_email_field,
-            'default_alias_field'  =>  $model->default_alias_field,
-            'default_first_name_field'  =>  $model->default_first_name_field,
-            'default_last_name_field'  =>  $model->default_last_name_field,
-            'is_connected'  =>  $model->is_connected,
-            'is_connection_secure'  =>  $model->is_connection_secure,
-            'is_usable'  =>  $model->is_usable,
-            'created_at'  =>  $model->created_at,
-            'updated_at'  =>  $model->updated_at,
-            'deleted_at'  =>  $model->deleted_at,
-        ]);
+        $transformed = Cache::get(
+            CacheHelper::getKey('IamBackend', $model->uuid, 'Transformed')
+        );
+
+        if($transformed)
+            return $transformed;
+
+        $transformed = parent::transform($model);
+
+        Cache::set(
+            CacheHelper::getKey('IamBackend', $model->uuid, 'Transformed'),
+            $transformed
+        );
+
+        return parent::transform($model);
     }
-    // EDIT AFTER HERE - WARNING: ABOVE THIS LINE MAY BE REGENERATED AND YOU MAY LOSE CODE
 }

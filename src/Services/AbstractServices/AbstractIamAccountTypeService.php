@@ -5,6 +5,10 @@ namespace NextDeveloper\IAM\Services\AbstractServices;
 use Illuminate\Http\Request;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
+use Illuminate\Support\Str;
+use NextDeveloper\IAM\Helpers\UserHelper;
+use NextDeveloper\Commons\Common\Cache\CacheHelper;
+use NextDeveloper\Commons\Helpers\DatabaseHelper;
 use NextDeveloper\IAM\Database\Models\IamAccountType;
 use NextDeveloper\IAM\Database\Filters\IamAccountTypeQueryFilter;
 
@@ -57,11 +61,6 @@ class AbstractIamAccountTypeService {
             return $model->paginate($perPage);
         else
             return $model->get();
-
-        if(!$model && $enablePaginate)
-            return IamAccountType::paginate($perPage);
-        else
-            return IamAccountType::get();
     }
 
     public static function getAll() {
@@ -100,6 +99,12 @@ class AbstractIamAccountTypeService {
     public static function create(array $data) {
         event( new IamAccountTypeCreatingEvent() );
 
+                if (array_key_exists('common_country_id', $data))
+            $data['common_country_id'] = DatabaseHelper::uuidToId(
+                '\NextDeveloper\Commons\Database\Models\CommonCountry',
+                $data['common_country_id']
+            );
+	        
         try {
             $model = IamAccountType::create($data);
         } catch(\Exception $e) {
@@ -108,7 +113,7 @@ class AbstractIamAccountTypeService {
 
         event( new IamAccountTypeCreatedEvent($model) );
 
-        return $model;
+        return $model->fresh();
     }
 
     /**
@@ -124,7 +129,13 @@ class AbstractIamAccountTypeService {
     public static function update($id, array $data) {
         $model = IamAccountType::where('uuid', $id)->first();
 
-        event( new IamAccountTypesUpdateingEvent($model) );
+                if (array_key_exists('common_country_id', $data))
+            $data['common_country_id'] = DatabaseHelper::uuidToId(
+                '\NextDeveloper\Commons\Database\Models\CommonCountry',
+                $data['common_country_id']
+            );
+	
+        event( new IamAccountTypeUpdatingEvent($model) );
 
         try {
            $model = $model->update($data);
@@ -132,9 +143,11 @@ class AbstractIamAccountTypeService {
            throw $e;
         }
 
-        event( new IamAccountTypesUpdatedEvent($model) );
+        event( new IamAccountTypeUpdatedEvent($model) );
+        
+        CacheHelper::deleteKeys('IamAccountType', $id);
 
-        return $model;
+        return $model->fresh();
     }
 
     /**
@@ -150,7 +163,7 @@ class AbstractIamAccountTypeService {
     public static function delete($id, array $data) {
         $model = IamAccountType::where('uuid', $id)->first();
 
-        event( new IamAccountTypesDeletingEvent() );
+        event( new IamAccountTypeDeletingEvent() );
 
         try {
             $model = $model->delete();
@@ -158,7 +171,9 @@ class AbstractIamAccountTypeService {
             throw $e;
         }
 
-        event( new IamAccountTypesDeletedEvent($model) );
+        event( new IamAccountTypeDeletedEvent($model) );
+        
+        CacheHelper::deleteKeys('IamAccountType', $id);
 
         return $model;
     }

@@ -5,6 +5,10 @@ namespace NextDeveloper\IAM\Services\AbstractServices;
 use Illuminate\Http\Request;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
+use Illuminate\Support\Str;
+use NextDeveloper\IAM\Helpers\UserHelper;
+use NextDeveloper\Commons\Common\Cache\CacheHelper;
+use NextDeveloper\Commons\Helpers\DatabaseHelper;
 use NextDeveloper\IAM\Database\Models\IamRoleUser;
 use NextDeveloper\IAM\Database\Filters\IamRoleUserQueryFilter;
 
@@ -57,11 +61,6 @@ class AbstractIamRoleUserService {
             return $model->paginate($perPage);
         else
             return $model->get();
-
-        if(!$model && $enablePaginate)
-            return IamRoleUser::paginate($perPage);
-        else
-            return IamRoleUser::get();
     }
 
     public static function getAll() {
@@ -100,6 +99,22 @@ class AbstractIamRoleUserService {
     public static function create(array $data) {
         event( new IamRoleUserCreatingEvent() );
 
+                if (array_key_exists('iam_role_id', $data))
+            $data['iam_role_id'] = DatabaseHelper::uuidToId(
+                '\NextDeveloper\IAM\Database\Models\IamRole',
+                $data['iam_role_id']
+            );
+	        if (array_key_exists('iam_user_id', $data))
+            $data['iam_user_id'] = DatabaseHelper::uuidToId(
+                '\NextDeveloper\IAM\Database\Models\IamUser',
+                $data['iam_user_id']
+            );
+	        if (array_key_exists('iam_account_id', $data))
+            $data['iam_account_id'] = DatabaseHelper::uuidToId(
+                '\NextDeveloper\IAM\Database\Models\IamAccount',
+                $data['iam_account_id']
+            );
+	        
         try {
             $model = IamRoleUser::create($data);
         } catch(\Exception $e) {
@@ -108,7 +123,7 @@ class AbstractIamRoleUserService {
 
         event( new IamRoleUserCreatedEvent($model) );
 
-        return $model;
+        return $model->fresh();
     }
 
     /**
@@ -124,7 +139,23 @@ class AbstractIamRoleUserService {
     public static function update($id, array $data) {
         $model = IamRoleUser::where('uuid', $id)->first();
 
-        event( new IamRoleUsersUpdateingEvent($model) );
+                if (array_key_exists('iam_role_id', $data))
+            $data['iam_role_id'] = DatabaseHelper::uuidToId(
+                '\NextDeveloper\IAM\Database\Models\IamRole',
+                $data['iam_role_id']
+            );
+	        if (array_key_exists('iam_user_id', $data))
+            $data['iam_user_id'] = DatabaseHelper::uuidToId(
+                '\NextDeveloper\IAM\Database\Models\IamUser',
+                $data['iam_user_id']
+            );
+	        if (array_key_exists('iam_account_id', $data))
+            $data['iam_account_id'] = DatabaseHelper::uuidToId(
+                '\NextDeveloper\IAM\Database\Models\IamAccount',
+                $data['iam_account_id']
+            );
+	
+        event( new IamRoleUserUpdatingEvent($model) );
 
         try {
            $model = $model->update($data);
@@ -132,9 +163,11 @@ class AbstractIamRoleUserService {
            throw $e;
         }
 
-        event( new IamRoleUsersUpdatedEvent($model) );
+        event( new IamRoleUserUpdatedEvent($model) );
+        
+        CacheHelper::deleteKeys('IamRoleUser', $id);
 
-        return $model;
+        return $model->fresh();
     }
 
     /**
@@ -150,7 +183,7 @@ class AbstractIamRoleUserService {
     public static function delete($id, array $data) {
         $model = IamRoleUser::where('uuid', $id)->first();
 
-        event( new IamRoleUsersDeletingEvent() );
+        event( new IamRoleUserDeletingEvent() );
 
         try {
             $model = $model->delete();
@@ -158,7 +191,9 @@ class AbstractIamRoleUserService {
             throw $e;
         }
 
-        event( new IamRoleUsersDeletedEvent($model) );
+        event( new IamRoleUserDeletedEvent($model) );
+        
+        CacheHelper::deleteKeys('IamRoleUser', $id);
 
         return $model;
     }

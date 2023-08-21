@@ -2,15 +2,18 @@
 
 namespace NextDeveloper\IAM\Http\Transformers;
 
+use Illuminate\Support\Facades\Cache;
+use NextDeveloper\Commons\Common\Cache\CacheHelper;
 use NextDeveloper\IAM\Database\Models\IamPermission;
 use NextDeveloper\Commons\Http\Transformers\AbstractTransformer;
+use NextDeveloper\IAM\Http\Transformers\AbstractTransformers\AbstractIamPermissionTransformer;
 
 /**
  * Class IamPermissionTransformer. This class is being used to manipulate the data we are serving to the customer
  *
  * @package NextDeveloper\IAM\Http\Transformers
  */
-class IamPermissionTransformer extends AbstractTransformer {
+class IamPermissionTransformer extends AbstractIamPermissionTransformer {
 
     /**
      * @param IamPermission $model
@@ -18,18 +21,20 @@ class IamPermissionTransformer extends AbstractTransformer {
      * @return array
      */
     public function transform(IamPermission $model) {
-        return $this->buildPayload([
-            'id'  =>  $model->uuid,
-            'namespace'  =>  $model->namespace,
-            'service'  =>  $model->service,
-            'method'  =>  $model->method,
-            'name'  =>  $model->name,
-            'is_active'  =>  $model->is_active == 1 ? true : false,
-            'created_by'  =>  $model->created_by,
-            'updated_by'  =>  $model->updated_by,
-            'created_at'  =>  $model->created_at,
-            'updated_at'  =>  $model->updated_at,
-        ]);
+        $transformed = Cache::get(
+            CacheHelper::getKey('IamPermission', $model->uuid, 'Transformed')
+        );
+
+        if($transformed)
+            return $transformed;
+
+        $transformed = parent::transform($model);
+
+        Cache::set(
+            CacheHelper::getKey('IamPermission', $model->uuid, 'Transformed'),
+            $transformed
+        );
+
+        return parent::transform($model);
     }
-    // EDIT AFTER HERE - WARNING: ABOVE THIS LINE MAY BE REGENERATED AND YOU MAY LOSE CODE
 }

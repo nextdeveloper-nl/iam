@@ -97,23 +97,23 @@ class IamUserQueryFilter extends AbstractQueryFilter
         return $this->builder->where( 'deleted_at', '<=', $date );
     }
 
-    public function languageId($value)
+    public function commonLanguageId($value)
     {
-        $language = Language::where('uuid', $value)->first();
+        $commonLanguage = CommonLanguage::where('uuid', $value)->first();
 
-        if($language) {
-            return $this->builder->where('language_id', '=', $language->id);
+        if($commonLanguage) {
+            return $this->builder->where('common_language_id', '=', $commonLanguage->id);
         }
     }
 
-    public function countryId($value)
+    public function commonCountryId($value)
     {
-        $country = Country::where('uuid', $value)->first();
+        $commonCountry = CommonCountry::where('uuid', $value)->first();
 
-        if($country) {
-            return $this->builder->where('country_id', '=', $country->id);
+        if($commonCountry) {
+            return $this->builder->where('common_country_id', '=', $commonCountry->id);
         }
     }
 
-    // EDIT AFTER HERE - WARNING: ABOVE THIS LINE MAY BE REGENERATED AND YOU MAY LOSE CODE
+    // EDIT AFTER HERE - WARNING: ABOVE THIS LINE MAY BE REGENERATED AND YOU MAY LOSE CODE\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n
 }

@@ -3,6 +3,7 @@
 namespace NextDeveloper\IAM\Http\Controllers\IamAccount;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use NextDeveloper\Generator\Common\AbstractController;
 use NextDeveloper\Generator\Http\Traits\ResponsableFactory;
 use NextDeveloper\IAM\Http\Requests\IamAccount\IamAccountUpdateRequest;

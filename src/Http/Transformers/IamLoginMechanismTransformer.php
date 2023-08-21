@@ -2,15 +2,18 @@
 
 namespace NextDeveloper\IAM\Http\Transformers;
 
+use Illuminate\Support\Facades\Cache;
+use NextDeveloper\Commons\Common\Cache\CacheHelper;
 use NextDeveloper\IAM\Database\Models\IamLoginMechanism;
 use NextDeveloper\Commons\Http\Transformers\AbstractTransformer;
+use NextDeveloper\IAM\Http\Transformers\AbstractTransformers\AbstractIamLoginMechanismTransformer;
 
 /**
  * Class IamLoginMechanismTransformer. This class is being used to manipulate the data we are serving to the customer
  *
  * @package NextDeveloper\IAM\Http\Transformers
  */
-class IamLoginMechanismTransformer extends AbstractTransformer {
+class IamLoginMechanismTransformer extends AbstractIamLoginMechanismTransformer {
 
     /**
      * @param IamLoginMechanism $model
@@ -18,19 +21,20 @@ class IamLoginMechanismTransformer extends AbstractTransformer {
      * @return array
      */
     public function transform(IamLoginMechanism $model) {
-        return $this->buildPayload([
-            'id'  =>  $model->uuid,
-            'user_id'  =>  $model->user_id,
-            'login_client'  =>  $model->login_client,
-            'login_data'  =>  $model->login_data,
-            'login_mechanism'  =>  $model->login_mechanism,
-            'is_latest'  =>  $model->is_latest == 1 ? true : false,
-            'is_default'  =>  $model->is_default == 1 ? true : false,
-            'is_active'  =>  $model->is_active == 1 ? true : false,
-            'created_at'  =>  $model->created_at,
-            'updated_at'  =>  $model->updated_at,
-            'deleted_at'  =>  $model->deleted_at,
-        ]);
+        $transformed = Cache::get(
+            CacheHelper::getKey('IamLoginMechanism', $model->uuid, 'Transformed')
+        );
+
+        if($transformed)
+            return $transformed;
+
+        $transformed = parent::transform($model);
+
+        Cache::set(
+            CacheHelper::getKey('IamLoginMechanism', $model->uuid, 'Transformed'),
+            $transformed
+        );
+
+        return parent::transform($model);
     }
-    // EDIT AFTER HERE - WARNING: ABOVE THIS LINE MAY BE REGENERATED AND YOU MAY LOSE CODE
 }

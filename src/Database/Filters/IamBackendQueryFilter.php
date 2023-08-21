@@ -142,23 +142,23 @@ class IamBackendQueryFilter extends AbstractQueryFilter
         return $this->builder->where( 'deleted_at', '<=', $date );
     }
 
-    public function accountId($value)
+    public function iamAccountId($value)
     {
-        $account = Account::where('uuid', $value)->first();
+        $iamAccount = IamAccount::where('uuid', $value)->first();
 
-        if($account) {
-            return $this->builder->where('account_id', '=', $account->id);
+        if($iamAccount) {
+            return $this->builder->where('iam_account_id', '=', $iamAccount->id);
         }
     }
 
-    public function virtualMachineId($value)
+    public function iaasVirtualMachineId($value)
     {
-        $virtualMachine = VirtualMachine::where('uuid', $value)->first();
+        $iaasVirtualMachine = IaasVirtualMachine::where('uuid', $value)->first();
 
-        if($virtualMachine) {
-            return $this->builder->where('virtual_machine_id', '=', $virtualMachine->id);
+        if($iaasVirtualMachine) {
+            return $this->builder->where('iaas_virtual_machine_id', '=', $iaasVirtualMachine->id);
         }
     }
 
-    // EDIT AFTER HERE - WARNING: ABOVE THIS LINE MAY BE REGENERATED AND YOU MAY LOSE CODE
+    // EDIT AFTER HERE - WARNING: ABOVE THIS LINE MAY BE REGENERATED AND YOU MAY LOSE CODE\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n
 }

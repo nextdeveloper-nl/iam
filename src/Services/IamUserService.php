@@ -4,6 +4,7 @@ namespace NextDeveloper\IAM\Services;
 
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Support\Facades\App;
 use NextDeveloper\Commons\Database\Models\CommonLanguage;
 use NextDeveloper\IAM\Authorization\Roles\IAuthorizationRole;
 use NextDeveloper\IAM\Database\Filters\IamUserQueryFilter;
@@ -32,8 +33,8 @@ class IamUserService extends AbstractIamUserService {
         }
 
         $users = IamUser::filter($filter)
-            ->join('iam_account_user', 'iam_users.id', '=', 'iam_account_user.user_id')
-            ->where('account_id', UserHelper::currentAccount()->id)
+            ->join('iam_account_user', 'iam_users.id', '=', 'iam_account_user.iam_user_id')
+            ->where('iam_account_id', UserHelper::currentAccount()->id)
             ->get();
 
         return $users;

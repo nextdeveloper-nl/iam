@@ -5,6 +5,10 @@ namespace NextDeveloper\IAM\Services\AbstractServices;
 use Illuminate\Http\Request;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
+use Illuminate\Support\Str;
+use NextDeveloper\IAM\Helpers\UserHelper;
+use NextDeveloper\Commons\Common\Cache\CacheHelper;
+use NextDeveloper\Commons\Helpers\DatabaseHelper;
 use NextDeveloper\IAM\Database\Models\IamLoginLog;
 use NextDeveloper\IAM\Database\Filters\IamLoginLogQueryFilter;
 
@@ -57,11 +61,6 @@ class AbstractIamLoginLogService {
             return $model->paginate($perPage);
         else
             return $model->get();
-
-        if(!$model && $enablePaginate)
-            return IamLoginLog::paginate($perPage);
-        else
-            return IamLoginLog::get();
     }
 
     public static function getAll() {
@@ -100,6 +99,12 @@ class AbstractIamLoginLogService {
     public static function create(array $data) {
         event( new IamLoginLogCreatingEvent() );
 
+                if (array_key_exists('iam_user_id', $data))
+            $data['iam_user_id'] = DatabaseHelper::uuidToId(
+                '\NextDeveloper\IAM\Database\Models\IamUser',
+                $data['iam_user_id']
+            );
+	        
         try {
             $model = IamLoginLog::create($data);
         } catch(\Exception $e) {
@@ -108,7 +113,7 @@ class AbstractIamLoginLogService {
 
         event( new IamLoginLogCreatedEvent($model) );
 
-        return $model;
+        return $model->fresh();
     }
 
     /**
@@ -124,7 +129,13 @@ class AbstractIamLoginLogService {
     public static function update($id, array $data) {
         $model = IamLoginLog::where('uuid', $id)->first();
 
-        event( new IamLoginLogsUpdateingEvent($model) );
+                if (array_key_exists('iam_user_id', $data))
+            $data['iam_user_id'] = DatabaseHelper::uuidToId(
+                '\NextDeveloper\IAM\Database\Models\IamUser',
+                $data['iam_user_id']
+            );
+	
+        event( new IamLoginLogUpdatingEvent($model) );
 
         try {
            $model = $model->update($data);
@@ -132,9 +143,11 @@ class AbstractIamLoginLogService {
            throw $e;
         }
 
-        event( new IamLoginLogsUpdatedEvent($model) );
+        event( new IamLoginLogUpdatedEvent($model) );
+        
+        CacheHelper::deleteKeys('IamLoginLog', $id);
 
-        return $model;
+        return $model->fresh();
     }
 
     /**
@@ -150,7 +163,7 @@ class AbstractIamLoginLogService {
     public static function delete($id, array $data) {
         $model = IamLoginLog::where('uuid', $id)->first();
 
-        event( new IamLoginLogsDeletingEvent() );
+        event( new IamLoginLogDeletingEvent() );
 
         try {
             $model = $model->delete();
@@ -158,7 +171,9 @@ class AbstractIamLoginLogService {
             throw $e;
         }
 
-        event( new IamLoginLogsDeletedEvent($model) );
+        event( new IamLoginLogDeletedEvent($model) );
+        
+        CacheHelper::deleteKeys('IamLoginLog', $id);
 
         return $model;
     }

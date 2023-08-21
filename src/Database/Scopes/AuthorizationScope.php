@@ -15,11 +15,6 @@ use NextDeveloper\IAM\Services\IamRoleService;
 class AuthorizationScope implements Scope
 {
     /**
-     * @var IamUser
-     */
-    private IamUser $_user;
-
-    /**
      * This function applies the role of the related user.
      *
      * @param Builder $builder
@@ -33,30 +28,39 @@ class AuthorizationScope implements Scope
         //  user information from the service.
         if(
             $model->getTable() == 'iam_users' ||
-            $model->getTable() == 'iam_accounts'
-        )
+            $model->getTable() == 'iam_roles' ||
+            $model->getTable() == 'iam_role_user'
+        ) {
+            Log::debug('[AuthorizationScope] Bypassing IamUsers model.');
             return;
+        }
 
-        Log::debug('[AuthorizationScope@apply] Model: ' . $model->getTable() );
+        Log::debug('[AuthorizationScope] Model: ' . $model->getTable() );
 
         //  This scope works for automated filtering of model requests. By using this global scope we have the
         //  capability to inject sql to the model. This way we dont need to deal with the security, most of the time.
         if($this->isBypass(request(), config('iam.auth_bypass_uris'))){
-            Log::debug('[AuthorizationScope@apply] Bypassing because URI is: ' . request()->getRequestUri());
+            Log::debug('[AuthorizationScope] Bypassing because URI is: ' . request()->getRequestUri());
             return;
         }
 
-        $this->_user = UserHelper::me();
+        Log::debug('[AuthorizationScope] Is user object available: ' . (UserHelper::me() == null));
 
-        Log::debug('[AuthorizationScope@apply] Is user object available: ' . is_null($this->_user));
-
-        if(!$this->_user) {
+        if(UserHelper::currentRole() == null) {
+            Log::debug('[AuthorizationScope] My user doesnt have a role :( thats why I am applying anonymous role.');
             $this->applyAnonymous($builder, $model);
         }
 
         $this->applyDefault($builder, $model);
     }
 
+    /**
+     *
+     *
+     * @param Request $request
+     * @param $uris
+     * @return bool
+     */
     private function isBypass(Request $request, $uris) {
         foreach ($uris as $uri) {
             if($uri == $request->getRequestUri())
@@ -67,7 +71,7 @@ class AuthorizationScope implements Scope
     }
 
     private function applyAnonymous(Builder $builder, Model $model) {
-        Log::debug('[AuthorizationScope@apply] Applying anonymous for this request:
+        Log::debug('[AuthorizationScope] Applying anonymous for this request:
         ' . request()->getRequestUri());
 
         $scope = new AnonymousRole();
@@ -76,11 +80,13 @@ class AuthorizationScope implements Scope
     }
 
     private function applyDefault(Builder $builder, Model $model) {
+        Log::debug('[AuthorizationScope] applying default role to model: ' . $model->getTable());
+
         $account = UserHelper::currentAccount();
         //  We are getting the highest level role of user.
-        $role = IamRoleService::getUserRole($this->_user, $account);
+        $role = IamRoleService::getUserRole(UserHelper::me(), $account);
 
-        Log::debug('[AuthorizationScope@apply] Applying role: ' . $role->class);
+        Log::debug('[AuthorizationScope] Applying role: ' . $role->class);
 
         $scope = app($role->class);
 

@@ -2,7 +2,10 @@
 
 namespace NextDeveloper\IAM\Services;
 
+use Illuminate\Support\Facades\Cache;
+use NextDeveloper\Commons\Common\Cache\CacheHelper;
 use NextDeveloper\IAM\Authorization\Roles\IAuthorizationRole;
+use NextDeveloper\IAM\Authorization\Roles\MemberRole;
 use NextDeveloper\IAM\Database\Models\IamAccount;
 use NextDeveloper\IAM\Database\Models\IamRole;
 use NextDeveloper\IAM\Database\Models\IamRoleUser;
@@ -76,14 +79,14 @@ class IamRoleService extends AbstractIamRoleService {
         }
 
         //  Getting the roles of user
-        $role = IamRoleUser::where('user_id', $user->id)
-            ->where('role_id', $role->id);
+        $role = IamRoleUser::where('iam_user_id', $user->id)
+            ->where('iam_role_id', $role->id);
 
         if($account) {
-            $role = $role->where('account_id', $account->id);
+            $role = $role->where('iam_account_id', $account->id);
         } else {
             $account = UserHelper::masterAccount($user);
-            $role = $role->where('account_id', $account->id);
+            $role = $role->where('iam_account_id', $account->id);
         }
 
         $role = $role->first();
@@ -95,9 +98,9 @@ class IamRoleService extends AbstractIamRoleService {
         }
 
         IamRoleUser::create([
-            'user_id'       =>  $user->id,
-            'account_id'    =>  $account->id,
-            'role_id'       =>  $role->id
+            'iam_user_id'       =>  $user->id,
+            'iam_account_id'    =>  $account->id,
+            'iam_role_id'       =>  $role->id
         ]);
         
         return true;
@@ -105,8 +108,16 @@ class IamRoleService extends AbstractIamRoleService {
 
     public static function getUserRole(IamUser $user, IamAccount $account) : IamRole
     {
+        $role = Cache::get(
+            CacheHelper::getKey('IamUser', $user->uuid, 'CurrentRole')
+        );
+
+        if($role) {
+            return $role;
+        }
+
         $role = $user->iamRole()
-            ->wherePivot('account_id', $account->id)
+            ->wherePivot('iam_account_id', $account->id)
             ->where('is_active', 1)
             ->orderBy('level', 'asc')
             ->first();
@@ -120,6 +131,11 @@ class IamRoleService extends AbstractIamRoleService {
             return self::getUserRole($user, $account);
         }
 
+        Cache::set(
+            CacheHelper::getKey('IamUser', $user->uuid, 'CurrentRole'),
+            $role
+        );
+
         return $role;
     }
 
@@ -132,24 +148,24 @@ class IamRoleService extends AbstractIamRoleService {
     public static function setRoleAsActive(IamRoleUser $roleUser) : IamRoleUser
     {
         //  Mark all other roles as not active
-        $roles = IamRoleUser::where('user_id', $roleUser->user_id)
-            ->where('account_id', $roleUser->account_id)
+        $roles = IamRoleUser::where('iam_user_id', $roleUser->iam_user_id)
+            ->where('iam_account_id', $roleUser->iam_account_id)
             ->update([
                 'is_active' =>  0
             ]);
 
         //  Update the requested role as active
-        IamRoleUser::where('user_id', $roleUser->user_id)
-            ->where('account_id', $roleUser->account_id)
-            ->where('role_id', $roleUser->role_id)
+        IamRoleUser::where('iam_user_id', $roleUser->iam_user_id)
+            ->where('iam_account_id', $roleUser->iam_account_id)
+            ->where('iam_role_id', $roleUser->iam_role_id)
             ->update([
                 'is_active' =>  1
             ]);
 
         //  Get the relation again
-        $roleUser = IamRoleUser::where('user_id', $roleUser->user_id)
-            ->where('account_id', $roleUser->account_id)
-            ->where('role_id', $roleUser->role_id)
+        $roleUser = IamRoleUser::where('iam_user_id', $roleUser->iam_user_id)
+            ->where('iam_account_id', $roleUser->iam_account_id)
+            ->where('iam_role_id', $roleUser->iam_role_id)
             ->first();
 
         return $roleUser;
@@ -160,24 +176,24 @@ class IamRoleService extends AbstractIamRoleService {
         $role = IamRole::where('uuid', $iamRoleId)->first();
 
         //  Mark all other roles as not active
-        $roles = IamRoleUser::where('user_id', $user->id)
-            ->where('account_id', $account->id)
+        $roles = IamRoleUser::where('iam_user_id', $user->id)
+            ->where('iam_account_id', $account->id)
             ->update([
                 'is_active' =>  0
             ]);
 
         //  Update the requested role as active
-        $roles = IamRoleUser::where('user_id', $user->id)
-            ->where('account_id', $account->id)
-            ->where('role_id', $role->id)
+        $roles = IamRoleUser::where('iam_user_id', $user->id)
+            ->where('iam_account_id', $account->id)
+            ->where('iam_role_id', $role->id)
             ->update([
                 'is_active' =>  1
             ]);
 
         //  Get the relation again
-        $roles = IamRoleUser::where('user_id', $user->id)
-            ->where('account_id', $account->id)
-            ->where('role_id', $role->id)
+        $roles = IamRoleUser::where('iam_user_id', $user->id)
+            ->where('iam_account_id', $account->id)
+            ->where('iam_role_id', $role->id)
             ->first();
 
         return $roles;

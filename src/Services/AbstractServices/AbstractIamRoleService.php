@@ -5,6 +5,10 @@ namespace NextDeveloper\IAM\Services\AbstractServices;
 use Illuminate\Http\Request;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
+use Illuminate\Support\Str;
+use NextDeveloper\IAM\Helpers\UserHelper;
+use NextDeveloper\Commons\Common\Cache\CacheHelper;
+use NextDeveloper\Commons\Helpers\DatabaseHelper;
 use NextDeveloper\IAM\Database\Models\IamRole;
 use NextDeveloper\IAM\Database\Filters\IamRoleQueryFilter;
 
@@ -57,11 +61,6 @@ class AbstractIamRoleService {
             return $model->paginate($perPage);
         else
             return $model->get();
-
-        if(!$model && $enablePaginate)
-            return IamRole::paginate($perPage);
-        else
-            return IamRole::get();
     }
 
     public static function getAll() {
@@ -100,6 +99,7 @@ class AbstractIamRoleService {
     public static function create(array $data) {
         event( new IamRoleCreatingEvent() );
 
+                
         try {
             $model = IamRole::create($data);
         } catch(\Exception $e) {
@@ -108,7 +108,7 @@ class AbstractIamRoleService {
 
         event( new IamRoleCreatedEvent($model) );
 
-        return $model;
+        return $model->fresh();
     }
 
     /**
@@ -124,7 +124,8 @@ class AbstractIamRoleService {
     public static function update($id, array $data) {
         $model = IamRole::where('uuid', $id)->first();
 
-        event( new IamRolesUpdateingEvent($model) );
+        
+        event( new IamRoleUpdatingEvent($model) );
 
         try {
            $model = $model->update($data);
@@ -132,9 +133,11 @@ class AbstractIamRoleService {
            throw $e;
         }
 
-        event( new IamRolesUpdatedEvent($model) );
+        event( new IamRoleUpdatedEvent($model) );
+        
+        CacheHelper::deleteKeys('IamRole', $id);
 
-        return $model;
+        return $model->fresh();
     }
 
     /**
@@ -150,7 +153,7 @@ class AbstractIamRoleService {
     public static function delete($id, array $data) {
         $model = IamRole::where('uuid', $id)->first();
 
-        event( new IamRolesDeletingEvent() );
+        event( new IamRoleDeletingEvent() );
 
         try {
             $model = $model->delete();
@@ -158,7 +161,9 @@ class AbstractIamRoleService {
             throw $e;
         }
 
-        event( new IamRolesDeletedEvent($model) );
+        event( new IamRoleDeletedEvent($model) );
+        
+        CacheHelper::deleteKeys('IamRole', $id);
 
         return $model;
     }

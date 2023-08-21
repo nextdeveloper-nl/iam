@@ -4,7 +4,8 @@ namespace NextDeveloper\IAM\Database\Filters;
 
 use Illuminate\Database\Eloquent\Builder;
 use NextDeveloper\Commons\Database\Filters\AbstractQueryFilter;
-                    
+use NextDeveloper\Accounts\Database\Models\User;
+        
 
 /**
  * This class automatically puts where clause on database so that use can filter
@@ -62,50 +63,41 @@ class IamAccountQueryFilter extends AbstractQueryFilter
         return $this->builder->where( 'deleted_at', '<=', $date );
     }
 
-    public function domainId($value)
+    public function commonDomainId($value)
     {
-        $domain = Domain::where('uuid', $value)->first();
+        $commonDomain = CommonDomain::where('uuid', $value)->first();
 
-        if($domain) {
-            return $this->builder->where('domain_id', '=', $domain->id);
+        if($commonDomain) {
+            return $this->builder->where('common_domain_id', '=', $commonDomain->id);
         }
     }
 
-    public function countryId($value)
+    public function commonCountryId($value)
     {
-        $country = Country::where('uuid', $value)->first();
+        $commonCountry = CommonCountry::where('uuid', $value)->first();
 
-        if($country) {
-            return $this->builder->where('country_id', '=', $country->id);
+        if($commonCountry) {
+            return $this->builder->where('common_country_id', '=', $commonCountry->id);
         }
     }
 
-    public function currencyId($value)
+    public function iamUserId($value)
     {
-        $currency = Currency::where('uuid', $value)->first();
+        $iamUser = IamUser::where('uuid', $value)->first();
 
-        if($currency) {
-            return $this->builder->where('currency_id', '=', $currency->id);
+        if($iamUser) {
+            return $this->builder->where('iam_user_id', '=', $iamUser->id);
         }
     }
 
-    public function ownerId($value)
+    public function iamAccountTypeId($value)
     {
-        $owner = Owner::where('uuid', $value)->first();
+        $iamAccountType = IamAccountType::where('uuid', $value)->first();
 
-        if($owner) {
-            return $this->builder->where('owner_id', '=', $owner->id);
+        if($iamAccountType) {
+            return $this->builder->where('iam_account_type_id', '=', $iamAccountType->id);
         }
     }
 
-    public function accountTypeId($value)
-    {
-        $accountType = AccountType::where('uuid', $value)->first();
-
-        if($accountType) {
-            return $this->builder->where('account_type_id', '=', $accountType->id);
-        }
-    }
-
-    // EDIT AFTER HERE - WARNING: ABOVE THIS LINE MAY BE REGENERATED AND YOU MAY LOSE CODE
+    // EDIT AFTER HERE - WARNING: ABOVE THIS LINE MAY BE REGENERATED AND YOU MAY LOSE CODE\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n
 }

@@ -12,15 +12,14 @@ class IamAccountUpdateRequest extends AbstractFormRequest
      */
     public function rules() {
         return [
-            'name'            => 'nullable|string|max:500',
-			'domain_id'       => 'nullable|exists:domains,uuid|uuid',
-			'country_id'      => 'nullable|exists:countries,uuid|uuid',
-			'currency_id'     => 'nullable|exists:currencies,uuid|uuid',
-			'phone_number'    => 'nullable|string|max:20',
-			'description'     => 'nullable|string|max:500',
-			'owner_id'        => 'nullable|exists:owners,uuid|uuid',
-			'account_type_id' => 'exists:account_types,uuid|uuid',
+            'name'                => 'nullable|string|max:500',
+			'common_domain_id'    => 'nullable|exists:common_domains,uuid|uuid',
+			'common_country_id'   => 'nullable|exists:common_countries,uuid|uuid',
+			'phone_number'        => 'nullable|string|max:20',
+			'description'         => 'nullable|string|max:500',
+			'iam_user_id'         => 'nullable|exists:iam_users,uuid|uuid',
+			'iam_account_type_id' => 'exists:iam_account_types,uuid|uuid',
         ];
     }
-    // EDIT AFTER HERE - WARNING: ABOVE THIS LINE MAY BE REGENERATED AND YOU MAY LOSE CODE
+    // EDIT AFTER HERE - WARNING: ABOVE THIS LINE MAY BE REGENERATED AND YOU MAY LOSE CODE\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n
 }

@@ -3,73 +3,121 @@
 namespace NextDeveloper\IAM\Database\Models;
 
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\Model;
 use NextDeveloper\Commons\Database\Traits\Filterable;
-use NextDeveloper\IAM\Database\Observers\IamUserObserver;
+use NextDeveloper\IAM\Database\Observers\IamUserRoleOverviewObserver;
 use NextDeveloper\Commons\Database\Traits\UuidId;
 
 /**
- * Class IamUser.
- *
- * @package NextDeveloper\IAM\Database\Models
- */
+* Class IamUserRoleOverview.
+*
+* @package NextDeveloper\IAM\Database\Models
+*/
 class IamUserRoleOverview extends Model
 {
-    use Filterable, UuidId;
-    use SoftDeletes;
+use Filterable, UuidId;
+	use SoftDeletes;
 
-    public $timestamps = true;
 
-    protected $table = 'iam_user_role_overview';
+	public $timestamps = true;
 
-    /**
-     * We are casting data fields.
-     * @var array
-     */
-    protected $dates = [
-        'created_at',
-        'updated_at',
-        'deleted_at',
-    ];
+protected $table = 'iam_user_role_overview';
 
-    /**
-     * @var int
-     */
-    protected $perPage = 20;
 
-    /**
-     * @return void
-     */
-    public static function boot()
-    {
-        parent::boot();
+/**
+* @var array
+*/
+protected $guarded = [];
+
+/**
+*  Here we have the fulltext fields. We can use these for fulltext search if enabled.
+*/
+protected $fullTextFields = [
+
+];
+
+/**
+* @var array
+*/
+protected $appends = [
+
+];
+
+/**
+* We are casting fields to objects so that we can work on them better
+* @var array
+*/
+protected $casts = [
+'id'             => 'integer',
+		'uuid'           => 'string',
+		'name'           => 'string',
+		'class'          => 'string',
+		'level'          => 'boolean',
+		'description'    => 'string',
+		'created_at'     => 'datetime',
+		'updated_at'     => 'datetime',
+		'deleted_at'     => 'datetime',
+		'iam_role_id'    => 'integer',
+		'iam_user_id'    => 'integer',
+		'iam_account_id' => 'integer',
+		'is_active'      => 'boolean',
+];
+
+/**
+* We are casting data fields.
+* @var array
+*/
+protected $dates = [
+'created_at',
+		'updated_at',
+		'deleted_at',
+];
+
+/**
+* @var array
+*/
+protected $with = [
+
+];
+
+/**
+* @var int
+*/
+protected $perPage = 20;
+
+/**
+* @return void
+*/
+public static function boot()
+{
+parent::boot();
 
 //  We create and add Observer even if we wont use it.
-        parent::observe(IamUserObserver::class);
+parent::observe(IamUserRoleOverviewObserver::class);
 
-        self::registerScopes();
-    }
+self::registerScopes();
+}
 
-    /**
-     * @return void
-     */
-    public static function registerScopes()
-    {
-        $globalScopes = config('iam.scopes.global');
-        $modelScopes = config('iam.scopes.iam_users');
+public static function registerScopes()
+{
+$globalScopes = config('iam.scopes.global');
+$modelScopes = config('iam.scopes.iam_user_role_overview');
 
-        if (!$modelScopes) $modelScopes = [];
-        if (!$globalScopes) $globalScopes = [];
+if(!$modelScopes) $modelScopes = [];
+if (!$globalScopes) $globalScopes = [];
 
-        $scopes = array_merge(
-            $globalScopes,
-            $modelScopes
-        );
+$scopes = array_merge(
+$globalScopes,
+$modelScopes
+);
 
-        if ($scopes) {
-            foreach ($scopes as $scope) {
-                static::addGlobalScope(app($scope));
-            }
-        }
-    }
+if($scopes) {
+foreach ($scopes as $scope) {
+static::addGlobalScope(app($scope));
+}
+}
+}
+
+// EDIT AFTER HERE - WARNING: ABOVE THIS LINE MAY BE REGENERATED AND YOU MAY LOSE CODE\n\n\n\n\n\n
 }

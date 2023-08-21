@@ -27,5 +27,6 @@ return [
     //  These are the URI's to be bypassed without asking for any Authorization Scope
     'auth_bypass_uris'  =>  [
         '/iam/authenticate/oauth/token'
-    ]
+    ],
+    ''
 ];

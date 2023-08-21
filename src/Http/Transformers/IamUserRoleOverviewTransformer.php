@@ -2,28 +2,39 @@
 
 namespace NextDeveloper\IAM\Http\Transformers;
 
-use NextDeveloper\IAM\Database\Models\IamRoleUser;
-use NextDeveloper\Commons\Http\Transformers\AbstractTransformer;
+use Illuminate\Support\Facades\Cache;
+use NextDeveloper\Commons\Common\Cache\CacheHelper;
 use NextDeveloper\IAM\Database\Models\IamUserRoleOverview;
+use NextDeveloper\Commons\Http\Transformers\AbstractTransformer;
+use NextDeveloper\IAM\Http\Transformers\AbstractTransformers\AbstractIamUserRoleOverviewTransformer;
 
 /**
- * Class IamRoleUserTransformer. This class is being used to manipulate the data we are serving to the customer
+ * Class IamUserRoleOverviewTransformer. This class is being used to manipulate the data we are serving to the customer
  *
  * @package NextDeveloper\IAM\Http\Transformers
  */
-class IamUserRoleOverviewTransformer extends AbstractTransformer {
+class IamUserRoleOverviewTransformer extends AbstractIamUserRoleOverviewTransformer {
 
     /**
-     * @param IamRoleUser $model
+     * @param IamUserRoleOverview $model
      *
      * @return array
      */
     public function transform(IamUserRoleOverview $model) {
-        return $this->buildPayload([
-            'id'  =>  $model->uuid,
-            'name'  =>  $model->name,
-            'is_active'  =>  $model->is_active
-        ]);
+        $transformed = Cache::get(
+            CacheHelper::getKey('IamUserRoleOverview', $model->uuid, 'Transformed')
+        );
+
+        if($transformed)
+            return $transformed;
+
+        $transformed = parent::transform($model);
+
+        Cache::set(
+            CacheHelper::getKey('IamUserRoleOverview', $model->uuid, 'Transformed'),
+            $transformed
+        );
+
+        return parent::transform($model);
     }
-    // EDIT AFTER HERE - WARNING: ABOVE THIS LINE MAY BE REGENERATED AND YOU MAY LOSE CODE
 }

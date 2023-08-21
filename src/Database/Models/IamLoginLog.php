@@ -9,107 +9,107 @@ use NextDeveloper\IAM\Database\Observers\IamLoginLogObserver;
 use NextDeveloper\Commons\Database\Traits\UuidId;
 
 /**
- * Class IamLoginLog.
- *
- * @package NextDeveloper\IAM\Database\Models
- */
+* Class IamLoginLog.
+*
+* @package NextDeveloper\IAM\Database\Models
+*/
 class IamLoginLog extends Model
 {
-    use Filterable, UuidId;
+use Filterable, UuidId;
 
 
-    public $timestamps = true;
+	public $timestamps = true;
 
-    protected $table = 'iam_login_logs';
+protected $table = 'iam_login_logs';
 
 
-    /**
-     * @var array
-     */
-    protected $guarded = [];
+/**
+* @var array
+*/
+protected $guarded = [];
 
-    /**
-     *  Here we have the fulltext fields. We can use these for fulltext search if enabled.
-     */
-    protected $fullTextFields = [
+/**
+*  Here we have the fulltext fields. We can use these for fulltext search if enabled.
+*/
+protected $fullTextFields = [
 
-    ];
+];
 
-    /**
-     * @var array
-     */
-    protected $appends = [
+/**
+* @var array
+*/
+protected $appends = [
 
-    ];
+];
 
-    /**
-     * We are casting fields to objects so that we can work on them better
-     * @var array
-     */
-    protected $casts = [
-        'id' => 'integer',
-        'uuid' => 'string',
-        'user_id' => 'integer',
-        'created_at' => 'datetime',
-    ];
+/**
+* We are casting fields to objects so that we can work on them better
+* @var array
+*/
+protected $casts = [
+'id'          => 'integer',
+		'uuid'        => 'string',
+		'iam_user_id' => 'integer',
+		'created_at'  => 'datetime',
+];
 
-    /**
-     * We are casting data fields.
-     * @var array
-     */
-    protected $dates = [
-        'created_at',
-    ];
+/**
+* We are casting data fields.
+* @var array
+*/
+protected $dates = [
+'created_at',
+];
 
-    /**
-     * @var array
-     */
-    protected $with = [
+/**
+* @var array
+*/
+protected $with = [
 
-    ];
+];
 
-    /**
-     * @var int
-     */
-    protected $perPage = 20;
+/**
+* @var int
+*/
+protected $perPage = 20;
 
-    /**
-     * @return void
-     */
-    public static function boot()
-    {
-        parent::boot();
+/**
+* @return void
+*/
+public static function boot()
+{
+parent::boot();
 
 //  We create and add Observer even if we wont use it.
-        parent::observe(IamLoginLogObserver::class);
+parent::observe(IamLoginLogObserver::class);
 
-        self::registerScopes();
-    }
+self::registerScopes();
+}
 
-    public static function registerScopes()
-    {
-        $globalScopes = config('iam.scopes.global');
-        $modelScopes = config('iam.scopes.iam_login_logs');
+public static function registerScopes()
+{
+$globalScopes = config('iam.scopes.global');
+$modelScopes = config('iam.scopes.iam_login_logs');
 
-        if (!$modelScopes) $modelScopes = [];
-        if (!$globalScopes) $globalScopes = [];
+if(!$modelScopes) $modelScopes = [];
+if (!$globalScopes) $globalScopes = [];
 
-        $scopes = array_merge(
-            $globalScopes,
-            $modelScopes
-        );
+$scopes = array_merge(
+$globalScopes,
+$modelScopes
+);
 
-        if ($scopes) {
-            foreach ($scopes as $scope) {
-                static::addGlobalScope(app($scope));
-            }
-        }
-    }
+if($scopes) {
+foreach ($scopes as $scope) {
+static::addGlobalScope(app($scope));
+}
+}
+}
 
-    public function iamUser()
+public function iamUser()
     {
         return $this->belongsTo(IamUser::class);
     }
-
-    // EDIT AFTER HERE - WARNING: ABOVE THIS LINE MAY BE REGENERATED AND YOU MAY LOSE CODE
+    
+    // EDIT AFTER HERE - WARNING: ABOVE THIS LINE MAY BE REGENERATED AND YOU MAY LOSE CODE\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n
 }

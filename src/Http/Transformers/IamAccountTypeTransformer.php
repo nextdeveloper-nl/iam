@@ -2,15 +2,18 @@
 
 namespace NextDeveloper\IAM\Http\Transformers;
 
+use Illuminate\Support\Facades\Cache;
+use NextDeveloper\Commons\Common\Cache\CacheHelper;
 use NextDeveloper\IAM\Database\Models\IamAccountType;
 use NextDeveloper\Commons\Http\Transformers\AbstractTransformer;
+use NextDeveloper\IAM\Http\Transformers\AbstractTransformers\AbstractIamAccountTypeTransformer;
 
 /**
  * Class IamAccountTypeTransformer. This class is being used to manipulate the data we are serving to the customer
  *
  * @package NextDeveloper\IAM\Http\Transformers
  */
-class IamAccountTypeTransformer extends AbstractTransformer {
+class IamAccountTypeTransformer extends AbstractIamAccountTypeTransformer {
 
     /**
      * @param IamAccountType $model
@@ -18,12 +21,20 @@ class IamAccountTypeTransformer extends AbstractTransformer {
      * @return array
      */
     public function transform(IamAccountType $model) {
-        return $this->buildPayload([
-            'id'  =>  $model->uuid,
-            'name'  =>  $model->name,
-            'description'  =>  $model->description,
-            'country_id'  =>  $model->country_id,
-        ]);
+        $transformed = Cache::get(
+            CacheHelper::getKey('IamAccountType', $model->uuid, 'Transformed')
+        );
+
+        if($transformed)
+            return $transformed;
+
+        $transformed = parent::transform($model);
+
+        Cache::set(
+            CacheHelper::getKey('IamAccountType', $model->uuid, 'Transformed'),
+            $transformed
+        );
+
+        return parent::transform($model);
     }
-    // EDIT AFTER HERE - WARNING: ABOVE THIS LINE MAY BE REGENERATED AND YOU MAY LOSE CODE
 }

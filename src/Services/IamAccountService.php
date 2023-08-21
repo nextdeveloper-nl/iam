@@ -2,6 +2,15 @@
 
 namespace NextDeveloper\IAM\Services;
 
+use Helpers\i18n;
+use Illuminate\Support\Collection;
+use NextDeveloper\Commons\Exceptions\CannotCreateModelException;
+use NextDeveloper\IAM\Database\Models\IamAccount;
+use NextDeveloper\IAM\Database\Models\IamAccountType;
+use NextDeveloper\IAM\Database\Models\IamUser;
+use NextDeveloper\IAM\Database\Models\IamUserAccountOverview;
+use NextDeveloper\IAM\Database\Models\IamViewUserAccount;
+use NextDeveloper\IAM\Helpers\UserHelper;
 use NextDeveloper\IAM\Services\AbstractServices\AbstractIamAccountService;
 
 /**
@@ -14,6 +23,46 @@ use NextDeveloper\IAM\Services\AbstractServices\AbstractIamAccountService;
 class IamAccountService extends AbstractIamAccountService {
 
     // EDIT AFTER HERE - WARNING: ABOVE THIS LINE MAY BE REGENERATED AND YOU MAY LOSE CODE
+
+    public static function create(array $data) : IamAccount
+    {
+        if(!array_key_exists('iam_user_id', $data)) {
+            $user = UserHelper::me();
+
+            if(!$user) {
+                throw new CannotCreateModelException('I cannot create account without a user. Please provide a user or first create a user.');
+            }
+
+            $data['iam_user_id']   =  $user->id;
+        }
+
+        if(!array_key_exists('iam_account_type_id', $data)) {
+            $accountType = IamAccountType::where('name', 'Team')->first();
+
+            $data['iam_account_type_id'] = $accountType->id;
+        }
+
+        return parent::create($data);
+    }
+
+    /**
+     *
+     *
+     * @param IamUser $user
+     * @return Collection
+     */
+    public static function userAccounts(IamUser $user) : Collection
+    {
+        $myAccounts = IamViewUserAccount::where('member_id', $user->id)->get();
+
+        $accounts = new Collection();
+
+        foreach ($myAccounts as $myAccount) {
+            $accounts[] = new IamAccount($myAccount->toArray());
+        }
+
+        return $accounts;
+    }
 
     /**
      * This function creates the initial account for the given user
@@ -29,7 +78,7 @@ class IamAccountService extends AbstractIamAccountService {
 
         $accountData = [
             'name'      =>  $name,
-            'owner_id'  =>  $user->id
+            'iam_user_id'  =>  $user->id
         ];
 
         return self::create($accountData);
@@ -39,7 +88,7 @@ class IamAccountService extends AbstractIamAccountService {
     {
         $accountData = [
             'name'  =>  $accountName,
-            'owner_id'  =>  $user->id
+            'iam_user_id'  =>  $user->id
         ];
 
         $account = self::create($accountData);
