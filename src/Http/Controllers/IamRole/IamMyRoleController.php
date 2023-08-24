@@ -40,7 +40,7 @@ class IamMyRoleController extends AbstractController
     * @throws \NextDeveloper\Commons\Exceptions\CannotCreateModelException
     */
     public function update(IamRoleUpdateRequest $request) {
-        $iamRoleId = $request->get('iam_role_id');
+        $iamRoleId = $request->get('id');
 
         if($iamRoleId == null)
             return $this->errorUnprocessable('Cannot get the role ID. Please provide role_id parameter

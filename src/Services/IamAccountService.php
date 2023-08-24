@@ -7,6 +7,7 @@ use Illuminate\Support\Collection;
 use NextDeveloper\Commons\Exceptions\CannotCreateModelException;
 use NextDeveloper\IAM\Database\Models\IamAccount;
 use NextDeveloper\IAM\Database\Models\IamAccountType;
+use NextDeveloper\IAM\Database\Models\IamAccountUser;
 use NextDeveloper\IAM\Database\Models\IamUser;
 use NextDeveloper\IAM\Database\Models\IamUserAccountOverview;
 use NextDeveloper\IAM\Database\Models\IamViewUserAccount;
@@ -42,7 +43,16 @@ class IamAccountService extends AbstractIamAccountService {
             $data['iam_account_type_id'] = $accountType->id;
         }
 
-        return parent::create($data);
+        $account = parent::create($data);
+
+        $relation = IamAccountUser::create([
+            'iam_user_id'       =>  UserHelper::me()->id,
+            'iam_account_id'    =>  $account->id,
+            'is_active'         =>  false,
+            'session_data'      =>  null
+        ]);
+
+        return $account;
     }
 
     /**
@@ -53,15 +63,7 @@ class IamAccountService extends AbstractIamAccountService {
      */
     public static function userAccounts(IamUser $user) : Collection
     {
-        $myAccounts = IamViewUserAccount::where('member_id', $user->id)->get();
-
-        $accounts = new Collection();
-
-        foreach ($myAccounts as $myAccount) {
-            $accounts[] = new IamAccount($myAccount->toArray());
-        }
-
-        return $accounts;
+        return IamViewUserAccount::withoutGlobalScopes()->where('iam_user_id', $user->id)->get();
     }
 
     /**
@@ -93,8 +95,18 @@ class IamAccountService extends AbstractIamAccountService {
 
         $account = self::create($accountData);
 
-        $relation = $user->iamAccount()->attach($account->id);
+        $relation = IamAccountUser::create([
+            'iam_user_id'       =>  $user->id,
+            'iam_account_id'    =>  $account->id,
+            'is_active'         =>  false,
+            'session_data'      =>  null
+        ]);
 
         return $account;
+    }
+
+    public static function switchToAccount($accountId, $me) : IamAccount
+    {
+
     }
 }

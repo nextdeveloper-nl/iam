@@ -85,7 +85,7 @@ class AbstractLogin extends AbstractGrant
      */
     public static function getLatestMechanism(IamUser $user, $mechanismName) : ?IamLoginMechanism
     {
-        $mechanism = IamLoginMechanism::where('user_id', $user->id)
+        $mechanism = IamLoginMechanism::where('iam_user_id', $user->id)
             ->where('login_mechanism', $mechanismName)
             ->where('is_active', 1)
             ->where('is_latest', 1)

@@ -23,35 +23,71 @@ class AuthorizationScope implements Scope
      */
     public function apply(Builder $builder, Model $model) : void
     {
+        Log::debug('[AuthorizationScope] Adding authorization scope for model: ' . $model->getTable() );
+
+        //  This is here to fix unwanted multiple applications of this scope
+        if($this->isRoleApplied($builder, $model))
+            return;
+
         //  Here we are bypassing iam_user table. Because we cannot get the user login information
         //  if we cannot get the user and this creates a constant loop. That is why we need to secure
         //  user information from the service.
         if(
+            $model->getTable() == 'iam_accounts' || //  This creates a recursive loop when we need currentRole
             $model->getTable() == 'iam_users' ||
             $model->getTable() == 'iam_roles' ||
-            $model->getTable() == 'iam_role_user'
+            $model->getTable() == 'iam_role_user' ||
+            $model->getTable() == 'iam_account_user' ||
+            $model->getTable() == 'iam_view_user_account'
         ) {
-            Log::debug('[AuthorizationScope] Bypassing IamUsers model.');
+            Log::debug('[AuthorizationScope] Bypassing model : ' . $model->getTable());
             return;
         }
 
-        Log::debug('[AuthorizationScope] Model: ' . $model->getTable() );
-
         //  This scope works for automated filtering of model requests. By using this global scope we have the
-        //  capability to inject sql to the model. This way we dont need to deal with the security, most of the time.
+        //  capability to inject sql to the model. This way we don't need to deal with the security, most of the time.
         if($this->isBypass(request(), config('iam.auth_bypass_uris'))){
             Log::debug('[AuthorizationScope] Bypassing because URI is: ' . request()->getRequestUri());
             return;
         }
 
-        Log::debug('[AuthorizationScope] Is user object available: ' . (UserHelper::me() == null));
+        $scope = $this->getAnonymous();
 
-        if(UserHelper::currentRole() == null) {
-            Log::debug('[AuthorizationScope] My user doesnt have a role :( thats why I am applying anonymous role.');
-            $this->applyAnonymous($builder, $model);
+        if(UserHelper::currentRole()) {
+            $scope = $this->getDefault();
+            Log::debug('[AuthorizationScope] My user has role. Applying default: ' . get_class($scope));
         }
 
-        $this->applyDefault($builder, $model);
+        Log::debug('[AuthorizationScope] Checking if the role is applied to this model.');
+        //  If we don't check if the role is applied then we may have a recursive loop here !!!
+        if($this->isRoleApplied($builder, $model)) {
+            return;
+        }
+
+        $model->setHidden([
+            'is_authorized' => true
+        ]);
+
+        Log::debug('[AuthorizationScope] Applying role: ' . get_class($scope));
+        Log::debug('[AuthorizationScope] Applying to model: ' . $model->getTable());
+        $scope->apply($builder, $model);
+    }
+
+    /**
+     * This will be implemented
+     *
+     * @param $builder
+     * @param $model
+     * @return bool
+     */
+    private function isRoleApplied(Builder $builder, Model $model) : bool
+    {
+        if($model->getHidden()) {
+            //  @todo: Should be revisited
+            return true;
+        }
+
+        return false;
     }
 
     /**
@@ -70,26 +106,15 @@ class AuthorizationScope implements Scope
         return false;
     }
 
-    private function applyAnonymous(Builder $builder, Model $model) {
-        Log::debug('[AuthorizationScope] Applying anonymous for this request:
-        ' . request()->getRequestUri());
-
-        $scope = new AnonymousRole();
-
-        $scope->apply($builder, $model);
+    private function getAnonymous() {
+        return new AnonymousRole();
     }
 
-    private function applyDefault(Builder $builder, Model $model) {
-        Log::debug('[AuthorizationScope] applying default role to model: ' . $model->getTable());
-
+    private function getDefault() {
         $account = UserHelper::currentAccount();
         //  We are getting the highest level role of user.
         $role = IamRoleService::getUserRole(UserHelper::me(), $account);
 
-        Log::debug('[AuthorizationScope] Applying role: ' . $role->class);
-
-        $scope = app($role->class);
-
-        $scope->apply($builder, $model);
+        return app($role->class);
     }
 }

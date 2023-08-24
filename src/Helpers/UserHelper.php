@@ -6,7 +6,9 @@ use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\DB;
 use NextDeveloper\Commons\Common\Cache\CacheHelper;
+use NextDeveloper\IAM\Database\Models\IamAccountUser;
 use NextDeveloper\IAM\Database\Models\IamRole;
 use NextDeveloper\IAM\Database\Models\IamRoleUser;
 use NextDeveloper\IAM\Database\Models\IamUser;
@@ -15,6 +17,7 @@ use NextDeveloper\IAM\Database\Models\IamUserRoleOverview;
 use NextDeveloper\IAM\Exceptions\CannotFindUserException;
 use NextDeveloper\IAM\Services\IamAccountService;
 use NextDeveloper\IAM\Services\IamRoleService;
+use NextDeveloper\IAM\Services\IamUserService;
 
 //  This is just an alias for UserHelper for fast coding.
 class U extends UserHelper {}
@@ -100,20 +103,29 @@ class UserHelper
         else
             return null;
 
+        $current = self::me()->iamAccount()->wherePivot('is_active', 1)->first();
 
         if(!$current) {
-            self::me()->iamAccount()->attach(
-                self::masterAccount()->id
-            );
+            //  This means that we have accounts but we don't have active account
+            if(self::me()->iamAccount()->count()) {
+                $account = self::masterAccount();
 
-            $current = self::me()->iamAccount()->wherePivot('is_active', 1)->first();
+                IamAccountUser::where([
+                    'iam_user_id'   =>  $user->id,
+                    'iam_account_id'    =>  $account->id
+                ])->update([
+                    'is_active' =>  true
+                ]);
+            } else {
+                //  This means that we don't have accounts
+                IamAccountService::createInitialAccount($user);
+            }
         }
 
         Cache::set(
             CacheHelper::getKey('IamUser', $user->uuid, 'CurrentAccount'),
             $current
         );
-
 
         return $current;
     }
@@ -126,10 +138,43 @@ class UserHelper
      */
     public static function switchAccountTo(IamAccount $account = null) : IamAccount
     {
-        if(!$account)
-            return self::currentAccount();
+        $me = self::me();
 
-        // @todo:  Here we need to check the account ownership and return default account instead
+        $teams = UserHelper::allAccounts($me);
+
+        $isInTeam = false;
+
+        foreach ($teams as $team) {
+            if($account->id == $team->id) {
+                $isInTeam = true;
+            }
+        }
+
+        if($isInTeam) {
+            foreach ($teams as $team) {
+                //  We are deleting this cache since they may all be changed
+                Cache::delete(
+                    CacheHelper::getKey('IamAccount', $team->uuid)
+                );
+            }
+
+            IamAccountUser::where('iam_user_id', $me->id)
+                ->update([
+                    'is_active' =>  0
+                ]);
+
+            IamAccountUser::where('iam_user_id', $me->id)
+                ->where('iam_account_id', $account->id)
+                ->update([
+                    'is_active' =>  1
+                ]);
+
+            Cache::delete(
+                CacheHelper::getKey('IamUser', $me->uuid)
+            );
+        }
+
+        return self::currentAccount();
     }
 
     /**
@@ -189,7 +234,7 @@ class UserHelper
 
         $role = IamRoleService::getUserRole($user, self::currentAccount($user));
 
-        $currentRole = Cache::delete(
+        Cache::delete(
             CacheHelper::getKey('IamUser', $user->uuid, 'CurrentRole'),
             $role
         );

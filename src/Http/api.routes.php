@@ -125,5 +125,6 @@ Route::prefix('view-user-accounts')->group(function () {
         Route::put('/roles', 'IamRole\IamMyRoleController@update');
 
         Route::get('/accounts', 'IamAccount\IamMyAccountController@index');
+        Route::put('/accounts', 'IamAccount\IamMyAccountController@update');
     });
 });

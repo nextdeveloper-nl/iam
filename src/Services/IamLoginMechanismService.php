@@ -16,7 +16,7 @@ class IamLoginMechanismService extends AbstractIamLoginMechanismService {
     // EDIT AFTER HERE - WARNING: ABOVE THIS LINE MAY BE REGENERATED AND YOU MAY LOSE CODE
     public static function getByUser(IamUser $user) : Collection
     {
-        $mechanisms = IamLoginMechanism::where('user_id', $user->id)
+        $mechanisms = IamLoginMechanism::where('iam_user_id', $user->id)
             ->get();
 
         return $mechanisms;

@@ -5,6 +5,7 @@ namespace NextDeveloper\IAM\Services\AbstractServices;
 use Illuminate\Http\Request;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 use NextDeveloper\IAM\Helpers\UserHelper;
 use NextDeveloper\Commons\Common\Cache\CacheHelper;
@@ -58,6 +59,8 @@ class AbstractIamAccountService
         }
 
         $model = IamAccount::filter($filter);
+
+        Log::debug('SQL Output: ' . $model->toSql());
 
         if ($model && $enablePaginate)
             return $model->paginate($perPage);

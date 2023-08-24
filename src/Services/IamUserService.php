@@ -77,7 +77,7 @@ class IamUserService extends AbstractIamUserService {
         if(!array_key_exists('language_id', $data)) {
             $lang = CommonLanguage::where('code', App::currentLocale())->first();
 
-            $data['language_id'] = $lang->id;
+            $data['common_language_id'] = $lang->id;
         }
 
         return parent::create($data);

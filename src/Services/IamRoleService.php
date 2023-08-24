@@ -79,29 +79,26 @@ class IamRoleService extends AbstractIamRoleService {
         }
 
         //  Getting the roles of user
-        $role = IamRoleUser::where('iam_user_id', $user->id)
-            ->where('iam_role_id', $role->id);
+        $relation = IamRoleUser::where('iam_user_id', $user->id)
+            ->where('iam_role_id', $role->id)->first();
 
-        if($account) {
-            $role = $role->where('iam_account_id', $account->id);
-        } else {
+        if(!$account) {
             $account = UserHelper::masterAccount($user);
-            $role = $role->where('iam_account_id', $account->id);
         }
 
-        $role = $role->first();
+        if(!$relation) {
+            $relation = IamRoleUser::create([
+                'iam_user_id'       =>  $user->id,
+                'iam_account_id'    =>  $account->id,
+                'iam_role_id'       =>  $role->id
+            ]);
+        }
 
         if($role) {
-            self::setRoleAsActive($role);
+            self::setRoleAsActive($relation);
 
             return true;
         }
-
-        IamRoleUser::create([
-            'iam_user_id'       =>  $user->id,
-            'iam_account_id'    =>  $account->id,
-            'iam_role_id'       =>  $role->id
-        ]);
         
         return true;
     }
@@ -116,13 +113,13 @@ class IamRoleService extends AbstractIamRoleService {
             return $role;
         }
 
-        $role = $user->iamRole()
-            ->wherePivot('iam_account_id', $account->id)
+        $userRoleRelation = IamRoleUser::where('iam_user_id', $user->id)
             ->where('is_active', 1)
-            ->orderBy('level', 'asc')
             ->first();
 
-        //  If the user dont have any roles, we are creating the Member role for the user
+        $role = IamRole::where('id', $userRoleRelation->iam_role_id)->first();
+
+        //  If the user don't have any roles, we are creating the Member role for the user
         if(!$role) {
             $role = self::getRole(new MemberRole());
 

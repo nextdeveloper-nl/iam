@@ -31,7 +31,7 @@ class OneTimeEmail extends AbstractLogin implements ILoginService
 
         if (!$latestMechanism) {
             return IamLoginMechanism::create([
-                'user_id'          => $user->id,
+                'iam_user_id'          => $user->id,
                 'login_mechanism'  => self::LOGINNAME,
             ]);
         }
