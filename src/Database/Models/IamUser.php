@@ -166,7 +166,7 @@ public function iamAccountUser()
      */
     public function iamRole()
     {
-        return $this->belongsToMany(IamRole::class, 'iam_role_user', 'iam_user_id', 'iam_role_id');
+        return $this->belongsToMany(IamRole::class, 'iam_role_user', 'iam_user_id', 'iam_role_id', 'id');
     }
 
 }

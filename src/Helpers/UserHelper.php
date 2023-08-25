@@ -85,12 +85,15 @@ class UserHelper
     public static function currentAccount(IamUser $user = null) : ?IamAccount
     {
         $current = null;
+        $relation = null;
 
         if(!$user) {
             $user = self::me();
         }
 
+        //  We have user
         if($user) {
+            //  We are checking if we have it in cache. If we have we will return it.
             $current = Cache::get(
                 CacheHelper::getKey('IamUser', $user->uuid, 'CurrentAccount')
             );
@@ -98,29 +101,53 @@ class UserHelper
             if($current)
                 return $current;
 
-            $current = $user->iamAccount()->wherePivot('is_active', 1)->first();
+            //  We are checking about the relation
+            $relation = IamAccountUser::where('iam_user_id', $user->id)
+                ->where('is_active', 1)
+                ->first();
+
+            //  If we don't have relation it means that we dont have current account information
+            //  that is why we are creating the relation
+            if(!$relation) {
+                $masterAccount = self::masterAccount($user);
+
+                //  Checking if the user has master account. If not we are creating a master account
+                if($masterAccount) {
+                    $relation = IamAccountUser::create([
+                        'iam_user_id'   =>  $user->id,
+                        'iam_account_id'    =>  $masterAccount->id,
+                        'is_active'     =>  1
+                    ]);
+                } else {
+                    $masterAccount = IamAccountService::createInitialAccount($user);
+
+                    $relation = IamAccountUser::where('iam_user_id', $user->id)
+                        ->where('is_active', 1)
+                        ->first();
+                }
+            }
         }
         else
             return null;
 
-        $current = self::me()->iamAccount()->wherePivot('is_active', 1)->first();
-
-        if(!$current) {
-            //  This means that we have accounts but we don't have active account
-            if(self::me()->iamAccount()->count()) {
-                $account = self::masterAccount();
-
-                IamAccountUser::where([
-                    'iam_user_id'   =>  $user->id,
-                    'iam_account_id'    =>  $account->id
-                ])->update([
-                    'is_active' =>  true
-                ]);
-            } else {
-                //  This means that we don't have accounts
-                IamAccountService::createInitialAccount($user);
-            }
-        }
+        $current = IamAccount::where('id', $relation->iam_account_id)->first();
+//
+//        if(!$current) {
+//            //  This means that we have accounts but we don't have active account
+//            if(UserHelper::allAccounts(self::me())) {
+//                $account = self::masterAccount();
+//
+//                IamAccountUser::where([
+//                    'iam_user_id'   =>  $user->id,
+//                    'iam_account_id'    =>  $account->id
+//                ])->update([
+//                    'is_active' =>  true
+//                ]);
+//            } else {
+//                //  This means that we don't have accounts
+//                IamAccountService::createInitialAccount($user);
+//            }
+//        }
 
         Cache::set(
             CacheHelper::getKey('IamUser', $user->uuid, 'CurrentAccount'),
