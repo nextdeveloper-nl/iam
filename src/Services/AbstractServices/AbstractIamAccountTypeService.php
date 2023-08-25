@@ -11,13 +11,13 @@ use NextDeveloper\Commons\Common\Cache\CacheHelper;
 use NextDeveloper\Commons\Helpers\DatabaseHelper;
 use NextDeveloper\IAM\Database\Models\IamAccountType;
 use NextDeveloper\IAM\Database\Filters\IamAccountTypeQueryFilter;
-
 use NextDeveloper\IAM\Events\IamAccountType\IamAccountTypeCreatedEvent;
 use NextDeveloper\IAM\Events\IamAccountType\IamAccountTypeCreatingEvent;
 use NextDeveloper\IAM\Events\IamAccountType\IamAccountTypeUpdatedEvent;
 use NextDeveloper\IAM\Events\IamAccountType\IamAccountTypeUpdatingEvent;
 use NextDeveloper\IAM\Events\IamAccountType\IamAccountTypeDeletedEvent;
 use NextDeveloper\IAM\Events\IamAccountType\IamAccountTypeDeletingEvent;
+
 
 /**
 * This class is responsible from managing the data for IamAccountType
@@ -138,14 +138,13 @@ class AbstractIamAccountTypeService {
         event( new IamAccountTypeUpdatingEvent($model) );
 
         try {
-           $model = $model->update($data);
+           $isUpdated = $model->update($data);
+           $model = $model->fresh();
         } catch(\Exception $e) {
            throw $e;
         }
 
         event( new IamAccountTypeUpdatedEvent($model) );
-        
-        CacheHelper::deleteKeys('IamAccountType', $id);
 
         return $model->fresh();
     }
@@ -172,8 +171,6 @@ class AbstractIamAccountTypeService {
         }
 
         event( new IamAccountTypeDeletedEvent($model) );
-        
-        CacheHelper::deleteKeys('IamAccountType', $id);
 
         return $model;
     }

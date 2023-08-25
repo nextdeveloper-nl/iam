@@ -113,7 +113,7 @@ Route::prefix('view-user-accounts')->group(function () {
         Route::delete('/{iam_view_user_accounts}', 'IamViewUserAccount\IamViewUserAccountController@destroy');
     });
 
-// EDIT AFTER HERE - WARNING: ABOVE THIS LINE MAY BE REGENERATED AND YOU MAY LOSE CODE\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n
+// EDIT AFTER HERE - WARNING: ABOVE THIS LINE MAY BE REGENERATED AND YOU MAY LOSE CODE\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n
 
     Route::prefix('authenticate')->group(function () {
         Route::post('/oauth/token', 'OAuth\AccessTokenController@issueToken');
@@ -126,5 +126,8 @@ Route::prefix('view-user-accounts')->group(function () {
 
         Route::get('/accounts', 'IamAccount\IamMyAccountController@index');
         Route::put('/accounts', 'IamAccount\IamMyAccountController@update');
+
+        Route::get('/contact', 'IamUser\IamMyUserController@index');
+        Route::put('/contact', 'IamUser\IamMyUserController@update');
     });
 });

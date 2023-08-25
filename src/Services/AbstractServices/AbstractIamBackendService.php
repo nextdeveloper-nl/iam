@@ -11,13 +11,13 @@ use NextDeveloper\Commons\Common\Cache\CacheHelper;
 use NextDeveloper\Commons\Helpers\DatabaseHelper;
 use NextDeveloper\IAM\Database\Models\IamBackend;
 use NextDeveloper\IAM\Database\Filters\IamBackendQueryFilter;
-
 use NextDeveloper\IAM\Events\IamBackend\IamBackendCreatedEvent;
 use NextDeveloper\IAM\Events\IamBackend\IamBackendCreatingEvent;
 use NextDeveloper\IAM\Events\IamBackend\IamBackendUpdatedEvent;
 use NextDeveloper\IAM\Events\IamBackend\IamBackendUpdatingEvent;
 use NextDeveloper\IAM\Events\IamBackend\IamBackendDeletedEvent;
 use NextDeveloper\IAM\Events\IamBackend\IamBackendDeletingEvent;
+
 
 /**
 * This class is responsible from managing the data for IamBackend
@@ -148,14 +148,13 @@ class AbstractIamBackendService {
         event( new IamBackendUpdatingEvent($model) );
 
         try {
-           $model = $model->update($data);
+           $isUpdated = $model->update($data);
+           $model = $model->fresh();
         } catch(\Exception $e) {
            throw $e;
         }
 
         event( new IamBackendUpdatedEvent($model) );
-        
-        CacheHelper::deleteKeys('IamBackend', $id);
 
         return $model->fresh();
     }
@@ -182,8 +181,6 @@ class AbstractIamBackendService {
         }
 
         event( new IamBackendDeletedEvent($model) );
-        
-        CacheHelper::deleteKeys('IamBackend', $id);
 
         return $model;
     }

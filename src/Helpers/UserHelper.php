@@ -131,23 +131,6 @@ class UserHelper
             return null;
 
         $current = IamAccount::where('id', $relation->iam_account_id)->first();
-//
-//        if(!$current) {
-//            //  This means that we have accounts but we don't have active account
-//            if(UserHelper::allAccounts(self::me())) {
-//                $account = self::masterAccount();
-//
-//                IamAccountUser::where([
-//                    'iam_user_id'   =>  $user->id,
-//                    'iam_account_id'    =>  $account->id
-//                ])->update([
-//                    'is_active' =>  true
-//                ]);
-//            } else {
-//                //  This means that we don't have accounts
-//                IamAccountService::createInitialAccount($user);
-//            }
-//        }
 
         Cache::set(
             CacheHelper::getKey('IamUser', $user->uuid, 'CurrentAccount'),

@@ -11,13 +11,13 @@ use NextDeveloper\Commons\Common\Cache\CacheHelper;
 use NextDeveloper\Commons\Helpers\DatabaseHelper;
 use NextDeveloper\IAM\Database\Models\IamRoleUser;
 use NextDeveloper\IAM\Database\Filters\IamRoleUserQueryFilter;
-
 use NextDeveloper\IAM\Events\IamRoleUser\IamRoleUserCreatedEvent;
 use NextDeveloper\IAM\Events\IamRoleUser\IamRoleUserCreatingEvent;
 use NextDeveloper\IAM\Events\IamRoleUser\IamRoleUserUpdatedEvent;
 use NextDeveloper\IAM\Events\IamRoleUser\IamRoleUserUpdatingEvent;
 use NextDeveloper\IAM\Events\IamRoleUser\IamRoleUserDeletedEvent;
 use NextDeveloper\IAM\Events\IamRoleUser\IamRoleUserDeletingEvent;
+
 
 /**
 * This class is responsible from managing the data for IamRoleUser
@@ -158,14 +158,13 @@ class AbstractIamRoleUserService {
         event( new IamRoleUserUpdatingEvent($model) );
 
         try {
-           $model = $model->update($data);
+           $isUpdated = $model->update($data);
+           $model = $model->fresh();
         } catch(\Exception $e) {
            throw $e;
         }
 
         event( new IamRoleUserUpdatedEvent($model) );
-        
-        CacheHelper::deleteKeys('IamRoleUser', $id);
 
         return $model->fresh();
     }
@@ -192,8 +191,6 @@ class AbstractIamRoleUserService {
         }
 
         event( new IamRoleUserDeletedEvent($model) );
-        
-        CacheHelper::deleteKeys('IamRoleUser', $id);
 
         return $model;
     }

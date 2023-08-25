@@ -107,7 +107,7 @@ class IamUserAccountOverviewQueryFilter extends AbstractQueryFilter
         $language = Language::where('uuid', $value)->first();
 
         if($language) {
-            return $this->builder->where('common_language_id', '=', $language->id);
+            return $this->builder->where('language_id', '=', $language->id);
         }
     }
 
@@ -138,5 +138,5 @@ class IamUserAccountOverviewQueryFilter extends AbstractQueryFilter
         }
     }
 
-    // EDIT AFTER HERE - WARNING: ABOVE THIS LINE MAY BE REGENERATED AND YOU MAY LOSE CODE\n\n\n\n\n\n
+    // EDIT AFTER HERE - WARNING: ABOVE THIS LINE MAY BE REGENERATED AND YOU MAY LOSE CODE\n\n\n\n\n\n\n\n\n\n
 }

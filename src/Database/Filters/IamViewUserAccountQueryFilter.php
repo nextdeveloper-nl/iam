@@ -5,7 +5,7 @@ namespace NextDeveloper\IAM\Database\Filters;
 use Illuminate\Database\Eloquent\Builder;
 use NextDeveloper\Commons\Database\Filters\AbstractQueryFilter;
 use NextDeveloper\Accounts\Database\Models\User;
-            
+        
 
 /**
  * This class automatically puts where clause on database so that use can filter
@@ -33,6 +33,11 @@ class IamViewUserAccountQueryFilter extends AbstractQueryFilter
         return $this->builder->where('description', 'like', '%' . $value . '%');
     }
 
+    public function isActive()
+    {
+        return $this->builder->where('is_active', true);
+    }
+    
     public function createdAtStart($date) 
     {
         return $this->builder->where( 'created_at', '>=', $date );
@@ -99,14 +104,5 @@ class IamViewUserAccountQueryFilter extends AbstractQueryFilter
         }
     }
 
-    public function memberId($value)
-    {
-        $member = Member::where('uuid', $value)->first();
-
-        if($member) {
-            return $this->builder->where('member_id', '=', $member->id);
-        }
-    }
-
-    // EDIT AFTER HERE - WARNING: ABOVE THIS LINE MAY BE REGENERATED AND YOU MAY LOSE CODE\n\n\n\n\n\n
+    // EDIT AFTER HERE - WARNING: ABOVE THIS LINE MAY BE REGENERATED AND YOU MAY LOSE CODE\n\n\n\n\n\n\n\n\n\n
 }

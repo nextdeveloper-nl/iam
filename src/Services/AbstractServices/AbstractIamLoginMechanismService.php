@@ -11,13 +11,13 @@ use NextDeveloper\Commons\Common\Cache\CacheHelper;
 use NextDeveloper\Commons\Helpers\DatabaseHelper;
 use NextDeveloper\IAM\Database\Models\IamLoginMechanism;
 use NextDeveloper\IAM\Database\Filters\IamLoginMechanismQueryFilter;
-
 use NextDeveloper\IAM\Events\IamLoginMechanism\IamLoginMechanismCreatedEvent;
 use NextDeveloper\IAM\Events\IamLoginMechanism\IamLoginMechanismCreatingEvent;
 use NextDeveloper\IAM\Events\IamLoginMechanism\IamLoginMechanismUpdatedEvent;
 use NextDeveloper\IAM\Events\IamLoginMechanism\IamLoginMechanismUpdatingEvent;
 use NextDeveloper\IAM\Events\IamLoginMechanism\IamLoginMechanismDeletedEvent;
 use NextDeveloper\IAM\Events\IamLoginMechanism\IamLoginMechanismDeletingEvent;
+
 
 /**
 * This class is responsible from managing the data for IamLoginMechanism
@@ -138,14 +138,13 @@ class AbstractIamLoginMechanismService {
         event( new IamLoginMechanismUpdatingEvent($model) );
 
         try {
-           $model = $model->update($data);
+           $isUpdated = $model->update($data);
+           $model = $model->fresh();
         } catch(\Exception $e) {
            throw $e;
         }
 
         event( new IamLoginMechanismUpdatedEvent($model) );
-        
-        CacheHelper::deleteKeys('IamLoginMechanism', $id);
 
         return $model->fresh();
     }
@@ -172,8 +171,6 @@ class AbstractIamLoginMechanismService {
         }
 
         event( new IamLoginMechanismDeletedEvent($model) );
-        
-        CacheHelper::deleteKeys('IamLoginMechanism', $id);
 
         return $model;
     }

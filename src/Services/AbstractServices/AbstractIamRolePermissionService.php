@@ -11,13 +11,13 @@ use NextDeveloper\Commons\Common\Cache\CacheHelper;
 use NextDeveloper\Commons\Helpers\DatabaseHelper;
 use NextDeveloper\IAM\Database\Models\IamRolePermission;
 use NextDeveloper\IAM\Database\Filters\IamRolePermissionQueryFilter;
-
 use NextDeveloper\IAM\Events\IamRolePermission\IamRolePermissionCreatedEvent;
 use NextDeveloper\IAM\Events\IamRolePermission\IamRolePermissionCreatingEvent;
 use NextDeveloper\IAM\Events\IamRolePermission\IamRolePermissionUpdatedEvent;
 use NextDeveloper\IAM\Events\IamRolePermission\IamRolePermissionUpdatingEvent;
 use NextDeveloper\IAM\Events\IamRolePermission\IamRolePermissionDeletedEvent;
 use NextDeveloper\IAM\Events\IamRolePermission\IamRolePermissionDeletingEvent;
+
 
 /**
 * This class is responsible from managing the data for IamRolePermission
@@ -148,14 +148,13 @@ class AbstractIamRolePermissionService {
         event( new IamRolePermissionUpdatingEvent($model) );
 
         try {
-           $model = $model->update($data);
+           $isUpdated = $model->update($data);
+           $model = $model->fresh();
         } catch(\Exception $e) {
            throw $e;
         }
 
         event( new IamRolePermissionUpdatedEvent($model) );
-        
-        CacheHelper::deleteKeys('IamRolePermission', $id);
 
         return $model->fresh();
     }
@@ -182,8 +181,6 @@ class AbstractIamRolePermissionService {
         }
 
         event( new IamRolePermissionDeletedEvent($model) );
-        
-        CacheHelper::deleteKeys('IamRolePermission', $id);
 
         return $model;
     }

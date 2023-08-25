@@ -60,8 +60,8 @@ protected $casts = [
 		'birthday'    => 'datetime',
 		'nin'         => 'string',
 		'cell_phone'  => 'string',
-		'common_language_id' => 'integer',
-		'common_country_id'  => 'integer',
+		'language_id' => 'integer',
+		'country_id'  => 'integer',
 		'created_at'  => 'datetime',
 		'updated_at'  => 'datetime',
 		'deleted_at'  => 'datetime',
@@ -126,5 +126,5 @@ static::addGlobalScope(app($scope));
 }
 }
 
-// EDIT AFTER HERE - WARNING: ABOVE THIS LINE MAY BE REGENERATED AND YOU MAY LOSE CODE\n\n\n\n\n\n
+// EDIT AFTER HERE - WARNING: ABOVE THIS LINE MAY BE REGENERATED AND YOU MAY LOSE CODE\n\n\n\n\n\n\n\n\n\n
 }

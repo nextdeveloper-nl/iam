@@ -11,13 +11,13 @@ use NextDeveloper\Commons\Common\Cache\CacheHelper;
 use NextDeveloper\Commons\Helpers\DatabaseHelper;
 use NextDeveloper\IAM\Database\Models\IamLoginLog;
 use NextDeveloper\IAM\Database\Filters\IamLoginLogQueryFilter;
-
 use NextDeveloper\IAM\Events\IamLoginLog\IamLoginLogCreatedEvent;
 use NextDeveloper\IAM\Events\IamLoginLog\IamLoginLogCreatingEvent;
 use NextDeveloper\IAM\Events\IamLoginLog\IamLoginLogUpdatedEvent;
 use NextDeveloper\IAM\Events\IamLoginLog\IamLoginLogUpdatingEvent;
 use NextDeveloper\IAM\Events\IamLoginLog\IamLoginLogDeletedEvent;
 use NextDeveloper\IAM\Events\IamLoginLog\IamLoginLogDeletingEvent;
+
 
 /**
 * This class is responsible from managing the data for IamLoginLog
@@ -138,14 +138,13 @@ class AbstractIamLoginLogService {
         event( new IamLoginLogUpdatingEvent($model) );
 
         try {
-           $model = $model->update($data);
+           $isUpdated = $model->update($data);
+           $model = $model->fresh();
         } catch(\Exception $e) {
            throw $e;
         }
 
         event( new IamLoginLogUpdatedEvent($model) );
-        
-        CacheHelper::deleteKeys('IamLoginLog', $id);
 
         return $model->fresh();
     }
@@ -172,8 +171,6 @@ class AbstractIamLoginLogService {
         }
 
         event( new IamLoginLogDeletedEvent($model) );
-        
-        CacheHelper::deleteKeys('IamLoginLog', $id);
 
         return $model;
     }

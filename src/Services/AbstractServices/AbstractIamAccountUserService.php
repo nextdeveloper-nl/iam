@@ -11,13 +11,13 @@ use NextDeveloper\Commons\Common\Cache\CacheHelper;
 use NextDeveloper\Commons\Helpers\DatabaseHelper;
 use NextDeveloper\IAM\Database\Models\IamAccountUser;
 use NextDeveloper\IAM\Database\Filters\IamAccountUserQueryFilter;
-
 use NextDeveloper\IAM\Events\IamAccountUser\IamAccountUserCreatedEvent;
 use NextDeveloper\IAM\Events\IamAccountUser\IamAccountUserCreatingEvent;
 use NextDeveloper\IAM\Events\IamAccountUser\IamAccountUserUpdatedEvent;
 use NextDeveloper\IAM\Events\IamAccountUser\IamAccountUserUpdatingEvent;
 use NextDeveloper\IAM\Events\IamAccountUser\IamAccountUserDeletedEvent;
 use NextDeveloper\IAM\Events\IamAccountUser\IamAccountUserDeletingEvent;
+
 
 /**
 * This class is responsible from managing the data for IamAccountUser
@@ -148,14 +148,13 @@ class AbstractIamAccountUserService {
         event( new IamAccountUserUpdatingEvent($model) );
 
         try {
-           $model = $model->update($data);
+           $isUpdated = $model->update($data);
+           $model = $model->fresh();
         } catch(\Exception $e) {
            throw $e;
         }
 
         event( new IamAccountUserUpdatedEvent($model) );
-        
-        CacheHelper::deleteKeys('IamAccountUser', $id);
 
         return $model->fresh();
     }
@@ -182,8 +181,6 @@ class AbstractIamAccountUserService {
         }
 
         event( new IamAccountUserDeletedEvent($model) );
-        
-        CacheHelper::deleteKeys('IamAccountUser', $id);
 
         return $model;
     }

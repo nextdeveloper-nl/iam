@@ -5,20 +5,20 @@ namespace NextDeveloper\IAM\Services\AbstractServices;
 use Illuminate\Http\Request;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
-use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Str;
 use NextDeveloper\IAM\Helpers\UserHelper;
 use NextDeveloper\Commons\Common\Cache\CacheHelper;
 use NextDeveloper\Commons\Helpers\DatabaseHelper;
 use NextDeveloper\IAM\Database\Models\IamAccount;
 use NextDeveloper\IAM\Database\Filters\IamAccountQueryFilter;
-
 use NextDeveloper\IAM\Events\IamAccount\IamAccountCreatedEvent;
 use NextDeveloper\IAM\Events\IamAccount\IamAccountCreatingEvent;
 use NextDeveloper\IAM\Events\IamAccount\IamAccountUpdatedEvent;
 use NextDeveloper\IAM\Events\IamAccount\IamAccountUpdatingEvent;
 use NextDeveloper\IAM\Events\IamAccount\IamAccountDeletedEvent;
 use NextDeveloper\IAM\Events\IamAccount\IamAccountDeletingEvent;
+
 
 /**
  * This class is responsible from managing the data for IamAccount
@@ -59,8 +59,6 @@ class AbstractIamAccountService
         }
 
         $model = IamAccount::filter($filter);
-
-        Log::debug('SQL Output: ' . $model->toSql());
 
         if ($model && $enablePaginate)
             return $model->paginate($perPage);
@@ -179,13 +177,12 @@ class AbstractIamAccountService
 
         try {
             $isUpdated = $model->update($data);
+            $model = $model->fresh();
         } catch (\Exception $e) {
             throw $e;
         }
 
         event(new IamAccountUpdatedEvent($model));
-
-        CacheHelper::deleteKeys('IamAccount', $id);
 
         return $model->fresh();
     }
@@ -213,8 +210,6 @@ class AbstractIamAccountService
         }
 
         event(new IamAccountDeletedEvent($model));
-
-        CacheHelper::deleteKeys('IamAccount', $id);
 
         return $model;
     }
