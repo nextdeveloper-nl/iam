@@ -2,118 +2,110 @@
 
 Route::prefix('iam')->group(function() {
 Route::prefix('account-types')->group(function () {
-        Route::get('/', 'IamAccountType\IamAccountTypeController@index');
-        Route::get('/{iam_account_types}', 'IamAccountType\IamAccountTypeController@show');
-        Route::post('/', 'IamAccountType\IamAccountTypeController@store');
-        Route::patch('/{iam_account_types}', 'IamAccountType\IamAccountTypeController@update');
-        Route::delete('/{iam_account_types}', 'IamAccountType\IamAccountTypeController@destroy');
+        Route::get('/', 'AccountTypes\AccountTypesController@index');
+        Route::get('/{iam_account_types}', 'AccountTypes\AccountTypesController@show');
+        Route::post('/', 'AccountTypes\AccountTypesController@store');
+        Route::patch('/{iam_account_types}', 'AccountTypes\AccountTypesController@update');
+        Route::delete('/{iam_account_types}', 'AccountTypes\AccountTypesController@destroy');
     });
 
 Route::prefix('account-user')->group(function () {
-        Route::get('/', 'IamAccountUser\IamAccountUserController@index');
-        Route::get('/{iam_account_user}', 'IamAccountUser\IamAccountUserController@show');
-        Route::post('/', 'IamAccountUser\IamAccountUserController@store');
-        Route::patch('/{iam_account_user}', 'IamAccountUser\IamAccountUserController@update');
-        Route::delete('/{iam_account_user}', 'IamAccountUser\IamAccountUserController@destroy');
+        Route::get('/', 'AccountUser\AccountUserController@index');
+        Route::get('/{iam_account_user}', 'AccountUser\AccountUserController@show');
+        Route::post('/', 'AccountUser\AccountUserController@store');
+        Route::patch('/{iam_account_user}', 'AccountUser\AccountUserController@update');
+        Route::delete('/{iam_account_user}', 'AccountUser\AccountUserController@destroy');
     });
 
 Route::prefix('accounts')->group(function () {
-        Route::get('/', 'IamAccount\IamAccountController@index');
-        Route::get('/{iam_accounts}', 'IamAccount\IamAccountController@show');
-        Route::post('/', 'IamAccount\IamAccountController@store');
-        Route::patch('/{iam_accounts}', 'IamAccount\IamAccountController@update');
-        Route::delete('/{iam_accounts}', 'IamAccount\IamAccountController@destroy');
+        Route::get('/', 'Accounts\AccountsController@index');
+        Route::get('/{iam_accounts}', 'Accounts\AccountsController@show');
+        Route::post('/', 'Accounts\AccountsController@store');
+        Route::patch('/{iam_accounts}', 'Accounts\AccountsController@update');
+        Route::delete('/{iam_accounts}', 'Accounts\AccountsController@destroy');
     });
 
 Route::prefix('backends')->group(function () {
-        Route::get('/', 'IamBackend\IamBackendController@index');
-        Route::get('/{iam_backends}', 'IamBackend\IamBackendController@show');
-        Route::post('/', 'IamBackend\IamBackendController@store');
-        Route::patch('/{iam_backends}', 'IamBackend\IamBackendController@update');
-        Route::delete('/{iam_backends}', 'IamBackend\IamBackendController@destroy');
+        Route::get('/', 'Backends\BackendsController@index');
+        Route::get('/{iam_backends}', 'Backends\BackendsController@show');
+        Route::post('/', 'Backends\BackendsController@store');
+        Route::patch('/{iam_backends}', 'Backends\BackendsController@update');
+        Route::delete('/{iam_backends}', 'Backends\BackendsController@destroy');
     });
 
 Route::prefix('login-logs')->group(function () {
-        Route::get('/', 'IamLoginLog\IamLoginLogController@index');
-        Route::get('/{iam_login_logs}', 'IamLoginLog\IamLoginLogController@show');
-        Route::post('/', 'IamLoginLog\IamLoginLogController@store');
-        Route::patch('/{iam_login_logs}', 'IamLoginLog\IamLoginLogController@update');
-        Route::delete('/{iam_login_logs}', 'IamLoginLog\IamLoginLogController@destroy');
+        Route::get('/', 'LoginLogs\LoginLogsController@index');
+        Route::get('/{iam_login_logs}', 'LoginLogs\LoginLogsController@show');
+        Route::post('/', 'LoginLogs\LoginLogsController@store');
+        Route::patch('/{iam_login_logs}', 'LoginLogs\LoginLogsController@update');
+        Route::delete('/{iam_login_logs}', 'LoginLogs\LoginLogsController@destroy');
     });
 
 Route::prefix('login-mechanisms')->group(function () {
-        Route::get('/', 'IamLoginMechanism\IamLoginMechanismController@index');
-        Route::get('/{iam_login_mechanisms}', 'IamLoginMechanism\IamLoginMechanismController@show');
-        Route::post('/', 'IamLoginMechanism\IamLoginMechanismController@store');
-        Route::patch('/{iam_login_mechanisms}', 'IamLoginMechanism\IamLoginMechanismController@update');
-        Route::delete('/{iam_login_mechanisms}', 'IamLoginMechanism\IamLoginMechanismController@destroy');
+        Route::get('/', 'LoginMechanisms\LoginMechanismsController@index');
+        Route::get('/{iam_login_mechanisms}', 'LoginMechanisms\LoginMechanismsController@show');
+        Route::post('/', 'LoginMechanisms\LoginMechanismsController@store');
+        Route::patch('/{iam_login_mechanisms}', 'LoginMechanisms\LoginMechanismsController@update');
+        Route::delete('/{iam_login_mechanisms}', 'LoginMechanisms\LoginMechanismsController@destroy');
     });
 
 Route::prefix('permissions')->group(function () {
-        Route::get('/', 'IamPermission\IamPermissionController@index');
-        Route::get('/{iam_permissions}', 'IamPermission\IamPermissionController@show');
-        Route::post('/', 'IamPermission\IamPermissionController@store');
-        Route::patch('/{iam_permissions}', 'IamPermission\IamPermissionController@update');
-        Route::delete('/{iam_permissions}', 'IamPermission\IamPermissionController@destroy');
+        Route::get('/', 'Permissions\PermissionsController@index');
+        Route::get('/{iam_permissions}', 'Permissions\PermissionsController@show');
+        Route::post('/', 'Permissions\PermissionsController@store');
+        Route::patch('/{iam_permissions}', 'Permissions\PermissionsController@update');
+        Route::delete('/{iam_permissions}', 'Permissions\PermissionsController@destroy');
     });
 
 Route::prefix('role-permission')->group(function () {
-        Route::get('/', 'IamRolePermission\IamRolePermissionController@index');
-        Route::get('/{iam_role_permission}', 'IamRolePermission\IamRolePermissionController@show');
-        Route::post('/', 'IamRolePermission\IamRolePermissionController@store');
-        Route::patch('/{iam_role_permission}', 'IamRolePermission\IamRolePermissionController@update');
-        Route::delete('/{iam_role_permission}', 'IamRolePermission\IamRolePermissionController@destroy');
+        Route::get('/', 'RolePermission\RolePermissionController@index');
+        Route::get('/{iam_role_permission}', 'RolePermission\RolePermissionController@show');
+        Route::post('/', 'RolePermission\RolePermissionController@store');
+        Route::patch('/{iam_role_permission}', 'RolePermission\RolePermissionController@update');
+        Route::delete('/{iam_role_permission}', 'RolePermission\RolePermissionController@destroy');
     });
 
 Route::prefix('role-user')->group(function () {
-        Route::get('/', 'IamRoleUser\IamRoleUserController@index');
-        Route::get('/{iam_role_user}', 'IamRoleUser\IamRoleUserController@show');
-        Route::post('/', 'IamRoleUser\IamRoleUserController@store');
-        Route::patch('/{iam_role_user}', 'IamRoleUser\IamRoleUserController@update');
-        Route::delete('/{iam_role_user}', 'IamRoleUser\IamRoleUserController@destroy');
+        Route::get('/', 'RoleUser\RoleUserController@index');
+        Route::get('/{iam_role_user}', 'RoleUser\RoleUserController@show');
+        Route::post('/', 'RoleUser\RoleUserController@store');
+        Route::patch('/{iam_role_user}', 'RoleUser\RoleUserController@update');
+        Route::delete('/{iam_role_user}', 'RoleUser\RoleUserController@destroy');
     });
 
 Route::prefix('roles')->group(function () {
-        Route::get('/', 'IamRole\IamRoleController@index');
-        Route::get('/{iam_roles}', 'IamRole\IamRoleController@show');
-        Route::post('/', 'IamRole\IamRoleController@store');
-        Route::patch('/{iam_roles}', 'IamRole\IamRoleController@update');
-        Route::delete('/{iam_roles}', 'IamRole\IamRoleController@destroy');
+        Route::get('/', 'Roles\RolesController@index');
+        Route::get('/{iam_roles}', 'Roles\RolesController@show');
+        Route::post('/', 'Roles\RolesController@store');
+        Route::patch('/{iam_roles}', 'Roles\RolesController@update');
+        Route::delete('/{iam_roles}', 'Roles\RolesController@destroy');
     });
 
 Route::prefix('users')->group(function () {
-        Route::get('/', 'IamUser\IamUserController@index');
-        Route::get('/{iam_users}', 'IamUser\IamUserController@show');
-        Route::post('/', 'IamUser\IamUserController@store');
-        Route::patch('/{iam_users}', 'IamUser\IamUserController@update');
-        Route::delete('/{iam_users}', 'IamUser\IamUserController@destroy');
+        Route::get('/', 'Users\UsersController@index');
+        Route::get('/{iam_users}', 'Users\UsersController@show');
+        Route::post('/', 'Users\UsersController@store');
+        Route::patch('/{iam_users}', 'Users\UsersController@update');
+        Route::delete('/{iam_users}', 'Users\UsersController@destroy');
     });
 
-Route::prefix('user-account-overview')->group(function () {
-        Route::get('/', 'IamUserAccountOverview\IamUserAccountOverviewController@index');
-        Route::get('/{iam_user_account_overview}', 'IamUserAccountOverview\IamUserAccountOverviewController@show');
-        Route::post('/', 'IamUserAccountOverview\IamUserAccountOverviewController@store');
-        Route::patch('/{iam_user_account_overview}', 'IamUserAccountOverview\IamUserAccountOverviewController@update');
-        Route::delete('/{iam_user_account_overview}', 'IamUserAccountOverview\IamUserAccountOverviewController@destroy');
+Route::prefix('user-accounts')->group(function () {
+        Route::get('/', 'UserAccounts\UserAccountsController@index');
+        Route::get('/{iam_user_accounts}', 'UserAccounts\UserAccountsController@show');
+        Route::post('/', 'UserAccounts\UserAccountsController@store');
+        Route::patch('/{iam_user_accounts}', 'UserAccounts\UserAccountsController@update');
+        Route::delete('/{iam_user_accounts}', 'UserAccounts\UserAccountsController@destroy');
     });
 
-Route::prefix('user-role-overview')->group(function () {
-        Route::get('/', 'IamUserRoleOverview\IamUserRoleOverviewController@index');
-        Route::get('/{iam_user_role_overview}', 'IamUserRoleOverview\IamUserRoleOverviewController@show');
-        Route::post('/', 'IamUserRoleOverview\IamUserRoleOverviewController@store');
-        Route::patch('/{iam_user_role_overview}', 'IamUserRoleOverview\IamUserRoleOverviewController@update');
-        Route::delete('/{iam_user_role_overview}', 'IamUserRoleOverview\IamUserRoleOverviewController@destroy');
+Route::prefix('user-roles')->group(function () {
+        Route::get('/', 'UserRoles\UserRolesController@index');
+        Route::get('/{iam_user_roles}', 'UserRoles\UserRolesController@show');
+        Route::post('/', 'UserRoles\UserRolesController@store');
+        Route::patch('/{iam_user_roles}', 'UserRoles\UserRolesController@update');
+        Route::delete('/{iam_user_roles}', 'UserRoles\UserRolesController@destroy');
     });
 
-Route::prefix('view-user-accounts')->group(function () {
-        Route::get('/', 'IamViewUserAccount\IamViewUserAccountController@index');
-        Route::get('/{iam_view_user_accounts}', 'IamViewUserAccount\IamViewUserAccountController@show');
-        Route::post('/', 'IamViewUserAccount\IamViewUserAccountController@store');
-        Route::patch('/{iam_view_user_accounts}', 'IamViewUserAccount\IamViewUserAccountController@update');
-        Route::delete('/{iam_view_user_accounts}', 'IamViewUserAccount\IamViewUserAccountController@destroy');
-    });
-
-// EDIT AFTER HERE - WARNING: ABOVE THIS LINE MAY BE REGENERATED AND YOU MAY LOSE CODE\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n
+// EDIT AFTER HERE - WARNING: ABOVE THIS LINE MAY BE REGENERATED AND YOU MAY LOSE CODE\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n
 
     Route::prefix('authenticate')->group(function () {
         Route::post('/oauth/token', 'OAuth\AccessTokenController@issueToken');
@@ -121,13 +113,13 @@ Route::prefix('view-user-accounts')->group(function () {
     });
 
     Route::prefix('my')->group(function() {
-        Route::get('/roles', 'IamRole\IamMyRoleController@index');
-        Route::put('/roles', 'IamRole\IamMyRoleController@update');
+        Route::get('/roles', 'Roles\MyRolesController@index');
+        Route::put('/roles', 'Roles\MyRolesController@update');
 
-        Route::get('/accounts', 'IamAccount\IamMyAccountController@index');
-        Route::put('/accounts', 'IamAccount\IamMyAccountController@update');
+        Route::get('/accounts', 'Accounts\MyAccountsController@index');
+        Route::put('/accounts', 'Accounts\MyAccountsController@update');
 
-        Route::get('/contact', 'IamUser\IamMyUserController@index');
-        Route::put('/contact', 'IamUser\IamMyUserController@update');
+        Route::get('/contact', 'Users\MyUsersController@index');
+        Route::put('/contact', 'Users\MyUsersController@update');
     });
 });

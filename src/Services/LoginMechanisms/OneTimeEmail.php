@@ -143,7 +143,7 @@ class OneTimeEmail extends AbstractLogin implements ILoginService
     {
         $user = $mechanism->iamUser();
 
-        //$role = IamRoleService::
+        //$role = RolesService::
 
         return true;
         // TODO: Implement attempt() method.

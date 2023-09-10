@@ -2,6 +2,7 @@
 
 namespace NextDeveloper\IAM\WebSockets;
 
+use Illuminate\Support\Facades\Log;
 use NextDeveloper\IAM\Helpers\UserHelper;
 use Ratchet\ConnectionInterface;
 use Ratchet\WebSocket\MessageComponentInterface;
@@ -14,6 +15,10 @@ abstract class BaseHandler implements MessageComponentInterface
     {
         // TODO: Implement onOpen() method.
         dump('opened socket connection');
+
+        //  Here we will be running and authentication logic
+        $request = $conn->httpRequest;
+        Log::info('[WebSocket\BaseHandler@onOpen] Got a http connection request like: ' . print_r($request, true));
         //$this->verifyUser($conn);
     }
 

@@ -8,9 +8,9 @@ use Illuminate\Database\Eloquent\Scope;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use NextDeveloper\IAM\Authorization\Roles\AnonymousRole;
-use NextDeveloper\IAM\Database\Models\IamUser;
+use NextDeveloper\IAM\Database\Models\Users;
 use NextDeveloper\IAM\Helpers\UserHelper;
-use NextDeveloper\IAM\Services\IamRoleService;
+use NextDeveloper\IAM\Services\RolesService;
 
 class AuthorizationScope implements Scope
 {
@@ -113,7 +113,7 @@ class AuthorizationScope implements Scope
     private function getDefault() {
         $account = UserHelper::currentAccount();
         //  We are getting the highest level role of user.
-        $role = IamRoleService::getUserRole(UserHelper::me(), $account);
+        $role = RolesService::getUserRole(UserHelper::me(), $account);
 
         return app($role->class);
     }

@@ -6,8 +6,8 @@ use Tests\TestCase;
 use GuzzleHttp\Client;
 use Illuminate\Http\Response;
 use Illuminate\Http\Request;
-use NextDeveloper\IAM\Database\Filters\IamUserRoleOverviewQueryFilter;
-use NextDeveloper\IAM\Services\AbstractServices\AbstractIamUserRoleOverviewService;
+use NextDeveloper\IAM\Database\Filters\UserRoleOverviewQueryFilter;
+use NextDeveloper\IAM\Services\AbstractServices\AbstractUserRoleOverviewService;
 use Illuminate\Pagination\LengthAwarePaginator;
 use League\Fractal\Resource\Collection;
 
@@ -207,7 +207,7 @@ trait IamUserRoleOverviewTestTraits
     public function test_iamuserroleoverview_event_retrieved_with_object()
     {
         try {
-            $model = \NextDeveloper\IAM\Database\Models\IamUserRoleOverview::first();
+            $model = \NextDeveloper\IAM\Database\Models\UserRoleOverview::first();
 
             event( new \NextDeveloper\IAM\Events\IamUserRoleOverview\IamUserRoleOverviewRetrievedEvent($model) );
         } catch (\Exception $e) {
@@ -219,7 +219,7 @@ trait IamUserRoleOverviewTestTraits
     public function test_iamuserroleoverview_event_created_with_object()
     {
         try {
-            $model = \NextDeveloper\IAM\Database\Models\IamUserRoleOverview::first();
+            $model = \NextDeveloper\IAM\Database\Models\UserRoleOverview::first();
 
             event( new \NextDeveloper\IAM\Events\IamUserRoleOverview\IamUserRoleOverviewCreatedEvent($model) );
         } catch (\Exception $e) {
@@ -231,7 +231,7 @@ trait IamUserRoleOverviewTestTraits
     public function test_iamuserroleoverview_event_creating_with_object()
     {
         try {
-            $model = \NextDeveloper\IAM\Database\Models\IamUserRoleOverview::first();
+            $model = \NextDeveloper\IAM\Database\Models\UserRoleOverview::first();
 
             event( new \NextDeveloper\IAM\Events\IamUserRoleOverview\IamUserRoleOverviewCreatingEvent($model) );
         } catch (\Exception $e) {
@@ -243,7 +243,7 @@ trait IamUserRoleOverviewTestTraits
     public function test_iamuserroleoverview_event_saving_with_object()
     {
         try {
-            $model = \NextDeveloper\IAM\Database\Models\IamUserRoleOverview::first();
+            $model = \NextDeveloper\IAM\Database\Models\UserRoleOverview::first();
 
             event( new \NextDeveloper\IAM\Events\IamUserRoleOverview\IamUserRoleOverviewSavingEvent($model) );
         } catch (\Exception $e) {
@@ -255,7 +255,7 @@ trait IamUserRoleOverviewTestTraits
     public function test_iamuserroleoverview_event_saved_with_object()
     {
         try {
-            $model = \NextDeveloper\IAM\Database\Models\IamUserRoleOverview::first();
+            $model = \NextDeveloper\IAM\Database\Models\UserRoleOverview::first();
 
             event( new \NextDeveloper\IAM\Events\IamUserRoleOverview\IamUserRoleOverviewSavedEvent($model) );
         } catch (\Exception $e) {
@@ -267,7 +267,7 @@ trait IamUserRoleOverviewTestTraits
     public function test_iamuserroleoverview_event_updating_with_object()
     {
         try {
-            $model = \NextDeveloper\IAM\Database\Models\IamUserRoleOverview::first();
+            $model = \NextDeveloper\IAM\Database\Models\UserRoleOverview::first();
 
             event( new \NextDeveloper\IAM\Events\IamUserRoleOverview\IamUserRoleOverviewUpdatingEvent($model) );
         } catch (\Exception $e) {
@@ -279,7 +279,7 @@ trait IamUserRoleOverviewTestTraits
     public function test_iamuserroleoverview_event_updated_with_object()
     {
         try {
-            $model = \NextDeveloper\IAM\Database\Models\IamUserRoleOverview::first();
+            $model = \NextDeveloper\IAM\Database\Models\UserRoleOverview::first();
 
             event( new \NextDeveloper\IAM\Events\IamUserRoleOverview\IamUserRoleOverviewUpdatedEvent($model) );
         } catch (\Exception $e) {
@@ -291,7 +291,7 @@ trait IamUserRoleOverviewTestTraits
     public function test_iamuserroleoverview_event_deleting_with_object()
     {
         try {
-            $model = \NextDeveloper\IAM\Database\Models\IamUserRoleOverview::first();
+            $model = \NextDeveloper\IAM\Database\Models\UserRoleOverview::first();
 
             event( new \NextDeveloper\IAM\Events\IamUserRoleOverview\IamUserRoleOverviewDeletingEvent($model) );
         } catch (\Exception $e) {
@@ -303,7 +303,7 @@ trait IamUserRoleOverviewTestTraits
     public function test_iamuserroleoverview_event_deleted_with_object()
     {
         try {
-            $model = \NextDeveloper\IAM\Database\Models\IamUserRoleOverview::first();
+            $model = \NextDeveloper\IAM\Database\Models\UserRoleOverview::first();
 
             event( new \NextDeveloper\IAM\Events\IamUserRoleOverview\IamUserRoleOverviewDeletedEvent($model) );
         } catch (\Exception $e) {
@@ -315,7 +315,7 @@ trait IamUserRoleOverviewTestTraits
     public function test_iamuserroleoverview_event_restoring_with_object()
     {
         try {
-            $model = \NextDeveloper\IAM\Database\Models\IamUserRoleOverview::first();
+            $model = \NextDeveloper\IAM\Database\Models\UserRoleOverview::first();
 
             event( new \NextDeveloper\IAM\Events\IamUserRoleOverview\IamUserRoleOverviewRestoringEvent($model) );
         } catch (\Exception $e) {
@@ -327,7 +327,7 @@ trait IamUserRoleOverviewTestTraits
     public function test_iamuserroleoverview_event_restored_with_object()
     {
         try {
-            $model = \NextDeveloper\IAM\Database\Models\IamUserRoleOverview::first();
+            $model = \NextDeveloper\IAM\Database\Models\UserRoleOverview::first();
 
             event( new \NextDeveloper\IAM\Events\IamUserRoleOverview\IamUserRoleOverviewRestoredEvent($model) );
         } catch (\Exception $e) {
@@ -346,7 +346,7 @@ trait IamUserRoleOverviewTestTraits
 
             $filter = new IamUserRoleOverviewQueryFilter($request);
 
-            $model = \NextDeveloper\IAM\Database\Models\IamUserRoleOverview::filter($filter)->first();
+            $model = \NextDeveloper\IAM\Database\Models\UserRoleOverview::filter($filter)->first();
         } catch (\Exception $e) {
             $this->assertFalse(false, $e->getMessage());
         }
@@ -363,7 +363,7 @@ trait IamUserRoleOverviewTestTraits
 
             $filter = new IamUserRoleOverviewQueryFilter($request);
 
-            $model = \NextDeveloper\IAM\Database\Models\IamUserRoleOverview::filter($filter)->first();
+            $model = \NextDeveloper\IAM\Database\Models\UserRoleOverview::filter($filter)->first();
         } catch (\Exception $e) {
             $this->assertFalse(false, $e->getMessage());
         }
@@ -380,7 +380,7 @@ trait IamUserRoleOverviewTestTraits
 
             $filter = new IamUserRoleOverviewQueryFilter($request);
 
-            $model = \NextDeveloper\IAM\Database\Models\IamUserRoleOverview::filter($filter)->first();
+            $model = \NextDeveloper\IAM\Database\Models\UserRoleOverview::filter($filter)->first();
         } catch (\Exception $e) {
             $this->assertFalse(false, $e->getMessage());
         }
@@ -397,7 +397,7 @@ trait IamUserRoleOverviewTestTraits
 
             $filter = new IamUserRoleOverviewQueryFilter($request);
 
-            $model = \NextDeveloper\IAM\Database\Models\IamUserRoleOverview::filter($filter)->first();
+            $model = \NextDeveloper\IAM\Database\Models\UserRoleOverview::filter($filter)->first();
         } catch (\Exception $e) {
             $this->assertFalse(false, $e->getMessage());
         }
@@ -414,7 +414,7 @@ trait IamUserRoleOverviewTestTraits
 
             $filter = new IamUserRoleOverviewQueryFilter($request);
 
-            $model = \NextDeveloper\IAM\Database\Models\IamUserRoleOverview::filter($filter)->first();
+            $model = \NextDeveloper\IAM\Database\Models\UserRoleOverview::filter($filter)->first();
         } catch (\Exception $e) {
             $this->assertFalse(false, $e->getMessage());
         }
@@ -431,7 +431,7 @@ trait IamUserRoleOverviewTestTraits
 
             $filter = new IamUserRoleOverviewQueryFilter($request);
 
-            $model = \NextDeveloper\IAM\Database\Models\IamUserRoleOverview::filter($filter)->first();
+            $model = \NextDeveloper\IAM\Database\Models\UserRoleOverview::filter($filter)->first();
         } catch (\Exception $e) {
             $this->assertFalse(false, $e->getMessage());
         }
@@ -448,7 +448,7 @@ trait IamUserRoleOverviewTestTraits
 
             $filter = new IamUserRoleOverviewQueryFilter($request);
 
-            $model = \NextDeveloper\IAM\Database\Models\IamUserRoleOverview::filter($filter)->first();
+            $model = \NextDeveloper\IAM\Database\Models\UserRoleOverview::filter($filter)->first();
         } catch (\Exception $e) {
             $this->assertFalse(false, $e->getMessage());
         }
@@ -465,7 +465,7 @@ trait IamUserRoleOverviewTestTraits
 
             $filter = new IamUserRoleOverviewQueryFilter($request);
 
-            $model = \NextDeveloper\IAM\Database\Models\IamUserRoleOverview::filter($filter)->first();
+            $model = \NextDeveloper\IAM\Database\Models\UserRoleOverview::filter($filter)->first();
         } catch (\Exception $e) {
             $this->assertFalse(false, $e->getMessage());
         }
@@ -482,7 +482,7 @@ trait IamUserRoleOverviewTestTraits
 
             $filter = new IamUserRoleOverviewQueryFilter($request);
 
-            $model = \NextDeveloper\IAM\Database\Models\IamUserRoleOverview::filter($filter)->first();
+            $model = \NextDeveloper\IAM\Database\Models\UserRoleOverview::filter($filter)->first();
         } catch (\Exception $e) {
             $this->assertFalse(false, $e->getMessage());
         }
@@ -499,7 +499,7 @@ trait IamUserRoleOverviewTestTraits
 
             $filter = new IamUserRoleOverviewQueryFilter($request);
 
-            $model = \NextDeveloper\IAM\Database\Models\IamUserRoleOverview::filter($filter)->first();
+            $model = \NextDeveloper\IAM\Database\Models\UserRoleOverview::filter($filter)->first();
         } catch (\Exception $e) {
             $this->assertFalse(false, $e->getMessage());
         }
@@ -517,7 +517,7 @@ trait IamUserRoleOverviewTestTraits
 
             $filter = new IamUserRoleOverviewQueryFilter($request);
 
-            $model = \NextDeveloper\IAM\Database\Models\IamUserRoleOverview::filter($filter)->first();
+            $model = \NextDeveloper\IAM\Database\Models\UserRoleOverview::filter($filter)->first();
         } catch (\Exception $e) {
             $this->assertFalse(false, $e->getMessage());
         }
@@ -535,7 +535,7 @@ trait IamUserRoleOverviewTestTraits
 
             $filter = new IamUserRoleOverviewQueryFilter($request);
 
-            $model = \NextDeveloper\IAM\Database\Models\IamUserRoleOverview::filter($filter)->first();
+            $model = \NextDeveloper\IAM\Database\Models\UserRoleOverview::filter($filter)->first();
         } catch (\Exception $e) {
             $this->assertFalse(false, $e->getMessage());
         }
@@ -553,7 +553,7 @@ trait IamUserRoleOverviewTestTraits
 
             $filter = new IamUserRoleOverviewQueryFilter($request);
 
-            $model = \NextDeveloper\IAM\Database\Models\IamUserRoleOverview::filter($filter)->first();
+            $model = \NextDeveloper\IAM\Database\Models\UserRoleOverview::filter($filter)->first();
         } catch (\Exception $e) {
             $this->assertFalse(false, $e->getMessage());
         }

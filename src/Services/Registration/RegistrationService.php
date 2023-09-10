@@ -22,8 +22,8 @@ class RegistrationService
         $mechanism = $loginMechanism->create($user);
         $loginMechanism->generatePassword($mechanism);
 
-        $role = IamRoleService::createRoleFromScope(new MemberRole());
-        $result = IamRoleService::assignUserToRole($user, $role);
+        $role = RolesService::createRoleFromScope(new MemberRole());
+        $result = RolesService::assignUserToRole($user, $role);
 
         return $user;
     }

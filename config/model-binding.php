@@ -114,7 +114,7 @@ return [
     },
 
 'iamuserroleoverview' => function ($value) {
-        return NextDeveloper\IAM\Database\Models\IamUserRoleOverview::findByRef($value);
+        return NextDeveloper\IAM\Database\Models\UserRoleOverview::findByRef($value);
     },
 
 'iamuser' => function ($value) {
@@ -166,7 +166,7 @@ return [
     },
 
 'iamuserroleoverview' => function ($value) {
-        return NextDeveloper\IAM\Database\Models\IamUserRoleOverview::findByRef($value);
+        return NextDeveloper\IAM\Database\Models\UserRoleOverview::findByRef($value);
     },
 
 'iamuser' => function ($value) {

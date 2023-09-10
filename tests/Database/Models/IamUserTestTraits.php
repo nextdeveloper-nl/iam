@@ -59,6 +59,7 @@ trait IamUserTestTraits
                 'fullname'  =>  'a',
                 'username'  =>  'a',
                 'about'  =>  'a',
+                'pronoun'  =>  'a',
                 'nin'  =>  'a',
                 'cell_phone'  =>  'a',
                     'birthday'  =>  now(),
@@ -444,6 +445,23 @@ trait IamUserTestTraits
         $this->assertTrue(true);
     }
 
+    public function test_iamuser_event_pronoun_filter()
+    {
+        try {
+            $request = new Request([
+                'pronoun'  =>  'a'
+            ]);
+
+            $filter = new IamUserQueryFilter($request);
+
+            $model = \NextDeveloper\IAM\Database\Models\IamUser::filter($filter)->first();
+        } catch (\Exception $e) {
+            $this->assertFalse(false, $e->getMessage());
+        }
+
+        $this->assertTrue(true);
+    }
+
     public function test_iamuser_event_nin_filter()
     {
         try {
@@ -685,5 +703,5 @@ trait IamUserTestTraits
 
         $this->assertTrue(true);
     }
-    // EDIT AFTER HERE - WARNING: ABOVE THIS LINE MAY BE REGENERATED AND YOU MAY LOSE CODE\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n
+    // EDIT AFTER HERE - WARNING: ABOVE THIS LINE MAY BE REGENERATED AND YOU MAY LOSE CODE\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n
 }
