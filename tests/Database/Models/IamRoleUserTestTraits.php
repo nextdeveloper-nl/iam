@@ -16,18 +16,20 @@ trait IamRoleUserTestTraits
     public $http;
 
     /**
-    *   Creating the Guzzle object
-    */
+     *   Creating the Guzzle object
+     */
     public function setupGuzzle()
     {
-        $this->http = new Client([
+        $this->http = new Client(
+            [
             'base_uri'  =>  '127.0.0.1:8000'
-        ]);
+            ]
+        );
     }
 
     /**
-    *   Destroying the Guzzle object
-    */
+     *   Destroying the Guzzle object
+     */
     public function destroyGuzzle()
     {
         $this->http = null;
@@ -42,16 +44,19 @@ trait IamRoleUserTestTraits
             ['http_errors' => false]
         );
 
-        $this->assertContains($response->getStatusCode(), [
+        $this->assertContains(
+            $response->getStatusCode(), [
             Response::HTTP_OK,
             Response::HTTP_NOT_FOUND
-        ]);
+            ]
+        );
     }
 
     public function test_http_iamroleuser_post()
     {
         $this->setupGuzzle();
-        $response = $this->http->request('POST', '/iam/iamroleuser', [
+        $response = $this->http->request(
+            'POST', '/iam/iamroleuser', [
             'form_params'   =>  [
                 ],
                 ['http_errors' => false]
@@ -62,10 +67,10 @@ trait IamRoleUserTestTraits
     }
 
     /**
-    * Get test
-    *
-    * @return bool
-    */
+     * Get test
+     *
+     * @return bool
+     */
     public function test_iamroleuser_model_get()
     {
         $result = AbstractIamRoleUserService::get();
@@ -82,9 +87,11 @@ trait IamRoleUserTestTraits
 
     public function test_iamroleuser_get_paginated()
     {
-        $result = AbstractIamRoleUserService::get(null, [
+        $result = AbstractIamRoleUserService::get(
+            null, [
             'paginated' =>  'true'
-        ]);
+            ]
+        );
 
         $this->assertIsObject($result, LengthAwarePaginator::class);
     }
@@ -92,7 +99,7 @@ trait IamRoleUserTestTraits
     public function test_iamroleuser_event_retrieved_without_object()
     {
         try {
-            event( new \NextDeveloper\IAM\Events\IamRoleUser\IamRoleUserRetrievedEvent() );
+            event(new \NextDeveloper\IAM\Events\IamRoleUser\IamRoleUserRetrievedEvent());
         } catch (\Exception $e) {
             $this->assertFalse(false, $e->getMessage());
         }
@@ -102,7 +109,7 @@ trait IamRoleUserTestTraits
     public function test_iamroleuser_event_created_without_object()
     {
         try {
-            event( new \NextDeveloper\IAM\Events\IamRoleUser\IamRoleUserCreatedEvent() );
+            event(new \NextDeveloper\IAM\Events\IamRoleUser\IamRoleUserCreatedEvent());
         } catch (\Exception $e) {
             $this->assertFalse(false, $e->getMessage());
         }
@@ -112,7 +119,7 @@ trait IamRoleUserTestTraits
     public function test_iamroleuser_event_creating_without_object()
     {
         try {
-            event( new \NextDeveloper\IAM\Events\IamRoleUser\IamRoleUserCreatingEvent() );
+            event(new \NextDeveloper\IAM\Events\IamRoleUser\IamRoleUserCreatingEvent());
         } catch (\Exception $e) {
             $this->assertFalse(false, $e->getMessage());
         }
@@ -122,7 +129,7 @@ trait IamRoleUserTestTraits
     public function test_iamroleuser_event_saving_without_object()
     {
         try {
-            event( new \NextDeveloper\IAM\Events\IamRoleUser\IamRoleUserSavingEvent() );
+            event(new \NextDeveloper\IAM\Events\IamRoleUser\IamRoleUserSavingEvent());
         } catch (\Exception $e) {
             $this->assertFalse(false, $e->getMessage());
         }
@@ -132,7 +139,7 @@ trait IamRoleUserTestTraits
     public function test_iamroleuser_event_saved_without_object()
     {
         try {
-            event( new \NextDeveloper\IAM\Events\IamRoleUser\IamRoleUserSavedEvent() );
+            event(new \NextDeveloper\IAM\Events\IamRoleUser\IamRoleUserSavedEvent());
         } catch (\Exception $e) {
             $this->assertFalse(false, $e->getMessage());
         }
@@ -142,7 +149,7 @@ trait IamRoleUserTestTraits
     public function test_iamroleuser_event_updating_without_object()
     {
         try {
-            event( new \NextDeveloper\IAM\Events\IamRoleUser\IamRoleUserUpdatingEvent() );
+            event(new \NextDeveloper\IAM\Events\IamRoleUser\IamRoleUserUpdatingEvent());
         } catch (\Exception $e) {
             $this->assertFalse(false, $e->getMessage());
         }
@@ -152,7 +159,7 @@ trait IamRoleUserTestTraits
     public function test_iamroleuser_event_updated_without_object()
     {
         try {
-            event( new \NextDeveloper\IAM\Events\IamRoleUser\IamRoleUserUpdatedEvent() );
+            event(new \NextDeveloper\IAM\Events\IamRoleUser\IamRoleUserUpdatedEvent());
         } catch (\Exception $e) {
             $this->assertFalse(false, $e->getMessage());
         }
@@ -162,7 +169,7 @@ trait IamRoleUserTestTraits
     public function test_iamroleuser_event_deleting_without_object()
     {
         try {
-            event( new \NextDeveloper\IAM\Events\IamRoleUser\IamRoleUserDeletingEvent() );
+            event(new \NextDeveloper\IAM\Events\IamRoleUser\IamRoleUserDeletingEvent());
         } catch (\Exception $e) {
             $this->assertFalse(false, $e->getMessage());
         }
@@ -172,7 +179,7 @@ trait IamRoleUserTestTraits
     public function test_iamroleuser_event_deleted_without_object()
     {
         try {
-            event( new \NextDeveloper\IAM\Events\IamRoleUser\IamRoleUserDeletedEvent() );
+            event(new \NextDeveloper\IAM\Events\IamRoleUser\IamRoleUserDeletedEvent());
         } catch (\Exception $e) {
             $this->assertFalse(false, $e->getMessage());
         }
@@ -182,7 +189,7 @@ trait IamRoleUserTestTraits
     public function test_iamroleuser_event_restoring_without_object()
     {
         try {
-            event( new \NextDeveloper\IAM\Events\IamRoleUser\IamRoleUserRestoringEvent() );
+            event(new \NextDeveloper\IAM\Events\IamRoleUser\IamRoleUserRestoringEvent());
         } catch (\Exception $e) {
             $this->assertFalse(false, $e->getMessage());
         }
@@ -192,7 +199,7 @@ trait IamRoleUserTestTraits
     public function test_iamroleuser_event_restored_without_object()
     {
         try {
-            event( new \NextDeveloper\IAM\Events\IamRoleUser\IamRoleUserRestoredEvent() );
+            event(new \NextDeveloper\IAM\Events\IamRoleUser\IamRoleUserRestoredEvent());
         } catch (\Exception $e) {
             $this->assertFalse(false, $e->getMessage());
         }
@@ -205,7 +212,7 @@ trait IamRoleUserTestTraits
         try {
             $model = \NextDeveloper\IAM\Database\Models\IamRoleUser::first();
 
-            event( new \NextDeveloper\IAM\Events\IamRoleUser\IamRoleUserRetrievedEvent($model) );
+            event(new \NextDeveloper\IAM\Events\IamRoleUser\IamRoleUserRetrievedEvent($model));
         } catch (\Exception $e) {
             $this->assertFalse(false, $e->getMessage());
         }
@@ -217,7 +224,7 @@ trait IamRoleUserTestTraits
         try {
             $model = \NextDeveloper\IAM\Database\Models\IamRoleUser::first();
 
-            event( new \NextDeveloper\IAM\Events\IamRoleUser\IamRoleUserCreatedEvent($model) );
+            event(new \NextDeveloper\IAM\Events\IamRoleUser\IamRoleUserCreatedEvent($model));
         } catch (\Exception $e) {
             $this->assertFalse(false, $e->getMessage());
         }
@@ -229,7 +236,7 @@ trait IamRoleUserTestTraits
         try {
             $model = \NextDeveloper\IAM\Database\Models\IamRoleUser::first();
 
-            event( new \NextDeveloper\IAM\Events\IamRoleUser\IamRoleUserCreatingEvent($model) );
+            event(new \NextDeveloper\IAM\Events\IamRoleUser\IamRoleUserCreatingEvent($model));
         } catch (\Exception $e) {
             $this->assertFalse(false, $e->getMessage());
         }
@@ -241,7 +248,7 @@ trait IamRoleUserTestTraits
         try {
             $model = \NextDeveloper\IAM\Database\Models\IamRoleUser::first();
 
-            event( new \NextDeveloper\IAM\Events\IamRoleUser\IamRoleUserSavingEvent($model) );
+            event(new \NextDeveloper\IAM\Events\IamRoleUser\IamRoleUserSavingEvent($model));
         } catch (\Exception $e) {
             $this->assertFalse(false, $e->getMessage());
         }
@@ -253,7 +260,7 @@ trait IamRoleUserTestTraits
         try {
             $model = \NextDeveloper\IAM\Database\Models\IamRoleUser::first();
 
-            event( new \NextDeveloper\IAM\Events\IamRoleUser\IamRoleUserSavedEvent($model) );
+            event(new \NextDeveloper\IAM\Events\IamRoleUser\IamRoleUserSavedEvent($model));
         } catch (\Exception $e) {
             $this->assertFalse(false, $e->getMessage());
         }
@@ -265,7 +272,7 @@ trait IamRoleUserTestTraits
         try {
             $model = \NextDeveloper\IAM\Database\Models\IamRoleUser::first();
 
-            event( new \NextDeveloper\IAM\Events\IamRoleUser\IamRoleUserUpdatingEvent($model) );
+            event(new \NextDeveloper\IAM\Events\IamRoleUser\IamRoleUserUpdatingEvent($model));
         } catch (\Exception $e) {
             $this->assertFalse(false, $e->getMessage());
         }
@@ -277,7 +284,7 @@ trait IamRoleUserTestTraits
         try {
             $model = \NextDeveloper\IAM\Database\Models\IamRoleUser::first();
 
-            event( new \NextDeveloper\IAM\Events\IamRoleUser\IamRoleUserUpdatedEvent($model) );
+            event(new \NextDeveloper\IAM\Events\IamRoleUser\IamRoleUserUpdatedEvent($model));
         } catch (\Exception $e) {
             $this->assertFalse(false, $e->getMessage());
         }
@@ -289,7 +296,7 @@ trait IamRoleUserTestTraits
         try {
             $model = \NextDeveloper\IAM\Database\Models\IamRoleUser::first();
 
-            event( new \NextDeveloper\IAM\Events\IamRoleUser\IamRoleUserDeletingEvent($model) );
+            event(new \NextDeveloper\IAM\Events\IamRoleUser\IamRoleUserDeletingEvent($model));
         } catch (\Exception $e) {
             $this->assertFalse(false, $e->getMessage());
         }
@@ -301,7 +308,7 @@ trait IamRoleUserTestTraits
         try {
             $model = \NextDeveloper\IAM\Database\Models\IamRoleUser::first();
 
-            event( new \NextDeveloper\IAM\Events\IamRoleUser\IamRoleUserDeletedEvent($model) );
+            event(new \NextDeveloper\IAM\Events\IamRoleUser\IamRoleUserDeletedEvent($model));
         } catch (\Exception $e) {
             $this->assertFalse(false, $e->getMessage());
         }
@@ -313,7 +320,7 @@ trait IamRoleUserTestTraits
         try {
             $model = \NextDeveloper\IAM\Database\Models\IamRoleUser::first();
 
-            event( new \NextDeveloper\IAM\Events\IamRoleUser\IamRoleUserRestoringEvent($model) );
+            event(new \NextDeveloper\IAM\Events\IamRoleUser\IamRoleUserRestoringEvent($model));
         } catch (\Exception $e) {
             $this->assertFalse(false, $e->getMessage());
         }
@@ -325,12 +332,12 @@ trait IamRoleUserTestTraits
         try {
             $model = \NextDeveloper\IAM\Database\Models\IamRoleUser::first();
 
-            event( new \NextDeveloper\IAM\Events\IamRoleUser\IamRoleUserRestoredEvent($model) );
+            event(new \NextDeveloper\IAM\Events\IamRoleUser\IamRoleUserRestoredEvent($model));
         } catch (\Exception $e) {
             $this->assertFalse(false, $e->getMessage());
         }
 
         $this->assertTrue(true);
     }
-    // EDIT AFTER HERE - WARNING: ABOVE THIS LINE MAY BE REGENERATED AND YOU MAY LOSE CODE\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n
+    // EDIT AFTER HERE - WARNING: ABOVE THIS LINE MAY BE REGENERATED AND YOU MAY LOSE CODE\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n
 }

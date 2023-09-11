@@ -16,18 +16,20 @@ trait IamAccountTypeTestTraits
     public $http;
 
     /**
-    *   Creating the Guzzle object
-    */
+     *   Creating the Guzzle object
+     */
     public function setupGuzzle()
     {
-        $this->http = new Client([
+        $this->http = new Client(
+            [
             'base_uri'  =>  '127.0.0.1:8000'
-        ]);
+            ]
+        );
     }
 
     /**
-    *   Destroying the Guzzle object
-    */
+     *   Destroying the Guzzle object
+     */
     public function destroyGuzzle()
     {
         $this->http = null;
@@ -42,16 +44,19 @@ trait IamAccountTypeTestTraits
             ['http_errors' => false]
         );
 
-        $this->assertContains($response->getStatusCode(), [
+        $this->assertContains(
+            $response->getStatusCode(), [
             Response::HTTP_OK,
             Response::HTTP_NOT_FOUND
-        ]);
+            ]
+        );
     }
 
     public function test_http_iamaccounttype_post()
     {
         $this->setupGuzzle();
-        $response = $this->http->request('POST', '/iam/iamaccounttype', [
+        $response = $this->http->request(
+            'POST', '/iam/iamaccounttype', [
             'form_params'   =>  [
                 'name'  =>  'a',
                 'description'  =>  'a',
@@ -64,10 +69,10 @@ trait IamAccountTypeTestTraits
     }
 
     /**
-    * Get test
-    *
-    * @return bool
-    */
+     * Get test
+     *
+     * @return bool
+     */
     public function test_iamaccounttype_model_get()
     {
         $result = AbstractIamAccountTypeService::get();
@@ -84,9 +89,11 @@ trait IamAccountTypeTestTraits
 
     public function test_iamaccounttype_get_paginated()
     {
-        $result = AbstractIamAccountTypeService::get(null, [
+        $result = AbstractIamAccountTypeService::get(
+            null, [
             'paginated' =>  'true'
-        ]);
+            ]
+        );
 
         $this->assertIsObject($result, LengthAwarePaginator::class);
     }
@@ -94,7 +101,7 @@ trait IamAccountTypeTestTraits
     public function test_iamaccounttype_event_retrieved_without_object()
     {
         try {
-            event( new \NextDeveloper\IAM\Events\IamAccountType\IamAccountTypeRetrievedEvent() );
+            event(new \NextDeveloper\IAM\Events\IamAccountType\IamAccountTypeRetrievedEvent());
         } catch (\Exception $e) {
             $this->assertFalse(false, $e->getMessage());
         }
@@ -104,7 +111,7 @@ trait IamAccountTypeTestTraits
     public function test_iamaccounttype_event_created_without_object()
     {
         try {
-            event( new \NextDeveloper\IAM\Events\IamAccountType\IamAccountTypeCreatedEvent() );
+            event(new \NextDeveloper\IAM\Events\IamAccountType\IamAccountTypeCreatedEvent());
         } catch (\Exception $e) {
             $this->assertFalse(false, $e->getMessage());
         }
@@ -114,7 +121,7 @@ trait IamAccountTypeTestTraits
     public function test_iamaccounttype_event_creating_without_object()
     {
         try {
-            event( new \NextDeveloper\IAM\Events\IamAccountType\IamAccountTypeCreatingEvent() );
+            event(new \NextDeveloper\IAM\Events\IamAccountType\IamAccountTypeCreatingEvent());
         } catch (\Exception $e) {
             $this->assertFalse(false, $e->getMessage());
         }
@@ -124,7 +131,7 @@ trait IamAccountTypeTestTraits
     public function test_iamaccounttype_event_saving_without_object()
     {
         try {
-            event( new \NextDeveloper\IAM\Events\IamAccountType\IamAccountTypeSavingEvent() );
+            event(new \NextDeveloper\IAM\Events\IamAccountType\IamAccountTypeSavingEvent());
         } catch (\Exception $e) {
             $this->assertFalse(false, $e->getMessage());
         }
@@ -134,7 +141,7 @@ trait IamAccountTypeTestTraits
     public function test_iamaccounttype_event_saved_without_object()
     {
         try {
-            event( new \NextDeveloper\IAM\Events\IamAccountType\IamAccountTypeSavedEvent() );
+            event(new \NextDeveloper\IAM\Events\IamAccountType\IamAccountTypeSavedEvent());
         } catch (\Exception $e) {
             $this->assertFalse(false, $e->getMessage());
         }
@@ -144,7 +151,7 @@ trait IamAccountTypeTestTraits
     public function test_iamaccounttype_event_updating_without_object()
     {
         try {
-            event( new \NextDeveloper\IAM\Events\IamAccountType\IamAccountTypeUpdatingEvent() );
+            event(new \NextDeveloper\IAM\Events\IamAccountType\IamAccountTypeUpdatingEvent());
         } catch (\Exception $e) {
             $this->assertFalse(false, $e->getMessage());
         }
@@ -154,7 +161,7 @@ trait IamAccountTypeTestTraits
     public function test_iamaccounttype_event_updated_without_object()
     {
         try {
-            event( new \NextDeveloper\IAM\Events\IamAccountType\IamAccountTypeUpdatedEvent() );
+            event(new \NextDeveloper\IAM\Events\IamAccountType\IamAccountTypeUpdatedEvent());
         } catch (\Exception $e) {
             $this->assertFalse(false, $e->getMessage());
         }
@@ -164,7 +171,7 @@ trait IamAccountTypeTestTraits
     public function test_iamaccounttype_event_deleting_without_object()
     {
         try {
-            event( new \NextDeveloper\IAM\Events\IamAccountType\IamAccountTypeDeletingEvent() );
+            event(new \NextDeveloper\IAM\Events\IamAccountType\IamAccountTypeDeletingEvent());
         } catch (\Exception $e) {
             $this->assertFalse(false, $e->getMessage());
         }
@@ -174,7 +181,7 @@ trait IamAccountTypeTestTraits
     public function test_iamaccounttype_event_deleted_without_object()
     {
         try {
-            event( new \NextDeveloper\IAM\Events\IamAccountType\IamAccountTypeDeletedEvent() );
+            event(new \NextDeveloper\IAM\Events\IamAccountType\IamAccountTypeDeletedEvent());
         } catch (\Exception $e) {
             $this->assertFalse(false, $e->getMessage());
         }
@@ -184,7 +191,7 @@ trait IamAccountTypeTestTraits
     public function test_iamaccounttype_event_restoring_without_object()
     {
         try {
-            event( new \NextDeveloper\IAM\Events\IamAccountType\IamAccountTypeRestoringEvent() );
+            event(new \NextDeveloper\IAM\Events\IamAccountType\IamAccountTypeRestoringEvent());
         } catch (\Exception $e) {
             $this->assertFalse(false, $e->getMessage());
         }
@@ -194,7 +201,7 @@ trait IamAccountTypeTestTraits
     public function test_iamaccounttype_event_restored_without_object()
     {
         try {
-            event( new \NextDeveloper\IAM\Events\IamAccountType\IamAccountTypeRestoredEvent() );
+            event(new \NextDeveloper\IAM\Events\IamAccountType\IamAccountTypeRestoredEvent());
         } catch (\Exception $e) {
             $this->assertFalse(false, $e->getMessage());
         }
@@ -207,7 +214,7 @@ trait IamAccountTypeTestTraits
         try {
             $model = \NextDeveloper\IAM\Database\Models\IamAccountType::first();
 
-            event( new \NextDeveloper\IAM\Events\IamAccountType\IamAccountTypeRetrievedEvent($model) );
+            event(new \NextDeveloper\IAM\Events\IamAccountType\IamAccountTypeRetrievedEvent($model));
         } catch (\Exception $e) {
             $this->assertFalse(false, $e->getMessage());
         }
@@ -219,7 +226,7 @@ trait IamAccountTypeTestTraits
         try {
             $model = \NextDeveloper\IAM\Database\Models\IamAccountType::first();
 
-            event( new \NextDeveloper\IAM\Events\IamAccountType\IamAccountTypeCreatedEvent($model) );
+            event(new \NextDeveloper\IAM\Events\IamAccountType\IamAccountTypeCreatedEvent($model));
         } catch (\Exception $e) {
             $this->assertFalse(false, $e->getMessage());
         }
@@ -231,7 +238,7 @@ trait IamAccountTypeTestTraits
         try {
             $model = \NextDeveloper\IAM\Database\Models\IamAccountType::first();
 
-            event( new \NextDeveloper\IAM\Events\IamAccountType\IamAccountTypeCreatingEvent($model) );
+            event(new \NextDeveloper\IAM\Events\IamAccountType\IamAccountTypeCreatingEvent($model));
         } catch (\Exception $e) {
             $this->assertFalse(false, $e->getMessage());
         }
@@ -243,7 +250,7 @@ trait IamAccountTypeTestTraits
         try {
             $model = \NextDeveloper\IAM\Database\Models\IamAccountType::first();
 
-            event( new \NextDeveloper\IAM\Events\IamAccountType\IamAccountTypeSavingEvent($model) );
+            event(new \NextDeveloper\IAM\Events\IamAccountType\IamAccountTypeSavingEvent($model));
         } catch (\Exception $e) {
             $this->assertFalse(false, $e->getMessage());
         }
@@ -255,7 +262,7 @@ trait IamAccountTypeTestTraits
         try {
             $model = \NextDeveloper\IAM\Database\Models\IamAccountType::first();
 
-            event( new \NextDeveloper\IAM\Events\IamAccountType\IamAccountTypeSavedEvent($model) );
+            event(new \NextDeveloper\IAM\Events\IamAccountType\IamAccountTypeSavedEvent($model));
         } catch (\Exception $e) {
             $this->assertFalse(false, $e->getMessage());
         }
@@ -267,7 +274,7 @@ trait IamAccountTypeTestTraits
         try {
             $model = \NextDeveloper\IAM\Database\Models\IamAccountType::first();
 
-            event( new \NextDeveloper\IAM\Events\IamAccountType\IamAccountTypeUpdatingEvent($model) );
+            event(new \NextDeveloper\IAM\Events\IamAccountType\IamAccountTypeUpdatingEvent($model));
         } catch (\Exception $e) {
             $this->assertFalse(false, $e->getMessage());
         }
@@ -279,7 +286,7 @@ trait IamAccountTypeTestTraits
         try {
             $model = \NextDeveloper\IAM\Database\Models\IamAccountType::first();
 
-            event( new \NextDeveloper\IAM\Events\IamAccountType\IamAccountTypeUpdatedEvent($model) );
+            event(new \NextDeveloper\IAM\Events\IamAccountType\IamAccountTypeUpdatedEvent($model));
         } catch (\Exception $e) {
             $this->assertFalse(false, $e->getMessage());
         }
@@ -291,7 +298,7 @@ trait IamAccountTypeTestTraits
         try {
             $model = \NextDeveloper\IAM\Database\Models\IamAccountType::first();
 
-            event( new \NextDeveloper\IAM\Events\IamAccountType\IamAccountTypeDeletingEvent($model) );
+            event(new \NextDeveloper\IAM\Events\IamAccountType\IamAccountTypeDeletingEvent($model));
         } catch (\Exception $e) {
             $this->assertFalse(false, $e->getMessage());
         }
@@ -303,7 +310,7 @@ trait IamAccountTypeTestTraits
         try {
             $model = \NextDeveloper\IAM\Database\Models\IamAccountType::first();
 
-            event( new \NextDeveloper\IAM\Events\IamAccountType\IamAccountTypeDeletedEvent($model) );
+            event(new \NextDeveloper\IAM\Events\IamAccountType\IamAccountTypeDeletedEvent($model));
         } catch (\Exception $e) {
             $this->assertFalse(false, $e->getMessage());
         }
@@ -315,7 +322,7 @@ trait IamAccountTypeTestTraits
         try {
             $model = \NextDeveloper\IAM\Database\Models\IamAccountType::first();
 
-            event( new \NextDeveloper\IAM\Events\IamAccountType\IamAccountTypeRestoringEvent($model) );
+            event(new \NextDeveloper\IAM\Events\IamAccountType\IamAccountTypeRestoringEvent($model));
         } catch (\Exception $e) {
             $this->assertFalse(false, $e->getMessage());
         }
@@ -327,7 +334,7 @@ trait IamAccountTypeTestTraits
         try {
             $model = \NextDeveloper\IAM\Database\Models\IamAccountType::first();
 
-            event( new \NextDeveloper\IAM\Events\IamAccountType\IamAccountTypeRestoredEvent($model) );
+            event(new \NextDeveloper\IAM\Events\IamAccountType\IamAccountTypeRestoredEvent($model));
         } catch (\Exception $e) {
             $this->assertFalse(false, $e->getMessage());
         }
@@ -338,9 +345,11 @@ trait IamAccountTypeTestTraits
     public function test_iamaccounttype_event_name_filter()
     {
         try {
-            $request = new Request([
+            $request = new Request(
+                [
                 'name'  =>  'a'
-            ]);
+                ]
+            );
 
             $filter = new IamAccountTypeQueryFilter($request);
 
@@ -355,9 +364,11 @@ trait IamAccountTypeTestTraits
     public function test_iamaccounttype_event_description_filter()
     {
         try {
-            $request = new Request([
+            $request = new Request(
+                [
                 'description'  =>  'a'
-            ]);
+                ]
+            );
 
             $filter = new IamAccountTypeQueryFilter($request);
 
@@ -368,5 +379,5 @@ trait IamAccountTypeTestTraits
 
         $this->assertTrue(true);
     }
-    // EDIT AFTER HERE - WARNING: ABOVE THIS LINE MAY BE REGENERATED AND YOU MAY LOSE CODE\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n
+    // EDIT AFTER HERE - WARNING: ABOVE THIS LINE MAY BE REGENERATED AND YOU MAY LOSE CODE\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n
 }

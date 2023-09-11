@@ -14,8 +14,8 @@ use NextDeveloper\Accounts\Database\Models\User;
 class RoleUsersQueryFilter extends AbstractQueryFilter
 {
     /**
-    * @var Builder
-    */
+     * @var Builder
+     */
     protected $builder;
 
     public function isActive()
@@ -50,5 +50,5 @@ class RoleUsersQueryFilter extends AbstractQueryFilter
         }
     }
 
-    // EDIT AFTER HERE - WARNING: ABOVE THIS LINE MAY BE REGENERATED AND YOU MAY LOSE CODE\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n
+    // EDIT AFTER HERE - WARNING: ABOVE THIS LINE MAY BE REGENERATED AND YOU MAY LOSE CODE\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n
 }

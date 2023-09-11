@@ -10,36 +10,42 @@ use NextDeveloper\Commons\Http\Transformers\AbstractTransformer;
  *
  * @package NextDeveloper\IAM\Http\Transformers
  */
-class AbstractUserRolesTransformer extends AbstractTransformer {
+class AbstractUserRolesTransformer extends AbstractTransformer
+{
 
     /**
      * @param UserRoles $model
      *
      * @return array
      */
-    public function transform(UserRoles $model) {
+    public function transform(UserRoles $model)
+    {
                         $iamRoleId = \NextDeveloper\IAM\Database\Models\Roles::where('id', $model->iam_role_id)->first();
                     $iamUserId = \NextDeveloper\IAM\Database\Models\Users::where('id', $model->iam_user_id)->first();
                     $iamAccountId = \NextDeveloper\IAM\Database\Models\Accounts::where('id', $model->iam_account_id)->first();
             
-        return $this->buildPayload([
-'id'  =>  $model->uuid,
-'name'  =>  $model->name,
-'class'  =>  $model->class,
-'level'  =>  $model->level,
-'description'  =>  $model->description,
-'created_at'  =>  $model->created_at,
-'updated_at'  =>  $model->updated_at,
-'deleted_at'  =>  $model->deleted_at,
-'iam_role_id'  =>  $iamRoleId ? $iamRoleId->uuid : null,
-'iam_user_id'  =>  $iamUserId ? $iamUserId->uuid : null,
-'iam_account_id'  =>  $iamAccountId ? $iamAccountId->uuid : null,
-'is_active'  =>  $model->is_active,
-'role_data'  =>  $model->role_data,
-    ]);
+        return $this->buildPayload(
+            [
+            'id'  =>  $model->uuid,
+            'name'  =>  $model->name,
+            'class'  =>  $model->class,
+            'level'  =>  $model->level,
+            'description'  =>  $model->description,
+            'created_at'  =>  $model->created_at,
+            'updated_at'  =>  $model->updated_at,
+            'deleted_at'  =>  $model->deleted_at,
+            'iam_role_id'  =>  $iamRoleId ? $iamRoleId->uuid : null,
+            'iam_user_id'  =>  $iamUserId ? $iamUserId->uuid : null,
+            'iam_account_id'  =>  $iamAccountId ? $iamAccountId->uuid : null,
+            'is_active'  =>  $model->is_active,
+            'role_data'  =>  $model->role_data,
+            ]
+        );
     }
     
-    // EDIT AFTER HERE - WARNING: ABOVE THIS LINE MAY BE REGENERATED AND YOU MAY LOSE CODE\n\n\n\n
+    // EDIT AFTER HERE - WARNING: ABOVE THIS LINE MAY BE REGENERATED AND YOU MAY LOSE CODE\n\n\n\n\n\n\n\n
+
+
 
 
 }

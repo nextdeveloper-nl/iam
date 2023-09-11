@@ -14,18 +14,18 @@ use NextDeveloper\Accounts\Database\Models\User;
 class LoginLogsQueryFilter extends AbstractQueryFilter
 {
     /**
-    * @var Builder
-    */
+     * @var Builder
+     */
     protected $builder;
 
     public function createdAtStart($date) 
     {
-        return $this->builder->where( 'created_at', '>=', $date );
+        return $this->builder->where('created_at', '>=', $date);
     }
 
     public function createdAtEnd($date) 
     {
-        return $this->builder->where( 'created_at', '<=', $date );
+        return $this->builder->where('created_at', '<=', $date);
     }
 
     public function iamUserId($value)
@@ -37,5 +37,5 @@ class LoginLogsQueryFilter extends AbstractQueryFilter
         }
     }
 
-    // EDIT AFTER HERE - WARNING: ABOVE THIS LINE MAY BE REGENERATED AND YOU MAY LOSE CODE\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n
+    // EDIT AFTER HERE - WARNING: ABOVE THIS LINE MAY BE REGENERATED AND YOU MAY LOSE CODE\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n
 }

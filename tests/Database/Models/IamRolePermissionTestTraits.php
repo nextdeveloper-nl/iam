@@ -16,18 +16,20 @@ trait IamRolePermissionTestTraits
     public $http;
 
     /**
-    *   Creating the Guzzle object
-    */
+     *   Creating the Guzzle object
+     */
     public function setupGuzzle()
     {
-        $this->http = new Client([
+        $this->http = new Client(
+            [
             'base_uri'  =>  '127.0.0.1:8000'
-        ]);
+            ]
+        );
     }
 
     /**
-    *   Destroying the Guzzle object
-    */
+     *   Destroying the Guzzle object
+     */
     public function destroyGuzzle()
     {
         $this->http = null;
@@ -42,16 +44,19 @@ trait IamRolePermissionTestTraits
             ['http_errors' => false]
         );
 
-        $this->assertContains($response->getStatusCode(), [
+        $this->assertContains(
+            $response->getStatusCode(), [
             Response::HTTP_OK,
             Response::HTTP_NOT_FOUND
-        ]);
+            ]
+        );
     }
 
     public function test_http_iamrolepermission_post()
     {
         $this->setupGuzzle();
-        $response = $this->http->request('POST', '/iam/iamrolepermission', [
+        $response = $this->http->request(
+            'POST', '/iam/iamrolepermission', [
             'form_params'   =>  [
                 'created_by'  =>  '1',
                 'updated_by'  =>  '1',
@@ -64,10 +69,10 @@ trait IamRolePermissionTestTraits
     }
 
     /**
-    * Get test
-    *
-    * @return bool
-    */
+     * Get test
+     *
+     * @return bool
+     */
     public function test_iamrolepermission_model_get()
     {
         $result = AbstractIamRolePermissionService::get();
@@ -84,9 +89,11 @@ trait IamRolePermissionTestTraits
 
     public function test_iamrolepermission_get_paginated()
     {
-        $result = AbstractIamRolePermissionService::get(null, [
+        $result = AbstractIamRolePermissionService::get(
+            null, [
             'paginated' =>  'true'
-        ]);
+            ]
+        );
 
         $this->assertIsObject($result, LengthAwarePaginator::class);
     }
@@ -94,7 +101,7 @@ trait IamRolePermissionTestTraits
     public function test_iamrolepermission_event_retrieved_without_object()
     {
         try {
-            event( new \NextDeveloper\IAM\Events\IamRolePermission\IamRolePermissionRetrievedEvent() );
+            event(new \NextDeveloper\IAM\Events\IamRolePermission\IamRolePermissionRetrievedEvent());
         } catch (\Exception $e) {
             $this->assertFalse(false, $e->getMessage());
         }
@@ -104,7 +111,7 @@ trait IamRolePermissionTestTraits
     public function test_iamrolepermission_event_created_without_object()
     {
         try {
-            event( new \NextDeveloper\IAM\Events\IamRolePermission\IamRolePermissionCreatedEvent() );
+            event(new \NextDeveloper\IAM\Events\IamRolePermission\IamRolePermissionCreatedEvent());
         } catch (\Exception $e) {
             $this->assertFalse(false, $e->getMessage());
         }
@@ -114,7 +121,7 @@ trait IamRolePermissionTestTraits
     public function test_iamrolepermission_event_creating_without_object()
     {
         try {
-            event( new \NextDeveloper\IAM\Events\IamRolePermission\IamRolePermissionCreatingEvent() );
+            event(new \NextDeveloper\IAM\Events\IamRolePermission\IamRolePermissionCreatingEvent());
         } catch (\Exception $e) {
             $this->assertFalse(false, $e->getMessage());
         }
@@ -124,7 +131,7 @@ trait IamRolePermissionTestTraits
     public function test_iamrolepermission_event_saving_without_object()
     {
         try {
-            event( new \NextDeveloper\IAM\Events\IamRolePermission\IamRolePermissionSavingEvent() );
+            event(new \NextDeveloper\IAM\Events\IamRolePermission\IamRolePermissionSavingEvent());
         } catch (\Exception $e) {
             $this->assertFalse(false, $e->getMessage());
         }
@@ -134,7 +141,7 @@ trait IamRolePermissionTestTraits
     public function test_iamrolepermission_event_saved_without_object()
     {
         try {
-            event( new \NextDeveloper\IAM\Events\IamRolePermission\IamRolePermissionSavedEvent() );
+            event(new \NextDeveloper\IAM\Events\IamRolePermission\IamRolePermissionSavedEvent());
         } catch (\Exception $e) {
             $this->assertFalse(false, $e->getMessage());
         }
@@ -144,7 +151,7 @@ trait IamRolePermissionTestTraits
     public function test_iamrolepermission_event_updating_without_object()
     {
         try {
-            event( new \NextDeveloper\IAM\Events\IamRolePermission\IamRolePermissionUpdatingEvent() );
+            event(new \NextDeveloper\IAM\Events\IamRolePermission\IamRolePermissionUpdatingEvent());
         } catch (\Exception $e) {
             $this->assertFalse(false, $e->getMessage());
         }
@@ -154,7 +161,7 @@ trait IamRolePermissionTestTraits
     public function test_iamrolepermission_event_updated_without_object()
     {
         try {
-            event( new \NextDeveloper\IAM\Events\IamRolePermission\IamRolePermissionUpdatedEvent() );
+            event(new \NextDeveloper\IAM\Events\IamRolePermission\IamRolePermissionUpdatedEvent());
         } catch (\Exception $e) {
             $this->assertFalse(false, $e->getMessage());
         }
@@ -164,7 +171,7 @@ trait IamRolePermissionTestTraits
     public function test_iamrolepermission_event_deleting_without_object()
     {
         try {
-            event( new \NextDeveloper\IAM\Events\IamRolePermission\IamRolePermissionDeletingEvent() );
+            event(new \NextDeveloper\IAM\Events\IamRolePermission\IamRolePermissionDeletingEvent());
         } catch (\Exception $e) {
             $this->assertFalse(false, $e->getMessage());
         }
@@ -174,7 +181,7 @@ trait IamRolePermissionTestTraits
     public function test_iamrolepermission_event_deleted_without_object()
     {
         try {
-            event( new \NextDeveloper\IAM\Events\IamRolePermission\IamRolePermissionDeletedEvent() );
+            event(new \NextDeveloper\IAM\Events\IamRolePermission\IamRolePermissionDeletedEvent());
         } catch (\Exception $e) {
             $this->assertFalse(false, $e->getMessage());
         }
@@ -184,7 +191,7 @@ trait IamRolePermissionTestTraits
     public function test_iamrolepermission_event_restoring_without_object()
     {
         try {
-            event( new \NextDeveloper\IAM\Events\IamRolePermission\IamRolePermissionRestoringEvent() );
+            event(new \NextDeveloper\IAM\Events\IamRolePermission\IamRolePermissionRestoringEvent());
         } catch (\Exception $e) {
             $this->assertFalse(false, $e->getMessage());
         }
@@ -194,7 +201,7 @@ trait IamRolePermissionTestTraits
     public function test_iamrolepermission_event_restored_without_object()
     {
         try {
-            event( new \NextDeveloper\IAM\Events\IamRolePermission\IamRolePermissionRestoredEvent() );
+            event(new \NextDeveloper\IAM\Events\IamRolePermission\IamRolePermissionRestoredEvent());
         } catch (\Exception $e) {
             $this->assertFalse(false, $e->getMessage());
         }
@@ -207,7 +214,7 @@ trait IamRolePermissionTestTraits
         try {
             $model = \NextDeveloper\IAM\Database\Models\IamRolePermission::first();
 
-            event( new \NextDeveloper\IAM\Events\IamRolePermission\IamRolePermissionRetrievedEvent($model) );
+            event(new \NextDeveloper\IAM\Events\IamRolePermission\IamRolePermissionRetrievedEvent($model));
         } catch (\Exception $e) {
             $this->assertFalse(false, $e->getMessage());
         }
@@ -219,7 +226,7 @@ trait IamRolePermissionTestTraits
         try {
             $model = \NextDeveloper\IAM\Database\Models\IamRolePermission::first();
 
-            event( new \NextDeveloper\IAM\Events\IamRolePermission\IamRolePermissionCreatedEvent($model) );
+            event(new \NextDeveloper\IAM\Events\IamRolePermission\IamRolePermissionCreatedEvent($model));
         } catch (\Exception $e) {
             $this->assertFalse(false, $e->getMessage());
         }
@@ -231,7 +238,7 @@ trait IamRolePermissionTestTraits
         try {
             $model = \NextDeveloper\IAM\Database\Models\IamRolePermission::first();
 
-            event( new \NextDeveloper\IAM\Events\IamRolePermission\IamRolePermissionCreatingEvent($model) );
+            event(new \NextDeveloper\IAM\Events\IamRolePermission\IamRolePermissionCreatingEvent($model));
         } catch (\Exception $e) {
             $this->assertFalse(false, $e->getMessage());
         }
@@ -243,7 +250,7 @@ trait IamRolePermissionTestTraits
         try {
             $model = \NextDeveloper\IAM\Database\Models\IamRolePermission::first();
 
-            event( new \NextDeveloper\IAM\Events\IamRolePermission\IamRolePermissionSavingEvent($model) );
+            event(new \NextDeveloper\IAM\Events\IamRolePermission\IamRolePermissionSavingEvent($model));
         } catch (\Exception $e) {
             $this->assertFalse(false, $e->getMessage());
         }
@@ -255,7 +262,7 @@ trait IamRolePermissionTestTraits
         try {
             $model = \NextDeveloper\IAM\Database\Models\IamRolePermission::first();
 
-            event( new \NextDeveloper\IAM\Events\IamRolePermission\IamRolePermissionSavedEvent($model) );
+            event(new \NextDeveloper\IAM\Events\IamRolePermission\IamRolePermissionSavedEvent($model));
         } catch (\Exception $e) {
             $this->assertFalse(false, $e->getMessage());
         }
@@ -267,7 +274,7 @@ trait IamRolePermissionTestTraits
         try {
             $model = \NextDeveloper\IAM\Database\Models\IamRolePermission::first();
 
-            event( new \NextDeveloper\IAM\Events\IamRolePermission\IamRolePermissionUpdatingEvent($model) );
+            event(new \NextDeveloper\IAM\Events\IamRolePermission\IamRolePermissionUpdatingEvent($model));
         } catch (\Exception $e) {
             $this->assertFalse(false, $e->getMessage());
         }
@@ -279,7 +286,7 @@ trait IamRolePermissionTestTraits
         try {
             $model = \NextDeveloper\IAM\Database\Models\IamRolePermission::first();
 
-            event( new \NextDeveloper\IAM\Events\IamRolePermission\IamRolePermissionUpdatedEvent($model) );
+            event(new \NextDeveloper\IAM\Events\IamRolePermission\IamRolePermissionUpdatedEvent($model));
         } catch (\Exception $e) {
             $this->assertFalse(false, $e->getMessage());
         }
@@ -291,7 +298,7 @@ trait IamRolePermissionTestTraits
         try {
             $model = \NextDeveloper\IAM\Database\Models\IamRolePermission::first();
 
-            event( new \NextDeveloper\IAM\Events\IamRolePermission\IamRolePermissionDeletingEvent($model) );
+            event(new \NextDeveloper\IAM\Events\IamRolePermission\IamRolePermissionDeletingEvent($model));
         } catch (\Exception $e) {
             $this->assertFalse(false, $e->getMessage());
         }
@@ -303,7 +310,7 @@ trait IamRolePermissionTestTraits
         try {
             $model = \NextDeveloper\IAM\Database\Models\IamRolePermission::first();
 
-            event( new \NextDeveloper\IAM\Events\IamRolePermission\IamRolePermissionDeletedEvent($model) );
+            event(new \NextDeveloper\IAM\Events\IamRolePermission\IamRolePermissionDeletedEvent($model));
         } catch (\Exception $e) {
             $this->assertFalse(false, $e->getMessage());
         }
@@ -315,7 +322,7 @@ trait IamRolePermissionTestTraits
         try {
             $model = \NextDeveloper\IAM\Database\Models\IamRolePermission::first();
 
-            event( new \NextDeveloper\IAM\Events\IamRolePermission\IamRolePermissionRestoringEvent($model) );
+            event(new \NextDeveloper\IAM\Events\IamRolePermission\IamRolePermissionRestoringEvent($model));
         } catch (\Exception $e) {
             $this->assertFalse(false, $e->getMessage());
         }
@@ -327,7 +334,7 @@ trait IamRolePermissionTestTraits
         try {
             $model = \NextDeveloper\IAM\Database\Models\IamRolePermission::first();
 
-            event( new \NextDeveloper\IAM\Events\IamRolePermission\IamRolePermissionRestoredEvent($model) );
+            event(new \NextDeveloper\IAM\Events\IamRolePermission\IamRolePermissionRestoredEvent($model));
         } catch (\Exception $e) {
             $this->assertFalse(false, $e->getMessage());
         }
@@ -338,9 +345,11 @@ trait IamRolePermissionTestTraits
     public function test_iamrolepermission_event_created_by_filter()
     {
         try {
-            $request = new Request([
+            $request = new Request(
+                [
                 'created_by'  =>  '1'
-            ]);
+                ]
+            );
 
             $filter = new IamRolePermissionQueryFilter($request);
 
@@ -355,9 +364,11 @@ trait IamRolePermissionTestTraits
     public function test_iamrolepermission_event_updated_by_filter()
     {
         try {
-            $request = new Request([
+            $request = new Request(
+                [
                 'updated_by'  =>  '1'
-            ]);
+                ]
+            );
 
             $filter = new IamRolePermissionQueryFilter($request);
 
@@ -372,9 +383,11 @@ trait IamRolePermissionTestTraits
     public function test_iamrolepermission_event_created_at_filter_start()
     {
         try {
-            $request = new Request([
+            $request = new Request(
+                [
                 'created_atStart'  =>  now()
-            ]);
+                ]
+            );
 
             $filter = new IamRolePermissionQueryFilter($request);
 
@@ -389,9 +402,11 @@ trait IamRolePermissionTestTraits
     public function test_iamrolepermission_event_updated_at_filter_start()
     {
         try {
-            $request = new Request([
+            $request = new Request(
+                [
                 'updated_atStart'  =>  now()
-            ]);
+                ]
+            );
 
             $filter = new IamRolePermissionQueryFilter($request);
 
@@ -406,9 +421,11 @@ trait IamRolePermissionTestTraits
     public function test_iamrolepermission_event_created_at_filter_end()
     {
         try {
-            $request = new Request([
+            $request = new Request(
+                [
                 'created_atEnd'  =>  now()
-            ]);
+                ]
+            );
 
             $filter = new IamRolePermissionQueryFilter($request);
 
@@ -423,9 +440,11 @@ trait IamRolePermissionTestTraits
     public function test_iamrolepermission_event_updated_at_filter_end()
     {
         try {
-            $request = new Request([
+            $request = new Request(
+                [
                 'updated_atEnd'  =>  now()
-            ]);
+                ]
+            );
 
             $filter = new IamRolePermissionQueryFilter($request);
 
@@ -440,10 +459,12 @@ trait IamRolePermissionTestTraits
     public function test_iamrolepermission_event_created_at_filter_start_and_end()
     {
         try {
-            $request = new Request([
+            $request = new Request(
+                [
                 'created_atStart'  =>  now(),
                 'created_atEnd'  =>  now()
-            ]);
+                ]
+            );
 
             $filter = new IamRolePermissionQueryFilter($request);
 
@@ -458,10 +479,12 @@ trait IamRolePermissionTestTraits
     public function test_iamrolepermission_event_updated_at_filter_start_and_end()
     {
         try {
-            $request = new Request([
+            $request = new Request(
+                [
                 'updated_atStart'  =>  now(),
                 'updated_atEnd'  =>  now()
-            ]);
+                ]
+            );
 
             $filter = new IamRolePermissionQueryFilter($request);
 
@@ -472,5 +495,5 @@ trait IamRolePermissionTestTraits
 
         $this->assertTrue(true);
     }
-    // EDIT AFTER HERE - WARNING: ABOVE THIS LINE MAY BE REGENERATED AND YOU MAY LOSE CODE\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n
+    // EDIT AFTER HERE - WARNING: ABOVE THIS LINE MAY BE REGENERATED AND YOU MAY LOSE CODE\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n
 }

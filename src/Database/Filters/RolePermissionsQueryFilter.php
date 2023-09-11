@@ -13,8 +13,8 @@ use NextDeveloper\Commons\Database\Filters\AbstractQueryFilter;
 class RolePermissionsQueryFilter extends AbstractQueryFilter
 {
     /**
-    * @var Builder
-    */
+     * @var Builder
+     */
     protected $builder;
 
     public function createdBy($value)
@@ -22,7 +22,7 @@ class RolePermissionsQueryFilter extends AbstractQueryFilter
         $operator = substr($value, 0, 1);
 
         if ($operator != '<' || $operator != '>') {
-           $operator = '=';
+            $operator = '=';
         } else {
             $value = substr($value, 1);
         }
@@ -35,7 +35,7 @@ class RolePermissionsQueryFilter extends AbstractQueryFilter
         $operator = substr($value, 0, 1);
 
         if ($operator != '<' || $operator != '>') {
-           $operator = '=';
+            $operator = '=';
         } else {
             $value = substr($value, 1);
         }
@@ -50,22 +50,22 @@ class RolePermissionsQueryFilter extends AbstractQueryFilter
     
     public function createdAtStart($date) 
     {
-        return $this->builder->where( 'created_at', '>=', $date );
+        return $this->builder->where('created_at', '>=', $date);
     }
 
     public function createdAtEnd($date) 
     {
-        return $this->builder->where( 'created_at', '<=', $date );
+        return $this->builder->where('created_at', '<=', $date);
     }
 
     public function updatedAtStart($date) 
     {
-        return $this->builder->where( 'updated_at', '>=', $date );
+        return $this->builder->where('updated_at', '>=', $date);
     }
 
     public function updatedAtEnd($date) 
     {
-        return $this->builder->where( 'updated_at', '<=', $date );
+        return $this->builder->where('updated_at', '<=', $date);
     }
 
     public function iamRoleId($value)
@@ -86,5 +86,5 @@ class RolePermissionsQueryFilter extends AbstractQueryFilter
         }
     }
 
-    // EDIT AFTER HERE - WARNING: ABOVE THIS LINE MAY BE REGENERATED AND YOU MAY LOSE CODE\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n
+    // EDIT AFTER HERE - WARNING: ABOVE THIS LINE MAY BE REGENERATED AND YOU MAY LOSE CODE\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n
 }

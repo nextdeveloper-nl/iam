@@ -16,18 +16,20 @@ trait IamLoginMechanismTestTraits
     public $http;
 
     /**
-    *   Creating the Guzzle object
-    */
+     *   Creating the Guzzle object
+     */
     public function setupGuzzle()
     {
-        $this->http = new Client([
+        $this->http = new Client(
+            [
             'base_uri'  =>  '127.0.0.1:8000'
-        ]);
+            ]
+        );
     }
 
     /**
-    *   Destroying the Guzzle object
-    */
+     *   Destroying the Guzzle object
+     */
     public function destroyGuzzle()
     {
         $this->http = null;
@@ -42,16 +44,19 @@ trait IamLoginMechanismTestTraits
             ['http_errors' => false]
         );
 
-        $this->assertContains($response->getStatusCode(), [
+        $this->assertContains(
+            $response->getStatusCode(), [
             Response::HTTP_OK,
             Response::HTTP_NOT_FOUND
-        ]);
+            ]
+        );
     }
 
     public function test_http_iamloginmechanism_post()
     {
         $this->setupGuzzle();
-        $response = $this->http->request('POST', '/iam/iamloginmechanism', [
+        $response = $this->http->request(
+            'POST', '/iam/iamloginmechanism', [
             'form_params'   =>  [
                 'login_client'  =>  'a',
                 'login_mechanism'  =>  'a',
@@ -64,10 +69,10 @@ trait IamLoginMechanismTestTraits
     }
 
     /**
-    * Get test
-    *
-    * @return bool
-    */
+     * Get test
+     *
+     * @return bool
+     */
     public function test_iamloginmechanism_model_get()
     {
         $result = AbstractIamLoginMechanismService::get();
@@ -84,9 +89,11 @@ trait IamLoginMechanismTestTraits
 
     public function test_iamloginmechanism_get_paginated()
     {
-        $result = AbstractIamLoginMechanismService::get(null, [
+        $result = AbstractIamLoginMechanismService::get(
+            null, [
             'paginated' =>  'true'
-        ]);
+            ]
+        );
 
         $this->assertIsObject($result, LengthAwarePaginator::class);
     }
@@ -94,7 +101,7 @@ trait IamLoginMechanismTestTraits
     public function test_iamloginmechanism_event_retrieved_without_object()
     {
         try {
-            event( new \NextDeveloper\IAM\Events\IamLoginMechanism\IamLoginMechanismRetrievedEvent() );
+            event(new \NextDeveloper\IAM\Events\IamLoginMechanism\IamLoginMechanismRetrievedEvent());
         } catch (\Exception $e) {
             $this->assertFalse(false, $e->getMessage());
         }
@@ -104,7 +111,7 @@ trait IamLoginMechanismTestTraits
     public function test_iamloginmechanism_event_created_without_object()
     {
         try {
-            event( new \NextDeveloper\IAM\Events\IamLoginMechanism\IamLoginMechanismCreatedEvent() );
+            event(new \NextDeveloper\IAM\Events\IamLoginMechanism\IamLoginMechanismCreatedEvent());
         } catch (\Exception $e) {
             $this->assertFalse(false, $e->getMessage());
         }
@@ -114,7 +121,7 @@ trait IamLoginMechanismTestTraits
     public function test_iamloginmechanism_event_creating_without_object()
     {
         try {
-            event( new \NextDeveloper\IAM\Events\IamLoginMechanism\IamLoginMechanismCreatingEvent() );
+            event(new \NextDeveloper\IAM\Events\IamLoginMechanism\IamLoginMechanismCreatingEvent());
         } catch (\Exception $e) {
             $this->assertFalse(false, $e->getMessage());
         }
@@ -124,7 +131,7 @@ trait IamLoginMechanismTestTraits
     public function test_iamloginmechanism_event_saving_without_object()
     {
         try {
-            event( new \NextDeveloper\IAM\Events\IamLoginMechanism\IamLoginMechanismSavingEvent() );
+            event(new \NextDeveloper\IAM\Events\IamLoginMechanism\IamLoginMechanismSavingEvent());
         } catch (\Exception $e) {
             $this->assertFalse(false, $e->getMessage());
         }
@@ -134,7 +141,7 @@ trait IamLoginMechanismTestTraits
     public function test_iamloginmechanism_event_saved_without_object()
     {
         try {
-            event( new \NextDeveloper\IAM\Events\IamLoginMechanism\IamLoginMechanismSavedEvent() );
+            event(new \NextDeveloper\IAM\Events\IamLoginMechanism\IamLoginMechanismSavedEvent());
         } catch (\Exception $e) {
             $this->assertFalse(false, $e->getMessage());
         }
@@ -144,7 +151,7 @@ trait IamLoginMechanismTestTraits
     public function test_iamloginmechanism_event_updating_without_object()
     {
         try {
-            event( new \NextDeveloper\IAM\Events\IamLoginMechanism\IamLoginMechanismUpdatingEvent() );
+            event(new \NextDeveloper\IAM\Events\IamLoginMechanism\IamLoginMechanismUpdatingEvent());
         } catch (\Exception $e) {
             $this->assertFalse(false, $e->getMessage());
         }
@@ -154,7 +161,7 @@ trait IamLoginMechanismTestTraits
     public function test_iamloginmechanism_event_updated_without_object()
     {
         try {
-            event( new \NextDeveloper\IAM\Events\IamLoginMechanism\IamLoginMechanismUpdatedEvent() );
+            event(new \NextDeveloper\IAM\Events\IamLoginMechanism\IamLoginMechanismUpdatedEvent());
         } catch (\Exception $e) {
             $this->assertFalse(false, $e->getMessage());
         }
@@ -164,7 +171,7 @@ trait IamLoginMechanismTestTraits
     public function test_iamloginmechanism_event_deleting_without_object()
     {
         try {
-            event( new \NextDeveloper\IAM\Events\IamLoginMechanism\IamLoginMechanismDeletingEvent() );
+            event(new \NextDeveloper\IAM\Events\IamLoginMechanism\IamLoginMechanismDeletingEvent());
         } catch (\Exception $e) {
             $this->assertFalse(false, $e->getMessage());
         }
@@ -174,7 +181,7 @@ trait IamLoginMechanismTestTraits
     public function test_iamloginmechanism_event_deleted_without_object()
     {
         try {
-            event( new \NextDeveloper\IAM\Events\IamLoginMechanism\IamLoginMechanismDeletedEvent() );
+            event(new \NextDeveloper\IAM\Events\IamLoginMechanism\IamLoginMechanismDeletedEvent());
         } catch (\Exception $e) {
             $this->assertFalse(false, $e->getMessage());
         }
@@ -184,7 +191,7 @@ trait IamLoginMechanismTestTraits
     public function test_iamloginmechanism_event_restoring_without_object()
     {
         try {
-            event( new \NextDeveloper\IAM\Events\IamLoginMechanism\IamLoginMechanismRestoringEvent() );
+            event(new \NextDeveloper\IAM\Events\IamLoginMechanism\IamLoginMechanismRestoringEvent());
         } catch (\Exception $e) {
             $this->assertFalse(false, $e->getMessage());
         }
@@ -194,7 +201,7 @@ trait IamLoginMechanismTestTraits
     public function test_iamloginmechanism_event_restored_without_object()
     {
         try {
-            event( new \NextDeveloper\IAM\Events\IamLoginMechanism\IamLoginMechanismRestoredEvent() );
+            event(new \NextDeveloper\IAM\Events\IamLoginMechanism\IamLoginMechanismRestoredEvent());
         } catch (\Exception $e) {
             $this->assertFalse(false, $e->getMessage());
         }
@@ -207,7 +214,7 @@ trait IamLoginMechanismTestTraits
         try {
             $model = \NextDeveloper\IAM\Database\Models\IamLoginMechanism::first();
 
-            event( new \NextDeveloper\IAM\Events\IamLoginMechanism\IamLoginMechanismRetrievedEvent($model) );
+            event(new \NextDeveloper\IAM\Events\IamLoginMechanism\IamLoginMechanismRetrievedEvent($model));
         } catch (\Exception $e) {
             $this->assertFalse(false, $e->getMessage());
         }
@@ -219,7 +226,7 @@ trait IamLoginMechanismTestTraits
         try {
             $model = \NextDeveloper\IAM\Database\Models\IamLoginMechanism::first();
 
-            event( new \NextDeveloper\IAM\Events\IamLoginMechanism\IamLoginMechanismCreatedEvent($model) );
+            event(new \NextDeveloper\IAM\Events\IamLoginMechanism\IamLoginMechanismCreatedEvent($model));
         } catch (\Exception $e) {
             $this->assertFalse(false, $e->getMessage());
         }
@@ -231,7 +238,7 @@ trait IamLoginMechanismTestTraits
         try {
             $model = \NextDeveloper\IAM\Database\Models\IamLoginMechanism::first();
 
-            event( new \NextDeveloper\IAM\Events\IamLoginMechanism\IamLoginMechanismCreatingEvent($model) );
+            event(new \NextDeveloper\IAM\Events\IamLoginMechanism\IamLoginMechanismCreatingEvent($model));
         } catch (\Exception $e) {
             $this->assertFalse(false, $e->getMessage());
         }
@@ -243,7 +250,7 @@ trait IamLoginMechanismTestTraits
         try {
             $model = \NextDeveloper\IAM\Database\Models\IamLoginMechanism::first();
 
-            event( new \NextDeveloper\IAM\Events\IamLoginMechanism\IamLoginMechanismSavingEvent($model) );
+            event(new \NextDeveloper\IAM\Events\IamLoginMechanism\IamLoginMechanismSavingEvent($model));
         } catch (\Exception $e) {
             $this->assertFalse(false, $e->getMessage());
         }
@@ -255,7 +262,7 @@ trait IamLoginMechanismTestTraits
         try {
             $model = \NextDeveloper\IAM\Database\Models\IamLoginMechanism::first();
 
-            event( new \NextDeveloper\IAM\Events\IamLoginMechanism\IamLoginMechanismSavedEvent($model) );
+            event(new \NextDeveloper\IAM\Events\IamLoginMechanism\IamLoginMechanismSavedEvent($model));
         } catch (\Exception $e) {
             $this->assertFalse(false, $e->getMessage());
         }
@@ -267,7 +274,7 @@ trait IamLoginMechanismTestTraits
         try {
             $model = \NextDeveloper\IAM\Database\Models\IamLoginMechanism::first();
 
-            event( new \NextDeveloper\IAM\Events\IamLoginMechanism\IamLoginMechanismUpdatingEvent($model) );
+            event(new \NextDeveloper\IAM\Events\IamLoginMechanism\IamLoginMechanismUpdatingEvent($model));
         } catch (\Exception $e) {
             $this->assertFalse(false, $e->getMessage());
         }
@@ -279,7 +286,7 @@ trait IamLoginMechanismTestTraits
         try {
             $model = \NextDeveloper\IAM\Database\Models\IamLoginMechanism::first();
 
-            event( new \NextDeveloper\IAM\Events\IamLoginMechanism\IamLoginMechanismUpdatedEvent($model) );
+            event(new \NextDeveloper\IAM\Events\IamLoginMechanism\IamLoginMechanismUpdatedEvent($model));
         } catch (\Exception $e) {
             $this->assertFalse(false, $e->getMessage());
         }
@@ -291,7 +298,7 @@ trait IamLoginMechanismTestTraits
         try {
             $model = \NextDeveloper\IAM\Database\Models\IamLoginMechanism::first();
 
-            event( new \NextDeveloper\IAM\Events\IamLoginMechanism\IamLoginMechanismDeletingEvent($model) );
+            event(new \NextDeveloper\IAM\Events\IamLoginMechanism\IamLoginMechanismDeletingEvent($model));
         } catch (\Exception $e) {
             $this->assertFalse(false, $e->getMessage());
         }
@@ -303,7 +310,7 @@ trait IamLoginMechanismTestTraits
         try {
             $model = \NextDeveloper\IAM\Database\Models\IamLoginMechanism::first();
 
-            event( new \NextDeveloper\IAM\Events\IamLoginMechanism\IamLoginMechanismDeletedEvent($model) );
+            event(new \NextDeveloper\IAM\Events\IamLoginMechanism\IamLoginMechanismDeletedEvent($model));
         } catch (\Exception $e) {
             $this->assertFalse(false, $e->getMessage());
         }
@@ -315,7 +322,7 @@ trait IamLoginMechanismTestTraits
         try {
             $model = \NextDeveloper\IAM\Database\Models\IamLoginMechanism::first();
 
-            event( new \NextDeveloper\IAM\Events\IamLoginMechanism\IamLoginMechanismRestoringEvent($model) );
+            event(new \NextDeveloper\IAM\Events\IamLoginMechanism\IamLoginMechanismRestoringEvent($model));
         } catch (\Exception $e) {
             $this->assertFalse(false, $e->getMessage());
         }
@@ -327,7 +334,7 @@ trait IamLoginMechanismTestTraits
         try {
             $model = \NextDeveloper\IAM\Database\Models\IamLoginMechanism::first();
 
-            event( new \NextDeveloper\IAM\Events\IamLoginMechanism\IamLoginMechanismRestoredEvent($model) );
+            event(new \NextDeveloper\IAM\Events\IamLoginMechanism\IamLoginMechanismRestoredEvent($model));
         } catch (\Exception $e) {
             $this->assertFalse(false, $e->getMessage());
         }
@@ -338,9 +345,11 @@ trait IamLoginMechanismTestTraits
     public function test_iamloginmechanism_event_login_client_filter()
     {
         try {
-            $request = new Request([
+            $request = new Request(
+                [
                 'login_client'  =>  'a'
-            ]);
+                ]
+            );
 
             $filter = new IamLoginMechanismQueryFilter($request);
 
@@ -355,9 +364,11 @@ trait IamLoginMechanismTestTraits
     public function test_iamloginmechanism_event_login_mechanism_filter()
     {
         try {
-            $request = new Request([
+            $request = new Request(
+                [
                 'login_mechanism'  =>  'a'
-            ]);
+                ]
+            );
 
             $filter = new IamLoginMechanismQueryFilter($request);
 
@@ -372,9 +383,11 @@ trait IamLoginMechanismTestTraits
     public function test_iamloginmechanism_event_created_at_filter_start()
     {
         try {
-            $request = new Request([
+            $request = new Request(
+                [
                 'created_atStart'  =>  now()
-            ]);
+                ]
+            );
 
             $filter = new IamLoginMechanismQueryFilter($request);
 
@@ -389,9 +402,11 @@ trait IamLoginMechanismTestTraits
     public function test_iamloginmechanism_event_updated_at_filter_start()
     {
         try {
-            $request = new Request([
+            $request = new Request(
+                [
                 'updated_atStart'  =>  now()
-            ]);
+                ]
+            );
 
             $filter = new IamLoginMechanismQueryFilter($request);
 
@@ -406,9 +421,11 @@ trait IamLoginMechanismTestTraits
     public function test_iamloginmechanism_event_deleted_at_filter_start()
     {
         try {
-            $request = new Request([
+            $request = new Request(
+                [
                 'deleted_atStart'  =>  now()
-            ]);
+                ]
+            );
 
             $filter = new IamLoginMechanismQueryFilter($request);
 
@@ -423,9 +440,11 @@ trait IamLoginMechanismTestTraits
     public function test_iamloginmechanism_event_created_at_filter_end()
     {
         try {
-            $request = new Request([
+            $request = new Request(
+                [
                 'created_atEnd'  =>  now()
-            ]);
+                ]
+            );
 
             $filter = new IamLoginMechanismQueryFilter($request);
 
@@ -440,9 +459,11 @@ trait IamLoginMechanismTestTraits
     public function test_iamloginmechanism_event_updated_at_filter_end()
     {
         try {
-            $request = new Request([
+            $request = new Request(
+                [
                 'updated_atEnd'  =>  now()
-            ]);
+                ]
+            );
 
             $filter = new IamLoginMechanismQueryFilter($request);
 
@@ -457,9 +478,11 @@ trait IamLoginMechanismTestTraits
     public function test_iamloginmechanism_event_deleted_at_filter_end()
     {
         try {
-            $request = new Request([
+            $request = new Request(
+                [
                 'deleted_atEnd'  =>  now()
-            ]);
+                ]
+            );
 
             $filter = new IamLoginMechanismQueryFilter($request);
 
@@ -474,10 +497,12 @@ trait IamLoginMechanismTestTraits
     public function test_iamloginmechanism_event_created_at_filter_start_and_end()
     {
         try {
-            $request = new Request([
+            $request = new Request(
+                [
                 'created_atStart'  =>  now(),
                 'created_atEnd'  =>  now()
-            ]);
+                ]
+            );
 
             $filter = new IamLoginMechanismQueryFilter($request);
 
@@ -492,10 +517,12 @@ trait IamLoginMechanismTestTraits
     public function test_iamloginmechanism_event_updated_at_filter_start_and_end()
     {
         try {
-            $request = new Request([
+            $request = new Request(
+                [
                 'updated_atStart'  =>  now(),
                 'updated_atEnd'  =>  now()
-            ]);
+                ]
+            );
 
             $filter = new IamLoginMechanismQueryFilter($request);
 
@@ -510,10 +537,12 @@ trait IamLoginMechanismTestTraits
     public function test_iamloginmechanism_event_deleted_at_filter_start_and_end()
     {
         try {
-            $request = new Request([
+            $request = new Request(
+                [
                 'deleted_atStart'  =>  now(),
                 'deleted_atEnd'  =>  now()
-            ]);
+                ]
+            );
 
             $filter = new IamLoginMechanismQueryFilter($request);
 
@@ -524,5 +553,5 @@ trait IamLoginMechanismTestTraits
 
         $this->assertTrue(true);
     }
-    // EDIT AFTER HERE - WARNING: ABOVE THIS LINE MAY BE REGENERATED AND YOU MAY LOSE CODE\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n
+    // EDIT AFTER HERE - WARNING: ABOVE THIS LINE MAY BE REGENERATED AND YOU MAY LOSE CODE\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n
 }
