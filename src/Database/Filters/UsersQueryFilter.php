@@ -104,7 +104,7 @@ class UsersQueryFilter extends AbstractQueryFilter
 
     public function commonLanguageId($value)
     {
-        $commonLanguage = CommonLanguage::where('uuid', $value)->first();
+        $commonLanguage = \NextDeveloper\Commons\Database\Models\Languages::where('uuid', $value)->first();
 
         if($commonLanguage) {
             return $this->builder->where('common_language_id', '=', $commonLanguage->id);
@@ -113,12 +113,12 @@ class UsersQueryFilter extends AbstractQueryFilter
 
     public function commonCountryId($value)
     {
-        $commonCountry = CommonCountry::where('uuid', $value)->first();
+        $commonCountry = \NextDeveloper\Commons\Database\Models\Countries::where('uuid', $value)->first();
 
         if($commonCountry) {
             return $this->builder->where('common_country_id', '=', $commonCountry->id);
         }
     }
 
-    // EDIT AFTER HERE - WARNING: ABOVE THIS LINE MAY BE REGENERATED AND YOU MAY LOSE CODE\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n
+    // EDIT AFTER HERE - WARNING: ABOVE THIS LINE MAY BE REGENERATED AND YOU MAY LOSE CODE\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n
 }

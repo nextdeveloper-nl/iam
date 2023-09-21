@@ -15,8 +15,8 @@ use DateInterval;
 use Illuminate\Support\Facades\DB;
 use League\OAuth2\Server\Grant\AbstractGrant;
 use League\OAuth2\Server\ResponseTypes\ResponseTypeInterface;
-use NextDeveloper\IAM\Database\Models\IamLoginMechanism;
-use NextDeveloper\IAM\Database\Models\IamUser;
+use NextDeveloper\IAM\Database\Models\LoginMechanisms;
+use NextDeveloper\IAM\Database\Models\Users;
 use Psr\Http\Message\ServerRequestInterface;
 
 /**
@@ -30,7 +30,7 @@ class AbstractLogin extends AbstractGrant
     /**
      * Generates a password and updates the login mechanism objects
      *
-     * @param IamLoginMechanism $mechanism
+     * @param LoginMechanisms $mechanism
      * @return string
      */
     public static function generateStrongPassword() : string {
@@ -79,13 +79,13 @@ class AbstractLogin extends AbstractGrant
     /**
      * Returns the latest login mechanism for relates user
      *
-     * @param IamUser $user
+     * @param Users $user
      * @param $mechanismName
-     * @return IamLoginMechanism|null
+     * @return LoginMechanisms|null
      */
-    public static function getLatestMechanism(IamUser $user, $mechanismName) : ?IamLoginMechanism
+    public static function getLatestMechanism(Users $user, $mechanismName) : ?LoginMechanisms
     {
-        $mechanism = IamLoginMechanism::where('iam_user_id', $user->id)
+        $mechanism = LoginMechanisms::where('iam_user_id', $user->id)
             ->where('login_mechanism', $mechanismName)
             ->where('is_active', 1)
             ->where('is_latest', 1)

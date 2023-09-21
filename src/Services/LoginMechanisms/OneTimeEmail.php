@@ -7,10 +7,10 @@ use League\OAuth2\Server\Exception\OAuthServerException;
 use League\OAuth2\Server\Exception\UniqueTokenIdentifierConstraintViolationException;
 use League\OAuth2\Server\ResponseTypes\ResponseTypeInterface;
 use NextDeveloper\IAM\Authorization\Roles\MemberRole;
-use NextDeveloper\IAM\Database\Models\IamLoginMechanism;
-use NextDeveloper\IAM\Database\Models\IamUser;
-use NextDeveloper\IAM\Services\IamRoleService;
-use NextDeveloper\IAM\Services\IamUserService;
+use NextDeveloper\IAM\Database\Models\LoginMechanisms;
+use NextDeveloper\IAM\Database\Models\Users;
+use NextDeveloper\IAM\Services\RolesService;
+use NextDeveloper\IAM\Services\UsersService;
 use Psr\Http\Message\ServerRequestInterface;
 
 class OneTimeEmail extends AbstractLogin implements ILoginService
@@ -22,15 +22,15 @@ class OneTimeEmail extends AbstractLogin implements ILoginService
      * the mechanism already. To do that we will check the mechanism with user_id. If the mechanism is already
      * created we will return the mechanism, if not we will create and return the mechanism.
      *
-     * @param IamUser $user
-     * @return IamLoginMechanism
+     * @param Users $user
+     * @return LoginMechanisms
      */
-    public function create(IamUser $user) : IamLoginMechanism
+    public function create(Users $user) : LoginMechanisms
     {
         $latestMechanism = self::getLatestMechanism($user);
 
         if (!$latestMechanism) {
-            return IamLoginMechanism::create([
+            return LoginMechanisms::create([
                 'iam_user_id'          => $user->id,
                 'login_mechanism'  => self::LOGINNAME,
             ]);
@@ -63,11 +63,11 @@ class OneTimeEmail extends AbstractLogin implements ILoginService
         //  We take the OTP
         $otp = $this->getRequestParameter('password', $request);
 
-        $user = IamUserService::getByEmail($username);
+        $user = UsersService::getByEmail($username);
 
         if(!$user) {
             //  Registering the user
-            $user = IamUserService::createWithEmail($username);
+            $user = UsersService::createWithEmail($username);
         }
 
         $mechanism = self::getLatestMechanism($user);
@@ -92,7 +92,7 @@ class OneTimeEmail extends AbstractLogin implements ILoginService
         $this->removeOldTokens($client->getIdentifier(), $accessToken->getIdentifier(), $user->id);
 
         // We need to make role checking here. If the role is not assigned to user, we need to assign member role
-        IamUserService::assignUserToRole($user, new MemberRole());
+        UsersService::assignUserToRole($user, new MemberRole());
 
         return $responseType;
     }
@@ -110,10 +110,10 @@ class OneTimeEmail extends AbstractLogin implements ILoginService
     /**
      * Generates a password and updates the login mechanism objects
      *
-     * @param IamLoginMechanism $mechanism
+     * @param LoginMechanisms $mechanism
      * @return string
      */
-    public function generatePassword(IamLoginMechanism $mechanism) : string
+    public function generatePassword(LoginMechanisms $mechanism) : string
     {
         /**
          * For this service we will be sending an email to the user so that the user knows his/her password for the
@@ -135,13 +135,13 @@ class OneTimeEmail extends AbstractLogin implements ILoginService
      * Here we check if the user credentials are correct. Even if the credentials are correct or not we will log
      * this attempt.
      *
-     * @param IamLoginMechanism $mechanism
+     * @param LoginMechanisms $mechanism
      * @param $loginData
      * @return true
      */
-    public function attempt(IamLoginMechanism $mechanism, $loginData) : bool
+    public function attempt(LoginMechanisms $mechanism, $loginData) : bool
     {
-        $user = $mechanism->iamUser();
+        $user = $mechanism->Users();
 
         //$role = RolesService::
 
@@ -152,11 +152,11 @@ class OneTimeEmail extends AbstractLogin implements ILoginService
     /**
      * Returns the mechanism name
      *
-     * @param IamUser $user
+     * @param Users $user
      * @param $mechanismName
-     * @return IamLoginMechanism|null
+     * @return LoginMechanisms|null
      */
-    public static function getLatestMechanism(IamUser $user, $mechanismName = self::LOGINNAME) : ?IamLoginMechanism
+    public static function getLatestMechanism(Users $user, $mechanismName = self::LOGINNAME) : ?LoginMechanisms
     {
         $mechanism = parent::getLatestMechanism($user, $mechanismName);
 

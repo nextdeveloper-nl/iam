@@ -130,98 +130,92 @@ class Users extends Model
         }
     }
 
-    public function accountUsers()
+    public function accountUsers() : \Illuminate\Database\Eloquent\Relations\HasMany
     {
         return $this->hasMany(\NextDeveloper\IAM\Database\Models\AccountUsers::class);
     }
 
-    public function loginLogs()
+    public function loginLogs() : \Illuminate\Database\Eloquent\Relations\HasMany
     {
         return $this->hasMany(\NextDeveloper\IAM\Database\Models\LoginLogs::class);
     }
 
-    public function loginMechanisms()
+    public function loginMechanisms() : \Illuminate\Database\Eloquent\Relations\HasMany
     {
         return $this->hasMany(\NextDeveloper\IAM\Database\Models\LoginMechanisms::class);
     }
 
-    public function roleUsers()
+    public function roleUsers() : \Illuminate\Database\Eloquent\Relations\HasMany
     {
         return $this->hasMany(\NextDeveloper\IAM\Database\Models\RoleUsers::class);
     }
 
-    public function countries()
+    public function countries() : \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
         return $this->belongsTo(\NextDeveloper\Commons\Database\Models\Countries::class);
     }
     
-    public function languages()
+    public function languages() : \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
         return $this->belongsTo(\NextDeveloper\Commons\Database\Models\Languages::class);
     }
     
-    public function products()
+    public function products() : \Illuminate\Database\Eloquent\Relations\HasMany
     {
         return $this->hasMany(\NextDeveloper\Marketplace\Database\Models\Products::class);
     }
 
-    public function users()
+    public function users() : \Illuminate\Database\Eloquent\Relations\HasMany
     {
         return $this->hasMany(\NextDeveloper\CRM\Database\Models\Users::class);
     }
 
-    public function cloudNodes()
+    public function cloudNodes() : \Illuminate\Database\Eloquent\Relations\HasMany
     {
         return $this->hasMany(\NextDeveloper\IAAS\Database\Models\CloudNodes::class);
     }
 
-    public function computeMembers()
+    public function computeMembers() : \Illuminate\Database\Eloquent\Relations\HasMany
     {
         return $this->hasMany(\NextDeveloper\IAAS\Database\Models\ComputeMembers::class);
     }
 
-    public function computePools()
+    public function computePools() : \Illuminate\Database\Eloquent\Relations\HasMany
     {
         return $this->hasMany(\NextDeveloper\IAAS\Database\Models\ComputePools::class);
     }
 
-    public function networkPools()
+    public function networkPools() : \Illuminate\Database\Eloquent\Relations\HasMany
     {
         return $this->hasMany(\NextDeveloper\IAAS\Database\Models\NetworkPools::class);
     }
 
-    public function storagePools()
+    public function storagePools() : \Illuminate\Database\Eloquent\Relations\HasMany
     {
         return $this->hasMany(\NextDeveloper\IAAS\Database\Models\StoragePools::class);
     }
 
-    public function virtualMachines()
+    public function virtualMachines() : \Illuminate\Database\Eloquent\Relations\HasMany
     {
         return $this->hasMany(\NextDeveloper\IAAS\Database\Models\VirtualMachines::class);
     }
 
-    // EDIT AFTER HERE - WARNING: ABOVE THIS LINE MAY BE REGENERATED AND YOU MAY LOSE CODE\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n
+    public function comments() : \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(\NextDeveloper\Commons\Database\Models\Comments::class);
+    }
 
+    public function domains() : \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(\NextDeveloper\Commons\Database\Models\Domains::class);
+    }
+
+    public function votes() : \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(\NextDeveloper\Commons\Database\Models\Votes::class);
+    }
+
+    // EDIT AFTER HERE - WARNING: ABOVE THIS LINE MAY BE REGENERATED AND YOU MAY LOSE CODE\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n
 
     use Authenticatable, HasApiTokens;
-
-    /**
-     * Returns the user account relation
-     *
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
-     */
-    public function iamAccount()
-    {
-        return $this->belongsToMany(IamAccount::class, 'iam_account_user', 'iam_user_id', 'iam_account_id');
-    }
-
-    /**
-     * Returns the user role relation
-     *
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
-     */
-    public function iamRole()
-    {
-        return $this->belongsToMany(IamRole::class, 'iam_role_user', 'iam_user_id', 'iam_role_id', 'id');
-    }
 }

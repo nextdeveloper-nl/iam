@@ -38,7 +38,8 @@ class AuthorizationScope implements Scope
             $model->getTable() == 'iam_roles' ||
             $model->getTable() == 'iam_role_user' ||
             $model->getTable() == 'iam_account_user' ||
-            $model->getTable() == 'iam_view_user_account'
+            $model->getTable() == 'iam_view_user_account' ||
+            $model->getTable() == 'iam_login_mechanisms'
         ) {
             Log::debug('[AuthorizationScope] Bypassing model : ' . $model->getTable());
             return;

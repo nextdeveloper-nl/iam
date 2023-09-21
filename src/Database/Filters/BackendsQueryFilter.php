@@ -144,7 +144,7 @@ class BackendsQueryFilter extends AbstractQueryFilter
 
     public function iamAccountId($value)
     {
-        $iamAccount = IamAccount::where('uuid', $value)->first();
+        $iamAccount = \NextDeveloper\IAM\Database\Models\Accounts::where('uuid', $value)->first();
 
         if($iamAccount) {
             return $this->builder->where('iam_account_id', '=', $iamAccount->id);
@@ -153,12 +153,12 @@ class BackendsQueryFilter extends AbstractQueryFilter
 
     public function iaasVirtualMachineId($value)
     {
-        $iaasVirtualMachine = IaasVirtualMachine::where('uuid', $value)->first();
+        $iaasVirtualMachine = \NextDeveloper\IAAS\Database\Models\VirtualMachines::where('uuid', $value)->first();
 
         if($iaasVirtualMachine) {
             return $this->builder->where('iaas_virtual_machine_id', '=', $iaasVirtualMachine->id);
         }
     }
 
-    // EDIT AFTER HERE - WARNING: ABOVE THIS LINE MAY BE REGENERATED AND YOU MAY LOSE CODE\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n
+    // EDIT AFTER HERE - WARNING: ABOVE THIS LINE MAY BE REGENERATED AND YOU MAY LOSE CODE\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n
 }

@@ -12,13 +12,13 @@ Route::prefix('iam')->group(
             }
         );
 
-        Route::prefix('account-user')->group(
+        Route::prefix('account-users')->group(
             function () {
-                Route::get('/', 'AccountUser\AccountUserController@index');
-                Route::get('/{iam_account_user}', 'AccountUser\AccountUserController@show');
-                Route::post('/', 'AccountUser\AccountUserController@store');
-                Route::patch('/{iam_account_user}', 'AccountUser\AccountUserController@update');
-                Route::delete('/{iam_account_user}', 'AccountUser\AccountUserController@destroy');
+                Route::get('/', 'AccountUsers\AccountUsersController@index');
+                Route::get('/{iam_account_user}', 'AccountUsers\AccountUsersController@show');
+                Route::post('/', 'AccountUsers\AccountUsersController@store');
+                Route::patch('/{iam_account_user}', 'AccountUsers\AccountUsersController@update');
+                Route::delete('/{iam_account_user}', 'AccountUsers\AccountUsersController@destroy');
             }
         );
 
@@ -72,23 +72,23 @@ Route::prefix('iam')->group(
             }
         );
 
-        Route::prefix('role-permission')->group(
+        Route::prefix('role-permissions')->group(
             function () {
-                Route::get('/', 'RolePermission\RolePermissionController@index');
-                Route::get('/{iam_role_permission}', 'RolePermission\RolePermissionController@show');
-                Route::post('/', 'RolePermission\RolePermissionController@store');
-                Route::patch('/{iam_role_permission}', 'RolePermission\RolePermissionController@update');
-                Route::delete('/{iam_role_permission}', 'RolePermission\RolePermissionController@destroy');
+                Route::get('/', 'RolePermissions\RolePermissionsController@index');
+                Route::get('/{iam_role_permission}', 'RolePermissions\RolePermissionsController@show');
+                Route::post('/', 'RolePermissions\RolePermissionsController@store');
+                Route::patch('/{iam_role_permission}', 'RolePermissions\RolePermissionsController@update');
+                Route::delete('/{iam_role_permission}', 'RolePermissions\RolePermissionsController@destroy');
             }
         );
 
-        Route::prefix('role-user')->group(
+        Route::prefix('role-users')->group(
             function () {
-                Route::get('/', 'RoleUser\RoleUserController@index');
-                Route::get('/{iam_role_user}', 'RoleUser\RoleUserController@show');
-                Route::post('/', 'RoleUser\RoleUserController@store');
-                Route::patch('/{iam_role_user}', 'RoleUser\RoleUserController@update');
-                Route::delete('/{iam_role_user}', 'RoleUser\RoleUserController@destroy');
+                Route::get('/', 'RoleUsers\RoleUsersController@index');
+                Route::get('/{iam_role_user}', 'RoleUsers\RoleUsersController@show');
+                Route::post('/', 'RoleUsers\RoleUsersController@store');
+                Route::patch('/{iam_role_user}', 'RoleUsers\RoleUsersController@update');
+                Route::delete('/{iam_role_user}', 'RoleUsers\RoleUsersController@destroy');
             }
         );
 
@@ -132,7 +132,7 @@ Route::prefix('iam')->group(
             }
         );
 
-        // EDIT AFTER HERE - WARNING: ABOVE THIS LINE MAY BE REGENERATED AND YOU MAY LOSE CODE\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n
+        // EDIT AFTER HERE - WARNING: ABOVE THIS LINE MAY BE REGENERATED AND YOU MAY LOSE CODE\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n
 
         Route::prefix('authenticate')->group(
             function () {

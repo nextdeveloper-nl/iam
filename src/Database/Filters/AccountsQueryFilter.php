@@ -5,7 +5,7 @@ namespace NextDeveloper\IAM\Database\Filters;
 use Illuminate\Database\Eloquent\Builder;
 use NextDeveloper\Commons\Database\Filters\AbstractQueryFilter;
 use NextDeveloper\Accounts\Database\Models\User;
-        
+                
 
 /**
  * This class automatically puts where clause on database so that use can filter
@@ -65,7 +65,7 @@ class AccountsQueryFilter extends AbstractQueryFilter
 
     public function commonDomainId($value)
     {
-        $commonDomain = CommonDomain::where('uuid', $value)->first();
+        $commonDomain = \NextDeveloper\Commons\Database\Models\Domains::where('uuid', $value)->first();
 
         if($commonDomain) {
             return $this->builder->where('common_domain_id', '=', $commonDomain->id);
@@ -74,7 +74,7 @@ class AccountsQueryFilter extends AbstractQueryFilter
 
     public function commonCountryId($value)
     {
-        $commonCountry = CommonCountry::where('uuid', $value)->first();
+        $commonCountry = \NextDeveloper\Commons\Database\Models\Countries::where('uuid', $value)->first();
 
         if($commonCountry) {
             return $this->builder->where('common_country_id', '=', $commonCountry->id);
@@ -83,7 +83,7 @@ class AccountsQueryFilter extends AbstractQueryFilter
 
     public function iamUserId($value)
     {
-        $iamUser = IamUser::where('uuid', $value)->first();
+        $iamUser = \NextDeveloper\IAM\Database\Models\Users::where('uuid', $value)->first();
 
         if($iamUser) {
             return $this->builder->where('iam_user_id', '=', $iamUser->id);
@@ -92,12 +92,12 @@ class AccountsQueryFilter extends AbstractQueryFilter
 
     public function iamAccountTypeId($value)
     {
-        $iamAccountType = IamAccountType::where('uuid', $value)->first();
+        $iamAccountType = \NextDeveloper\IAM\Database\Models\AccountTypes::where('uuid', $value)->first();
 
         if($iamAccountType) {
             return $this->builder->where('iam_account_type_id', '=', $iamAccountType->id);
         }
     }
 
-    // EDIT AFTER HERE - WARNING: ABOVE THIS LINE MAY BE REGENERATED AND YOU MAY LOSE CODE\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n
+    // EDIT AFTER HERE - WARNING: ABOVE THIS LINE MAY BE REGENERATED AND YOU MAY LOSE CODE\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n
 }
