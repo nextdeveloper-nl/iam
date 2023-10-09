@@ -233,11 +233,16 @@ class UserHelper
 
         if(!$user) {
             $user = self::me();
-
-            $currentRole = Cache::get(
-                CacheHelper::getKey('Users', $user->uuid, 'CurrentRole'),
-            );
         }
+
+        //  If we still dont have the user then we dont have the user created.
+        if(!$user) {
+            return null;
+        }
+
+        $currentRole = Cache::get(
+            CacheHelper::getKey('Users', $user->uuid, 'CurrentRole'),
+        );
 
         if($currentRole)
             return $currentRole;

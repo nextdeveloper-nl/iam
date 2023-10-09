@@ -3,8 +3,8 @@
 namespace NextDeveloper\IAM\Services\Registration;
 
 use NextDeveloper\IAM\Authorization\Roles\MemberRole;
-use NextDeveloper\IAM\Database\Models\IamUser;
-use NextDeveloper\IAM\Services\IamRoleService;
+use NextDeveloper\IAM\Database\Models\Users;
+use NextDeveloper\IAM\Services\RolesService;
 use NextDeveloper\IAM\Services\LoginMechanisms\OneTimeEmail;
 
 class RegistrationService
@@ -13,10 +13,10 @@ class RegistrationService
      * This function will register the user to the system. Which means it will create the first default login
      * mechanism for the user, so that the user can login.
      *
-     * @param IamUser $user
-     * @return IamUser
+     * @param Users $user
+     * @return Users
      */
-    public static function registerUser(IamUser $user) : IamUser
+    public static function registerUser(Users $user) : Users
     {
         $loginMechanism = new OneTimeEmail();
         $mechanism = $loginMechanism->create($user);
