@@ -25,7 +25,7 @@ class RoleUsersQueryFilter extends AbstractQueryFilter
     
     public function iamRoleId($value)
     {
-        $iamRole = \NextDeveloper\IAM\Database\Models\Roles::where('uuid', $value)->first();
+            $iamRole = \NextDeveloper\IAM\Database\Models\Roles::where('uuid', $value)->first();
 
         if($iamRole) {
             return $this->builder->where('iam_role_id', '=', $iamRole->id);
@@ -34,7 +34,7 @@ class RoleUsersQueryFilter extends AbstractQueryFilter
 
     public function iamUserId($value)
     {
-        $iamUser = \NextDeveloper\IAM\Database\Models\Users::where('uuid', $value)->first();
+            $iamUser = \NextDeveloper\IAM\Database\Models\Users::where('uuid', $value)->first();
 
         if($iamUser) {
             return $this->builder->where('iam_user_id', '=', $iamUser->id);
@@ -43,12 +43,12 @@ class RoleUsersQueryFilter extends AbstractQueryFilter
 
     public function iamAccountId($value)
     {
-        $iamAccount = \NextDeveloper\IAM\Database\Models\Accounts::where('uuid', $value)->first();
+            $iamAccount = \NextDeveloper\IAM\Database\Models\Accounts::where('uuid', $value)->first();
 
         if($iamAccount) {
             return $this->builder->where('iam_account_id', '=', $iamAccount->id);
         }
     }
 
-    // EDIT AFTER HERE - WARNING: ABOVE THIS LINE MAY BE REGENERATED AND YOU MAY LOSE CODE\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n
+    // EDIT AFTER HERE - WARNING: ABOVE THIS LINE MAY BE REGENERATED AND YOU MAY LOSE CODE\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n
 }

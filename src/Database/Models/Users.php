@@ -200,22 +200,17 @@ class Users extends Model
         return $this->hasMany(\NextDeveloper\IAAS\Database\Models\VirtualMachines::class);
     }
 
-    public function comments() : \Illuminate\Database\Eloquent\Relations\HasMany
+    public function clubs() : \Illuminate\Database\Eloquent\Relations\HasMany
     {
-        return $this->hasMany(\NextDeveloper\Commons\Database\Models\Comments::class);
+        return $this->hasMany(\NextDeveloper\Golf\Database\Models\Clubs::class);
     }
 
-    public function domains() : \Illuminate\Database\Eloquent\Relations\HasMany
+    public function hotels() : \Illuminate\Database\Eloquent\Relations\HasMany
     {
-        return $this->hasMany(\NextDeveloper\Commons\Database\Models\Domains::class);
+        return $this->hasMany(\NextDeveloper\Stay\Database\Models\Hotels::class);
     }
 
-    public function votes() : \Illuminate\Database\Eloquent\Relations\HasMany
-    {
-        return $this->hasMany(\NextDeveloper\Commons\Database\Models\Votes::class);
-    }
-
-    // EDIT AFTER HERE - WARNING: ABOVE THIS LINE MAY BE REGENERATED AND YOU MAY LOSE CODE\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n
+    // EDIT AFTER HERE - WARNING: ABOVE THIS LINE MAY BE REGENERATED AND YOU MAY LOSE CODE\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n
 
     use Authenticatable, HasApiTokens;
 }

@@ -70,7 +70,7 @@ class RolePermissionsQueryFilter extends AbstractQueryFilter
 
     public function iamRoleId($value)
     {
-        $iamRole = \NextDeveloper\IAM\Database\Models\Roles::where('uuid', $value)->first();
+            $iamRole = \NextDeveloper\IAM\Database\Models\Roles::where('uuid', $value)->first();
 
         if($iamRole) {
             return $this->builder->where('iam_role_id', '=', $iamRole->id);
@@ -79,12 +79,12 @@ class RolePermissionsQueryFilter extends AbstractQueryFilter
 
     public function iamPermissionId($value)
     {
-        $iamPermission = \NextDeveloper\IAM\Database\Models\Permissions::where('uuid', $value)->first();
+            $iamPermission = \NextDeveloper\IAM\Database\Models\Permissions::where('uuid', $value)->first();
 
         if($iamPermission) {
             return $this->builder->where('iam_permission_id', '=', $iamPermission->id);
         }
     }
 
-    // EDIT AFTER HERE - WARNING: ABOVE THIS LINE MAY BE REGENERATED AND YOU MAY LOSE CODE\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n
+    // EDIT AFTER HERE - WARNING: ABOVE THIS LINE MAY BE REGENERATED AND YOU MAY LOSE CODE\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n
 }

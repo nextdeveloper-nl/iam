@@ -229,13 +229,15 @@ class UserHelper
 
     public static function currentRole(Users $user = null) : ?Roles
     {
+        $currentRole = null;
+
         if(!$user) {
             $user = self::me();
-        }
 
-        $currentRole = Cache::get(
-            CacheHelper::getKey('Users', $user->uuid, 'CurrentRole'),
-        );
+            $currentRole = Cache::get(
+                CacheHelper::getKey('Users', $user->uuid, 'CurrentRole'),
+            );
+        }
 
         if($currentRole)
             return $currentRole;
