@@ -76,6 +76,20 @@ class AbstractLogin extends AbstractGrant
         DB::delete($sql);
     }
 
+    public function hashPassword($password) {
+        $algo = $this->getAvailableHashAlgorithm();
+
+        return password_hash($password, $algo);
+
+        return $hash;
+    }
+
+    public function getAvailableHashAlgorithm() {
+        $hashes = config('iam.hash_algorithms');
+
+        return $hashes[0];
+    }
+
     /**
      * Returns the latest login mechanism for relates user
      *

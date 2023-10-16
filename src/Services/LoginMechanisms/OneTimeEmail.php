@@ -30,10 +30,12 @@ class OneTimeEmail extends AbstractLogin implements ILoginService
         $latestMechanism = self::getLatestMechanism($user);
 
         if (!$latestMechanism) {
-            return LoginMechanisms::create([
+            $latestMechanism = LoginMechanisms::create([
                 'iam_user_id'          => $user->id,
                 'login_mechanism'  => self::LOGINNAME,
             ]);
+
+            $this->generatePassword($latestMechanism);
         }
 
         return $latestMechanism;
@@ -122,13 +124,18 @@ class OneTimeEmail extends AbstractLogin implements ILoginService
 
         $password = random_int(100000, 999999);
 
+        $algo = $this->getAvailableHashAlgorithm();
+
+        $hashedPassword = $this->hashPassword($password);
+
         $updateMechanismLoginData = $mechanism->update([
-            'login_data' => json_encode(["password" => bcrypt($password)])
+            'login_data'    => [
+                'passwordHash'  =>  $hashedPassword,
+                'tempPassword'  =>  $password
+            ]
         ]);
 
-        // TODO: Send email to the user with the password
-
-        return $password;
+        return $hashedPassword;
     }
 
     /**
@@ -136,17 +143,16 @@ class OneTimeEmail extends AbstractLogin implements ILoginService
      * this attempt.
      *
      * @param LoginMechanisms $mechanism
-     * @param $loginData
+     * @param string $password Password of the login mechanism
      * @return true
      */
-    public function attempt(LoginMechanisms $mechanism, $loginData) : bool
+    public function attempt(LoginMechanisms $mechanism, $password) : bool
     {
-        $user = $mechanism->Users();
+        $loginData = $mechanism->login_data;
 
-        //$role = RolesService::
+        return password_verify($password, $loginData['passwordHash']);
 
         return true;
-        // TODO: Implement attempt() method.
     }
 
     /**

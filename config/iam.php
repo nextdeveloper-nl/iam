@@ -2,10 +2,10 @@
 
 return [
     'hash_algorithms' => [
-        'argon2id',
-        'scrypt',
-        'bcrypt',
-        'md5'
+        PASSWORD_ARGON2ID,
+        PASSWORD_ARGON2I,
+        PASSWORD_BCRYPT,
+        PASSWORD_DEFAULT
     ],
     'roles' =>  [
         'member'    =>  [

@@ -55,6 +55,7 @@ class LoginMechanisms extends Model
     'iam_user_id'     => 'integer',
     'login_client'    => 'string',
     'login_mechanism' => 'string',
+    'login_data'    =>  'json',
     'is_latest'       => 'boolean',
     'is_default'      => 'boolean',
     'is_active'       => 'boolean',
@@ -123,7 +124,10 @@ class LoginMechanisms extends Model
 
     public function users() : \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
-        return $this->belongsTo(\NextDeveloper\IAM\Database\Models\Users::class);
+        return $this->belongsTo(
+            \NextDeveloper\IAM\Database\Models\Users::class,
+            'iam_user_id'
+        );
     }
     
     // EDIT AFTER HERE - WARNING: ABOVE THIS LINE MAY BE REGENERATED AND YOU MAY LOSE CODE\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n
