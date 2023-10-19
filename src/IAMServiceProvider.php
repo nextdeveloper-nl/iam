@@ -37,13 +37,6 @@ class IAMServiceProvider extends AbstractServiceProvider {
         $this->bootModelBindings();
         $this->bootEvents();
         $this->bootLogger();
-        $this->bootGrants();
-    }
-
-    public function bootGrants() {
-        $oneTimeEmail = new OneTimeEmail();
-
-        app(AuthorizationServer::class)->enableGrantType( $oneTimeEmail, Passport::tokensExpireIn() );
     }
 
     /**

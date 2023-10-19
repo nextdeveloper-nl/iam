@@ -134,13 +134,6 @@ Route::prefix('iam')->group(
 
         // EDIT AFTER HERE - WARNING: ABOVE THIS LINE MAY BE REGENERATED AND YOU MAY LOSE CODE\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n
 
-        Route::prefix('authenticate')->group(
-            function () {
-                Route::post('/oauth/token', 'OAuth\AccessTokenController@issueToken');
-                Route::post('/login', 'OAuth\AccessTokenController@issueToken');
-            }
-        );
-
         Route::prefix('my')->group(
             function () {
                 Route::get('/roles', 'Roles\MyRolesController@index');

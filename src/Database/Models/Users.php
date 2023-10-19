@@ -16,7 +16,7 @@ use NextDeveloper\Commons\Database\Traits\UuidId;
  *
  * @package NextDeveloper\IAM\Database\Models
  */
-class Users extends Model
+class Users extends Model implements \Illuminate\Contracts\Auth\Authenticatable
 {
     use Filterable, UuidId;
     use SoftDeletes;

@@ -2,12 +2,11 @@
 
 namespace NextDeveloper\IAM\Services;
 
+use App\Grants\OneTimeEmail;
 use Illuminate\Database\Eloquent\Collection;
 use NextDeveloper\IAM\Database\Models\LoginMechanisms;
 use NextDeveloper\IAM\Database\Models\Users;
 use NextDeveloper\IAM\Services\AbstractServices\AbstractLoginMechanismsService;
-use NextDeveloper\IAM\Services\LoginMechanisms\AbstractLogin;
-use NextDeveloper\IAM\Services\LoginMechanisms\OneTimeEmail;
 
 /**
 * This class is responsible from managing the data for LoginMechanisms
@@ -37,6 +36,7 @@ class LoginMechanismsService extends AbstractLoginMechanismsService {
 
         $mechanisms = LoginMechanisms::where('iam_user_id', $this->_user->id)
             ->where('is_active', 1)
+            ->where('login_mechanism', 'not like', '2FA%')
             ->get();
 
         return $mechanisms;
@@ -53,7 +53,7 @@ class LoginMechanismsService extends AbstractLoginMechanismsService {
 
     public function getTwoFA() : ?LoginMechanisms {
         return LoginMechanisms::where('iam_user_id', $this->_user->id)
-            ->where('login_mechanism', 'like', '2FA*')
+            ->where('login_mechanism', 'like', '2FA%')
             ->where('is_latest', 1)
             ->where('is_active', 1)
             ->first();
