@@ -2,10 +2,10 @@
 
 namespace NextDeveloper\IAM\Services\Registration;
 
+use App\Grants\OneTimeEmail;
 use NextDeveloper\IAM\Authorization\Roles\MemberRole;
 use NextDeveloper\IAM\Database\Models\Users;
 use NextDeveloper\IAM\Services\RolesService;
-use NextDeveloper\IAM\Services\LoginMechanisms\OneTimeEmail;
 
 class RegistrationService
 {
