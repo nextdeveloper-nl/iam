@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 use NextDeveloper\Commons\Database\Traits\Filterable;
 use NextDeveloper\IAM\Database\Observers\RolePermissionsObserver;
 use NextDeveloper\Commons\Database\Traits\UuidId;
+use NextDeveloper\Commons\Common\Cache\Traits\CleanCache;
 
 /**
  * Class RolePermissions.
@@ -15,7 +16,7 @@ use NextDeveloper\Commons\Database\Traits\UuidId;
  */
 class RolePermissions extends Model
 {
-    use Filterable, UuidId;
+    use Filterable, UuidId, CleanCache;
 
 
     public $timestamps = true;
@@ -48,6 +49,8 @@ class RolePermissions extends Model
      @var array
      */
     protected $casts = [
+    'id'                => 'integer',
+    'uuid'              => 'string',
     'iam_role_id'       => 'integer',
     'iam_permission_id' => 'integer',
     'is_active'         => 'boolean',
@@ -124,5 +127,6 @@ class RolePermissions extends Model
         return $this->belongsTo(\NextDeveloper\IAM\Database\Models\Roles::class);
     }
     
-    // EDIT AFTER HERE - WARNING: ABOVE THIS LINE MAY BE REGENERATED AND YOU MAY LOSE CODE\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n
+    // EDIT AFTER HERE - WARNING: ABOVE THIS LINE MAY BE REGENERATED AND YOU MAY LOSE CODE\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n
+
 }

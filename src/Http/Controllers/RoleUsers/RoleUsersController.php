@@ -81,7 +81,7 @@ class RoleUsersController extends AbstractController
     public function destroy($roleUsersId) {
         $model = RoleUsersService::delete($roleUsersId);
 
-        return ResponsableFactory::makeResponse($this, $model);
+        return $this->noContent();
     }
 
     // EDIT AFTER HERE - WARNING: ABOVE THIS LINE MAY BE REGENERATED AND YOU MAY LOSE CODE

@@ -40,7 +40,7 @@ class AccountUsersController extends AbstractController
         //  in NextDeveloper Platform Project
         $model = AccountUsersService::getByRef($ref);
 
-        return ResponsableFactory::makeResponse($this, $model);
+        return $this->noContent();
     }
 
     /**

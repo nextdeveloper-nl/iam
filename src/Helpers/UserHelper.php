@@ -3,6 +3,7 @@
 namespace NextDeveloper\IAM\Helpers;
 
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
 use NextDeveloper\Commons\Common\Cache\CacheHelper;
@@ -295,5 +296,18 @@ class UserHelper
         );
 
         return true;
+    }
+
+    /**
+     * Applies user fields to the object before creating it.
+     *
+     * @param $model
+     * @return void
+     */
+    public static function applyUserFields(Model $model) : Model {
+        $model->iam_user_id     =   self::me()->id;
+        $model->iam_account_id  =   self::currentAccount()->id;
+
+        return $model;
     }
 }

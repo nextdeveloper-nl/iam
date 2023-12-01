@@ -81,7 +81,7 @@ class AccountTypesController extends AbstractController
     public function destroy($accountTypesId) {
         $model = AccountTypesService::delete($accountTypesId);
 
-        return ResponsableFactory::makeResponse($this, $model);
+        return $this->noContent();
     }
 
     // EDIT AFTER HERE - WARNING: ABOVE THIS LINE MAY BE REGENERATED AND YOU MAY LOSE CODE

@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Model;
 use NextDeveloper\Commons\Database\Traits\Filterable;
 use NextDeveloper\IAM\Database\Observers\AccountsObserver;
 use NextDeveloper\Commons\Database\Traits\UuidId;
+use NextDeveloper\Commons\Common\Cache\Traits\CleanCache;
 
 /**
  * Class Accounts.
@@ -17,7 +18,7 @@ use NextDeveloper\Commons\Database\Traits\UuidId;
  */
 class Accounts extends Model
 {
-    use Filterable, UuidId;
+    use Filterable, UuidId, CleanCache;
     use SoftDeletes;
 
 
@@ -58,7 +59,6 @@ class Accounts extends Model
     'common_country_id'   => 'integer',
     'phone_number'        => 'string',
     'description'         => 'string',
-    'iam_user_id'         => 'integer',
     'iam_account_type_id' => 'integer',
     'created_at'          => 'datetime',
     'updated_at'          => 'datetime',
@@ -208,11 +208,12 @@ class Accounts extends Model
         return $this->hasMany(\NextDeveloper\Stay\Database\Models\Hotels::class);
     }
 
-    // EDIT AFTER HERE - WARNING: ABOVE THIS LINE MAY BE REGENERATED AND YOU MAY LOSE CODE\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n
+    // EDIT AFTER HERE - WARNING: ABOVE THIS LINE MAY BE REGENERATED AND YOU MAY LOSE CODE\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n
 
-    public function Users()
+    public function users()
     {
         return $this->belongsToMany(Accounts::class, 'iam_account_user', 'iam_account_id', 'iam_user_id');
     }
+
 
 }

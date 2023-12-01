@@ -13,8 +13,7 @@ class BackendsUpdateRequest extends AbstractFormRequest
     public function rules()
     {
         return [
-            'iam_account_id'           => 'nullable|exists:iam_accounts,uuid|uuid',
-        'iaas_virtual_machine_id'  => 'nullable|exists:iaas_virtual_machines,uuid|uuid',
+            'iaas_virtual_machine_id'  => 'nullable|exists:iaas_virtual_machines,uuid|uuid',
         'name'                     => 'nullable|string|max:100',
         'type'                     => '',
         'ldap_server_name'         => 'nullable|string|max:250',
@@ -37,5 +36,5 @@ class BackendsUpdateRequest extends AbstractFormRequest
         'is_usable'                => 'boolean',
         ];
     }
-    // EDIT AFTER HERE - WARNING: ABOVE THIS LINE MAY BE REGENERATED AND YOU MAY LOSE CODE\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n
+    // EDIT AFTER HERE - WARNING: ABOVE THIS LINE MAY BE REGENERATED AND YOU MAY LOSE CODE\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n
 }

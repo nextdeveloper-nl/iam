@@ -10,15 +10,16 @@ use Laravel\Passport\HasApiTokens;
 use NextDeveloper\Commons\Database\Traits\Filterable;
 use NextDeveloper\IAM\Database\Observers\UsersObserver;
 use NextDeveloper\Commons\Database\Traits\UuidId;
+use NextDeveloper\Commons\Common\Cache\Traits\CleanCache;
 
 /**
  * Class Users.
  *
  * @package NextDeveloper\IAM\Database\Models
  */
-class Users extends Model implements \Illuminate\Contracts\Auth\Authenticatable
+class Users extends Model
 {
-    use Filterable, UuidId;
+    use Filterable, UuidId, CleanCache;
     use SoftDeletes;
 
 
@@ -210,7 +211,8 @@ class Users extends Model implements \Illuminate\Contracts\Auth\Authenticatable
         return $this->hasMany(\NextDeveloper\Stay\Database\Models\Hotels::class);
     }
 
-    // EDIT AFTER HERE - WARNING: ABOVE THIS LINE MAY BE REGENERATED AND YOU MAY LOSE CODE\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n
+    // EDIT AFTER HERE - WARNING: ABOVE THIS LINE MAY BE REGENERATED AND YOU MAY LOSE CODE\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n
 
     use Authenticatable, HasApiTokens;
+
 }

@@ -25,7 +25,7 @@ class AbstractRolePermissionsTransformer extends AbstractTransformer
             
         return $this->buildPayload(
             [
-            'id'  =>  $model->id,
+            'id'  =>  $model->uuid,
             'iam_role_id'  =>  $iamRoleId ? $iamRoleId->uuid : null,
             'iam_permission_id'  =>  $iamPermissionId ? $iamPermissionId->uuid : null,
             'is_active'  =>  $model->is_active == 1 ? true : false,
@@ -37,11 +37,5 @@ class AbstractRolePermissionsTransformer extends AbstractTransformer
         );
     }
     
-    // EDIT AFTER HERE - WARNING: ABOVE THIS LINE MAY BE REGENERATED AND YOU MAY LOSE CODE\n\n\n\n\n\n\n\n\n\n\n\n
-
-
-
-
-
-
+    // EDIT AFTER HERE - WARNING: ABOVE THIS LINE MAY BE REGENERATED AND YOU MAY LOSE CODE
 }
