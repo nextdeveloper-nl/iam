@@ -147,7 +147,6 @@ Route::prefix('iam')->group(
 
         // EDIT AFTER HERE - WARNING: ABOVE THIS LINE MAY BE REGENERATED AND YOU MAY LOSE CODE
 
-
         Route::prefix('my')->group(
             function () {
                 Route::get('/roles', 'Roles\MyRolesController@index');
@@ -162,6 +161,7 @@ Route::prefix('iam')->group(
         );
     }
 );
+
 
 
 
