@@ -21,16 +21,18 @@ class AbstractLoginLogsTransformer extends AbstractTransformer
     public function transform(LoginLogs $model)
     {
                         $iamUserId = \NextDeveloper\IAM\Database\Models\Users::where('id', $model->iam_user_id)->first();
-            
+        
         return $this->buildPayload(
             [
             'id'  =>  $model->uuid,
             'iam_user_id'  =>  $iamUserId ? $iamUserId->uuid : null,
             'log'  =>  $model->log,
-            'created_at'  =>  $model->created_at,
+            'created_at'  =>  $model->created_at ? $model->created_at->toIso8601String() : null,
             ]
         );
     }
-    
-    // EDIT AFTER HERE - WARNING: ABOVE THIS LINE MAY BE REGENERATED AND YOU MAY LOSE CODE
+
+    // EDIT AFTER HERE - WARNING: ABOVE THIS LINE MAY BE REGENERATED AND YOU MAY LOSE CODE\n\n\n\n
+
+
 }

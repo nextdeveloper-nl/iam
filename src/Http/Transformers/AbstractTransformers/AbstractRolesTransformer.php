@@ -20,7 +20,7 @@ class AbstractRolesTransformer extends AbstractTransformer
      */
     public function transform(Roles $model)
     {
-                
+            
         return $this->buildPayload(
             [
             'id'  =>  $model->uuid,
@@ -28,12 +28,14 @@ class AbstractRolesTransformer extends AbstractTransformer
             'class'  =>  $model->class,
             'level'  =>  $model->level,
             'description'  =>  $model->description,
-            'created_at'  =>  $model->created_at,
-            'updated_at'  =>  $model->updated_at,
-            'deleted_at'  =>  $model->deleted_at,
+            'created_at'  =>  $model->created_at ? $model->created_at->toIso8601String() : null,
+            'updated_at'  =>  $model->updated_at ? $model->updated_at->toIso8601String() : null,
+            'deleted_at'  =>  $model->deleted_at ? $model->deleted_at->toIso8601String() : null,
             ]
         );
     }
-    
-    // EDIT AFTER HERE - WARNING: ABOVE THIS LINE MAY BE REGENERATED AND YOU MAY LOSE CODE
+
+    // EDIT AFTER HERE - WARNING: ABOVE THIS LINE MAY BE REGENERATED AND YOU MAY LOSE CODE\n\n\n\n
+
+
 }
