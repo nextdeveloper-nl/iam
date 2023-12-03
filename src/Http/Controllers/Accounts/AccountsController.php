@@ -13,29 +13,31 @@ use NextDeveloper\IAM\Http\Requests\Accounts\AccountsCreateRequest;
 class AccountsController extends AbstractController
 {
     /**
-    * This method returns the list of accounts.
-    *
-    * optional http params:
-    * - paginate: If you set paginate parameter, the result will be returned paginated.
-    *
-    * @param AccountsQueryFilter $filter An object that builds search query
-    * @param Request $request Laravel request object, this holds all data about request. Automatically populated.
-    * @return \Illuminate\Http\JsonResponse
-    */
-    public function index(AccountsQueryFilter $filter, Request $request) {
+     * This method returns the list of accounts.
+     *
+     * optional http params:
+     * - paginate: If you set paginate parameter, the result will be returned paginated.
+     *
+     * @param  AccountsQueryFilter $filter  An object that builds search query
+     * @param  Request             $request Laravel request object, this holds all data about request. Automatically populated.
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function index(AccountsQueryFilter $filter, Request $request)
+    {
         $data = AccountsService::get($filter, $request->all());
 
         return ResponsableFactory::makeResponse($this, $data);
     }
 
     /**
-    * This method receives ID for the related model and returns the item to the client.
-    *
-    * @param $accountsId
-    * @return mixed|null
-    * @throws \Laravel\Octane\Exceptions\DdException
-    */
-    public function show($ref) {
+     * This method receives ID for the related model and returns the item to the client.
+     *
+     * @param  $accountsId
+     * @return mixed|null
+     * @throws \Laravel\Octane\Exceptions\DdException
+     */
+    public function show($ref)
+    {
         //  Here we are not using Laravel Route Model Binding. Please check routeBinding.md file
         //  in NextDeveloper Platform Project
         $model = AccountsService::getByRef($ref);
@@ -44,41 +46,58 @@ class AccountsController extends AbstractController
     }
 
     /**
-    * This method created Accounts object on database.
-    *
-    * @param AccountsCreateRequest $request
-    * @return mixed|null
-    * @throws \NextDeveloper\Commons\Exceptions\CannotCreateModelException
-    */
-    public function store(AccountsCreateRequest $request) {
+     * This method returns the list of sub objects the related object.
+     *
+     * @param  $ref
+     * @param  $subObject
+     * @return void
+     */
+    public function subObjects($ref, $subObject)
+    {
+        $objects = AccountsService::getSubObjects($ref, $subObject);
+
+        return ResponsableFactory::makeResponse($this, $objects);
+    }
+
+    /**
+     * This method created Accounts object on database.
+     *
+     * @param  AccountsCreateRequest $request
+     * @return mixed|null
+     * @throws \NextDeveloper\Commons\Exceptions\CannotCreateModelException
+     */
+    public function store(AccountsCreateRequest $request)
+    {
         $model = AccountsService::create($request->validated());
 
         return ResponsableFactory::makeResponse($this, $model);
     }
 
     /**
-    * This method updates Accounts object on database.
-    *
-    * @param $accountsId
-    * @param CountryCreateRequest $request
-    * @return mixed|null
-    * @throws \NextDeveloper\Commons\Exceptions\CannotCreateModelException
-    */
-    public function update($accountsId, AccountsUpdateRequest $request) {
+     * This method updates Accounts object on database.
+     *
+     * @param  $accountsId
+     * @param  CountryCreateRequest $request
+     * @return mixed|null
+     * @throws \NextDeveloper\Commons\Exceptions\CannotCreateModelException
+     */
+    public function update($accountsId, AccountsUpdateRequest $request)
+    {
         $model = AccountsService::update($accountsId, $request->validated());
 
         return ResponsableFactory::makeResponse($this, $model);
     }
 
     /**
-    * This method updates Accounts object on database.
-    *
-    * @param $accountsId
-    * @param CountryCreateRequest $request
-    * @return mixed|null
-    * @throws \NextDeveloper\Commons\Exceptions\CannotCreateModelException
-    */
-    public function destroy($accountsId) {
+     * This method updates Accounts object on database.
+     *
+     * @param  $accountsId
+     * @param  CountryCreateRequest $request
+     * @return mixed|null
+     * @throws \NextDeveloper\Commons\Exceptions\CannotCreateModelException
+     */
+    public function destroy($accountsId)
+    {
         $model = AccountsService::delete($accountsId);
 
         return $this->noContent();

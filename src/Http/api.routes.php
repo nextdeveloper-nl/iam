@@ -134,7 +134,19 @@ Route::prefix('iam')->group(
             }
         );
 
+        Route::prefix('user-roles')->group(
+            function () {
+                Route::get('/', 'UserRoles\UserRolesController@index');
+                Route::get('/{iam_user_roles}', 'UserRoles\UserRolesController@show');
+                Route::get('/{iam_user_roles}/{subObjects}', 'UserRoles\UserRolesController@subObjects');
+                Route::post('/', 'UserRoles\UserRolesController@store');
+                Route::patch('/{iam_user_roles}', 'UserRoles\UserRolesController@update');
+                Route::delete('/{iam_user_roles}', 'UserRoles\UserRolesController@destroy');
+            }
+        );
+
         // EDIT AFTER HERE - WARNING: ABOVE THIS LINE MAY BE REGENERATED AND YOU MAY LOSE CODE
+
 
         Route::prefix('my')->group(
             function () {
@@ -150,6 +162,7 @@ Route::prefix('iam')->group(
         );
     }
 );
+
 
 
 
