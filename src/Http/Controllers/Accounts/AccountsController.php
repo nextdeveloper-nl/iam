@@ -7,11 +7,15 @@ use NextDeveloper\IAM\Http\Controllers\AbstractController;
 use NextDeveloper\Generator\Http\Traits\ResponsableFactory;
 use NextDeveloper\IAM\Http\Requests\Accounts\AccountsUpdateRequest;
 use NextDeveloper\IAM\Database\Filters\AccountsQueryFilter;
+use NextDeveloper\IAM\Database\Models\Accounts;
 use NextDeveloper\IAM\Services\AccountsService;
 use NextDeveloper\IAM\Http\Requests\Accounts\AccountsCreateRequest;
-
+use NextDeveloper\Commons\Http\Traits\Tags;
 class AccountsController extends AbstractController
 {
+    private $model = Accounts::class;
+
+    use Tags;
     /**
      * This method returns the list of accounts.
      *
@@ -46,15 +50,18 @@ class AccountsController extends AbstractController
     }
 
     /**
-     * This method returns the list of sub objects the related object.
+     * This method returns the list of sub objects the related object. Sub object means an object which is preowned by
+     * this object.
+     *
+     * It can be tags, addresses, states etc.
      *
      * @param  $ref
      * @param  $subObject
      * @return void
      */
-    public function subObjects($ref, $subObject)
+    public function relatedObjects($ref, $subObject)
     {
-        $objects = AccountsService::getSubObjects($ref, $subObject);
+        $objects = AccountsService::relatedObjects($ref, $subObject);
 
         return ResponsableFactory::makeResponse($this, $objects);
     }

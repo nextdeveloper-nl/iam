@@ -11,6 +11,7 @@ use NextDeveloper\Commons\Common\Cache\CacheHelper;
 use NextDeveloper\Commons\Helpers\DatabaseHelper;
 use NextDeveloper\IAM\Database\Models\RoleUsers;
 use NextDeveloper\IAM\Database\Filters\RoleUsersQueryFilter;
+use NextDeveloper\Commons\Exceptions\ModelNotFoundException;
 use NextDeveloper\IAM\Events\RoleUsers\RoleUsersCreatedEvent;
 use NextDeveloper\IAM\Events\RoleUsers\RoleUsersCreatingEvent;
 use NextDeveloper\IAM\Events\RoleUsers\RoleUsersUpdatedEvent;
@@ -18,16 +19,17 @@ use NextDeveloper\IAM\Events\RoleUsers\RoleUsersUpdatingEvent;
 use NextDeveloper\IAM\Events\RoleUsers\RoleUsersDeletedEvent;
 use NextDeveloper\IAM\Events\RoleUsers\RoleUsersDeletingEvent;
 
-
 /**
-* This class is responsible from managing the data for RoleUsers
-*
-* Class RoleUsersService.
-*
-* @package NextDeveloper\IAM\Database\Models
-*/
-class AbstractRoleUsersService {
-    public static function get(RoleUsersQueryFilter $filter = null, array $params = []) : Collection|LengthAwarePaginator {
+ * This class is responsible from managing the data for RoleUsers
+ *
+ * Class RoleUsersService.
+ *
+ * @package NextDeveloper\IAM\Database\Models
+ */
+class AbstractRoleUsersService
+{
+    public static function get(RoleUsersQueryFilter $filter = null, array $params = []) : Collection|LengthAwarePaginator
+    {
         $enablePaginate = array_key_exists('paginate', $params);
 
         /**
@@ -36,19 +38,22 @@ class AbstractRoleUsersService {
         *
         * Please let me know if you have any other idea about this; baris.bulut@nextdeveloper.com
         */
-        if($filter == null)
+        if($filter == null) {
             $filter = new RoleUsersQueryFilter(new Request());
+        }
 
         $perPage = config('commons.pagination.per_page');
 
-        if($perPage == null)
+        if($perPage == null) {
             $perPage = 20;
+        }
 
         if(array_key_exists('per_page', $params)) {
             $perPage = intval($params['per_page']);
 
-            if($perPage == 0)
+            if($perPage == 0) {
                 $perPage = 20;
+            }
         }
 
         if(array_key_exists('orderBy', $params)) {
@@ -57,155 +62,191 @@ class AbstractRoleUsersService {
 
         $model = RoleUsers::filter($filter);
 
-        if($model && $enablePaginate)
+        if($model && $enablePaginate) {
             return $model->paginate($perPage);
-        else
+        } else {
             return $model->get();
+        }
     }
 
-    public static function getAll() {
+    public static function getAll()
+    {
         return RoleUsers::all();
     }
 
     /**
-    * This method returns the model by looking at reference id
-    *
-    * @param $ref
-    * @return mixed
-    */
-    public static function getByRef($ref) : ?RoleUsers {
+     * This method returns the model by looking at reference id
+     *
+     * @param  $ref
+     * @return mixed
+     */
+    public static function getByRef($ref) : ?RoleUsers
+    {
         return RoleUsers::findByRef($ref);
     }
 
     /**
-    * This method returns the model by lookint at its id
-    *
-    * @param $id
-    * @return RoleUsers|null
-    */
-    public static function getById($id) : ?RoleUsers {
+     * This method returns the model by lookint at its id
+     *
+     * @param  $id
+     * @return RoleUsers|null
+     */
+    public static function getById($id) : ?RoleUsers
+    {
         return RoleUsers::where('id', $id)->first();
     }
 
     /**
-    * This method created the model from an array.
-    *
-    * Throws an exception if stuck with any problem.
-    *
-    * @param array $data
-    * @return mixed
-    * @throw Exception
-    */
-    public static function create(array $data) {
-        event( new RoleUsersCreatingEvent() );
+     * This method returns the sub objects of the related models
+     *
+     * @param  $uuid
+     * @param  $object
+     * @return void
+     * @throws \Laravel\Octane\Exceptions\DdException
+     */
+    public static function relatedObjects($uuid, $object)
+    {
+        try {
+            $obj = RoleUsers::where('uuid', $uuid)->first();
 
-                if (array_key_exists('iam_role_id', $data))
+            if(!$obj) {
+                throw new ModelNotFoundException('Cannot find the related model');
+            }
+
+            if($obj) {
+                return $obj->$object;
+            }
+        } catch (\Exception $e) {
+            dd($e);
+        }
+    }
+
+    /**
+     * This method created the model from an array.
+     *
+     * Throws an exception if stuck with any problem.
+     *
+     * @param  array $data
+     * @return mixed
+     * @throw  Exception
+     */
+    public static function create(array $data)
+    {
+        event(new RoleUsersCreatingEvent());
+
+        if (array_key_exists('iam_role_id', $data)) {
             $data['iam_role_id'] = DatabaseHelper::uuidToId(
                 '\NextDeveloper\IAM\Database\Models\Roles',
                 $data['iam_role_id']
             );
-	        if (array_key_exists('iam_user_id', $data))
+        }
+        if (array_key_exists('iam_user_id', $data)) {
             $data['iam_user_id'] = DatabaseHelper::uuidToId(
                 '\NextDeveloper\IAM\Database\Models\Users',
                 $data['iam_user_id']
             );
-	        if (array_key_exists('iam_account_id', $data))
+        }
+        if (array_key_exists('iam_account_id', $data)) {
             $data['iam_account_id'] = DatabaseHelper::uuidToId(
                 '\NextDeveloper\IAM\Database\Models\Accounts',
                 $data['iam_account_id']
             );
-	        
+        }
+    
         try {
             $model = RoleUsers::create($data);
         } catch(\Exception $e) {
             throw $e;
         }
 
-        event( new RoleUsersCreatedEvent($model) );
+        event(new RoleUsersCreatedEvent($model));
 
         return $model->fresh();
     }
 
-/**
-* This function expects the ID inside the object.
-*
-* @param array $data
-* @return RoleUsers
-*/
-public static function updateRaw(array $data) : ?RoleUsers
-{
-if(array_key_exists('id', $data)) {
-return self::update($data['id'], $data);
-}
+    /**
+     This function expects the ID inside the object.
+    
+     @param  array $data
+     @return RoleUsers
+     */
+    public static function updateRaw(array $data) : ?RoleUsers
+    {
+        if(array_key_exists('id', $data)) {
+            return self::update($data['id'], $data);
+        }
 
-return null;
-}
+        return null;
+    }
 
     /**
-    * This method updated the model from an array.
-    *
-    * Throws an exception if stuck with any problem.
-    *
-    * @param
-    * @param array $data
-    * @return mixed
-    * @throw Exception
-    */
-    public static function update($id, array $data) {
+     * This method updated the model from an array.
+     *
+     * Throws an exception if stuck with any problem.
+     *
+     * @param
+     * @param  array $data
+     * @return mixed
+     * @throw  Exception
+     */
+    public static function update($id, array $data)
+    {
         $model = RoleUsers::where('uuid', $id)->first();
 
-                if (array_key_exists('iam_role_id', $data))
+        if (array_key_exists('iam_role_id', $data)) {
             $data['iam_role_id'] = DatabaseHelper::uuidToId(
                 '\NextDeveloper\IAM\Database\Models\Roles',
                 $data['iam_role_id']
             );
-	        if (array_key_exists('iam_user_id', $data))
+        }
+        if (array_key_exists('iam_user_id', $data)) {
             $data['iam_user_id'] = DatabaseHelper::uuidToId(
                 '\NextDeveloper\IAM\Database\Models\Users',
                 $data['iam_user_id']
             );
-	        if (array_key_exists('iam_account_id', $data))
+        }
+        if (array_key_exists('iam_account_id', $data)) {
             $data['iam_account_id'] = DatabaseHelper::uuidToId(
                 '\NextDeveloper\IAM\Database\Models\Accounts',
                 $data['iam_account_id']
             );
-	
-        event( new RoleUsersUpdatingEvent($model) );
+        }
+    
+        event(new RoleUsersUpdatingEvent($model));
 
         try {
-           $isUpdated = $model->update($data);
-           $model = $model->fresh();
+            $isUpdated = $model->update($data);
+            $model = $model->fresh();
         } catch(\Exception $e) {
-           throw $e;
+            throw $e;
         }
 
-        event( new RoleUsersUpdatedEvent($model) );
+        event(new RoleUsersUpdatedEvent($model));
 
         return $model->fresh();
     }
 
     /**
-    * This method updated the model from an array.
-    *
-    * Throws an exception if stuck with any problem.
-    *
-    * @param
-    * @param array $data
-    * @return mixed
-    * @throw Exception
-    */
-    public static function delete($id, array $data) {
+     * This method updated the model from an array.
+     *
+     * Throws an exception if stuck with any problem.
+     *
+     * @param
+     * @param  array $data
+     * @return mixed
+     * @throw  Exception
+     */
+    public static function delete($id)
+    {
         $model = RoleUsers::where('uuid', $id)->first();
 
-        event( new RoleUsersDeletingEvent() );
+        event(new RoleUsersDeletingEvent());
 
         try {
             $model = $model->delete();
         } catch(\Exception $e) {
             throw $e;
         }
-
-        event( new RoleUsersDeletedEvent($model) );
 
         return $model;
     }

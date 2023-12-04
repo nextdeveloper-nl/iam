@@ -7,11 +7,15 @@ use NextDeveloper\IAM\Http\Controllers\AbstractController;
 use NextDeveloper\Generator\Http\Traits\ResponsableFactory;
 use NextDeveloper\IAM\Http\Requests\LoginLogs\LoginLogsUpdateRequest;
 use NextDeveloper\IAM\Database\Filters\LoginLogsQueryFilter;
+use NextDeveloper\IAM\Database\Models\LoginLogs;
 use NextDeveloper\IAM\Services\LoginLogsService;
 use NextDeveloper\IAM\Http\Requests\LoginLogs\LoginLogsCreateRequest;
-
+use NextDeveloper\Commons\Http\Traits\Tags;
 class LoginLogsController extends AbstractController
 {
+    private $model = LoginLogs::class;
+
+    use Tags;
     /**
      * This method returns the list of loginlogs.
      *
@@ -46,15 +50,18 @@ class LoginLogsController extends AbstractController
     }
 
     /**
-     * This method returns the list of sub objects the related object.
+     * This method returns the list of sub objects the related object. Sub object means an object which is preowned by
+     * this object.
+     *
+     * It can be tags, addresses, states etc.
      *
      * @param  $ref
      * @param  $subObject
      * @return void
      */
-    public function subObjects($ref, $subObject)
+    public function relatedObjects($ref, $subObject)
     {
-        $objects = LoginLogsService::getSubObjects($ref, $subObject);
+        $objects = LoginLogsService::relatedObjects($ref, $subObject);
 
         return ResponsableFactory::makeResponse($this, $objects);
     }

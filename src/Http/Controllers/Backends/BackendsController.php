@@ -7,11 +7,15 @@ use NextDeveloper\IAM\Http\Controllers\AbstractController;
 use NextDeveloper\Generator\Http\Traits\ResponsableFactory;
 use NextDeveloper\IAM\Http\Requests\Backends\BackendsUpdateRequest;
 use NextDeveloper\IAM\Database\Filters\BackendsQueryFilter;
+use NextDeveloper\IAM\Database\Models\Backends;
 use NextDeveloper\IAM\Services\BackendsService;
 use NextDeveloper\IAM\Http\Requests\Backends\BackendsCreateRequest;
-
+use NextDeveloper\Commons\Http\Traits\Tags;
 class BackendsController extends AbstractController
 {
+    private $model = Backends::class;
+
+    use Tags;
     /**
      * This method returns the list of backends.
      *
@@ -46,15 +50,18 @@ class BackendsController extends AbstractController
     }
 
     /**
-     * This method returns the list of sub objects the related object.
+     * This method returns the list of sub objects the related object. Sub object means an object which is preowned by
+     * this object.
+     *
+     * It can be tags, addresses, states etc.
      *
      * @param  $ref
      * @param  $subObject
      * @return void
      */
-    public function subObjects($ref, $subObject)
+    public function relatedObjects($ref, $subObject)
     {
-        $objects = BackendsService::getSubObjects($ref, $subObject);
+        $objects = BackendsService::relatedObjects($ref, $subObject);
 
         return ResponsableFactory::makeResponse($this, $objects);
     }

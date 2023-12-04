@@ -11,6 +11,7 @@ use NextDeveloper\Commons\Common\Cache\CacheHelper;
 use NextDeveloper\Commons\Helpers\DatabaseHelper;
 use NextDeveloper\IAM\Database\Models\Permissions;
 use NextDeveloper\IAM\Database\Filters\PermissionsQueryFilter;
+use NextDeveloper\Commons\Exceptions\ModelNotFoundException;
 use NextDeveloper\IAM\Events\Permissions\PermissionsCreatedEvent;
 use NextDeveloper\IAM\Events\Permissions\PermissionsCreatingEvent;
 use NextDeveloper\IAM\Events\Permissions\PermissionsUpdatedEvent;
@@ -18,16 +19,17 @@ use NextDeveloper\IAM\Events\Permissions\PermissionsUpdatingEvent;
 use NextDeveloper\IAM\Events\Permissions\PermissionsDeletedEvent;
 use NextDeveloper\IAM\Events\Permissions\PermissionsDeletingEvent;
 
-
 /**
-* This class is responsible from managing the data for Permissions
-*
-* Class PermissionsService.
-*
-* @package NextDeveloper\IAM\Database\Models
-*/
-class AbstractPermissionsService {
-    public static function get(PermissionsQueryFilter $filter = null, array $params = []) : Collection|LengthAwarePaginator {
+ * This class is responsible from managing the data for Permissions
+ *
+ * Class PermissionsService.
+ *
+ * @package NextDeveloper\IAM\Database\Models
+ */
+class AbstractPermissionsService
+{
+    public static function get(PermissionsQueryFilter $filter = null, array $params = []) : Collection|LengthAwarePaginator
+    {
         $enablePaginate = array_key_exists('paginate', $params);
 
         /**
@@ -36,19 +38,22 @@ class AbstractPermissionsService {
         *
         * Please let me know if you have any other idea about this; baris.bulut@nextdeveloper.com
         */
-        if($filter == null)
+        if($filter == null) {
             $filter = new PermissionsQueryFilter(new Request());
+        }
 
         $perPage = config('commons.pagination.per_page');
 
-        if($perPage == null)
+        if($perPage == null) {
             $perPage = 20;
+        }
 
         if(array_key_exists('per_page', $params)) {
             $perPage = intval($params['per_page']);
 
-            if($perPage == 0)
+            if($perPage == 0) {
                 $perPage = 20;
+            }
         }
 
         if(array_key_exists('orderBy', $params)) {
@@ -57,125 +62,155 @@ class AbstractPermissionsService {
 
         $model = Permissions::filter($filter);
 
-        if($model && $enablePaginate)
+        if($model && $enablePaginate) {
             return $model->paginate($perPage);
-        else
+        } else {
             return $model->get();
+        }
     }
 
-    public static function getAll() {
+    public static function getAll()
+    {
         return Permissions::all();
     }
 
     /**
-    * This method returns the model by looking at reference id
-    *
-    * @param $ref
-    * @return mixed
-    */
-    public static function getByRef($ref) : ?Permissions {
+     * This method returns the model by looking at reference id
+     *
+     * @param  $ref
+     * @return mixed
+     */
+    public static function getByRef($ref) : ?Permissions
+    {
         return Permissions::findByRef($ref);
     }
 
     /**
-    * This method returns the model by lookint at its id
-    *
-    * @param $id
-    * @return Permissions|null
-    */
-    public static function getById($id) : ?Permissions {
+     * This method returns the model by lookint at its id
+     *
+     * @param  $id
+     * @return Permissions|null
+     */
+    public static function getById($id) : ?Permissions
+    {
         return Permissions::where('id', $id)->first();
     }
 
     /**
-    * This method created the model from an array.
-    *
-    * Throws an exception if stuck with any problem.
-    *
-    * @param array $data
-    * @return mixed
-    * @throw Exception
-    */
-    public static function create(array $data) {
-        event( new PermissionsCreatingEvent() );
+     * This method returns the sub objects of the related models
+     *
+     * @param  $uuid
+     * @param  $object
+     * @return void
+     * @throws \Laravel\Octane\Exceptions\DdException
+     */
+    public static function relatedObjects($uuid, $object)
+    {
+        try {
+            $obj = Permissions::where('uuid', $uuid)->first();
 
-                
+            if(!$obj) {
+                throw new ModelNotFoundException('Cannot find the related model');
+            }
+
+            if($obj) {
+                return $obj->$object;
+            }
+        } catch (\Exception $e) {
+            dd($e);
+        }
+    }
+
+    /**
+     * This method created the model from an array.
+     *
+     * Throws an exception if stuck with any problem.
+     *
+     * @param  array $data
+     * @return mixed
+     * @throw  Exception
+     */
+    public static function create(array $data)
+    {
+        event(new PermissionsCreatingEvent());
+
+        
         try {
             $model = Permissions::create($data);
         } catch(\Exception $e) {
             throw $e;
         }
 
-        event( new PermissionsCreatedEvent($model) );
+        event(new PermissionsCreatedEvent($model));
 
         return $model->fresh();
     }
 
-/**
-* This function expects the ID inside the object.
-*
-* @param array $data
-* @return Permissions
-*/
-public static function updateRaw(array $data) : ?Permissions
-{
-if(array_key_exists('id', $data)) {
-return self::update($data['id'], $data);
-}
+    /**
+     This function expects the ID inside the object.
+    
+     @param  array $data
+     @return Permissions
+     */
+    public static function updateRaw(array $data) : ?Permissions
+    {
+        if(array_key_exists('id', $data)) {
+            return self::update($data['id'], $data);
+        }
 
-return null;
-}
+        return null;
+    }
 
     /**
-    * This method updated the model from an array.
-    *
-    * Throws an exception if stuck with any problem.
-    *
-    * @param
-    * @param array $data
-    * @return mixed
-    * @throw Exception
-    */
-    public static function update($id, array $data) {
+     * This method updated the model from an array.
+     *
+     * Throws an exception if stuck with any problem.
+     *
+     * @param
+     * @param  array $data
+     * @return mixed
+     * @throw  Exception
+     */
+    public static function update($id, array $data)
+    {
         $model = Permissions::where('uuid', $id)->first();
 
         
-        event( new PermissionsUpdatingEvent($model) );
+        event(new PermissionsUpdatingEvent($model));
 
         try {
-           $isUpdated = $model->update($data);
-           $model = $model->fresh();
+            $isUpdated = $model->update($data);
+            $model = $model->fresh();
         } catch(\Exception $e) {
-           throw $e;
+            throw $e;
         }
 
-        event( new PermissionsUpdatedEvent($model) );
+        event(new PermissionsUpdatedEvent($model));
 
         return $model->fresh();
     }
 
     /**
-    * This method updated the model from an array.
-    *
-    * Throws an exception if stuck with any problem.
-    *
-    * @param
-    * @param array $data
-    * @return mixed
-    * @throw Exception
-    */
-    public static function delete($id, array $data) {
+     * This method updated the model from an array.
+     *
+     * Throws an exception if stuck with any problem.
+     *
+     * @param
+     * @param  array $data
+     * @return mixed
+     * @throw  Exception
+     */
+    public static function delete($id)
+    {
         $model = Permissions::where('uuid', $id)->first();
 
-        event( new PermissionsDeletingEvent() );
+        event(new PermissionsDeletingEvent());
 
         try {
             $model = $model->delete();
         } catch(\Exception $e) {
             throw $e;
         }
-
-        event( new PermissionsDeletedEvent($model) );
 
         return $model;
     }

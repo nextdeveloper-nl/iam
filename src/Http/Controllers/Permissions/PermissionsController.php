@@ -7,11 +7,15 @@ use NextDeveloper\IAM\Http\Controllers\AbstractController;
 use NextDeveloper\Generator\Http\Traits\ResponsableFactory;
 use NextDeveloper\IAM\Http\Requests\Permissions\PermissionsUpdateRequest;
 use NextDeveloper\IAM\Database\Filters\PermissionsQueryFilter;
+use NextDeveloper\IAM\Database\Models\Permissions;
 use NextDeveloper\IAM\Services\PermissionsService;
 use NextDeveloper\IAM\Http\Requests\Permissions\PermissionsCreateRequest;
-
+use NextDeveloper\Commons\Http\Traits\Tags;
 class PermissionsController extends AbstractController
 {
+    private $model = Permissions::class;
+
+    use Tags;
     /**
      * This method returns the list of permissions.
      *
@@ -46,15 +50,18 @@ class PermissionsController extends AbstractController
     }
 
     /**
-     * This method returns the list of sub objects the related object.
+     * This method returns the list of sub objects the related object. Sub object means an object which is preowned by
+     * this object.
+     *
+     * It can be tags, addresses, states etc.
      *
      * @param  $ref
      * @param  $subObject
      * @return void
      */
-    public function subObjects($ref, $subObject)
+    public function relatedObjects($ref, $subObject)
     {
-        $objects = PermissionsService::getSubObjects($ref, $subObject);
+        $objects = PermissionsService::relatedObjects($ref, $subObject);
 
         return ResponsableFactory::makeResponse($this, $objects);
     }
