@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\App;
 use NextDeveloper\Commons\Database\Models\Languages;
 use NextDeveloper\IAM\Authorization\Roles\IAuthorizationRole;
 use NextDeveloper\IAM\Database\Filters\UsersQueryFilter;
+use NextDeveloper\IAM\Database\Models\UserAccounts;
 use NextDeveloper\IAM\Database\Models\Users;
 use NextDeveloper\IAM\Helpers\UserHelper;
 use NextDeveloper\IAM\Services\AbstractServices\AbstractUsersService;
@@ -23,7 +24,7 @@ use NextDeveloper\IAM\Services\Registration\RegistrationService;
 class UsersService extends AbstractUsersService {
 
     // EDIT AFTER HERE - WARNING: ABOVE THIS LINE MAY BE REGENERATED AND YOU MAY LOSE CODE
-    
+
     public static function get(UsersQueryFilter $filter = null, array $params = []) : Collection|LengthAwarePaginator {
         $user = UserHelper::me();
 
@@ -32,8 +33,7 @@ class UsersService extends AbstractUsersService {
             return new Collection();
         }
 
-        $users = Users::filter($filter)
-            ->join('iam_account_user', 'iam_users.id', '=', 'iam_account_user.iam_user_id')
+        $users = UserAccounts::filter($filter)
             ->where('iam_account_id', UserHelper::currentAccount()->id)
             ->get();
 

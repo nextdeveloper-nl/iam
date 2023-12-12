@@ -27,9 +27,9 @@ class UsersTransformer extends AbstractUsersTransformer
             CacheHelper::getKey('Users', $model->uuid, 'Transformed')
         );
 
-        if($transformed) {
-            return $transformed;
-        }
+//        if($transformed) {
+//            return $transformed;
+//        }
 
         $transformed = parent::transform($model);
 

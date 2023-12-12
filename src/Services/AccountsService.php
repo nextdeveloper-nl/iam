@@ -63,7 +63,7 @@ class AccountsService extends AbstractAccountsService {
      */
     public static function userAccounts(Users $user) : Collection
     {
-        return UserAccounts::withoutGlobalScopes()->where('id', $user->id)->get();
+        return UserAccounts::withoutGlobalScopes()->where('iam_user_id', $user->id)->get();
     }
 
     /**
