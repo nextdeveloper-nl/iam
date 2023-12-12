@@ -123,4 +123,5 @@ class LoginLogs extends Model
 
 
 
+
 }

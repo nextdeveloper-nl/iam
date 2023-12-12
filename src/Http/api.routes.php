@@ -8,6 +8,8 @@ Route::prefix('iam')->group(
 
                 Route::get('{iam_account_types}/tags ', 'AccountTypes\AccountTypesController@tags');
                 Route::post('{iam_account_types}/tags ', 'AccountTypes\AccountTypesController@saveTags');
+                Route::get('{iam_account_types}/addresses ', 'AccountTypes\AccountTypesController@addresses');
+                Route::post('{iam_account_types}/addresses ', 'AccountTypes\AccountTypesController@saveAddresses');
 
                 Route::get('/{iam_account_types}/{subObjects}', 'AccountTypes\AccountTypesController@relatedObjects');
                 Route::get('/{iam_account_types}', 'AccountTypes\AccountTypesController@show');
@@ -24,6 +26,8 @@ Route::prefix('iam')->group(
 
                 Route::get('{iam_account_user}/tags ', 'AccountUser\AccountUserController@tags');
                 Route::post('{iam_account_user}/tags ', 'AccountUser\AccountUserController@saveTags');
+                Route::get('{iam_account_user}/addresses ', 'AccountUser\AccountUserController@addresses');
+                Route::post('{iam_account_user}/addresses ', 'AccountUser\AccountUserController@saveAddresses');
 
                 Route::get('/{iam_account_user}/{subObjects}', 'AccountUser\AccountUserController@relatedObjects');
                 Route::get('/{iam_account_user}', 'AccountUser\AccountUserController@show');
@@ -40,6 +44,8 @@ Route::prefix('iam')->group(
 
                 Route::get('{iam_accounts}/tags ', 'Accounts\AccountsController@tags');
                 Route::post('{iam_accounts}/tags ', 'Accounts\AccountsController@saveTags');
+                Route::get('{iam_accounts}/addresses ', 'Accounts\AccountsController@addresses');
+                Route::post('{iam_accounts}/addresses ', 'Accounts\AccountsController@saveAddresses');
 
                 Route::get('/{iam_accounts}/{subObjects}', 'Accounts\AccountsController@relatedObjects');
                 Route::get('/{iam_accounts}', 'Accounts\AccountsController@show');
@@ -50,19 +56,21 @@ Route::prefix('iam')->group(
             }
         );
 
-        Route::prefix('backends')->group(
+        Route::prefix('backend-directories')->group(
             function () {
-                Route::get('/', 'Backends\BackendsController@index');
+                Route::get('/', 'BackendDirectories\BackendDirectoriesController@index');
 
-                Route::get('{iam_backends}/tags ', 'Backends\BackendsController@tags');
-                Route::post('{iam_backends}/tags ', 'Backends\BackendsController@saveTags');
+                Route::get('{iam_backend_directories}/tags ', 'BackendDirectories\BackendDirectoriesController@tags');
+                Route::post('{iam_backend_directories}/tags ', 'BackendDirectories\BackendDirectoriesController@saveTags');
+                Route::get('{iam_backend_directories}/addresses ', 'BackendDirectories\BackendDirectoriesController@addresses');
+                Route::post('{iam_backend_directories}/addresses ', 'BackendDirectories\BackendDirectoriesController@saveAddresses');
 
-                Route::get('/{iam_backends}/{subObjects}', 'Backends\BackendsController@relatedObjects');
-                Route::get('/{iam_backends}', 'Backends\BackendsController@show');
+                Route::get('/{iam_backend_directories}/{subObjects}', 'BackendDirectories\BackendDirectoriesController@relatedObjects');
+                Route::get('/{iam_backend_directories}', 'BackendDirectories\BackendDirectoriesController@show');
 
-                Route::post('/', 'Backends\BackendsController@store');
-                Route::patch('/{iam_backends}', 'Backends\BackendsController@update');
-                Route::delete('/{iam_backends}', 'Backends\BackendsController@destroy');
+                Route::post('/', 'BackendDirectories\BackendDirectoriesController@store');
+                Route::patch('/{iam_backend_directories}', 'BackendDirectories\BackendDirectoriesController@update');
+                Route::delete('/{iam_backend_directories}', 'BackendDirectories\BackendDirectoriesController@destroy');
             }
         );
 
@@ -72,6 +80,8 @@ Route::prefix('iam')->group(
 
                 Route::get('{iam_login_logs}/tags ', 'LoginLogs\LoginLogsController@tags');
                 Route::post('{iam_login_logs}/tags ', 'LoginLogs\LoginLogsController@saveTags');
+                Route::get('{iam_login_logs}/addresses ', 'LoginLogs\LoginLogsController@addresses');
+                Route::post('{iam_login_logs}/addresses ', 'LoginLogs\LoginLogsController@saveAddresses');
 
                 Route::get('/{iam_login_logs}/{subObjects}', 'LoginLogs\LoginLogsController@relatedObjects');
                 Route::get('/{iam_login_logs}', 'LoginLogs\LoginLogsController@show');
@@ -88,6 +98,8 @@ Route::prefix('iam')->group(
 
                 Route::get('{iam_login_mechanisms}/tags ', 'LoginMechanisms\LoginMechanismsController@tags');
                 Route::post('{iam_login_mechanisms}/tags ', 'LoginMechanisms\LoginMechanismsController@saveTags');
+                Route::get('{iam_login_mechanisms}/addresses ', 'LoginMechanisms\LoginMechanismsController@addresses');
+                Route::post('{iam_login_mechanisms}/addresses ', 'LoginMechanisms\LoginMechanismsController@saveAddresses');
 
                 Route::get('/{iam_login_mechanisms}/{subObjects}', 'LoginMechanisms\LoginMechanismsController@relatedObjects');
                 Route::get('/{iam_login_mechanisms}', 'LoginMechanisms\LoginMechanismsController@show');
@@ -104,6 +116,8 @@ Route::prefix('iam')->group(
 
                 Route::get('{iam_permissions}/tags ', 'Permissions\PermissionsController@tags');
                 Route::post('{iam_permissions}/tags ', 'Permissions\PermissionsController@saveTags');
+                Route::get('{iam_permissions}/addresses ', 'Permissions\PermissionsController@addresses');
+                Route::post('{iam_permissions}/addresses ', 'Permissions\PermissionsController@saveAddresses');
 
                 Route::get('/{iam_permissions}/{subObjects}', 'Permissions\PermissionsController@relatedObjects');
                 Route::get('/{iam_permissions}', 'Permissions\PermissionsController@show');
@@ -120,6 +134,8 @@ Route::prefix('iam')->group(
 
                 Route::get('{iam_role_permission}/tags ', 'RolePermission\RolePermissionController@tags');
                 Route::post('{iam_role_permission}/tags ', 'RolePermission\RolePermissionController@saveTags');
+                Route::get('{iam_role_permission}/addresses ', 'RolePermission\RolePermissionController@addresses');
+                Route::post('{iam_role_permission}/addresses ', 'RolePermission\RolePermissionController@saveAddresses');
 
                 Route::get('/{iam_role_permission}/{subObjects}', 'RolePermission\RolePermissionController@relatedObjects');
                 Route::get('/{iam_role_permission}', 'RolePermission\RolePermissionController@show');
@@ -136,6 +152,8 @@ Route::prefix('iam')->group(
 
                 Route::get('{iam_role_user}/tags ', 'RoleUser\RoleUserController@tags');
                 Route::post('{iam_role_user}/tags ', 'RoleUser\RoleUserController@saveTags');
+                Route::get('{iam_role_user}/addresses ', 'RoleUser\RoleUserController@addresses');
+                Route::post('{iam_role_user}/addresses ', 'RoleUser\RoleUserController@saveAddresses');
 
                 Route::get('/{iam_role_user}/{subObjects}', 'RoleUser\RoleUserController@relatedObjects');
                 Route::get('/{iam_role_user}', 'RoleUser\RoleUserController@show');
@@ -152,6 +170,8 @@ Route::prefix('iam')->group(
 
                 Route::get('{iam_roles}/tags ', 'Roles\RolesController@tags');
                 Route::post('{iam_roles}/tags ', 'Roles\RolesController@saveTags');
+                Route::get('{iam_roles}/addresses ', 'Roles\RolesController@addresses');
+                Route::post('{iam_roles}/addresses ', 'Roles\RolesController@saveAddresses');
 
                 Route::get('/{iam_roles}/{subObjects}', 'Roles\RolesController@relatedObjects');
                 Route::get('/{iam_roles}', 'Roles\RolesController@show');
@@ -168,6 +188,8 @@ Route::prefix('iam')->group(
 
                 Route::get('{iam_users}/tags ', 'Users\UsersController@tags');
                 Route::post('{iam_users}/tags ', 'Users\UsersController@saveTags');
+                Route::get('{iam_users}/addresses ', 'Users\UsersController@addresses');
+                Route::post('{iam_users}/addresses ', 'Users\UsersController@saveAddresses');
 
                 Route::get('/{iam_users}/{subObjects}', 'Users\UsersController@relatedObjects');
                 Route::get('/{iam_users}', 'Users\UsersController@show');
@@ -184,6 +206,8 @@ Route::prefix('iam')->group(
 
                 Route::get('{iam_user_accounts}/tags ', 'UserAccounts\UserAccountsController@tags');
                 Route::post('{iam_user_accounts}/tags ', 'UserAccounts\UserAccountsController@saveTags');
+                Route::get('{iam_user_accounts}/addresses ', 'UserAccounts\UserAccountsController@addresses');
+                Route::post('{iam_user_accounts}/addresses ', 'UserAccounts\UserAccountsController@saveAddresses');
 
                 Route::get('/{iam_user_accounts}/{subObjects}', 'UserAccounts\UserAccountsController@relatedObjects');
                 Route::get('/{iam_user_accounts}', 'UserAccounts\UserAccountsController@show');
@@ -200,6 +224,8 @@ Route::prefix('iam')->group(
 
                 Route::get('{iam_user_roles}/tags ', 'UserRoles\UserRolesController@tags');
                 Route::post('{iam_user_roles}/tags ', 'UserRoles\UserRolesController@saveTags');
+                Route::get('{iam_user_roles}/addresses ', 'UserRoles\UserRolesController@addresses');
+                Route::post('{iam_user_roles}/addresses ', 'UserRoles\UserRolesController@saveAddresses');
 
                 Route::get('/{iam_user_roles}/{subObjects}', 'UserRoles\UserRolesController@relatedObjects');
                 Route::get('/{iam_user_roles}', 'UserRoles\UserRolesController@show');
@@ -211,6 +237,25 @@ Route::prefix('iam')->group(
         );
 
         // EDIT AFTER HERE - WARNING: ABOVE THIS LINE MAY BE REGENERATED AND YOU MAY LOSE CODE
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
         Route::prefix('my')->group(
@@ -227,6 +272,14 @@ Route::prefix('iam')->group(
         );
     }
 );
+
+
+
+
+
+
+
+
 
 
 

@@ -310,4 +310,8 @@ class UserHelper
 
         return $model;
     }
+
+    public static function getAccountOwner(Accounts $accounts) : Users {
+        throw new \Exception('This function is not implemented yet!');
+    }
 }

@@ -33,13 +33,13 @@ class AuthorizationScope implements Scope
         //  if we cannot get the user and this creates a constant loop. That is why we need to secure
         //  user information from the service.
         if(
-            $model->getTable() == 'iam_accounts' || //  This creates a recursive loop when we need currentRole
-            $model->getTable() == 'iam_users' ||
-            $model->getTable() == 'iam_roles' ||
-            $model->getTable() == 'iam_role_user' ||
-            $model->getTable() == 'iam_account_user' ||
-            $model->getTable() == 'iam_view_user_account' ||
-            $model->getTable() == 'iam_login_mechanisms'
+            //$model->getTable() == 'iam_accounts' || //  This creates a recursive loop when we need currentRole
+            $model->getTable() == 'iam_users'
+            //$model->getTable() == 'iam_roles' ||
+            //$model->getTable() == 'iam_role_user' ||
+            //$model->getTable() == 'iam_account_user' ||
+            //$model->getTable() == 'iam_view_user_account' ||
+            //$model->getTable() == 'iam_login_mechanisms'
         ) {
             Log::debug('[AuthorizationScope] Bypassing model : ' . $model->getTable());
             return;
