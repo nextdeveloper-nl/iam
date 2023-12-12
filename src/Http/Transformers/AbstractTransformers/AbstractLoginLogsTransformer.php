@@ -39,4 +39,5 @@ class AbstractLoginLogsTransformer extends AbstractTransformer
 
 
 
+
 }

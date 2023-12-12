@@ -200,6 +200,24 @@ Route::prefix('iam')->group(
             }
         );
 
+        Route::prefix('account-users')->group(
+            function () {
+                Route::get('/', 'AccountUsers\AccountUsersController@index');
+
+                Route::get('{iam_account_users}/tags ', 'AccountUsers\AccountUsersController@tags');
+                Route::post('{iam_account_users}/tags ', 'AccountUsers\AccountUsersController@saveTags');
+                Route::get('{iam_account_users}/addresses ', 'AccountUsers\AccountUsersController@addresses');
+                Route::post('{iam_account_users}/addresses ', 'AccountUsers\AccountUsersController@saveAddresses');
+
+                Route::get('/{iam_account_users}/{subObjects}', 'AccountUsers\AccountUsersController@relatedObjects');
+                Route::get('/{iam_account_users}', 'AccountUsers\AccountUsersController@show');
+
+                Route::post('/', 'AccountUsers\AccountUsersController@store');
+                Route::patch('/{iam_account_users}', 'AccountUsers\AccountUsersController@update');
+                Route::delete('/{iam_account_users}', 'AccountUsers\AccountUsersController@destroy');
+            }
+        );
+
         Route::prefix('user-accounts')->group(
             function () {
                 Route::get('/', 'UserAccounts\UserAccountsController@index');
@@ -258,6 +276,20 @@ Route::prefix('iam')->group(
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
         Route::prefix('my')->group(
             function () {
                 Route::get('/roles', 'Roles\MyRolesController@index');
@@ -272,6 +304,7 @@ Route::prefix('iam')->group(
         );
     }
 );
+
 
 
 

@@ -22,62 +22,12 @@ class UserAccountsQueryFilter extends AbstractQueryFilter
     {
         return $this->builder->where('name', 'like', '%' . $value . '%');
     }
-    
-    public function surname($value)
-    {
-        return $this->builder->where('surname', 'like', '%' . $value . '%');
-    }
-    
-    public function email($value)
-    {
-        return $this->builder->where('email', 'like', '%' . $value . '%');
-    }
-    
-    public function fullname($value)
-    {
-        return $this->builder->where('fullname', 'like', '%' . $value . '%');
-    }
-    
-    public function username($value)
-    {
-        return $this->builder->where('username', 'like', '%' . $value . '%');
-    }
-    
-    public function about($value)
-    {
-        return $this->builder->where('about', 'like', '%' . $value . '%');
-    }
-    
-    public function pronoun($value)
-    {
-        return $this->builder->where('pronoun', 'like', '%' . $value . '%');
-    }
-    
-    public function nin($value)
-    {
-        return $this->builder->where('nin', 'like', '%' . $value . '%');
-    }
-    
-    public function cellPhone($value)
-    {
-        return $this->builder->where('cell_phone', 'like', '%' . $value . '%');
-    }
 
     public function isActive()
     {
         return $this->builder->where('is_active', true);
     }
     
-    public function birthdayStart($date) 
-    {
-        return $this->builder->where('birthday', '>=', $date);
-    }
-
-    public function birthdayEnd($date) 
-    {
-        return $this->builder->where('birthday', '<=', $date);
-    }
-
     public function createdAtStart($date) 
     {
         return $this->builder->where('created_at', '>=', $date);
@@ -108,12 +58,12 @@ class UserAccountsQueryFilter extends AbstractQueryFilter
         return $this->builder->where('deleted_at', '<=', $date);
     }
 
-    public function commonLanguageId($value)
+    public function commonDomainId($value)
     {
-            $commonLanguage = \NextDeveloper\Commons\Database\Models\Languages::where('uuid', $value)->first();
+            $commonDomain = \NextDeveloper\Commons\Database\Models\Domains::where('uuid', $value)->first();
 
-        if($commonLanguage) {
-            return $this->builder->where('common_language_id', '=', $commonLanguage->id);
+        if($commonDomain) {
+            return $this->builder->where('common_domain_id', '=', $commonDomain->id);
         }
     }
 

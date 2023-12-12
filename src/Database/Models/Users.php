@@ -23,81 +23,82 @@ class Users extends Model
     use Filterable, UuidId, CleanCache, Taggable;
     use SoftDeletes;
 
+
     public $timestamps = true;
 
     protected $table = 'iam_users';
 
 
     /**
-     * @var array
+     @var array
      */
     protected $guarded = [];
 
     /**
-     * Here we have the fulltext fields. We can use these for fulltext search if enabled.
+      Here we have the fulltext fields. We can use these for fulltext search if enabled.
      */
     protected $fullTextFields = [
 
     ];
 
     /**
-     * @var array
+     @var array
      */
     protected $appends = [
 
     ];
 
     /**
-     * We are casting fields to objects so that we can work on them better
+     We are casting fields to objects so that we can work on them better
      *
-     * @var array
+     @var array
      */
     protected $casts = [
-        'id' => 'integer',
-        'uuid' => 'string',
-        'name' => 'string',
-        'surname' => 'string',
-        'email' => 'string',
-        'fullname' => 'string',
-        'username' => 'string',
-        'about' => 'string',
-        'pronoun' => 'string',
-        'birthday' => 'datetime',
-        'nin' => 'string',
-        'cell_phone' => 'string',
-        'common_language_id' => 'integer',
-        'common_country_id' => 'integer',
-        'created_at' => 'datetime',
-        'updated_at' => 'datetime',
-        'deleted_at' => 'datetime',
+    'id'                 => 'integer',
+    'uuid'               => 'string',
+    'name'               => 'string',
+    'surname'            => 'string',
+    'email'              => 'string',
+    'fullname'           => 'string',
+    'username'           => 'string',
+    'about'              => 'string',
+    'pronoun'            => 'string',
+    'birthday'           => 'datetime',
+    'nin'                => 'string',
+    'cell_phone'         => 'string',
+    'common_language_id' => 'integer',
+    'common_country_id'  => 'integer',
+    'created_at'         => 'datetime',
+    'updated_at'         => 'datetime',
+    'deleted_at'         => 'datetime',
     ];
 
     /**
-     * We are casting data fields.
+     We are casting data fields.
      *
-     * @var array
+     @var array
      */
     protected $dates = [
-        'birthday',
-        'created_at',
-        'updated_at',
-        'deleted_at',
+    'birthday',
+    'created_at',
+    'updated_at',
+    'deleted_at',
     ];
 
     /**
-     * @var array
+     @var array
      */
     protected $with = [
 
     ];
 
     /**
-     * @var int
+     @var int
      */
     protected $perPage = 20;
 
     /**
-     * @return void
+     @return void
      */
     public static function boot()
     {
@@ -114,11 +115,9 @@ class Users extends Model
         $globalScopes = config('iam.scopes.global');
         $modelScopes = config('iam.scopes.iam_users');
 
-        if (!$modelScopes) {
-            $modelScopes = [];
+        if(!$modelScopes) { $modelScopes = [];
         }
-        if (!$globalScopes) {
-            $globalScopes = [];
+        if (!$globalScopes) { $globalScopes = [];
         }
 
         $scopes = array_merge(
@@ -126,44 +125,45 @@ class Users extends Model
             $modelScopes
         );
 
-        if ($scopes) {
+        if($scopes) {
             foreach ($scopes as $scope) {
                 static::addGlobalScope(app($scope));
             }
         }
     }
 
-    public function accountUsers(): \Illuminate\Database\Eloquent\Relations\HasMany
+    public function accountUsers() : \Illuminate\Database\Eloquent\Relations\HasMany
     {
         return $this->hasMany(\NextDeveloper\IAM\Database\Models\AccountUsers::class);
     }
 
-    public function loginLogs(): \Illuminate\Database\Eloquent\Relations\HasMany
+    public function loginLogs() : \Illuminate\Database\Eloquent\Relations\HasMany
     {
         return $this->hasMany(\NextDeveloper\IAM\Database\Models\LoginLogs::class);
     }
 
-    public function loginMechanisms(): \Illuminate\Database\Eloquent\Relations\HasMany
+    public function loginMechanisms() : \Illuminate\Database\Eloquent\Relations\HasMany
     {
         return $this->hasMany(\NextDeveloper\IAM\Database\Models\LoginMechanisms::class);
     }
 
-    public function roleUsers(): \Illuminate\Database\Eloquent\Relations\HasMany
+    public function roleUsers() : \Illuminate\Database\Eloquent\Relations\HasMany
     {
         return $this->hasMany(\NextDeveloper\IAM\Database\Models\RoleUsers::class);
     }
 
-    public function countries(): \Illuminate\Database\Eloquent\Relations\BelongsTo
+    public function countries() : \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
         return $this->belongsTo(\NextDeveloper\Commons\Database\Models\Countries::class);
     }
-
-    public function languages(): \Illuminate\Database\Eloquent\Relations\BelongsTo
+    
+    public function languages() : \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
         return $this->belongsTo(\NextDeveloper\Commons\Database\Models\Languages::class);
     }
-
+    
     // EDIT AFTER HERE - WARNING: ABOVE THIS LINE MAY BE REGENERATED AND YOU MAY LOSE CODE\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n
 
     use Authenticatable, HasApiTokens;
+
 }

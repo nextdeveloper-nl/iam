@@ -9,6 +9,7 @@ use NextDeveloper\IAM\Database\Observers\AccountUsersObserver;
 use NextDeveloper\Commons\Database\Traits\UuidId;
 use NextDeveloper\Commons\Common\Cache\Traits\CleanCache;
 use NextDeveloper\Commons\Database\Traits\Taggable;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 /**
  * Class AccountUsers.
@@ -18,11 +19,12 @@ use NextDeveloper\Commons\Database\Traits\Taggable;
 class AccountUsers extends Model
 {
     use Filterable, UuidId, CleanCache, Taggable;
+    use SoftDeletes;
 
 
-    public $timestamps = false;
+    public $timestamps = true;
 
-    protected $table = 'iam_account_user';
+    protected $table = 'iam_account_users';
 
 
     /**
@@ -50,8 +52,24 @@ class AccountUsers extends Model
      @var array
      */
     protected $casts = [
-    'uuid'           => 'string',
-    'is_active'      => 'boolean',
+    'id'                 => 'integer',
+    'uuid'               => 'string',
+    'name'               => 'string',
+    'surname'            => 'string',
+    'email'              => 'string',
+    'fullname'           => 'string',
+    'username'           => 'string',
+    'about'              => 'string',
+    'pronoun'            => 'string',
+    'birthday'           => 'datetime',
+    'nin'                => 'string',
+    'cell_phone'         => 'string',
+    'common_language_id' => 'integer',
+    'common_country_id'  => 'integer',
+    'created_at'         => 'datetime',
+    'updated_at'         => 'datetime',
+    'deleted_at'         => 'datetime',
+    'is_active'          => 'boolean',
     ];
 
     /**
@@ -60,7 +78,10 @@ class AccountUsers extends Model
      @var array
      */
     protected $dates = [
-
+    'birthday',
+    'created_at',
+    'updated_at',
+    'deleted_at',
     ];
 
     /**
@@ -91,7 +112,7 @@ class AccountUsers extends Model
     public static function registerScopes()
     {
         $globalScopes = config('iam.scopes.global');
-        $modelScopes = config('iam.scopes.iam_account_user');
+        $modelScopes = config('iam.scopes.iam_account_users');
 
         if(!$modelScopes) { $modelScopes = [];
         }
@@ -110,12 +131,9 @@ class AccountUsers extends Model
         }
     }
 
-    public function users() : \Illuminate\Database\Eloquent\Relations\BelongsTo
-    {
-        return $this->belongsTo(\NextDeveloper\IAM\Database\Models\Users::class);
-    }
-    
     // EDIT AFTER HERE - WARNING: ABOVE THIS LINE MAY BE REGENERATED AND YOU MAY LOSE CODE\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n
+
+
 
 
 
