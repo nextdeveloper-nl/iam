@@ -10,6 +10,7 @@ use NextDeveloper\IAM\Database\Models\Accounts;
 use NextDeveloper\IAM\Database\Models\Roles;
 use NextDeveloper\IAM\Database\Models\RoleUsers;
 use NextDeveloper\IAM\Database\Models\Users;
+use NextDeveloper\IAM\Database\Scopes\AuthorizationScope;
 use NextDeveloper\IAM\Helpers\UserHelper;
 use NextDeveloper\IAM\Services\AbstractServices\AbstractRolesService;
 
@@ -113,11 +114,14 @@ class RolesService extends AbstractRolesService {
             return $role;
         }
 
-        $userRoleRelation = RoleUsers::where('iam_user_id', $user->id)
+        $userRoleRelation = RoleUsers::withoutGlobalScope(AuthorizationScope::class)
+            ->where('iam_user_id', $user->id)
             ->where('is_active', 1)
             ->first();
 
-        $role = Roles::where('id', $userRoleRelation->iam_role_id)->first();
+        $role = Roles::withoutGlobalScope(AuthorizationScope::class)
+            ->where('id', $userRoleRelation->iam_role_id)
+            ->first();
 
         //  If the user don't have any roles, we are creating the Member role for the user
         if(!$role) {

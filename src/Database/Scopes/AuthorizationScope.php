@@ -116,6 +116,10 @@ class AuthorizationScope implements Scope
         //  We are getting the highest level role of user.
         $role = RolesService::getUserRole(UserHelper::me(), $account);
 
+        if(!$role->class)
+            throw new \Exception('I am trying to apply the role: ' . $role->name . '. But I cannot find '
+                . 'the related class for the role. That is why I cannot apply.');
+
         return app($role->class);
     }
 }

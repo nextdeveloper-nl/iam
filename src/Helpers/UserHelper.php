@@ -12,6 +12,7 @@ use NextDeveloper\IAM\Database\Models\Roles;
 use NextDeveloper\IAM\Database\Models\RoleUsers;
 use NextDeveloper\IAM\Database\Models\Users;
 use NextDeveloper\IAM\Database\Models\Accounts;
+use NextDeveloper\IAM\Database\Scopes\AuthorizationScope;
 use NextDeveloper\IAM\Exceptions\CannotFindUserException;
 use NextDeveloper\IAM\Services\AccountsService;
 use NextDeveloper\IAM\Services\RolesService;
@@ -101,7 +102,8 @@ class UserHelper
                 return $current;
 
             //  We are checking about the relation
-            $relation = AccountUsers::where('iam_user_id', $user->id)
+            $relation = AccountUsers::withoutGlobalScope(AuthorizationScope::class)
+                ->where('id', $user->id)
                 ->where('is_active', 1)
                 ->first();
 
@@ -129,7 +131,9 @@ class UserHelper
         else
             return null;
 
-        $current = Accounts::where('id', $relation->iam_account_id)->first();
+        $current = Accounts::withoutGlobalScope(AuthorizationScope::class)
+            ->where('id', $relation->iam_account_id)
+            ->first();
 
         Cache::set(
             CacheHelper::getKey('Users', $user->uuid, 'CurrentAccount'),
