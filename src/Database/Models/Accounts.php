@@ -144,6 +144,41 @@ class Accounts extends Model
         return $this->hasMany(\NextDeveloper\IAM\Database\Models\RoleUsers::class);
     }
 
+    public function answers() : \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(\NextDeveloper\LMS\Database\Models\Answers::class);
+    }
+
+    public function courses() : \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(\NextDeveloper\LMS\Database\Models\Courses::class);
+    }
+
+    public function homework() : \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(\NextDeveloper\LMS\Database\Models\Homework::class);
+    }
+
+    public function homeworkAnswers() : \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(\NextDeveloper\LMS\Database\Models\HomeworkAnswers::class);
+    }
+
+    public function questions() : \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(\NextDeveloper\LMS\Database\Models\Questions::class);
+    }
+
+    public function tests() : \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(\NextDeveloper\LMS\Database\Models\Tests::class);
+    }
+
+    public function userTests() : \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(\NextDeveloper\LMS\Database\Models\UserTests::class);
+    }
+
     // EDIT AFTER HERE - WARNING: ABOVE THIS LINE MAY BE REGENERATED AND YOU MAY LOSE CODE\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n
 
     public function users()

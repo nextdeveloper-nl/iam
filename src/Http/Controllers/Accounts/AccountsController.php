@@ -3,6 +3,7 @@
 namespace NextDeveloper\IAM\Http\Controllers\Accounts;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 use NextDeveloper\IAM\Http\Controllers\AbstractController;
 use NextDeveloper\Generator\Http\Traits\ResponsableFactory;
 use NextDeveloper\IAM\Http\Requests\Accounts\AccountsUpdateRequest;
@@ -64,6 +65,22 @@ class AccountsController extends AbstractController
         $objects = AccountsService::relatedObjects($ref, $subObject);
 
         return ResponsableFactory::makeResponse($this, $objects);
+    }
+
+    public function action($id, $action)
+    {
+        $obj = Accounts::findByUuid($id);
+
+        //  reset-password  =>  ResetPassword
+        $action = Str::kebab($action);
+
+        if(class_exists('\NextDeveloper\IAM\Actions\Accounts\\' . $action)) {
+            $action = '\NextDeveloper\IAM\Actions\Accounts\\' . $action;
+            dispatch( new $action($obj) );
+        } else {
+            throw new \Exception('Cannot find the related action for thi object. '
+                . ' Please provide me a valid action');
+        }
     }
 
     /**

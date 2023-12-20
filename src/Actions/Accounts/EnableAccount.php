@@ -1,6 +1,6 @@
 <?php
 
-namespace NextDeveloper\IAM\Actions\Users;
+namespace NextDeveloper\IAM\Actions\Accounts;
 
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -10,7 +10,12 @@ use Illuminate\Queue\SerializesModels;
 use NextDeveloper\Commons\Actions\AbstractAction;
 use NextDeveloper\CRM\Database\Models\Users;
 
-class ValidateCellphoneNumber extends AbstractAction
+/**
+ * This job resets the users password and send a security link with a token in email
+ * so that use can come to the web site and/or control panel or authentication service,
+ * to reset users password
+ */
+class EnableAccount extends AbstractAction
 {
     /**
      * Sample action;

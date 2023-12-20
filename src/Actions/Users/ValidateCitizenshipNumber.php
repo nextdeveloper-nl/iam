@@ -7,11 +7,15 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
+use NextDeveloper\Commons\Actions\AbstractAction;
 use NextDeveloper\CRM\Database\Models\Users;
 
-class ValidateCitizenshipNumber implements ShouldQueue
+class ValidateCitizenshipNumber extends AbstractAction
 {
-    use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
+    /**
+     * Sample action;
+     * https://.../iam/users/{user-id}/action/reset-password
+     */
 
     /**
      * This action takes a user object and assigns an Account Manager
@@ -20,7 +24,7 @@ class ValidateCitizenshipNumber implements ShouldQueue
      */
     public function __construct(Users $users)
     {
-
+        parent::__construct();
     }
 
     public function handle()
