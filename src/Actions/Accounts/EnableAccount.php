@@ -34,6 +34,21 @@ class EnableAccount extends AbstractAction
 
     public function handle()
     {
+        /**
+         * 1) Get account
+         * 2) Check if account is valid for enabling
+         * 3) Enable account
+         * 4) Send user email notification about enabling account
+         */
 
+        $this->setProgress(0, 'Starting to get account for enabling');
+
+        $this->setProgress(10, "Got the account for enabling moving to account checks");
+
+        $this->setProgress(50, "Account is eligible for enabling, enabilng account");
+
+        $this->setProgress(90, "Account enabled");
+
+        $this->setProgress(100, "Process finished");
     }
 }
