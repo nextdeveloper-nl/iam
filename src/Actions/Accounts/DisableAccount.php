@@ -2,13 +2,9 @@
 
 namespace NextDeveloper\IAM\Actions\Accounts;
 
-use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldQueue;
-use Illuminate\Foundation\Bus\Dispatchable;
-use Illuminate\Queue\InteractsWithQueue;
-use Illuminate\Queue\SerializesModels;
 use NextDeveloper\Commons\Actions\AbstractAction;
-use NextDeveloper\CRM\Database\Models\Users;
+use NextDeveloper\IAM\Database\Models\Accounts;
+use NextDeveloper\IAM\Services\AccountsService;
 
 /**
  * This job resets the users password and send a security link with a token in email
@@ -25,15 +21,25 @@ class DisableAccount extends AbstractAction
     /**
      * This action takes a user object and assigns an Account Manager
      *
-     * @param Users $users
+     * @param Accounts $accounts
      */
-    public function __construct(Users $users)
+    public function __construct(private Accounts $accounts)
     {
         parent::__construct();
     }
 
     public function handle()
     {
+        $this->setProgress(0, 'Starting to disable account');
+
+        $this->accounts = AccountsService::disable($this->accounts);
+
+        $this->setProgress(50, 'Account has been disabled');
+
+        //  Send notification to the account owner
+        //  Account owner is; iam_user_id in iam_accounts table
+
+
 
     }
 }

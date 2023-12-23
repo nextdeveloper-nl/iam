@@ -10,6 +10,7 @@ use NextDeveloper\IAM\Database\Models\AccountTypes;
 use NextDeveloper\IAM\Database\Models\AccountUsers;
 use NextDeveloper\IAM\Database\Models\UserAccounts;
 use NextDeveloper\IAM\Database\Models\Users;
+use NextDeveloper\IAM\Events\Accounts\AccountsUpdatedEvent;
 use NextDeveloper\IAM\Helpers\UserHelper;
 use NextDeveloper\IAM\Services\AbstractServices\AbstractAccountsService;
 
@@ -110,4 +111,35 @@ class AccountsService extends AbstractAccountsService {
 
     }
 
+    /**
+     * This service disables account.
+     *
+     * @param Accounts $accounts
+     * @return Accounts
+     */
+    public static function disable(Accounts $accounts) : Accounts {
+        $accounts->update([
+            'is_active' =>   false
+        ]);
+
+        event(new AccountsUpdatedEvent($accounts));
+
+        return $accounts->fresh();
+    }
+
+    /**
+     * This service enables account.
+     *
+     * @param Accounts $accounts
+     * @return Accounts
+     */
+    public static function enable(Accounts $accounts) : Accounts {
+        $accounts->update([
+            'is_active' =>   true
+        ]);
+
+        event(new AccountsUpdatedEvent($accounts));
+
+        return $accounts->fresh();
+    }
 }

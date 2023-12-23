@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\Model;
 use NextDeveloper\Commons\Database\Traits\Filterable;
+use NextDeveloper\Communication\Database\Traits\SendEmail;
 use NextDeveloper\IAM\Database\Observers\AccountsObserver;
 use NextDeveloper\Commons\Database\Traits\UuidId;
 use NextDeveloper\Commons\Common\Cache\Traits\CleanCache;
@@ -21,7 +22,7 @@ class Accounts extends Model
 {
     use Filterable, UuidId, CleanCache, Taggable;
     use SoftDeletes;
-
+    use SendEmail;
 
     public $timestamps = true;
 
@@ -128,12 +129,12 @@ class Accounts extends Model
     {
         return $this->belongsTo(\NextDeveloper\Commons\Database\Models\Domains::class);
     }
-    
+
     public function accountTypes() : \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
         return $this->belongsTo(\NextDeveloper\IAM\Database\Models\AccountTypes::class);
     }
-    
+
     public function backendDirectories() : \Illuminate\Database\Eloquent\Relations\HasMany
     {
         return $this->hasMany(\NextDeveloper\IAM\Database\Models\BackendDirectories::class);
