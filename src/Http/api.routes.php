@@ -190,6 +190,8 @@ Route::prefix('iam')->group(
                 Route::post('{iam_users}/tags ', 'Users\UsersController@saveTags');
                 Route::get('{iam_users}/addresses ', 'Users\UsersController@addresses');
                 Route::post('{iam_users}/addresses ', 'Users\UsersController@saveAddresses');
+                Route::post('{iam_users}/actions/{action}', 'Users\UsersController@actions');
+
 
                 Route::get('/{iam_users}/{subObjects}', 'Users\UsersController@relatedObjects');
                 Route::get('/{iam_users}', 'Users\UsersController@show');
