@@ -4,7 +4,7 @@ namespace NextDeveloper\IAM\Http\Controllers\Roles;
 
 use Illuminate\Http\Request;
 use NextDeveloper\Generator\Common\AbstractController;
-use NextDeveloper\Generator\Http\Traits\ResponsableFactory;
+use NextDeveloper\Commons\Http\Response\ResponsableFactory;
 use NextDeveloper\IAM\Database\Models\UserRoleOverview;
 use NextDeveloper\IAM\Database\Models\UserRoles;
 use NextDeveloper\IAM\Helpers\UserHelper;

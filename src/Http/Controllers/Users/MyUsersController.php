@@ -4,7 +4,7 @@ namespace NextDeveloper\IAM\Http\Controllers\Users;
 
 use Illuminate\Http\Request;
 use NextDeveloper\Generator\Common\AbstractController;
-use NextDeveloper\Generator\Http\Traits\ResponsableFactory;
+use NextDeveloper\Commons\Http\Response\ResponsableFactory;
 use NextDeveloper\IAM\Helpers\UserHelper;
 use NextDeveloper\IAM\Database\Filters\UsersQueryFilter;
 use NextDeveloper\IAM\Http\Requests\Users\UsersUpdateRequest;

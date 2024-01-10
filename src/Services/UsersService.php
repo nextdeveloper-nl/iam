@@ -62,8 +62,6 @@ class UsersService extends AbstractUsersService {
             'email' =>  $email
         ]);
 
-        $user = RegistrationService::registerUser($user);
-
         return $user;
     }
 
@@ -75,7 +73,7 @@ class UsersService extends AbstractUsersService {
      * @throws \Exception
      */
     public static function create(array $data) : Users {
-        if(!array_key_exists('language_id', $data)) {
+        if(!array_key_exists('common_language_id', $data)) {
             $lang = Languages::where('code', App::currentLocale())->first();
 
             $data['common_language_id'] = $lang->id;
@@ -84,12 +82,8 @@ class UsersService extends AbstractUsersService {
         return parent::create($data);
     }
 
-    public static function getByEmail($email) : ?Users {
+    public static function getByEmail($email, $createUser = false) : ?Users {
         $user = Users::where('email', $email)->first();
-
-        if(!$user) {
-            $user = self::createWithEmail($email);
-        }
 
         return $user;
     }

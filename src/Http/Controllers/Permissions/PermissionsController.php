@@ -4,7 +4,7 @@ namespace NextDeveloper\IAM\Http\Controllers\Permissions;
 
 use Illuminate\Http\Request;
 use NextDeveloper\IAM\Http\Controllers\AbstractController;
-use NextDeveloper\Generator\Http\Traits\ResponsableFactory;
+use NextDeveloper\Commons\Http\Response\ResponsableFactory;
 use NextDeveloper\IAM\Http\Requests\Permissions\PermissionsUpdateRequest;
 use NextDeveloper\IAM\Database\Filters\PermissionsQueryFilter;
 use NextDeveloper\IAM\Database\Models\Permissions;

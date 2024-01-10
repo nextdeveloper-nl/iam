@@ -4,7 +4,7 @@ namespace NextDeveloper\IAM\Http\Controllers\AccountTypes;
 
 use Illuminate\Http\Request;
 use NextDeveloper\IAM\Http\Controllers\AbstractController;
-use NextDeveloper\Generator\Http\Traits\ResponsableFactory;
+use NextDeveloper\Commons\Http\Response\ResponsableFactory;
 use NextDeveloper\IAM\Http\Requests\AccountTypes\AccountTypesUpdateRequest;
 use NextDeveloper\IAM\Database\Filters\AccountTypesQueryFilter;
 use NextDeveloper\IAM\Database\Models\AccountTypes;

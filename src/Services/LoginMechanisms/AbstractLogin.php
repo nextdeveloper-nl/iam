@@ -10,20 +10,15 @@
 
 namespace NextDeveloper\IAM\Services\LoginMechanisms;
 
-
-use DateInterval;
 use Illuminate\Support\Facades\DB;
-use League\OAuth2\Server\Grant\AbstractGrant;
-use League\OAuth2\Server\ResponseTypes\ResponseTypeInterface;
 use NextDeveloper\IAM\Database\Models\LoginMechanisms;
 use NextDeveloper\IAM\Database\Models\Users;
-use Psr\Http\Message\ServerRequestInterface;
 
 /**
  * Interface ILoginService
  * @package PlusClouds\Account\Common\Services\OAuth2
  */
-class AbstractLogin extends AbstractGrant
+class AbstractLogin
 {
     public $className;
 
@@ -49,18 +44,6 @@ class AbstractLogin extends AbstractGrant
         $name = class_basename($obj);
         
         return $name;
-    }
-
-    public function getIdentifier()
-    {
-        throw new \Exception('This authentication grant type is not implemented!!');
-        // TODO: Implement getIdentifier() method.
-    }
-
-    public function respondToAccessTokenRequest(ServerRequestInterface $request, ResponseTypeInterface $responseType, DateInterval $accessTokenTTL)
-    {
-        throw new \Exception('This authentication grant type is not implemented!!');
-        // TODO: Implement respondToAccessTokenRequest() method.
     }
 
     /**

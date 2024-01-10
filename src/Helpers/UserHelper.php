@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
 use NextDeveloper\Commons\Common\Cache\CacheHelper;
+use NextDeveloper\Commons\Database\Models\Languages;
 use NextDeveloper\IAM\Database\Models\AccountUsers;
 use NextDeveloper\IAM\Database\Models\Roles;
 use NextDeveloper\IAM\Database\Models\RoleUsers;
@@ -75,6 +76,15 @@ class UserHelper
         }
 
         return $account;
+    }
+
+    public static function getLocale(Users $users = null) : Languages {
+        if(!$users)
+            $users = self::me();
+
+        $lang = Languages::where('id', $users->common_language_id)->first();
+
+        return $lang;
     }
 
     /**

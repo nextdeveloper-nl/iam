@@ -95,11 +95,7 @@ class RolesService extends AbstractRolesService {
             ]);
         }
 
-        if($role) {
-            self::setRoleAsActive($relation);
-
-            return true;
-        }
+        self::setRoleAsActive($relation);
 
         return true;
     }
@@ -149,14 +145,16 @@ class RolesService extends AbstractRolesService {
     public static function setRoleAsActive(RoleUsers $roleUser) : RoleUsers
     {
         //  Mark all other roles as not active
-        $roles = RoleUsers::where('iam_user_id', $roleUser->iam_user_id)
+        $roles = RoleUsers::withoutGlobalScopes()
+            ->where('iam_user_id', $roleUser->iam_user_id)
             ->where('iam_account_id', $roleUser->iam_account_id)
             ->update([
                 'is_active' =>  0
             ]);
 
         //  Update the requested role as active
-        RoleUsers::where('iam_user_id', $roleUser->iam_user_id)
+        RoleUsers::withoutGlobalScopes()
+            ->where('iam_user_id', $roleUser->iam_user_id)
             ->where('iam_account_id', $roleUser->iam_account_id)
             ->where('iam_role_id', $roleUser->iam_role_id)
             ->update([
@@ -164,7 +162,8 @@ class RolesService extends AbstractRolesService {
             ]);
 
         //  Get the relation again
-        $roleUser = RoleUsers::where('iam_user_id', $roleUser->iam_user_id)
+        $roleUser = RoleUsers::withoutGlobalScopes()
+            ->where('iam_user_id', $roleUser->iam_user_id)
             ->where('iam_account_id', $roleUser->iam_account_id)
             ->where('iam_role_id', $roleUser->iam_role_id)
             ->first();
