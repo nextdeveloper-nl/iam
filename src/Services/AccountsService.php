@@ -2,9 +2,10 @@
 
 namespace NextDeveloper\IAM\Services;
 
-use Helpers\i18n;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\DB;
 use NextDeveloper\Commons\Exceptions\CannotCreateModelException;
+use NextDeveloper\I18n\Helpers\i18n;
 use NextDeveloper\IAM\Database\Models\Accounts;
 use NextDeveloper\IAM\Database\Models\AccountTypes;
 use NextDeveloper\IAM\Database\Models\AccountUsers;
@@ -46,8 +47,8 @@ class AccountsService extends AbstractAccountsService {
 
         $account = parent::create($data);
 
-        $relation = AccountUsers::create([
-            'iam_user_id'       =>  UserHelper::me()->id,
+        DB::table('iam_account_user')->insert([
+            'iam_user_id'       =>  $data['iam_user_id'],
             'iam_account_id'    =>  $account->id,
             'is_active'         =>  false,
             'session_data'      =>  null
@@ -96,20 +97,13 @@ class AccountsService extends AbstractAccountsService {
 
         $account = self::create($accountData);
 
-        $relation = AccountUsers::create([
-            'iam_user_id'       =>  $user->id,
-            'iam_account_id'    =>  $account->id,
-            'is_active'         =>  false,
-            'session_data'      =>  null
-        ]);
-
         return $account;
     }
 
-    public static function switchToAccount($accountId, $me) : Accounts
-    {
-
-    }
+//    public static function switchToAccount($accountId, $me) : Accounts
+//    {
+//
+//    }
 
     /**
      * This service disables account.

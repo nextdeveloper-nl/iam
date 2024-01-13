@@ -27,14 +27,16 @@ class LoginMechanismsService extends AbstractLoginMechanismsService {
     // EDIT AFTER HERE - WARNING: ABOVE THIS LINE MAY BE REGENERATED AND YOU MAY LOSE CODE
     public function getByUser() : Collection
     {
-        $mechanisms = LoginMechanisms::where('iam_user_id', $this->_user->id)
+        $mechanisms = LoginMechanisms::withoutGlobalScopes()
+            ->where('iam_user_id', $this->_user->id)
             ->where('is_active', 1)
             ->get();
 
         if(!count($mechanisms))
             (new OneTimeEmail())->create($this->_user);
 
-        $mechanisms = LoginMechanisms::where('iam_user_id', $this->_user->id)
+        $mechanisms = LoginMechanisms::withoutGlobalScopes()
+            ->where('iam_user_id', $this->_user->id)
             ->where('is_active', 1)
             ->where('login_mechanism', 'not like', '2FA%')
             ->get();

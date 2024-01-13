@@ -4,7 +4,7 @@ namespace NextDeveloper\IAM\Http\Controllers\LoginMechanisms;
 
 use Illuminate\Http\Request;
 use NextDeveloper\IAM\Http\Controllers\AbstractController;
-use NextDeveloper\Generator\Http\Traits\ResponsableFactory;
+use NextDeveloper\Commons\Http\Response\ResponsableFactory;
 use NextDeveloper\IAM\Http\Requests\LoginMechanisms\LoginMechanismsUpdateRequest;
 use NextDeveloper\IAM\Database\Filters\LoginMechanismsQueryFilter;
 use NextDeveloper\IAM\Database\Models\LoginMechanisms;

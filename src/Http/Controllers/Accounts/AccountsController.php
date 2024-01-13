@@ -5,7 +5,7 @@ namespace NextDeveloper\IAM\Http\Controllers\Accounts;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use NextDeveloper\IAM\Http\Controllers\AbstractController;
-use NextDeveloper\Generator\Http\Traits\ResponsableFactory;
+use NextDeveloper\Commons\Http\Response\ResponsableFactory;
 use NextDeveloper\IAM\Http\Requests\Accounts\AccountsUpdateRequest;
 use NextDeveloper\IAM\Database\Filters\AccountsQueryFilter;
 use NextDeveloper\IAM\Database\Models\Accounts;

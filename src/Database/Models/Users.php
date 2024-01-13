@@ -23,7 +23,6 @@ class Users extends Model
     use Filterable, UuidId, CleanCache, Taggable;
     use SoftDeletes;
 
-
     public $timestamps = true;
 
     protected $table = 'iam_users';
@@ -197,8 +196,20 @@ class Users extends Model
         return $this->hasMany(\NextDeveloper\LMS\Database\Models\UserTests::class);
     }
 
-    // EDIT AFTER HERE - WARNING: ABOVE THIS LINE MAY BE REGENERATED AND YOU MAY LOSE CODE\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n
+    public function comments() : \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(\NextDeveloper\Commons\Database\Models\Comments::class);
+    }
 
-    use Authenticatable, HasApiTokens;
+    public function domains() : \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(\NextDeveloper\Commons\Database\Models\Domains::class);
+    }
 
+    public function votes() : \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(\NextDeveloper\Commons\Database\Models\Votes::class);
+    }
+
+    // EDIT AFTER HERE - WARNING: ABOVE THIS LINE MAY BE REGENERATED AND YOU MAY LOSE CODE
 }

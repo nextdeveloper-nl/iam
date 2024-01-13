@@ -4,7 +4,7 @@ namespace NextDeveloper\IAM\Http\Controllers\BackendDirectories;
 
 use Illuminate\Http\Request;
 use NextDeveloper\IAM\Http\Controllers\AbstractController;
-use NextDeveloper\Generator\Http\Traits\ResponsableFactory;
+use NextDeveloper\Commons\Http\Response\ResponsableFactory;
 use NextDeveloper\IAM\Http\Requests\BackendDirectories\BackendDirectoriesUpdateRequest;
 use NextDeveloper\IAM\Database\Filters\BackendDirectoriesQueryFilter;
 use NextDeveloper\IAM\Database\Models\BackendDirectories;

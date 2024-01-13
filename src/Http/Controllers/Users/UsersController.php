@@ -3,8 +3,10 @@
 namespace NextDeveloper\IAM\Http\Controllers\Users;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
+use NextDeveloper\IAM\Database\Models\Accounts;
 use NextDeveloper\IAM\Http\Controllers\AbstractController;
-use NextDeveloper\Generator\Http\Traits\ResponsableFactory;
+use NextDeveloper\Commons\Http\Response\ResponsableFactory;
 use NextDeveloper\IAM\Http\Requests\Users\UsersUpdateRequest;
 use NextDeveloper\IAM\Database\Filters\UsersQueryFilter;
 use NextDeveloper\IAM\Database\Models\Users;
@@ -64,6 +66,37 @@ class UsersController extends AbstractController
         $objects = UsersService::relatedObjects($ref, $subObject);
 
         return ResponsableFactory::makeResponse($this, $objects);
+    }
+
+    /**
+     * This function triggers related actions for the related object
+     *
+     * @param $ref
+     * @param $action
+     * @return void
+     */
+    public function actions($ref, $action)
+    {
+        $obj = Users::where('uuid', $ref)->first();
+
+        if(!$obj)
+            return $this->errorNotFound('Cannot find the related object you are looking for.'
+                . 'That is why I cannot also run this action.');
+
+        //  reset-password  =>  ResetPassword
+        $action = Str::ucfirst(Str::camel($action));
+
+        if(class_exists('\NextDeveloper\IAM\Actions\Users\\' . $action)) {
+            $action = '\NextDeveloper\IAM\Actions\Users\\' . $action;
+            dispatch( new $action($obj) );
+
+            return $this->withArray([
+                'status'    =>  'action sent'
+            ]);
+        } else {
+            return $this->withError('Cannot find the related action for this object. '
+                . ' Please provide me a valid action');
+        }
     }
 
     /**

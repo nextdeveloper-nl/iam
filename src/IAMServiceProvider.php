@@ -2,12 +2,7 @@
 
 namespace NextDeveloper\IAM;
 
-use GuzzleHttp\Client as GuzzleClient;
-use Illuminate\Support\Facades\Log;
-use Laravel\Passport\Passport;
-use League\OAuth2\Server\AuthorizationServer;
 use NextDeveloper\Commons\AbstractServiceProvider;
-use NextDeveloper\IAM\Services\LoginMechanisms\OneTimeEmail;
 
 /**
  * Class IAMServiceProvider

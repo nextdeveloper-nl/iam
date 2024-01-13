@@ -4,7 +4,7 @@ namespace NextDeveloper\IAM\Http\Controllers\RoleUsers;
 
 use Illuminate\Http\Request;
 use NextDeveloper\IAM\Http\Controllers\AbstractController;
-use NextDeveloper\Generator\Http\Traits\ResponsableFactory;
+use NextDeveloper\Commons\Http\Response\ResponsableFactory;
 use NextDeveloper\IAM\Http\Requests\RoleUsers\RoleUsersUpdateRequest;
 use NextDeveloper\IAM\Database\Filters\RoleUsersQueryFilter;
 use NextDeveloper\IAM\Database\Models\RoleUsers;

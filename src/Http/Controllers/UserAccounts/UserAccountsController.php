@@ -4,7 +4,7 @@ namespace NextDeveloper\IAM\Http\Controllers\UserAccounts;
 
 use Illuminate\Http\Request;
 use NextDeveloper\IAM\Http\Controllers\AbstractController;
-use NextDeveloper\Generator\Http\Traits\ResponsableFactory;
+use NextDeveloper\Commons\Http\Response\ResponsableFactory;
 use NextDeveloper\IAM\Http\Requests\UserAccounts\UserAccountsUpdateRequest;
 use NextDeveloper\IAM\Database\Filters\UserAccountsQueryFilter;
 use NextDeveloper\IAM\Database\Models\UserAccounts;
