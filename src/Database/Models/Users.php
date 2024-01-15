@@ -155,12 +155,12 @@ class Users extends Model
     {
         return $this->belongsTo(\NextDeveloper\Commons\Database\Models\Countries::class);
     }
-    
+
     public function languages() : \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
         return $this->belongsTo(\NextDeveloper\Commons\Database\Models\Languages::class);
     }
-    
+
     public function answers() : \Illuminate\Database\Eloquent\Relations\HasMany
     {
         return $this->hasMany(\NextDeveloper\LMS\Database\Models\Answers::class);
@@ -212,4 +212,6 @@ class Users extends Model
     }
 
     // EDIT AFTER HERE - WARNING: ABOVE THIS LINE MAY BE REGENERATED AND YOU MAY LOSE CODE
+
+    use Authenticatable;
 }
