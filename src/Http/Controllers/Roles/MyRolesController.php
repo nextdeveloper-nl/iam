@@ -3,7 +3,7 @@
 namespace NextDeveloper\IAM\Http\Controllers\Roles;
 
 use Illuminate\Http\Request;
-use NextDeveloper\Generator\Common\AbstractController;
+use NextDeveloper\Commons\Http\Controllers\AbstractController;
 use NextDeveloper\Commons\Http\Response\ResponsableFactory;
 use NextDeveloper\IAM\Database\Models\UserRoleOverview;
 use NextDeveloper\IAM\Database\Models\UserRoles;
