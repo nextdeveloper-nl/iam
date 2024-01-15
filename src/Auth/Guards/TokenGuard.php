@@ -2,6 +2,7 @@
 
 namespace NextDeveloper\IAM\Auth\Guards;
 
+use Illuminate\Auth\AuthenticationException;
 use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Contracts\Auth\Guard;
 use Illuminate\Contracts\Auth\UserProvider;
@@ -59,6 +60,10 @@ class TokenGuard implements Guard
             ->select('*')
             ->where('id', $token)
             ->first();
+
+        if(!$oauthToken)
+            throw new AuthenticationException('Cannot authenticate the user. Most probably you are using '
+                . 'a wrong token.');
 
         $user = Users::withoutGlobalScopes()
             ->where('id', $oauthToken->user_id)

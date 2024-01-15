@@ -43,12 +43,6 @@ class IamUserProvider implements UserProvider
      */
     public function retrieveByToken($identifier, $token)
     {
-        $oauthToken = DB::table('oauth_access_tokens')
-            ->select('*')
-            ->where('user_id', $identifier)
-            ->first();
-
-        dd($oauthToken);
         // TODO: Implement retrieveByToken() method.
     }
 
@@ -61,7 +55,6 @@ class IamUserProvider implements UserProvider
      */
     public function updateRememberToken(Authenticatable $user, $token)
     {
-        die('updateRememberToken');
         // TODO: Implement updateRememberToken() method.
     }
 
@@ -73,7 +66,6 @@ class IamUserProvider implements UserProvider
      */
     public function retrieveByCredentials(array $credentials)
     {
-        die('retrieveByCredentials');
         // TODO: Implement retrieveByCredentials() method.
     }
 
@@ -86,7 +78,6 @@ class IamUserProvider implements UserProvider
      */
     public function validateCredentials(Authenticatable $user, array $credentials)
     {
-        die('validateCreds');
         return true;
         // TODO: Implement validateCredentials() method.
     }
