@@ -34,10 +34,7 @@ class UserHelper
         /**
          * This will return the User object of the logged in user
          */
-//        dump('REQ');
-//        dump(\request()->getPayload());
-
-        return Auth::guard( 'api' )->user();
+        return Auth::guard( 'nd_oauth' )->user();
     }
 
     /**

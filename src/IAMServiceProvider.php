@@ -2,7 +2,9 @@
 
 namespace NextDeveloper\IAM;
 
+use Illuminate\Support\Facades\Auth;
 use NextDeveloper\Commons\AbstractServiceProvider;
+use NextDeveloper\IAM\Auth\Providers\IamUserProvider;
 
 /**
  * Class IAMServiceProvider
@@ -28,10 +30,15 @@ class IAMServiceProvider extends AbstractServiceProvider {
         $this->loadViewsFrom($this->dir.'/../resources/views', 'IAM');
 
 //        $this->bootErrorHandler();
+        $this->bootGuard();
         $this->bootChannelRoutes();
         $this->bootModelBindings();
         $this->bootEvents();
         $this->bootLogger();
+    }
+
+    public function bootGuard() {
+
     }
 
     /**
@@ -105,7 +112,7 @@ class IAMServiceProvider extends AbstractServiceProvider {
     protected function registerRoutes() {
         if ( ! $this->app->routesAreCached()) {
             $this->app['router']
-                ->middleware('auth:api')
+                ->middleware('auth:nd_oauth')
                 ->namespace('NextDeveloper\IAM\Http\Controllers')
                 ->group(__DIR__.DIRECTORY_SEPARATOR.'Http'.DIRECTORY_SEPARATOR.'api.routes.php');
         }
