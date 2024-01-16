@@ -19,6 +19,7 @@ class AccountsUpdateRequest extends AbstractFormRequest
         'phone_number'        => 'nullable|string|max:20',
         'description'         => 'nullable|string|max:500',
         'iam_account_type_id' => 'exists:iam_account_types,uuid|uuid',
+        'is_active'           => 'boolean',
         ];
     }
     // EDIT AFTER HERE - WARNING: ABOVE THIS LINE MAY BE REGENERATED AND YOU MAY LOSE CODE\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n

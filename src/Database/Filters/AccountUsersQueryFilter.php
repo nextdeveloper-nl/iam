@@ -5,7 +5,7 @@ namespace NextDeveloper\IAM\Database\Filters;
 use Illuminate\Database\Eloquent\Builder;
 use NextDeveloper\Commons\Database\Filters\AbstractQueryFilter;
 use NextDeveloper\Accounts\Database\Models\User;
-            
+                
 
 /**
  * This class automatically puts where clause on database so that use can filter
@@ -123,6 +123,15 @@ class AccountUsersQueryFilter extends AbstractQueryFilter
 
         if($commonCountry) {
             return $this->builder->where('common_country_id', '=', $commonCountry->id);
+        }
+    }
+
+    public function iamUserId($value)
+    {
+            $iamUser = \NextDeveloper\IAM\Database\Models\Users::where('uuid', $value)->first();
+
+        if($iamUser) {
+            return $this->builder->where('iam_user_id', '=', $iamUser->id);
         }
     }
 

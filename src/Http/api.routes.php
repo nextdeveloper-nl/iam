@@ -190,8 +190,6 @@ Route::prefix('iam')->group(
                 Route::post('{iam_users}/tags ', 'Users\UsersController@saveTags');
                 Route::get('{iam_users}/addresses ', 'Users\UsersController@addresses');
                 Route::post('{iam_users}/addresses ', 'Users\UsersController@saveAddresses');
-                Route::post('{iam_users}/actions/{action}', 'Users\UsersController@actions');
-
 
                 Route::get('/{iam_users}/{subObjects}', 'Users\UsersController@relatedObjects');
                 Route::get('/{iam_users}', 'Users\UsersController@show');
@@ -199,6 +197,222 @@ Route::prefix('iam')->group(
                 Route::post('/', 'Users\UsersController@store');
                 Route::patch('/{iam_users}', 'Users\UsersController@update');
                 Route::delete('/{iam_users}', 'Users\UsersController@destroy');
+            }
+        );
+
+        Route::prefix('account-users')->group(
+            function () {
+                Route::get('/', 'AccountUsers\AccountUsersController@index');
+
+                Route::get('{iam_account_users}/tags ', 'AccountUsers\AccountUsersController@tags');
+                Route::post('{iam_account_users}/tags ', 'AccountUsers\AccountUsersController@saveTags');
+                Route::get('{iam_account_users}/addresses ', 'AccountUsers\AccountUsersController@addresses');
+                Route::post('{iam_account_users}/addresses ', 'AccountUsers\AccountUsersController@saveAddresses');
+
+                Route::get('/{iam_account_users}/{subObjects}', 'AccountUsers\AccountUsersController@relatedObjects');
+                Route::get('/{iam_account_users}', 'AccountUsers\AccountUsersController@show');
+
+                Route::post('/', 'AccountUsers\AccountUsersController@store');
+                Route::patch('/{iam_account_users}', 'AccountUsers\AccountUsersController@update');
+                Route::delete('/{iam_account_users}', 'AccountUsers\AccountUsersController@destroy');
+            }
+        );
+
+        Route::prefix('user-accounts')->group(
+            function () {
+                Route::get('/', 'UserAccounts\UserAccountsController@index');
+
+                Route::get('{iam_user_accounts}/tags ', 'UserAccounts\UserAccountsController@tags');
+                Route::post('{iam_user_accounts}/tags ', 'UserAccounts\UserAccountsController@saveTags');
+                Route::get('{iam_user_accounts}/addresses ', 'UserAccounts\UserAccountsController@addresses');
+                Route::post('{iam_user_accounts}/addresses ', 'UserAccounts\UserAccountsController@saveAddresses');
+
+                Route::get('/{iam_user_accounts}/{subObjects}', 'UserAccounts\UserAccountsController@relatedObjects');
+                Route::get('/{iam_user_accounts}', 'UserAccounts\UserAccountsController@show');
+
+                Route::post('/', 'UserAccounts\UserAccountsController@store');
+                Route::patch('/{iam_user_accounts}', 'UserAccounts\UserAccountsController@update');
+                Route::delete('/{iam_user_accounts}', 'UserAccounts\UserAccountsController@destroy');
+            }
+        );
+
+        Route::prefix('user-roles')->group(
+            function () {
+                Route::get('/', 'UserRoles\UserRolesController@index');
+
+                Route::get('{iam_user_roles}/tags ', 'UserRoles\UserRolesController@tags');
+                Route::post('{iam_user_roles}/tags ', 'UserRoles\UserRolesController@saveTags');
+                Route::get('{iam_user_roles}/addresses ', 'UserRoles\UserRolesController@addresses');
+                Route::post('{iam_user_roles}/addresses ', 'UserRoles\UserRolesController@saveAddresses');
+
+                Route::get('/{iam_user_roles}/{subObjects}', 'UserRoles\UserRolesController@relatedObjects');
+                Route::get('/{iam_user_roles}', 'UserRoles\UserRolesController@show');
+
+                Route::post('/', 'UserRoles\UserRolesController@store');
+                Route::patch('/{iam_user_roles}', 'UserRoles\UserRolesController@update');
+                Route::delete('/{iam_user_roles}', 'UserRoles\UserRolesController@destroy');
+            }
+        );
+
+        Route::prefix('account-users')->group(
+            function () {
+                Route::get('/', 'AccountUsers\AccountUsersController@index');
+
+                Route::get('{iam_account_users}/tags ', 'AccountUsers\AccountUsersController@tags');
+                Route::post('{iam_account_users}/tags ', 'AccountUsers\AccountUsersController@saveTags');
+                Route::get('{iam_account_users}/addresses ', 'AccountUsers\AccountUsersController@addresses');
+                Route::post('{iam_account_users}/addresses ', 'AccountUsers\AccountUsersController@saveAddresses');
+
+                Route::get('/{iam_account_users}/{subObjects}', 'AccountUsers\AccountUsersController@relatedObjects');
+                Route::get('/{iam_account_users}', 'AccountUsers\AccountUsersController@show');
+
+                Route::post('/', 'AccountUsers\AccountUsersController@store');
+                Route::patch('/{iam_account_users}', 'AccountUsers\AccountUsersController@update');
+                Route::delete('/{iam_account_users}', 'AccountUsers\AccountUsersController@destroy');
+            }
+        );
+
+        Route::prefix('user-accounts')->group(
+            function () {
+                Route::get('/', 'UserAccounts\UserAccountsController@index');
+
+                Route::get('{iam_user_accounts}/tags ', 'UserAccounts\UserAccountsController@tags');
+                Route::post('{iam_user_accounts}/tags ', 'UserAccounts\UserAccountsController@saveTags');
+                Route::get('{iam_user_accounts}/addresses ', 'UserAccounts\UserAccountsController@addresses');
+                Route::post('{iam_user_accounts}/addresses ', 'UserAccounts\UserAccountsController@saveAddresses');
+
+                Route::get('/{iam_user_accounts}/{subObjects}', 'UserAccounts\UserAccountsController@relatedObjects');
+                Route::get('/{iam_user_accounts}', 'UserAccounts\UserAccountsController@show');
+
+                Route::post('/', 'UserAccounts\UserAccountsController@store');
+                Route::patch('/{iam_user_accounts}', 'UserAccounts\UserAccountsController@update');
+                Route::delete('/{iam_user_accounts}', 'UserAccounts\UserAccountsController@destroy');
+            }
+        );
+
+        Route::prefix('user-roles')->group(
+            function () {
+                Route::get('/', 'UserRoles\UserRolesController@index');
+
+                Route::get('{iam_user_roles}/tags ', 'UserRoles\UserRolesController@tags');
+                Route::post('{iam_user_roles}/tags ', 'UserRoles\UserRolesController@saveTags');
+                Route::get('{iam_user_roles}/addresses ', 'UserRoles\UserRolesController@addresses');
+                Route::post('{iam_user_roles}/addresses ', 'UserRoles\UserRolesController@saveAddresses');
+
+                Route::get('/{iam_user_roles}/{subObjects}', 'UserRoles\UserRolesController@relatedObjects');
+                Route::get('/{iam_user_roles}', 'UserRoles\UserRolesController@show');
+
+                Route::post('/', 'UserRoles\UserRolesController@store');
+                Route::patch('/{iam_user_roles}', 'UserRoles\UserRolesController@update');
+                Route::delete('/{iam_user_roles}', 'UserRoles\UserRolesController@destroy');
+            }
+        );
+
+        Route::prefix('account-users')->group(
+            function () {
+                Route::get('/', 'AccountUsers\AccountUsersController@index');
+
+                Route::get('{iam_account_users}/tags ', 'AccountUsers\AccountUsersController@tags');
+                Route::post('{iam_account_users}/tags ', 'AccountUsers\AccountUsersController@saveTags');
+                Route::get('{iam_account_users}/addresses ', 'AccountUsers\AccountUsersController@addresses');
+                Route::post('{iam_account_users}/addresses ', 'AccountUsers\AccountUsersController@saveAddresses');
+
+                Route::get('/{iam_account_users}/{subObjects}', 'AccountUsers\AccountUsersController@relatedObjects');
+                Route::get('/{iam_account_users}', 'AccountUsers\AccountUsersController@show');
+
+                Route::post('/', 'AccountUsers\AccountUsersController@store');
+                Route::patch('/{iam_account_users}', 'AccountUsers\AccountUsersController@update');
+                Route::delete('/{iam_account_users}', 'AccountUsers\AccountUsersController@destroy');
+            }
+        );
+
+        Route::prefix('user-accounts')->group(
+            function () {
+                Route::get('/', 'UserAccounts\UserAccountsController@index');
+
+                Route::get('{iam_user_accounts}/tags ', 'UserAccounts\UserAccountsController@tags');
+                Route::post('{iam_user_accounts}/tags ', 'UserAccounts\UserAccountsController@saveTags');
+                Route::get('{iam_user_accounts}/addresses ', 'UserAccounts\UserAccountsController@addresses');
+                Route::post('{iam_user_accounts}/addresses ', 'UserAccounts\UserAccountsController@saveAddresses');
+
+                Route::get('/{iam_user_accounts}/{subObjects}', 'UserAccounts\UserAccountsController@relatedObjects');
+                Route::get('/{iam_user_accounts}', 'UserAccounts\UserAccountsController@show');
+
+                Route::post('/', 'UserAccounts\UserAccountsController@store');
+                Route::patch('/{iam_user_accounts}', 'UserAccounts\UserAccountsController@update');
+                Route::delete('/{iam_user_accounts}', 'UserAccounts\UserAccountsController@destroy');
+            }
+        );
+
+        Route::prefix('user-roles')->group(
+            function () {
+                Route::get('/', 'UserRoles\UserRolesController@index');
+
+                Route::get('{iam_user_roles}/tags ', 'UserRoles\UserRolesController@tags');
+                Route::post('{iam_user_roles}/tags ', 'UserRoles\UserRolesController@saveTags');
+                Route::get('{iam_user_roles}/addresses ', 'UserRoles\UserRolesController@addresses');
+                Route::post('{iam_user_roles}/addresses ', 'UserRoles\UserRolesController@saveAddresses');
+
+                Route::get('/{iam_user_roles}/{subObjects}', 'UserRoles\UserRolesController@relatedObjects');
+                Route::get('/{iam_user_roles}', 'UserRoles\UserRolesController@show');
+
+                Route::post('/', 'UserRoles\UserRolesController@store');
+                Route::patch('/{iam_user_roles}', 'UserRoles\UserRolesController@update');
+                Route::delete('/{iam_user_roles}', 'UserRoles\UserRolesController@destroy');
+            }
+        );
+
+        Route::prefix('account-users')->group(
+            function () {
+                Route::get('/', 'AccountUsers\AccountUsersController@index');
+
+                Route::get('{iam_account_users}/tags ', 'AccountUsers\AccountUsersController@tags');
+                Route::post('{iam_account_users}/tags ', 'AccountUsers\AccountUsersController@saveTags');
+                Route::get('{iam_account_users}/addresses ', 'AccountUsers\AccountUsersController@addresses');
+                Route::post('{iam_account_users}/addresses ', 'AccountUsers\AccountUsersController@saveAddresses');
+
+                Route::get('/{iam_account_users}/{subObjects}', 'AccountUsers\AccountUsersController@relatedObjects');
+                Route::get('/{iam_account_users}', 'AccountUsers\AccountUsersController@show');
+
+                Route::post('/', 'AccountUsers\AccountUsersController@store');
+                Route::patch('/{iam_account_users}', 'AccountUsers\AccountUsersController@update');
+                Route::delete('/{iam_account_users}', 'AccountUsers\AccountUsersController@destroy');
+            }
+        );
+
+        Route::prefix('user-accounts')->group(
+            function () {
+                Route::get('/', 'UserAccounts\UserAccountsController@index');
+
+                Route::get('{iam_user_accounts}/tags ', 'UserAccounts\UserAccountsController@tags');
+                Route::post('{iam_user_accounts}/tags ', 'UserAccounts\UserAccountsController@saveTags');
+                Route::get('{iam_user_accounts}/addresses ', 'UserAccounts\UserAccountsController@addresses');
+                Route::post('{iam_user_accounts}/addresses ', 'UserAccounts\UserAccountsController@saveAddresses');
+
+                Route::get('/{iam_user_accounts}/{subObjects}', 'UserAccounts\UserAccountsController@relatedObjects');
+                Route::get('/{iam_user_accounts}', 'UserAccounts\UserAccountsController@show');
+
+                Route::post('/', 'UserAccounts\UserAccountsController@store');
+                Route::patch('/{iam_user_accounts}', 'UserAccounts\UserAccountsController@update');
+                Route::delete('/{iam_user_accounts}', 'UserAccounts\UserAccountsController@destroy');
+            }
+        );
+
+        Route::prefix('user-roles')->group(
+            function () {
+                Route::get('/', 'UserRoles\UserRolesController@index');
+
+                Route::get('{iam_user_roles}/tags ', 'UserRoles\UserRolesController@tags');
+                Route::post('{iam_user_roles}/tags ', 'UserRoles\UserRolesController@saveTags');
+                Route::get('{iam_user_roles}/addresses ', 'UserRoles\UserRolesController@addresses');
+                Route::post('{iam_user_roles}/addresses ', 'UserRoles\UserRolesController@saveAddresses');
+
+                Route::get('/{iam_user_roles}/{subObjects}', 'UserRoles\UserRolesController@relatedObjects');
+                Route::get('/{iam_user_roles}', 'UserRoles\UserRolesController@show');
+
+                Route::post('/', 'UserRoles\UserRolesController@store');
+                Route::patch('/{iam_user_roles}', 'UserRoles\UserRolesController@update');
+                Route::delete('/{iam_user_roles}', 'UserRoles\UserRolesController@destroy');
             }
         );
 
@@ -292,6 +506,26 @@ Route::prefix('iam')->group(
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
         Route::prefix('my')->group(
             function () {
                 Route::get('/roles', 'Roles\MyRolesController@index');
@@ -306,6 +540,11 @@ Route::prefix('iam')->group(
         );
     }
 );
+
+
+
+
+
 
 
 
