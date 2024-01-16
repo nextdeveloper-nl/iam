@@ -6,7 +6,6 @@ use Illuminate\Auth\Authenticatable;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\Model;
-use Laravel\Passport\HasApiTokens;
 use NextDeveloper\Commons\Database\Traits\Filterable;
 use NextDeveloper\IAM\Database\Observers\UsersObserver;
 use NextDeveloper\Commons\Database\Traits\UuidId;
