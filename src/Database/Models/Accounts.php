@@ -22,7 +22,7 @@ class Accounts extends Model
 {
     use Filterable, UuidId, CleanCache, Taggable;
     use SoftDeletes;
-    use SendEmail;
+
 
     public $timestamps = true;
 
@@ -62,6 +62,7 @@ class Accounts extends Model
     'phone_number'        => 'string',
     'description'         => 'string',
     'iam_account_type_id' => 'integer',
+    'is_active'           => 'boolean',
     'created_at'          => 'datetime',
     'updated_at'          => 'datetime',
     'deleted_at'          => 'datetime',
@@ -129,12 +130,12 @@ class Accounts extends Model
     {
         return $this->belongsTo(\NextDeveloper\Commons\Database\Models\Domains::class);
     }
-
+    
     public function accountTypes() : \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
         return $this->belongsTo(\NextDeveloper\IAM\Database\Models\AccountTypes::class);
     }
-
+    
     public function backendDirectories() : \Illuminate\Database\Eloquent\Relations\HasMany
     {
         return $this->hasMany(\NextDeveloper\IAM\Database\Models\BackendDirectories::class);
@@ -145,39 +146,64 @@ class Accounts extends Model
         return $this->hasMany(\NextDeveloper\IAM\Database\Models\RoleUsers::class);
     }
 
-    public function answers() : \Illuminate\Database\Eloquent\Relations\HasMany
+    public function products() : \Illuminate\Database\Eloquent\Relations\HasMany
     {
-        return $this->hasMany(\NextDeveloper\LMS\Database\Models\Answers::class);
+        return $this->hasMany(\NextDeveloper\Marketplace\Database\Models\Products::class);
     }
 
-    public function courses() : \Illuminate\Database\Eloquent\Relations\HasMany
+    public function accounts() : \Illuminate\Database\Eloquent\Relations\HasMany
     {
-        return $this->hasMany(\NextDeveloper\LMS\Database\Models\Courses::class);
+        return $this->hasMany(\NextDeveloper\CRM\Database\Models\Accounts::class);
     }
 
-    public function homework() : \Illuminate\Database\Eloquent\Relations\HasMany
+    public function opportunities() : \Illuminate\Database\Eloquent\Relations\HasMany
     {
-        return $this->hasMany(\NextDeveloper\LMS\Database\Models\Homework::class);
+        return $this->hasMany(\NextDeveloper\CRM\Database\Models\Opportunities::class);
     }
 
-    public function homeworkAnswers() : \Illuminate\Database\Eloquent\Relations\HasMany
+    public function quotes() : \Illuminate\Database\Eloquent\Relations\HasMany
     {
-        return $this->hasMany(\NextDeveloper\LMS\Database\Models\HomeworkAnswers::class);
+        return $this->hasMany(\NextDeveloper\CRM\Database\Models\Quotes::class);
     }
 
-    public function questions() : \Illuminate\Database\Eloquent\Relations\HasMany
+    public function cloudNodes() : \Illuminate\Database\Eloquent\Relations\HasMany
     {
-        return $this->hasMany(\NextDeveloper\LMS\Database\Models\Questions::class);
+        return $this->hasMany(\NextDeveloper\IAAS\Database\Models\CloudNodes::class);
     }
 
-    public function tests() : \Illuminate\Database\Eloquent\Relations\HasMany
+    public function computeMembers() : \Illuminate\Database\Eloquent\Relations\HasMany
     {
-        return $this->hasMany(\NextDeveloper\LMS\Database\Models\Tests::class);
+        return $this->hasMany(\NextDeveloper\IAAS\Database\Models\ComputeMembers::class);
     }
 
-    public function userTests() : \Illuminate\Database\Eloquent\Relations\HasMany
+    public function computePools() : \Illuminate\Database\Eloquent\Relations\HasMany
     {
-        return $this->hasMany(\NextDeveloper\LMS\Database\Models\UserTests::class);
+        return $this->hasMany(\NextDeveloper\IAAS\Database\Models\ComputePools::class);
+    }
+
+    public function datacenters() : \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(\NextDeveloper\IAAS\Database\Models\Datacenters::class);
+    }
+
+    public function networkPools() : \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(\NextDeveloper\IAAS\Database\Models\NetworkPools::class);
+    }
+
+    public function storagePools() : \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(\NextDeveloper\IAAS\Database\Models\StoragePools::class);
+    }
+
+    public function virtualMachines() : \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(\NextDeveloper\IAAS\Database\Models\VirtualMachines::class);
+    }
+
+    public function emails() : \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(\NextDeveloper\Communication\Database\Models\Emails::class);
     }
 
     // EDIT AFTER HERE - WARNING: ABOVE THIS LINE MAY BE REGENERATED AND YOU MAY LOSE CODE\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n
@@ -186,6 +212,11 @@ class Accounts extends Model
     {
         return $this->belongsToMany(Accounts::class, 'iam_account_user', 'iam_account_id', 'iam_user_id');
     }
+
+
+
+
+
 
 
 

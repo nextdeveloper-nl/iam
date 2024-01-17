@@ -35,6 +35,7 @@ class AbstractAccountsTransformer extends AbstractTransformer
             'description'  =>  $model->description,
             'iam_user_id'  =>  $iamUserId ? $iamUserId->uuid : null,
             'iam_account_type_id'  =>  $iamAccountTypeId ? $iamAccountTypeId->uuid : null,
+            'is_active'  =>  $model->is_active,
             'created_at'  =>  $model->created_at ? $model->created_at->toIso8601String() : null,
             'updated_at'  =>  $model->updated_at ? $model->updated_at->toIso8601String() : null,
             'deleted_at'  =>  $model->deleted_at ? $model->deleted_at->toIso8601String() : null,
@@ -43,6 +44,11 @@ class AbstractAccountsTransformer extends AbstractTransformer
     }
 
     // EDIT AFTER HERE - WARNING: ABOVE THIS LINE MAY BE REGENERATED AND YOU MAY LOSE CODE\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n
+
+
+
+
+
 
 
 

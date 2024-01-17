@@ -33,6 +33,11 @@ class AccountsQueryFilter extends AbstractQueryFilter
         return $this->builder->where('description', 'like', '%' . $value . '%');
     }
 
+    public function isActive()
+    {
+        return $this->builder->where('is_active', true);
+    }
+    
     public function createdAtStart($date) 
     {
         return $this->builder->where('created_at', '>=', $date);
