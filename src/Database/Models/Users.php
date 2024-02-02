@@ -7,6 +7,8 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\Model;
 use NextDeveloper\Commons\Database\Traits\Filterable;
+use NextDeveloper\Communication\Database\Traits\SendEmail;
+use NextDeveloper\Communication\Database\Traits\SendNotification;
 use NextDeveloper\IAM\Database\Observers\UsersObserver;
 use NextDeveloper\Commons\Database\Traits\UuidId;
 use NextDeveloper\Commons\Common\Cache\Traits\CleanCache;
@@ -21,7 +23,6 @@ class Users extends Model
 {
     use Filterable, UuidId, CleanCache, Taggable;
     use SoftDeletes;
-
 
     public $timestamps = true;
 
@@ -150,12 +151,12 @@ class Users extends Model
     {
         return $this->belongsTo(\NextDeveloper\Commons\Database\Models\Countries::class);
     }
-    
+
     public function languages() : \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
         return $this->belongsTo(\NextDeveloper\Commons\Database\Models\Languages::class);
     }
-    
+
     public function products() : \Illuminate\Database\Eloquent\Relations\HasMany
     {
         return $this->hasMany(\NextDeveloper\Marketplace\Database\Models\Products::class);
@@ -219,6 +220,7 @@ class Users extends Model
     // EDIT AFTER HERE - WARNING: ABOVE THIS LINE MAY BE REGENERATED AND YOU MAY LOSE CODE
 
     use Authenticatable;
-
+    use SendEmail;
+    use SendNotification;
 
 }

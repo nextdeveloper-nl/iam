@@ -56,6 +56,9 @@ class TokenGuard implements Guard
         $token = $headers->get('authorization');
         $token = Str::replace('Bearer ', '', $token);
 
+        if($token == null)
+            return null;
+
         $oauthToken = DB::table('oauth_access_tokens')
             ->select('*')
             ->where('id', $token)
