@@ -13,11 +13,11 @@ class PermissionsUpdateRequest extends AbstractFormRequest
     public function rules()
     {
         return [
-            'namespace'  => 'nullable|string|max:500',
-        'service'    => 'nullable|string|max:255',
-        'method'     => 'nullable|string|max:255',
-        'name'       => 'nullable|string|max:255',
-        'is_active'  => 'boolean',
+            'namespace' => 'nullable|string',
+        'service' => 'nullable|string',
+        'method' => 'nullable|string',
+        'name' => 'nullable|string',
+        'is_active' => 'boolean',
         'created_by' => 'nullable|integer',
         'updated_by' => 'nullable|integer',
         ];

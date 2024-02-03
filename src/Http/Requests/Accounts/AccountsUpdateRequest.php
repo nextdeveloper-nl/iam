@@ -13,13 +13,13 @@ class AccountsUpdateRequest extends AbstractFormRequest
     public function rules()
     {
         return [
-            'name'                => 'nullable|string|max:500',
-        'common_domain_id'    => 'nullable|exists:common_domains,uuid|uuid',
-        'common_country_id'   => 'nullable|exists:common_countries,uuid|uuid',
-        'phone_number'        => 'nullable|string|max:20',
-        'description'         => 'nullable|string|max:500',
-        'iam_account_type_id' => 'exists:iam_account_types,uuid|uuid',
-        'is_active'           => 'boolean',
+            'name' => 'nullable|string',
+        'common_domain_id' => 'nullable|exists:common_domains,uuid|uuid',
+        'common_country_id' => 'nullable|exists:common_countries,uuid|uuid',
+        'phone_number' => 'nullable',
+        'description' => 'nullable|string',
+        'iam_account_type_id' => 'nullable|exists:iam_account_types,uuid|uuid',
+        'is_active' => 'boolean',
         ];
     }
     // EDIT AFTER HERE - WARNING: ABOVE THIS LINE MAY BE REGENERATED AND YOU MAY LOSE CODE\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n

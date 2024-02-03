@@ -52,17 +52,17 @@ class UserRoles extends Model
      @var array
      */
     protected $casts = [
-    'id'             => 'integer',
-    'uuid'           => 'string',
-    'name'           => 'string',
-    'class'          => 'string',
-    'level'          => 'boolean',
-    'description'    => 'string',
-    'created_at'     => 'datetime',
-    'updated_at'     => 'datetime',
-    'deleted_at'     => 'datetime',
-    'iam_role_id'    => 'integer',
-    'is_active'      => 'boolean',
+    'id' => 'integer',
+    'name' => 'string',
+    'class' => 'string',
+    'level' => 'integer',
+    'description' => 'string',
+    'created_at' => 'datetime',
+    'updated_at' => 'datetime',
+    'deleted_at' => 'datetime',
+    'iam_role_id' => 'integer',
+    'is_active' => 'boolean',
+    'role_data' => 'array',
     ];
 
     /**
@@ -124,6 +124,8 @@ class UserRoles extends Model
     }
 
     // EDIT AFTER HERE - WARNING: ABOVE THIS LINE MAY BE REGENERATED AND YOU MAY LOSE CODE\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n
+
+
 
 
 

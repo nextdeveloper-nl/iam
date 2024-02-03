@@ -12,12 +12,6 @@ use NextDeveloper\Commons\Helpers\DatabaseHelper;
 use NextDeveloper\IAM\Database\Models\LoginMechanisms;
 use NextDeveloper\IAM\Database\Filters\LoginMechanismsQueryFilter;
 use NextDeveloper\Commons\Exceptions\ModelNotFoundException;
-use NextDeveloper\IAM\Events\LoginMechanisms\LoginMechanismsCreatedEvent;
-use NextDeveloper\IAM\Events\LoginMechanisms\LoginMechanismsCreatingEvent;
-use NextDeveloper\IAM\Events\LoginMechanisms\LoginMechanismsUpdatedEvent;
-use NextDeveloper\IAM\Events\LoginMechanisms\LoginMechanismsUpdatingEvent;
-use NextDeveloper\IAM\Events\LoginMechanisms\LoginMechanismsDeletedEvent;
-use NextDeveloper\IAM\Events\LoginMechanisms\LoginMechanismsDeletingEvent;
 
 /**
  * This class is responsible from managing the data for LoginMechanisms
@@ -132,8 +126,6 @@ class AbstractLoginMechanismsService
      */
     public static function create(array $data)
     {
-        event(new LoginMechanismsCreatingEvent());
-
         if (array_key_exists('iam_user_id', $data)) {
             $data['iam_user_id'] = DatabaseHelper::uuidToId(
                 '\NextDeveloper\IAM\Database\Models\Users',
@@ -147,16 +139,16 @@ class AbstractLoginMechanismsService
             throw $e;
         }
 
-        event(new LoginMechanismsCreatedEvent($model));
+        Events::fire('created:NextDeveloper\IAM\LoginMechanisms', $model);
 
         return $model->fresh();
     }
 
     /**
-     This function expects the ID inside the object.
-    
-     @param  array $data
-     @return LoginMechanisms
+     * This function expects the ID inside the object.
+     *
+     * @param  array $data
+     * @return LoginMechanisms
      */
     public static function updateRaw(array $data) : ?LoginMechanisms
     {
@@ -197,7 +189,7 @@ class AbstractLoginMechanismsService
             throw $e;
         }
 
-        event(new LoginMechanismsUpdatedEvent($model));
+        Events::fire('updated:NextDeveloper\IAM\LoginMechanisms', $model);
 
         return $model->fresh();
     }
@@ -216,7 +208,7 @@ class AbstractLoginMechanismsService
     {
         $model = LoginMechanisms::where('uuid', $id)->first();
 
-        event(new LoginMechanismsDeletingEvent());
+        Events::fire('deleted:NextDeveloper\IAM\LoginMechanisms', $model);
 
         try {
             $model = $model->delete();

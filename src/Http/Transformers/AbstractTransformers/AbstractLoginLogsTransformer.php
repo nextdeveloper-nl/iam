@@ -27,12 +27,14 @@ class AbstractLoginLogsTransformer extends AbstractTransformer
             'id'  =>  $model->uuid,
             'iam_user_id'  =>  $iamUserId ? $iamUserId->uuid : null,
             'log'  =>  $model->log,
-            'created_at'  =>  $model->created_at ? $model->created_at->toIso8601String() : null,
+            'created_at'  =>  $model->created_at,
             ]
         );
     }
 
     // EDIT AFTER HERE - WARNING: ABOVE THIS LINE MAY BE REGENERATED AND YOU MAY LOSE CODE\n\n\n\n\n\n\n\n
+
+
 
 
 

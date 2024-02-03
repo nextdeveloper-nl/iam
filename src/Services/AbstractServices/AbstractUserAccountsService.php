@@ -12,12 +12,6 @@ use NextDeveloper\Commons\Helpers\DatabaseHelper;
 use NextDeveloper\IAM\Database\Models\UserAccounts;
 use NextDeveloper\IAM\Database\Filters\UserAccountsQueryFilter;
 use NextDeveloper\Commons\Exceptions\ModelNotFoundException;
-use NextDeveloper\IAM\Events\UserAccounts\UserAccountsCreatedEvent;
-use NextDeveloper\IAM\Events\UserAccounts\UserAccountsCreatingEvent;
-use NextDeveloper\IAM\Events\UserAccounts\UserAccountsUpdatedEvent;
-use NextDeveloper\IAM\Events\UserAccounts\UserAccountsUpdatingEvent;
-use NextDeveloper\IAM\Events\UserAccounts\UserAccountsDeletedEvent;
-use NextDeveloper\IAM\Events\UserAccounts\UserAccountsDeletingEvent;
 
 /**
  * This class is responsible from managing the data for UserAccounts
@@ -132,8 +126,6 @@ class AbstractUserAccountsService
      */
     public static function create(array $data)
     {
-        event(new UserAccountsCreatingEvent());
-
         if (array_key_exists('common_domain_id', $data)) {
             $data['common_domain_id'] = DatabaseHelper::uuidToId(
                 '\NextDeveloper\Commons\Database\Models\Domains',
@@ -165,16 +157,16 @@ class AbstractUserAccountsService
             throw $e;
         }
 
-        event(new UserAccountsCreatedEvent($model));
+        Events::fire('created:NextDeveloper\IAM\UserAccounts', $model);
 
         return $model->fresh();
     }
 
     /**
-     This function expects the ID inside the object.
-    
-     @param  array $data
-     @return UserAccounts
+     * This function expects the ID inside the object.
+     *
+     * @param  array $data
+     * @return UserAccounts
      */
     public static function updateRaw(array $data) : ?UserAccounts
     {
@@ -233,7 +225,7 @@ class AbstractUserAccountsService
             throw $e;
         }
 
-        event(new UserAccountsUpdatedEvent($model));
+        Events::fire('updated:NextDeveloper\IAM\UserAccounts', $model);
 
         return $model->fresh();
     }
@@ -252,7 +244,7 @@ class AbstractUserAccountsService
     {
         $model = UserAccounts::where('uuid', $id)->first();
 
-        event(new UserAccountsDeletingEvent());
+        Events::fire('deleted:NextDeveloper\IAM\UserAccounts', $model);
 
         try {
             $model = $model->delete();

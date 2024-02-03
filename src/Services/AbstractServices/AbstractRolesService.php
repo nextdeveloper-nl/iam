@@ -12,12 +12,6 @@ use NextDeveloper\Commons\Helpers\DatabaseHelper;
 use NextDeveloper\IAM\Database\Models\Roles;
 use NextDeveloper\IAM\Database\Filters\RolesQueryFilter;
 use NextDeveloper\Commons\Exceptions\ModelNotFoundException;
-use NextDeveloper\IAM\Events\Roles\RolesCreatedEvent;
-use NextDeveloper\IAM\Events\Roles\RolesCreatingEvent;
-use NextDeveloper\IAM\Events\Roles\RolesUpdatedEvent;
-use NextDeveloper\IAM\Events\Roles\RolesUpdatingEvent;
-use NextDeveloper\IAM\Events\Roles\RolesDeletedEvent;
-use NextDeveloper\IAM\Events\Roles\RolesDeletingEvent;
 
 /**
  * This class is responsible from managing the data for Roles
@@ -132,8 +126,6 @@ class AbstractRolesService
      */
     public static function create(array $data)
     {
-        event(new RolesCreatingEvent());
-
         
         try {
             $model = Roles::create($data);
@@ -141,16 +133,16 @@ class AbstractRolesService
             throw $e;
         }
 
-        event(new RolesCreatedEvent($model));
+        Events::fire('created:NextDeveloper\IAM\Roles', $model);
 
         return $model->fresh();
     }
 
     /**
-     This function expects the ID inside the object.
-    
-     @param  array $data
-     @return Roles
+     * This function expects the ID inside the object.
+     *
+     * @param  array $data
+     * @return Roles
      */
     public static function updateRaw(array $data) : ?Roles
     {
@@ -185,7 +177,7 @@ class AbstractRolesService
             throw $e;
         }
 
-        event(new RolesUpdatedEvent($model));
+        Events::fire('updated:NextDeveloper\IAM\Roles', $model);
 
         return $model->fresh();
     }
@@ -204,7 +196,7 @@ class AbstractRolesService
     {
         $model = Roles::where('uuid', $id)->first();
 
-        event(new RolesDeletingEvent());
+        Events::fire('deleted:NextDeveloper\IAM\Roles', $model);
 
         try {
             $model = $model->delete();

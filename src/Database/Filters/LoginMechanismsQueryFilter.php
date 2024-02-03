@@ -18,11 +18,6 @@ class LoginMechanismsQueryFilter extends AbstractQueryFilter
      */
     protected $builder;
     
-    public function loginClient($value)
-    {
-        return $this->builder->where('login_client', 'like', '%' . $value . '%');
-    }
-    
     public function loginMechanism($value)
     {
         return $this->builder->where('login_mechanism', 'like', '%' . $value . '%');

@@ -22,36 +22,6 @@ class BackendDirectoriesQueryFilter extends AbstractQueryFilter
         return $this->builder->where('name', 'like', '%' . $value . '%');
     }
     
-    public function ldapServerName($value)
-    {
-        return $this->builder->where('ldap_server_name', 'like', '%' . $value . '%');
-    }
-    
-    public function ldapServerUrl($value)
-    {
-        return $this->builder->where('ldap_server_url', 'like', '%' . $value . '%');
-    }
-    
-    public function ldapServerPort($value)
-    {
-        return $this->builder->where('ldap_server_port', 'like', '%' . $value . '%');
-    }
-    
-    public function ldapBaseDn($value)
-    {
-        return $this->builder->where('ldap_base_dn', 'like', '%' . $value . '%');
-    }
-    
-    public function ldapBindUsername($value)
-    {
-        return $this->builder->where('ldap_bind_username', 'like', '%' . $value . '%');
-    }
-    
-    public function ldapBindPassword($value)
-    {
-        return $this->builder->where('ldap_bind_password', 'like', '%' . $value . '%');
-    }
-    
     public function defaultFilter($value)
     {
         return $this->builder->where('default_filter', 'like', '%' . $value . '%');
@@ -87,14 +57,14 @@ class BackendDirectoriesQueryFilter extends AbstractQueryFilter
         return $this->builder->where('default_alias_field', 'like', '%' . $value . '%');
     }
     
-    public function defaultFirstNameField($value)
+    public function defaultNameField($value)
     {
-        return $this->builder->where('default_first_name_field', 'like', '%' . $value . '%');
+        return $this->builder->where('default_name_field', 'like', '%' . $value . '%');
     }
     
-    public function defaultLastNameField($value)
+    public function defaultSurnameField($value)
     {
-        return $this->builder->where('default_last_name_field', 'like', '%' . $value . '%');
+        return $this->builder->where('default_surname_field', 'like', '%' . $value . '%');
     }
 
     public function isConnected()

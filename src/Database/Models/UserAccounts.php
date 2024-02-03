@@ -52,15 +52,15 @@ class UserAccounts extends Model
      @var array
      */
     protected $casts = [
-    'id'                => 'integer',
-    'uuid'              => 'string',
-    'name'              => 'string',
-    'common_domain_id'  => 'integer',
+    'id' => 'integer',
+    'name' => 'string',
+    'common_domain_id' => 'integer',
     'common_country_id' => 'integer',
-    'created_at'        => 'datetime',
-    'updated_at'        => 'datetime',
-    'deleted_at'        => 'datetime',
-    'is_active'         => 'boolean',
+    'created_at' => 'datetime',
+    'updated_at' => 'datetime',
+    'deleted_at' => 'datetime',
+    'is_active' => 'boolean',
+    'session_data' => 'array',
     ];
 
     /**
@@ -122,6 +122,8 @@ class UserAccounts extends Model
     }
 
     // EDIT AFTER HERE - WARNING: ABOVE THIS LINE MAY BE REGENERATED AND YOU MAY LOSE CODE\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n
+
+
 
 
 

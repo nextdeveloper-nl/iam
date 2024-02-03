@@ -50,13 +50,12 @@ class Permissions extends Model
      @var array
      */
     protected $casts = [
-    'id'         => 'integer',
-    'uuid'       => 'string',
-    'namespace'  => 'string',
-    'service'    => 'string',
-    'method'     => 'string',
-    'name'       => 'string',
-    'is_active'  => 'boolean',
+    'id' => 'integer',
+    'namespace' => 'string',
+    'service' => 'string',
+    'method' => 'string',
+    'name' => 'string',
+    'is_active' => 'boolean',
     'created_by' => 'integer',
     'updated_by' => 'integer',
     'created_at' => 'datetime',
@@ -120,12 +119,9 @@ class Permissions extends Model
         }
     }
 
-    public function rolePermissions() : \Illuminate\Database\Eloquent\Relations\HasMany
-    {
-        return $this->hasMany(\NextDeveloper\IAM\Database\Models\RolePermissions::class);
-    }
-
     // EDIT AFTER HERE - WARNING: ABOVE THIS LINE MAY BE REGENERATED AND YOU MAY LOSE CODE\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n
+
+
 
 
 

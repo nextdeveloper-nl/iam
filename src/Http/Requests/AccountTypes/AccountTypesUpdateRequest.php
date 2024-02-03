@@ -13,8 +13,8 @@ class AccountTypesUpdateRequest extends AbstractFormRequest
     public function rules()
     {
         return [
-            'name'              => 'nullable|string|max:20',
-        'description'       => 'nullable|string|max:255',
+            'name' => 'nullable|string',
+        'description' => 'nullable|string',
         'common_country_id' => 'nullable|exists:common_countries,uuid|uuid',
         ];
     }

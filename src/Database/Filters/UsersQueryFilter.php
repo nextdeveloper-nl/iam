@@ -4,7 +4,7 @@ namespace NextDeveloper\IAM\Database\Filters;
 
 use Illuminate\Database\Eloquent\Builder;
 use NextDeveloper\Commons\Database\Filters\AbstractQueryFilter;
-        
+            
 
 /**
  * This class automatically puts where clause on database so that use can filter
@@ -57,11 +57,16 @@ class UsersQueryFilter extends AbstractQueryFilter
         return $this->builder->where('nin', 'like', '%' . $value . '%');
     }
     
-    public function cellPhone($value)
+    public function phoneNumber($value)
     {
-        return $this->builder->where('cell_phone', 'like', '%' . $value . '%');
+        return $this->builder->where('phone_number', 'like', '%' . $value . '%');
     }
 
+    public function isRobot()
+    {
+        return $this->builder->where('is_robot', true);
+    }
+    
     public function birthdayStart($date) 
     {
         return $this->builder->where('birthday', '>=', $date);
@@ -117,6 +122,15 @@ class UsersQueryFilter extends AbstractQueryFilter
 
         if($commonCountry) {
             return $this->builder->where('common_country_id', '=', $commonCountry->id);
+        }
+    }
+
+    public function iamUserId($value)
+    {
+            $iamUser = \NextDeveloper\IAM\Database\Models\Users::where('uuid', $value)->first();
+
+        if($iamUser) {
+            return $this->builder->where('iam_user_id', '=', $iamUser->id);
         }
     }
 

@@ -43,19 +43,21 @@ class AbstractBackendDirectoriesTransformer extends AbstractTransformer
             'default_password_field'  =>  $model->default_password_field,
             'default_email_field'  =>  $model->default_email_field,
             'default_alias_field'  =>  $model->default_alias_field,
-            'default_first_name_field'  =>  $model->default_first_name_field,
-            'default_last_name_field'  =>  $model->default_last_name_field,
+            'default_name_field'  =>  $model->default_name_field,
+            'default_surname_field'  =>  $model->default_surname_field,
             'is_connected'  =>  $model->is_connected,
             'is_connection_secure'  =>  $model->is_connection_secure,
             'is_usable'  =>  $model->is_usable,
-            'created_at'  =>  $model->created_at ? $model->created_at->toIso8601String() : null,
-            'updated_at'  =>  $model->updated_at ? $model->updated_at->toIso8601String() : null,
-            'deleted_at'  =>  $model->deleted_at ? $model->deleted_at->toIso8601String() : null,
+            'created_at'  =>  $model->created_at,
+            'updated_at'  =>  $model->updated_at,
+            'deleted_at'  =>  $model->deleted_at,
             ]
         );
     }
 
     // EDIT AFTER HERE - WARNING: ABOVE THIS LINE MAY BE REGENERATED AND YOU MAY LOSE CODE
+
+
 
 
 

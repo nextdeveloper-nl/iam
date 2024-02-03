@@ -52,31 +52,24 @@ class BackendDirectories extends Model
      @var array
      */
     protected $casts = [
-    'id'                       => 'integer',
-    'uuid'                     => 'string',
-    'iaas_virtual_machine_id'  => 'integer',
-    'name'                     => 'string',
-    'ldap_server_name'         => 'string',
-    'ldap_server_url'          => 'string',
-    'ldap_server_port'         => 'string',
-    'ldap_base_dn'             => 'string',
-    'ldap_bind_username'       => 'string',
-    'ldap_bind_password'       => 'string',
-    'default_filter'           => 'string',
-    'default_memberof'         => 'string',
-    'default_group'            => 'string',
-    'default_userid_field'     => 'string',
-    'default_password_field'   => 'string',
-    'default_email_field'      => 'string',
-    'default_alias_field'      => 'string',
-    'default_first_name_field' => 'string',
-    'default_last_name_field'  => 'string',
-    'is_connected'             => 'boolean',
-    'is_connection_secure'     => 'boolean',
-    'is_usable'                => 'boolean',
-    'created_at'               => 'datetime',
-    'updated_at'               => 'datetime',
-    'deleted_at'               => 'datetime',
+    'id' => 'integer',
+    'iaas_virtual_machine_id' => 'integer',
+    'name' => 'string',
+    'default_filter' => 'string',
+    'default_memberof' => 'string',
+    'default_group' => 'string',
+    'default_userid_field' => 'string',
+    'default_password_field' => 'string',
+    'default_email_field' => 'string',
+    'default_alias_field' => 'string',
+    'default_name_field' => 'string',
+    'default_surname_field' => 'string',
+    'is_connected' => 'boolean',
+    'is_connection_secure' => 'boolean',
+    'is_usable' => 'boolean',
+    'created_at' => 'datetime',
+    'updated_at' => 'datetime',
+    'deleted_at' => 'datetime',
     ];
 
     /**
@@ -137,12 +130,9 @@ class BackendDirectories extends Model
         }
     }
 
-    public function accounts() : \Illuminate\Database\Eloquent\Relations\BelongsTo
-    {
-        return $this->belongsTo(\NextDeveloper\IAM\Database\Models\Accounts::class);
-    }
-    
     // EDIT AFTER HERE - WARNING: ABOVE THIS LINE MAY BE REGENERATED AND YOU MAY LOSE CODE
+
+
 
 
 

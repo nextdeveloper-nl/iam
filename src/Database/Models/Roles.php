@@ -52,15 +52,14 @@ class Roles extends Model
      @var array
      */
     protected $casts = [
-    'id'          => 'integer',
-    'uuid'        => 'string',
-    'name'        => 'string',
-    'class'       => 'string',
-    'level'       => 'boolean',
+    'id' => 'integer',
+    'name' => 'string',
+    'class' => 'string',
     'description' => 'string',
-    'created_at'  => 'datetime',
-    'updated_at'  => 'datetime',
-    'deleted_at'  => 'datetime',
+    'created_at' => 'datetime',
+    'updated_at' => 'datetime',
+    'deleted_at' => 'datetime',
+    'level' => 'integer',
     ];
 
     /**
@@ -121,17 +120,9 @@ class Roles extends Model
         }
     }
 
-    public function rolePermissions() : \Illuminate\Database\Eloquent\Relations\HasMany
-    {
-        return $this->hasMany(\NextDeveloper\IAM\Database\Models\RolePermissions::class);
-    }
-
-    public function roleUsers() : \Illuminate\Database\Eloquent\Relations\HasMany
-    {
-        return $this->hasMany(\NextDeveloper\IAM\Database\Models\RoleUsers::class);
-    }
-
     // EDIT AFTER HERE - WARNING: ABOVE THIS LINE MAY BE REGENERATED AND YOU MAY LOSE CODE\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n
+
+
 
 
 

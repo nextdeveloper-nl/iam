@@ -12,12 +12,6 @@ use NextDeveloper\Commons\Helpers\DatabaseHelper;
 use NextDeveloper\IAM\Database\Models\RoleUsers;
 use NextDeveloper\IAM\Database\Filters\RoleUsersQueryFilter;
 use NextDeveloper\Commons\Exceptions\ModelNotFoundException;
-use NextDeveloper\IAM\Events\RoleUsers\RoleUsersCreatedEvent;
-use NextDeveloper\IAM\Events\RoleUsers\RoleUsersCreatingEvent;
-use NextDeveloper\IAM\Events\RoleUsers\RoleUsersUpdatedEvent;
-use NextDeveloper\IAM\Events\RoleUsers\RoleUsersUpdatingEvent;
-use NextDeveloper\IAM\Events\RoleUsers\RoleUsersDeletedEvent;
-use NextDeveloper\IAM\Events\RoleUsers\RoleUsersDeletingEvent;
 
 /**
  * This class is responsible from managing the data for RoleUsers
@@ -132,8 +126,6 @@ class AbstractRoleUsersService
      */
     public static function create(array $data)
     {
-        event(new RoleUsersCreatingEvent());
-
         if (array_key_exists('iam_role_id', $data)) {
             $data['iam_role_id'] = DatabaseHelper::uuidToId(
                 '\NextDeveloper\IAM\Database\Models\Roles',
@@ -159,16 +151,16 @@ class AbstractRoleUsersService
             throw $e;
         }
 
-        event(new RoleUsersCreatedEvent($model));
+        Events::fire('created:NextDeveloper\IAM\RoleUsers', $model);
 
         return $model->fresh();
     }
 
     /**
-     This function expects the ID inside the object.
-    
-     @param  array $data
-     @return RoleUsers
+     * This function expects the ID inside the object.
+     *
+     * @param  array $data
+     * @return RoleUsers
      */
     public static function updateRaw(array $data) : ?RoleUsers
     {
@@ -221,7 +213,7 @@ class AbstractRoleUsersService
             throw $e;
         }
 
-        event(new RoleUsersUpdatedEvent($model));
+        Events::fire('updated:NextDeveloper\IAM\RoleUsers', $model);
 
         return $model->fresh();
     }
@@ -240,7 +232,7 @@ class AbstractRoleUsersService
     {
         $model = RoleUsers::where('uuid', $id)->first();
 
-        event(new RoleUsersDeletingEvent());
+        Events::fire('deleted:NextDeveloper\IAM\RoleUsers', $model);
 
         try {
             $model = $model->delete();

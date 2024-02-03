@@ -52,16 +52,15 @@ class LoginMechanisms extends Model
      @var array
      */
     protected $casts = [
-    'id'              => 'integer',
-    'uuid'            => 'string',
-    'login_client'    => 'string',
+    'id' => 'integer',
+    'login_data' => 'array',
     'login_mechanism' => 'string',
-    'is_latest'       => 'boolean',
-    'is_default'      => 'boolean',
-    'is_active'       => 'boolean',
-    'created_at'      => 'datetime',
-    'updated_at'      => 'datetime',
-    'deleted_at'      => 'datetime',
+    'is_latest' => 'boolean',
+    'is_default' => 'boolean',
+    'is_active' => 'boolean',
+    'created_at' => 'datetime',
+    'updated_at' => 'datetime',
+    'deleted_at' => 'datetime',
     ];
 
     /**
@@ -122,12 +121,9 @@ class LoginMechanisms extends Model
         }
     }
 
-    public function users() : \Illuminate\Database\Eloquent\Relations\BelongsTo
-    {
-        return $this->belongsTo(\NextDeveloper\IAM\Database\Models\Users::class);
-    }
-    
     // EDIT AFTER HERE - WARNING: ABOVE THIS LINE MAY BE REGENERATED AND YOU MAY LOSE CODE\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n
+
+
 
 
 

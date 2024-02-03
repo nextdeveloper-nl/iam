@@ -66,7 +66,7 @@ trait IamUserTestTraits
                 'about'  =>  'a',
                 'pronoun'  =>  'a',
                 'nin'  =>  'a',
-                'cell_phone'  =>  'a',
+                'phone_number'  =>  'a',
                     'birthday'  =>  now(),
                             ],
                 ['http_errors' => false]
@@ -502,12 +502,12 @@ trait IamUserTestTraits
         $this->assertTrue(true);
     }
 
-    public function test_iamuser_event_cell_phone_filter()
+    public function test_iamuser_event_phone_number_filter()
     {
         try {
             $request = new Request(
                 [
-                'cell_phone'  =>  'a'
+                'phone_number'  =>  'a'
                 ]
             );
 

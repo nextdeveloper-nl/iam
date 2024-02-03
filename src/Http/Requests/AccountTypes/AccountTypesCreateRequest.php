@@ -13,8 +13,8 @@ class AccountTypesCreateRequest extends AbstractFormRequest
     public function rules()
     {
         return [
-            'name'              => 'required|string|max:20',
-        'description'       => 'nullable|string|max:255',
+            'name' => 'required|string',
+        'description' => 'nullable|string',
         'common_country_id' => 'required|exists:common_countries,uuid|uuid',
         ];
     }

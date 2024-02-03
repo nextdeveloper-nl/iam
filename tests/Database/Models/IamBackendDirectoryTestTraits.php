@@ -59,12 +59,6 @@ trait IamBackendDirectoryTestTraits
             'POST', '/iam/iambackenddirectory', [
             'form_params'   =>  [
                 'name'  =>  'a',
-                'ldap_server_name'  =>  'a',
-                'ldap_server_url'  =>  'a',
-                'ldap_server_port'  =>  'a',
-                'ldap_base_dn'  =>  'a',
-                'ldap_bind_username'  =>  'a',
-                'ldap_bind_password'  =>  'a',
                 'default_filter'  =>  'a',
                 'default_memberof'  =>  'a',
                 'default_group'  =>  'a',
@@ -72,8 +66,8 @@ trait IamBackendDirectoryTestTraits
                 'default_password_field'  =>  'a',
                 'default_email_field'  =>  'a',
                 'default_alias_field'  =>  'a',
-                'default_first_name_field'  =>  'a',
-                'default_last_name_field'  =>  'a',
+                'default_name_field'  =>  'a',
+                'default_surname_field'  =>  'a',
                             ],
                 ['http_errors' => false]
             ]
@@ -375,120 +369,6 @@ trait IamBackendDirectoryTestTraits
         $this->assertTrue(true);
     }
 
-    public function test_iambackenddirectory_event_ldap_server_name_filter()
-    {
-        try {
-            $request = new Request(
-                [
-                'ldap_server_name'  =>  'a'
-                ]
-            );
-
-            $filter = new IamBackendDirectoryQueryFilter($request);
-
-            $model = \NextDeveloper\IAM\Database\Models\IamBackendDirectory::filter($filter)->first();
-        } catch (\Exception $e) {
-            $this->assertFalse(false, $e->getMessage());
-        }
-
-        $this->assertTrue(true);
-    }
-
-    public function test_iambackenddirectory_event_ldap_server_url_filter()
-    {
-        try {
-            $request = new Request(
-                [
-                'ldap_server_url'  =>  'a'
-                ]
-            );
-
-            $filter = new IamBackendDirectoryQueryFilter($request);
-
-            $model = \NextDeveloper\IAM\Database\Models\IamBackendDirectory::filter($filter)->first();
-        } catch (\Exception $e) {
-            $this->assertFalse(false, $e->getMessage());
-        }
-
-        $this->assertTrue(true);
-    }
-
-    public function test_iambackenddirectory_event_ldap_server_port_filter()
-    {
-        try {
-            $request = new Request(
-                [
-                'ldap_server_port'  =>  'a'
-                ]
-            );
-
-            $filter = new IamBackendDirectoryQueryFilter($request);
-
-            $model = \NextDeveloper\IAM\Database\Models\IamBackendDirectory::filter($filter)->first();
-        } catch (\Exception $e) {
-            $this->assertFalse(false, $e->getMessage());
-        }
-
-        $this->assertTrue(true);
-    }
-
-    public function test_iambackenddirectory_event_ldap_base_dn_filter()
-    {
-        try {
-            $request = new Request(
-                [
-                'ldap_base_dn'  =>  'a'
-                ]
-            );
-
-            $filter = new IamBackendDirectoryQueryFilter($request);
-
-            $model = \NextDeveloper\IAM\Database\Models\IamBackendDirectory::filter($filter)->first();
-        } catch (\Exception $e) {
-            $this->assertFalse(false, $e->getMessage());
-        }
-
-        $this->assertTrue(true);
-    }
-
-    public function test_iambackenddirectory_event_ldap_bind_username_filter()
-    {
-        try {
-            $request = new Request(
-                [
-                'ldap_bind_username'  =>  'a'
-                ]
-            );
-
-            $filter = new IamBackendDirectoryQueryFilter($request);
-
-            $model = \NextDeveloper\IAM\Database\Models\IamBackendDirectory::filter($filter)->first();
-        } catch (\Exception $e) {
-            $this->assertFalse(false, $e->getMessage());
-        }
-
-        $this->assertTrue(true);
-    }
-
-    public function test_iambackenddirectory_event_ldap_bind_password_filter()
-    {
-        try {
-            $request = new Request(
-                [
-                'ldap_bind_password'  =>  'a'
-                ]
-            );
-
-            $filter = new IamBackendDirectoryQueryFilter($request);
-
-            $model = \NextDeveloper\IAM\Database\Models\IamBackendDirectory::filter($filter)->first();
-        } catch (\Exception $e) {
-            $this->assertFalse(false, $e->getMessage());
-        }
-
-        $this->assertTrue(true);
-    }
-
     public function test_iambackenddirectory_event_default_filter_filter()
     {
         try {
@@ -622,12 +502,12 @@ trait IamBackendDirectoryTestTraits
         $this->assertTrue(true);
     }
 
-    public function test_iambackenddirectory_event_default_first_name_field_filter()
+    public function test_iambackenddirectory_event_default_name_field_filter()
     {
         try {
             $request = new Request(
                 [
-                'default_first_name_field'  =>  'a'
+                'default_name_field'  =>  'a'
                 ]
             );
 
@@ -641,12 +521,12 @@ trait IamBackendDirectoryTestTraits
         $this->assertTrue(true);
     }
 
-    public function test_iambackenddirectory_event_default_last_name_field_filter()
+    public function test_iambackenddirectory_event_default_surname_field_filter()
     {
         try {
             $request = new Request(
                 [
-                'default_last_name_field'  =>  'a'
+                'default_surname_field'  =>  'a'
                 ]
             );
 

@@ -3,6 +3,7 @@
 namespace NextDeveloper\IAM\Events\Accounts;
 
 use Illuminate\Queue\SerializesModels;
+use Illuminate\Support\Facades\Log;
 use NextDeveloper\IAM\Database\Models\Accounts;
 
 /**
@@ -25,6 +26,8 @@ class AccountsCreatedEvent
 
     public function __construct(Accounts $model = null) {
         $this->_model = $model;
+
+        Log::info('AccountsCreatedEvent fired');
     }
 
     /**

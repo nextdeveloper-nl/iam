@@ -23,11 +23,6 @@ class AccountsQueryFilter extends AbstractQueryFilter
         return $this->builder->where('name', 'like', '%' . $value . '%');
     }
     
-    public function phoneNumber($value)
-    {
-        return $this->builder->where('phone_number', 'like', '%' . $value . '%');
-    }
-    
     public function description($value)
     {
         return $this->builder->where('description', 'like', '%' . $value . '%');

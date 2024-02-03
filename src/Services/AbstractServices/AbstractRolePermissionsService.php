@@ -12,12 +12,6 @@ use NextDeveloper\Commons\Helpers\DatabaseHelper;
 use NextDeveloper\IAM\Database\Models\RolePermissions;
 use NextDeveloper\IAM\Database\Filters\RolePermissionsQueryFilter;
 use NextDeveloper\Commons\Exceptions\ModelNotFoundException;
-use NextDeveloper\IAM\Events\RolePermissions\RolePermissionsCreatedEvent;
-use NextDeveloper\IAM\Events\RolePermissions\RolePermissionsCreatingEvent;
-use NextDeveloper\IAM\Events\RolePermissions\RolePermissionsUpdatedEvent;
-use NextDeveloper\IAM\Events\RolePermissions\RolePermissionsUpdatingEvent;
-use NextDeveloper\IAM\Events\RolePermissions\RolePermissionsDeletedEvent;
-use NextDeveloper\IAM\Events\RolePermissions\RolePermissionsDeletingEvent;
 
 /**
  * This class is responsible from managing the data for RolePermissions
@@ -132,8 +126,6 @@ class AbstractRolePermissionsService
      */
     public static function create(array $data)
     {
-        event(new RolePermissionsCreatingEvent());
-
         if (array_key_exists('iam_role_id', $data)) {
             $data['iam_role_id'] = DatabaseHelper::uuidToId(
                 '\NextDeveloper\IAM\Database\Models\Roles',
@@ -153,16 +145,16 @@ class AbstractRolePermissionsService
             throw $e;
         }
 
-        event(new RolePermissionsCreatedEvent($model));
+        Events::fire('created:NextDeveloper\IAM\RolePermissions', $model);
 
         return $model->fresh();
     }
 
     /**
-     This function expects the ID inside the object.
-    
-     @param  array $data
-     @return RolePermissions
+     * This function expects the ID inside the object.
+     *
+     * @param  array $data
+     * @return RolePermissions
      */
     public static function updateRaw(array $data) : ?RolePermissions
     {
@@ -209,7 +201,7 @@ class AbstractRolePermissionsService
             throw $e;
         }
 
-        event(new RolePermissionsUpdatedEvent($model));
+        Events::fire('updated:NextDeveloper\IAM\RolePermissions', $model);
 
         return $model->fresh();
     }
@@ -228,7 +220,7 @@ class AbstractRolePermissionsService
     {
         $model = RolePermissions::where('uuid', $id)->first();
 
-        event(new RolePermissionsDeletingEvent());
+        Events::fire('deleted:NextDeveloper\IAM\RolePermissions', $model);
 
         try {
             $model = $model->delete();

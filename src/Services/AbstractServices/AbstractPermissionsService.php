@@ -12,12 +12,6 @@ use NextDeveloper\Commons\Helpers\DatabaseHelper;
 use NextDeveloper\IAM\Database\Models\Permissions;
 use NextDeveloper\IAM\Database\Filters\PermissionsQueryFilter;
 use NextDeveloper\Commons\Exceptions\ModelNotFoundException;
-use NextDeveloper\IAM\Events\Permissions\PermissionsCreatedEvent;
-use NextDeveloper\IAM\Events\Permissions\PermissionsCreatingEvent;
-use NextDeveloper\IAM\Events\Permissions\PermissionsUpdatedEvent;
-use NextDeveloper\IAM\Events\Permissions\PermissionsUpdatingEvent;
-use NextDeveloper\IAM\Events\Permissions\PermissionsDeletedEvent;
-use NextDeveloper\IAM\Events\Permissions\PermissionsDeletingEvent;
 
 /**
  * This class is responsible from managing the data for Permissions
@@ -132,8 +126,6 @@ class AbstractPermissionsService
      */
     public static function create(array $data)
     {
-        event(new PermissionsCreatingEvent());
-
         
         try {
             $model = Permissions::create($data);
@@ -141,16 +133,16 @@ class AbstractPermissionsService
             throw $e;
         }
 
-        event(new PermissionsCreatedEvent($model));
+        Events::fire('created:NextDeveloper\IAM\Permissions', $model);
 
         return $model->fresh();
     }
 
     /**
-     This function expects the ID inside the object.
-    
-     @param  array $data
-     @return Permissions
+     * This function expects the ID inside the object.
+     *
+     * @param  array $data
+     * @return Permissions
      */
     public static function updateRaw(array $data) : ?Permissions
     {
@@ -185,7 +177,7 @@ class AbstractPermissionsService
             throw $e;
         }
 
-        event(new PermissionsUpdatedEvent($model));
+        Events::fire('updated:NextDeveloper\IAM\Permissions', $model);
 
         return $model->fresh();
     }
@@ -204,7 +196,7 @@ class AbstractPermissionsService
     {
         $model = Permissions::where('uuid', $id)->first();
 
-        event(new PermissionsDeletingEvent());
+        Events::fire('deleted:NextDeveloper\IAM\Permissions', $model);
 
         try {
             $model = $model->delete();

@@ -22,6 +22,7 @@ class AbstractUsersTransformer extends AbstractTransformer
     {
                         $commonLanguageId = \NextDeveloper\Commons\Database\Models\Languages::where('id', $model->common_language_id)->first();
                     $commonCountryId = \NextDeveloper\Commons\Database\Models\Countries::where('id', $model->common_country_id)->first();
+                    $iamUserId = \NextDeveloper\IAM\Database\Models\Users::where('id', $model->iam_user_id)->first();
         
         return $this->buildPayload(
             [
@@ -35,17 +36,21 @@ class AbstractUsersTransformer extends AbstractTransformer
             'pronoun'  =>  $model->pronoun,
             'birthday'  =>  $model->birthday,
             'nin'  =>  $model->nin,
-            'cell_phone'  =>  $model->cell_phone,
             'common_language_id'  =>  $commonLanguageId ? $commonLanguageId->uuid : null,
             'common_country_id'  =>  $commonCountryId ? $commonCountryId->uuid : null,
-            'created_at'  =>  $model->created_at ? $model->created_at->toIso8601String() : null,
-            'updated_at'  =>  $model->updated_at ? $model->updated_at->toIso8601String() : null,
-            'deleted_at'  =>  $model->deleted_at ? $model->deleted_at->toIso8601String() : null,
+            'created_at'  =>  $model->created_at,
+            'updated_at'  =>  $model->updated_at,
+            'deleted_at'  =>  $model->deleted_at,
+            'is_robot'  =>  $model->is_robot,
+            'iam_user_id'  =>  $iamUserId ? $iamUserId->uuid : null,
+            'phone_number'  =>  $model->phone_number,
             ]
         );
     }
 
     // EDIT AFTER HERE - WARNING: ABOVE THIS LINE MAY BE REGENERATED AND YOU MAY LOSE CODE\n\n\n\n\n\n\n\n
+
+
 
 
 

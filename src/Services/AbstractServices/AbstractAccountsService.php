@@ -5,19 +5,11 @@ namespace NextDeveloper\IAM\Services\AbstractServices;
 use Illuminate\Http\Request;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
-use Illuminate\Support\Str;
-use NextDeveloper\IAM\Helpers\UserHelper;
-use NextDeveloper\Commons\Common\Cache\CacheHelper;
+use NextDeveloper\Events\Services\Events;
 use NextDeveloper\Commons\Helpers\DatabaseHelper;
 use NextDeveloper\IAM\Database\Models\Accounts;
 use NextDeveloper\IAM\Database\Filters\AccountsQueryFilter;
 use NextDeveloper\Commons\Exceptions\ModelNotFoundException;
-use NextDeveloper\IAM\Events\Accounts\AccountsCreatedEvent;
-use NextDeveloper\IAM\Events\Accounts\AccountsCreatingEvent;
-use NextDeveloper\IAM\Events\Accounts\AccountsUpdatedEvent;
-use NextDeveloper\IAM\Events\Accounts\AccountsUpdatingEvent;
-use NextDeveloper\IAM\Events\Accounts\AccountsDeletedEvent;
-use NextDeveloper\IAM\Events\Accounts\AccountsDeletingEvent;
 
 /**
  * This class is responsible from managing the data for Accounts
@@ -132,8 +124,6 @@ class AbstractAccountsService
      */
     public static function create(array $data)
     {
-        event(new AccountsCreatingEvent());
-
         if (array_key_exists('common_domain_id', $data)) {
             $data['common_domain_id'] = DatabaseHelper::uuidToId(
                 '\NextDeveloper\Commons\Database\Models\Domains',
@@ -158,23 +148,23 @@ class AbstractAccountsService
                 $data['iam_account_type_id']
             );
         }
-    
+
         try {
             $model = Accounts::create($data);
         } catch(\Exception $e) {
             throw $e;
         }
 
-        event(new AccountsCreatedEvent($model));
+        Events::fire('created:NextDeveloper\IAM\Accounts', $model);
 
         return $model->fresh();
     }
 
     /**
-     This function expects the ID inside the object.
-    
-     @param  array $data
-     @return Accounts
+     * This function expects the ID inside the object.
+     *
+     * @param  array $data
+     * @return Accounts
      */
     public static function updateRaw(array $data) : ?Accounts
     {
@@ -223,7 +213,7 @@ class AbstractAccountsService
                 $data['iam_account_type_id']
             );
         }
-    
+
         event(new AccountsUpdatingEvent($model));
 
         try {
@@ -233,7 +223,7 @@ class AbstractAccountsService
             throw $e;
         }
 
-        event(new AccountsUpdatedEvent($model));
+        Events::fire('updated:NextDeveloper\IAM\Accounts', $model);
 
         return $model->fresh();
     }
@@ -252,7 +242,7 @@ class AbstractAccountsService
     {
         $model = Accounts::where('uuid', $id)->first();
 
-        event(new AccountsDeletingEvent());
+        Events::fire('deleted:NextDeveloper\IAM\Accounts', $model);
 
         try {
             $model = $model->delete();

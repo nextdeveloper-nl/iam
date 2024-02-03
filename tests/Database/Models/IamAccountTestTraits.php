@@ -59,7 +59,6 @@ trait IamAccountTestTraits
             'POST', '/iam/iamaccount', [
             'form_params'   =>  [
                 'name'  =>  'a',
-                'phone_number'  =>  'a',
                 'description'  =>  'a',
                             ],
                 ['http_errors' => false]
@@ -349,25 +348,6 @@ trait IamAccountTestTraits
             $request = new Request(
                 [
                 'name'  =>  'a'
-                ]
-            );
-
-            $filter = new IamAccountQueryFilter($request);
-
-            $model = \NextDeveloper\IAM\Database\Models\IamAccount::filter($filter)->first();
-        } catch (\Exception $e) {
-            $this->assertFalse(false, $e->getMessage());
-        }
-
-        $this->assertTrue(true);
-    }
-
-    public function test_iamaccount_event_phone_number_filter()
-    {
-        try {
-            $request = new Request(
-                [
-                'phone_number'  =>  'a'
                 ]
             );
 
