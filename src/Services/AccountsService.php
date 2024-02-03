@@ -40,7 +40,7 @@ class AccountsService extends AbstractAccountsService {
         }
 
         if(!array_key_exists('iam_account_type_id', $data)) {
-            $accountType = AccountTypes::where('name', 'Team')->first();
+            $accountType = AccountTypes::withoutGlobalScopes()->where('name', 'Team')->first();
 
             $data['iam_account_type_id'] = $accountType->id;
         }

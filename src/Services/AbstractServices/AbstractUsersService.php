@@ -12,12 +12,6 @@ use NextDeveloper\Commons\Helpers\DatabaseHelper;
 use NextDeveloper\IAM\Database\Models\Users;
 use NextDeveloper\IAM\Database\Filters\UsersQueryFilter;
 use NextDeveloper\Commons\Exceptions\ModelNotFoundException;
-use NextDeveloper\IAM\Events\Users\UsersCreatedEvent;
-use NextDeveloper\IAM\Events\Users\UsersCreatingEvent;
-use NextDeveloper\IAM\Events\Users\UsersUpdatedEvent;
-use NextDeveloper\IAM\Events\Users\UsersUpdatingEvent;
-use NextDeveloper\IAM\Events\Users\UsersDeletedEvent;
-use NextDeveloper\IAM\Events\Users\UsersDeletingEvent;
 
 /**
  * This class is responsible from managing the data for Users
@@ -132,8 +126,6 @@ class AbstractUsersService
      */
     public static function create(array $data)
     {
-        event(new UsersCreatingEvent());
-
         if (array_key_exists('common_language_id', $data)) {
             $data['common_language_id'] = DatabaseHelper::uuidToId(
                 '\NextDeveloper\Commons\Database\Models\Languages',
@@ -146,6 +138,12 @@ class AbstractUsersService
                 $data['common_country_id']
             );
         }
+        if (array_key_exists('iam_user_id', $data)) {
+            $data['iam_user_id'] = DatabaseHelper::uuidToId(
+                '\NextDeveloper\IAM\Database\Models\Users',
+                $data['iam_user_id']
+            );
+        }
     
         try {
             $model = Users::create($data);
@@ -153,16 +151,16 @@ class AbstractUsersService
             throw $e;
         }
 
-        event(new UsersCreatedEvent($model));
+        Events::fire('created:NextDeveloper\IAM\Users', $model);
 
         return $model->fresh();
     }
 
     /**
-     This function expects the ID inside the object.
-    
-     @param  array $data
-     @return Users
+     * This function expects the ID inside the object.
+     *
+     * @param  array $data
+     * @return Users
      */
     public static function updateRaw(array $data) : ?Users
     {
@@ -199,6 +197,12 @@ class AbstractUsersService
                 $data['common_country_id']
             );
         }
+        if (array_key_exists('iam_user_id', $data)) {
+            $data['iam_user_id'] = DatabaseHelper::uuidToId(
+                '\NextDeveloper\IAM\Database\Models\Users',
+                $data['iam_user_id']
+            );
+        }
     
         event(new UsersUpdatingEvent($model));
 
@@ -209,7 +213,7 @@ class AbstractUsersService
             throw $e;
         }
 
-        event(new UsersUpdatedEvent($model));
+        Events::fire('updated:NextDeveloper\IAM\Users', $model);
 
         return $model->fresh();
     }
@@ -228,7 +232,7 @@ class AbstractUsersService
     {
         $model = Users::where('uuid', $id)->first();
 
-        event(new UsersDeletingEvent());
+        Events::fire('deleted:NextDeveloper\IAM\Users', $model);
 
         try {
             $model = $model->delete();

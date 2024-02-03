@@ -12,12 +12,6 @@ use NextDeveloper\Commons\Helpers\DatabaseHelper;
 use NextDeveloper\IAM\Database\Models\AccountUsers;
 use NextDeveloper\IAM\Database\Filters\AccountUsersQueryFilter;
 use NextDeveloper\Commons\Exceptions\ModelNotFoundException;
-use NextDeveloper\IAM\Events\AccountUsers\AccountUsersCreatedEvent;
-use NextDeveloper\IAM\Events\AccountUsers\AccountUsersCreatingEvent;
-use NextDeveloper\IAM\Events\AccountUsers\AccountUsersUpdatedEvent;
-use NextDeveloper\IAM\Events\AccountUsers\AccountUsersUpdatingEvent;
-use NextDeveloper\IAM\Events\AccountUsers\AccountUsersDeletedEvent;
-use NextDeveloper\IAM\Events\AccountUsers\AccountUsersDeletingEvent;
 
 /**
  * This class is responsible from managing the data for AccountUsers
@@ -132,8 +126,6 @@ class AbstractAccountUsersService
      */
     public static function create(array $data)
     {
-        event(new AccountUsersCreatingEvent());
-
         if (array_key_exists('iam_user_id', $data)) {
             $data['iam_user_id'] = DatabaseHelper::uuidToId(
                 '\NextDeveloper\IAM\Database\Models\Users',
@@ -153,16 +145,16 @@ class AbstractAccountUsersService
             throw $e;
         }
 
-        event(new AccountUsersCreatedEvent($model));
+        Events::fire('created:NextDeveloper\IAM\AccountUsers', $model);
 
         return $model->fresh();
     }
 
     /**
-     This function expects the ID inside the object.
-    
-     @param  array $data
-     @return AccountUsers
+     * This function expects the ID inside the object.
+     *
+     * @param  array $data
+     * @return AccountUsers
      */
     public static function updateRaw(array $data) : ?AccountUsers
     {
@@ -209,7 +201,7 @@ class AbstractAccountUsersService
             throw $e;
         }
 
-        event(new AccountUsersUpdatedEvent($model));
+        Events::fire('updated:NextDeveloper\IAM\AccountUsers', $model);
 
         return $model->fresh();
     }
@@ -228,7 +220,7 @@ class AbstractAccountUsersService
     {
         $model = AccountUsers::where('uuid', $id)->first();
 
-        event(new AccountUsersDeletingEvent());
+        Events::fire('deleted:NextDeveloper\IAM\AccountUsers', $model);
 
         try {
             $model = $model->delete();

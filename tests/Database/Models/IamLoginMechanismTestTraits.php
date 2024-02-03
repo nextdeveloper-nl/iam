@@ -58,7 +58,6 @@ trait IamLoginMechanismTestTraits
         $response = $this->http->request(
             'POST', '/iam/iamloginmechanism', [
             'form_params'   =>  [
-                'login_client'  =>  'a',
                 'login_mechanism'  =>  'a',
                             ],
                 ['http_errors' => false]
@@ -335,25 +334,6 @@ trait IamLoginMechanismTestTraits
             $model = \NextDeveloper\IAM\Database\Models\IamLoginMechanism::first();
 
             event(new \NextDeveloper\IAM\Events\IamLoginMechanism\IamLoginMechanismRestoredEvent($model));
-        } catch (\Exception $e) {
-            $this->assertFalse(false, $e->getMessage());
-        }
-
-        $this->assertTrue(true);
-    }
-
-    public function test_iamloginmechanism_event_login_client_filter()
-    {
-        try {
-            $request = new Request(
-                [
-                'login_client'  =>  'a'
-                ]
-            );
-
-            $filter = new IamLoginMechanismQueryFilter($request);
-
-            $model = \NextDeveloper\IAM\Database\Models\IamLoginMechanism::filter($filter)->first();
         } catch (\Exception $e) {
             $this->assertFalse(false, $e->getMessage());
         }

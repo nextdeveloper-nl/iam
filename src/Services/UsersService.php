@@ -74,7 +74,7 @@ class UsersService extends AbstractUsersService {
      */
     public static function create(array $data) : Users {
         if(!array_key_exists('common_language_id', $data)) {
-            $lang = Languages::where('code', App::currentLocale())->first();
+            $lang = Languages::withoutGlobalScopes()->where('code', App::currentLocale())->first();
 
             $data['common_language_id'] = $lang->id;
         }

@@ -52,24 +52,24 @@ class AccountUsers extends Model
      @var array
      */
     protected $casts = [
-    'id'                 => 'integer',
-    'uuid'               => 'string',
-    'name'               => 'string',
-    'surname'            => 'string',
-    'email'              => 'string',
-    'fullname'           => 'string',
-    'username'           => 'string',
-    'about'              => 'string',
-    'pronoun'            => 'string',
-    'birthday'           => 'datetime',
-    'nin'                => 'string',
-    'cell_phone'         => 'string',
+    'id' => 'integer',
+    'name' => 'string',
+    'surname' => 'string',
+    'email' => 'string',
+    'fullname' => 'string',
+    'username' => 'string',
+    'about' => 'string',
+    'pronoun' => 'string',
+    'birthday' => 'datetime',
+    'nin' => 'string',
     'common_language_id' => 'integer',
-    'common_country_id'  => 'integer',
-    'created_at'         => 'datetime',
-    'updated_at'         => 'datetime',
-    'deleted_at'         => 'datetime',
-    'is_active'          => 'boolean',
+    'common_country_id' => 'integer',
+    'created_at' => 'datetime',
+    'updated_at' => 'datetime',
+    'deleted_at' => 'datetime',
+    'phone_number' => 'string',
+    'is_active' => 'boolean',
+    'session_data' => 'array',
     ];
 
     /**
@@ -132,6 +132,10 @@ class AccountUsers extends Model
     }
 
     // EDIT AFTER HERE - WARNING: ABOVE THIS LINE MAY BE REGENERATED AND YOU MAY LOSE CODE\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n
+
+
+
+
 
 
 

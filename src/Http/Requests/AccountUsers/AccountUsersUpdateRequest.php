@@ -13,8 +13,8 @@ class AccountUsersUpdateRequest extends AbstractFormRequest
     public function rules()
     {
         return [
-            'is_active'      => 'boolean',
-        'session_data'   => 'nullable',
+            'is_active' => 'boolean',
+        'session_data' => 'nullable',
         ];
     }
     // EDIT AFTER HERE - WARNING: ABOVE THIS LINE MAY BE REGENERATED AND YOU MAY LOSE CODE\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n

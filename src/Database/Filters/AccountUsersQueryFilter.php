@@ -58,9 +58,9 @@ class AccountUsersQueryFilter extends AbstractQueryFilter
         return $this->builder->where('nin', 'like', '%' . $value . '%');
     }
     
-    public function cellPhone($value)
+    public function phoneNumber($value)
     {
-        return $this->builder->where('cell_phone', 'like', '%' . $value . '%');
+        return $this->builder->where('phone_number', 'like', '%' . $value . '%');
     }
 
     public function isActive()

@@ -12,12 +12,6 @@ use NextDeveloper\Commons\Helpers\DatabaseHelper;
 use NextDeveloper\IAM\Database\Models\AccountTypes;
 use NextDeveloper\IAM\Database\Filters\AccountTypesQueryFilter;
 use NextDeveloper\Commons\Exceptions\ModelNotFoundException;
-use NextDeveloper\IAM\Events\AccountTypes\AccountTypesCreatedEvent;
-use NextDeveloper\IAM\Events\AccountTypes\AccountTypesCreatingEvent;
-use NextDeveloper\IAM\Events\AccountTypes\AccountTypesUpdatedEvent;
-use NextDeveloper\IAM\Events\AccountTypes\AccountTypesUpdatingEvent;
-use NextDeveloper\IAM\Events\AccountTypes\AccountTypesDeletedEvent;
-use NextDeveloper\IAM\Events\AccountTypes\AccountTypesDeletingEvent;
 
 /**
  * This class is responsible from managing the data for AccountTypes
@@ -132,8 +126,6 @@ class AbstractAccountTypesService
      */
     public static function create(array $data)
     {
-        event(new AccountTypesCreatingEvent());
-
         if (array_key_exists('common_country_id', $data)) {
             $data['common_country_id'] = DatabaseHelper::uuidToId(
                 '\NextDeveloper\Commons\Database\Models\Countries',
@@ -147,16 +139,16 @@ class AbstractAccountTypesService
             throw $e;
         }
 
-        event(new AccountTypesCreatedEvent($model));
+        Events::fire('created:NextDeveloper\IAM\AccountTypes', $model);
 
         return $model->fresh();
     }
 
     /**
-     This function expects the ID inside the object.
-    
-     @param  array $data
-     @return AccountTypes
+     * This function expects the ID inside the object.
+     *
+     * @param  array $data
+     * @return AccountTypes
      */
     public static function updateRaw(array $data) : ?AccountTypes
     {
@@ -197,7 +189,7 @@ class AbstractAccountTypesService
             throw $e;
         }
 
-        event(new AccountTypesUpdatedEvent($model));
+        Events::fire('updated:NextDeveloper\IAM\AccountTypes', $model);
 
         return $model->fresh();
     }
@@ -216,7 +208,7 @@ class AbstractAccountTypesService
     {
         $model = AccountTypes::where('uuid', $id)->first();
 
-        event(new AccountTypesDeletingEvent());
+        Events::fire('deleted:NextDeveloper\IAM\AccountTypes', $model);
 
         try {
             $model = $model->delete();

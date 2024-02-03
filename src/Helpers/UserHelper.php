@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\DB;
 use NextDeveloper\Commons\Common\Cache\CacheHelper;
 use NextDeveloper\Commons\Database\Models\Languages;
 use NextDeveloper\IAM\Database\Models\AccountUsers;
@@ -34,7 +35,24 @@ class UserHelper
         /**
          * This will return the User object of the logged in user
          */
-        return Auth::guard( 'nd_oauth' )->user();
+        $headers = request()->headers->all();
+        $authorization = $headers['authorization'][0] ?? null;
+
+        if(!$authorization)
+            return null;
+
+        $authorization = str_replace('Bearer ', '', $authorization);
+
+        $token = DB::select("select * from oauth_access_tokens where id = ?", [$authorization]);
+
+        if(!$token)
+            return null;
+
+        $user = Users::withoutGlobalScopes()
+            ->where('id', $token[0]->user_id)
+            ->first();
+
+        return $user;
     }
 
     /**
@@ -316,6 +334,9 @@ class UserHelper
      * @return void
      */
     public static function applyUserFields(Model $model) : Model {
+        if(!self::me())
+            return $model;
+
         $model->iam_user_id     =   self::me()->id;
         $model->iam_account_id  =   self::currentAccount()->id;
 

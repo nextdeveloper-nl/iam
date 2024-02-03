@@ -50,15 +50,14 @@ class RolePermissions extends Model
      @var array
      */
     protected $casts = [
-    'id'                => 'integer',
-    'uuid'              => 'string',
-    'iam_role_id'       => 'integer',
+    'id' => 'integer',
+    'iam_role_id' => 'integer',
     'iam_permission_id' => 'integer',
-    'is_active'         => 'boolean',
-    'created_by'        => 'integer',
-    'created_at'        => 'datetime',
-    'updated_by'        => 'integer',
-    'updated_at'        => 'datetime',
+    'is_active' => 'boolean',
+    'created_by' => 'integer',
+    'created_at' => 'datetime',
+    'updated_by' => 'integer',
+    'updated_at' => 'datetime',
     ];
 
     /**
@@ -118,17 +117,9 @@ class RolePermissions extends Model
         }
     }
 
-    public function permissions() : \Illuminate\Database\Eloquent\Relations\BelongsTo
-    {
-        return $this->belongsTo(\NextDeveloper\IAM\Database\Models\Permissions::class);
-    }
-    
-    public function roles() : \Illuminate\Database\Eloquent\Relations\BelongsTo
-    {
-        return $this->belongsTo(\NextDeveloper\IAM\Database\Models\Roles::class);
-    }
-    
     // EDIT AFTER HERE - WARNING: ABOVE THIS LINE MAY BE REGENERATED AND YOU MAY LOSE CODE\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n
+
+
 
 
 

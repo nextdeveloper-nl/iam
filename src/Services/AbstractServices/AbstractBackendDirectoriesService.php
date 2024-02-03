@@ -12,12 +12,6 @@ use NextDeveloper\Commons\Helpers\DatabaseHelper;
 use NextDeveloper\IAM\Database\Models\BackendDirectories;
 use NextDeveloper\IAM\Database\Filters\BackendDirectoriesQueryFilter;
 use NextDeveloper\Commons\Exceptions\ModelNotFoundException;
-use NextDeveloper\IAM\Events\BackendDirectories\BackendDirectoriesCreatedEvent;
-use NextDeveloper\IAM\Events\BackendDirectories\BackendDirectoriesCreatingEvent;
-use NextDeveloper\IAM\Events\BackendDirectories\BackendDirectoriesUpdatedEvent;
-use NextDeveloper\IAM\Events\BackendDirectories\BackendDirectoriesUpdatingEvent;
-use NextDeveloper\IAM\Events\BackendDirectories\BackendDirectoriesDeletedEvent;
-use NextDeveloper\IAM\Events\BackendDirectories\BackendDirectoriesDeletingEvent;
 
 /**
  * This class is responsible from managing the data for BackendDirectories
@@ -132,8 +126,6 @@ class AbstractBackendDirectoriesService
      */
     public static function create(array $data)
     {
-        event(new BackendDirectoriesCreatingEvent());
-
         if (array_key_exists('iam_account_id', $data)) {
             $data['iam_account_id'] = DatabaseHelper::uuidToId(
                 '\NextDeveloper\IAM\Database\Models\Accounts',
@@ -153,16 +145,16 @@ class AbstractBackendDirectoriesService
             throw $e;
         }
 
-        event(new BackendDirectoriesCreatedEvent($model));
+        Events::fire('created:NextDeveloper\IAM\BackendDirectories', $model);
 
         return $model->fresh();
     }
 
     /**
-     This function expects the ID inside the object.
-    
-     @param  array $data
-     @return BackendDirectories
+     * This function expects the ID inside the object.
+     *
+     * @param  array $data
+     * @return BackendDirectories
      */
     public static function updateRaw(array $data) : ?BackendDirectories
     {
@@ -209,7 +201,7 @@ class AbstractBackendDirectoriesService
             throw $e;
         }
 
-        event(new BackendDirectoriesUpdatedEvent($model));
+        Events::fire('updated:NextDeveloper\IAM\BackendDirectories', $model);
 
         return $model->fresh();
     }
@@ -228,7 +220,7 @@ class AbstractBackendDirectoriesService
     {
         $model = BackendDirectories::where('uuid', $id)->first();
 
-        event(new BackendDirectoriesDeletingEvent());
+        Events::fire('deleted:NextDeveloper\IAM\BackendDirectories', $model);
 
         try {
             $model = $model->delete();
