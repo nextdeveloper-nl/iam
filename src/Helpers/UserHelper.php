@@ -130,7 +130,7 @@ class UserHelper
 
             //  We are checking about the relation
             $relation = AccountUsers::withoutGlobalScope(AuthorizationScope::class)
-                ->where('id', $user->id)
+                ->where('iam_user_id', $user->id)
                 ->where('is_active', 1)
                 ->first();
 
@@ -288,6 +288,22 @@ class UserHelper
         );
 
         return $role;
+    }
+
+    /**
+     * Returns the roles of the user
+     *
+     * @param Users|null $user
+     * @return Roles|null
+     */
+    public static function getRoles(Users $user = null) : ?Collection
+    {
+        if(!$user)
+            $user = self::me();
+
+        $roles = RolesService::getUserRoles($user, self::currentAccount($user));
+
+        return $roles;
     }
 
     public static function switchToRoleByRoleId(Users $user = null, $roleId) : ?Roles

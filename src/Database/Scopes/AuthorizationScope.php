@@ -54,6 +54,8 @@ class AuthorizationScope implements Scope
 
         $scope = $this->getAnonymous();
 
+        dd(UserHelper::getRoles());
+
         if(UserHelper::currentRole()) {
             $scope = $this->getDefault();
             Log::debug('[AuthorizationScope] My user has role. Applying default: ' . get_class($scope));

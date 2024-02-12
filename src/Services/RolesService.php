@@ -2,6 +2,7 @@
 
 namespace NextDeveloper\IAM\Services;
 
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\Cache;
 use NextDeveloper\Commons\Common\Cache\CacheHelper;
 use NextDeveloper\IAM\Authorization\Roles\IAuthorizationRole;
@@ -41,6 +42,27 @@ class RolesService extends AbstractRolesService {
         }
 
         return $Roles;
+    }
+
+    /**
+     * Returns the roles of the user
+     *
+     * @param Users $user
+     * @param Accounts $account
+     * @return array
+     */
+    public static function getUserRoles($user, $account) :?Collection
+    {
+        $roles = RoleUsers::withoutGlobalScope(AuthorizationScope::class)
+            ->where('iam_user_id', $user->id)
+            ->where('iam_account_id', $account->id)
+            ->where('is_active', true)
+            ->get();
+
+        dd($account);
+        dd($roles);
+
+        return $roles;
     }
 
     /**
