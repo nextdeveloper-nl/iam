@@ -17,5 +17,13 @@ interface IAuthorizationRole
      */
     public const LEVEL = 100;
 
+    public const DESCRIPTION = '';
+
+    public const DB_PREFIX = 'x!@#';
+
     public function apply(Builder $builder, Model $model);
+
+    public function canBeApplied($column);
+
+    public function getDbPrefix();
 }

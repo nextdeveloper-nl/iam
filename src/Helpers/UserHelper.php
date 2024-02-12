@@ -55,6 +55,11 @@ class UserHelper
         return $user;
     }
 
+    public static function currentUser()
+    {
+        return self::me();
+    }
+
     /**
      * Returns all accounts that the user is part of.
      *
@@ -304,6 +309,18 @@ class UserHelper
         $roles = RolesService::getUserRoles($user, self::currentAccount($user));
 
         return $roles;
+    }
+
+    public static function removeFromRole($role, Users $users = null) :bool {
+        if(!$users)
+            $users = self::me();
+
+        if(class_basename($role) == 'UserRoles')
+            $role = Roles::withoutGlobalScopes()->where('uuid', $role->uuid)->first();
+
+        $sql = DB::raw('delete from role_users where iam_user_id = ' . $users->id . ' and iam_role_id = ' . $role->id . ';');
+
+        return true;
     }
 
     public static function switchToRoleByRoleId(Users $user = null, $roleId) : ?Roles

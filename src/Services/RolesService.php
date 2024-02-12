@@ -10,6 +10,7 @@ use NextDeveloper\IAM\Authorization\Roles\MemberRole;
 use NextDeveloper\IAM\Database\Models\Accounts;
 use NextDeveloper\IAM\Database\Models\Roles;
 use NextDeveloper\IAM\Database\Models\RoleUsers;
+use NextDeveloper\IAM\Database\Models\UserRoles;
 use NextDeveloper\IAM\Database\Models\Users;
 use NextDeveloper\IAM\Database\Scopes\AuthorizationScope;
 use NextDeveloper\IAM\Helpers\UserHelper;
@@ -53,14 +54,11 @@ class RolesService extends AbstractRolesService {
      */
     public static function getUserRoles($user, $account) :?Collection
     {
-        $roles = RoleUsers::withoutGlobalScope(AuthorizationScope::class)
+        $roles = UserRoles::withoutGlobalScope(AuthorizationScope::class)
             ->where('iam_user_id', $user->id)
             ->where('iam_account_id', $account->id)
             ->where('is_active', true)
             ->get();
-
-        dd($account);
-        dd($roles);
 
         return $roles;
     }
