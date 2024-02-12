@@ -26,6 +26,7 @@ class UsersUpdateRequest extends AbstractFormRequest
         'common_country_id' => 'nullable|exists:common_countries,uuid|uuid',
         'is_robot' => 'boolean',
         'phone_number' => 'nullable|string',
+        'tags' => '',
         ];
     }
     // EDIT AFTER HERE - WARNING: ABOVE THIS LINE MAY BE REGENERATED AND YOU MAY LOSE CODE\n\n\n\n\n\n\n\n

@@ -5,11 +5,14 @@ namespace NextDeveloper\IAM\Services\AbstractServices;
 use Illuminate\Http\Request;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
-use NextDeveloper\Events\Services\Events;
+use Illuminate\Support\Str;
+use NextDeveloper\IAM\Helpers\UserHelper;
+use NextDeveloper\Commons\Common\Cache\CacheHelper;
 use NextDeveloper\Commons\Helpers\DatabaseHelper;
 use NextDeveloper\IAM\Database\Models\Accounts;
 use NextDeveloper\IAM\Database\Filters\AccountsQueryFilter;
 use NextDeveloper\Commons\Exceptions\ModelNotFoundException;
+use NextDeveloper\Events\Services\Events;
 
 /**
  * This class is responsible from managing the data for Accounts
@@ -148,7 +151,7 @@ class AbstractAccountsService
                 $data['iam_account_type_id']
             );
         }
-
+    
         try {
             $model = Accounts::create($data);
         } catch(\Exception $e) {
@@ -213,8 +216,8 @@ class AbstractAccountsService
                 $data['iam_account_type_id']
             );
         }
-
-        event(new AccountsUpdatingEvent($model));
+    
+        Events::fire('updating:NextDeveloper\IAM\Accounts', $model);
 
         try {
             $isUpdated = $model->update($data);

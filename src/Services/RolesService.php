@@ -32,7 +32,9 @@ class RolesService extends AbstractRolesService {
      */
     public static function getRole(IAuthorizationRole $role) : Roles
     {
-        $Roles = Roles::where('name', $role::NAME)->first();
+        $Roles = Roles::withoutGlobalScope(AuthorizationScope::class)
+            ->where('name', $role::NAME)
+            ->first();
 
         if(!$Roles) {
             $Roles = RolesService::createRoleFromScope($role);
@@ -114,6 +116,12 @@ class RolesService extends AbstractRolesService {
             ->where('iam_user_id', $user->id)
             ->where('is_active', 1)
             ->first();
+
+        if(!$userRoleRelation) {
+            $role = self::getRole(new MemberRole());
+
+            self::assignUserToRole($user, $role);
+        }
 
         $role = Roles::withoutGlobalScope(AuthorizationScope::class)
             ->where('id', $userRoleRelation->iam_role_id)

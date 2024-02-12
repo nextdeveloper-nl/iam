@@ -12,6 +12,7 @@ use NextDeveloper\Commons\Helpers\DatabaseHelper;
 use NextDeveloper\IAM\Database\Models\RoleUsers;
 use NextDeveloper\IAM\Database\Filters\RoleUsersQueryFilter;
 use NextDeveloper\Commons\Exceptions\ModelNotFoundException;
+use NextDeveloper\Events\Services\Events;
 
 /**
  * This class is responsible from managing the data for RoleUsers
@@ -204,7 +205,7 @@ class AbstractRoleUsersService
             );
         }
     
-        event(new RoleUsersUpdatingEvent($model));
+        Events::fire('updating:NextDeveloper\IAM\RoleUsers', $model);
 
         try {
             $isUpdated = $model->update($data);

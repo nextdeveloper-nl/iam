@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Model;
 use NextDeveloper\Commons\Database\Traits\Filterable;
 use NextDeveloper\Communication\Database\Traits\SendEmail;
 use NextDeveloper\Communication\Database\Traits\SendNotification;
+use NextDeveloper\Communication\Database\Traits\SendSMS;
 use NextDeveloper\IAM\Database\Observers\UsersObserver;
 use NextDeveloper\Commons\Database\Traits\UuidId;
 use NextDeveloper\Commons\Common\Cache\Traits\CleanCache;
@@ -67,11 +68,12 @@ class Users extends Model
     'nin' => 'string',
     'common_language_id' => 'integer',
     'common_country_id' => 'integer',
+    'is_robot' => 'boolean',
+    'phone_number' => 'string',
+    'tags' => \NextDeveloper\Commons\Database\Casts\TextArray::class,
     'created_at' => 'datetime',
     'updated_at' => 'datetime',
     'deleted_at' => 'datetime',
-    'is_robot' => 'boolean',
-    'phone_number' => 'string',
     ];
 
     /**
@@ -138,11 +140,7 @@ class Users extends Model
     use Authenticatable;
     use SendEmail;
     use SendNotification;
-
-
-
-
-
+    use SendSMS;
 
 
 

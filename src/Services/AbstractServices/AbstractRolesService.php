@@ -12,6 +12,7 @@ use NextDeveloper\Commons\Helpers\DatabaseHelper;
 use NextDeveloper\IAM\Database\Models\Roles;
 use NextDeveloper\IAM\Database\Filters\RolesQueryFilter;
 use NextDeveloper\Commons\Exceptions\ModelNotFoundException;
+use NextDeveloper\Events\Services\Events;
 
 /**
  * This class is responsible from managing the data for Roles
@@ -168,7 +169,7 @@ class AbstractRolesService
         $model = Roles::where('uuid', $id)->first();
 
         
-        event(new RolesUpdatingEvent($model));
+        Events::fire('updating:NextDeveloper\IAM\Roles', $model);
 
         try {
             $isUpdated = $model->update($data);

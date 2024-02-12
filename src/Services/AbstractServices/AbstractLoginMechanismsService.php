@@ -12,6 +12,7 @@ use NextDeveloper\Commons\Helpers\DatabaseHelper;
 use NextDeveloper\IAM\Database\Models\LoginMechanisms;
 use NextDeveloper\IAM\Database\Filters\LoginMechanismsQueryFilter;
 use NextDeveloper\Commons\Exceptions\ModelNotFoundException;
+use NextDeveloper\Events\Services\Events;
 
 /**
  * This class is responsible from managing the data for LoginMechanisms
@@ -180,7 +181,7 @@ class AbstractLoginMechanismsService
             );
         }
     
-        event(new LoginMechanismsUpdatingEvent($model));
+        Events::fire('updating:NextDeveloper\IAM\LoginMechanisms', $model);
 
         try {
             $isUpdated = $model->update($data);

@@ -12,6 +12,7 @@ use NextDeveloper\Commons\Helpers\DatabaseHelper;
 use NextDeveloper\IAM\Database\Models\Users;
 use NextDeveloper\IAM\Database\Filters\UsersQueryFilter;
 use NextDeveloper\Commons\Exceptions\ModelNotFoundException;
+use NextDeveloper\Events\Services\Events;
 
 /**
  * This class is responsible from managing the data for Users
@@ -204,7 +205,7 @@ class AbstractUsersService
             );
         }
     
-        event(new UsersUpdatingEvent($model));
+        Events::fire('updating:NextDeveloper\IAM\Users', $model);
 
         try {
             $isUpdated = $model->update($data);
