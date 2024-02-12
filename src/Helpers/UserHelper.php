@@ -84,7 +84,9 @@ class UserHelper
             throw new CannotFindUserException();
         }
 
-        $account = Accounts::where('iam_user_id', $user->id)->first();
+        $account = Accounts::withoutGlobalScopes()
+            ->where('iam_user_id', $user->id)
+            ->first();
 
         if(!$account) {
             $account = AccountsService::createInitialAccount($user);
@@ -119,9 +121,9 @@ class UserHelper
         //  We have user
         if($user) {
             //  We are checking if we have it in cache. If we have we will return it.
-            $current = Cache::get(
-                CacheHelper::getKey('Users', $user->uuid, 'CurrentAccount')
-            );
+//            $current = Cache::get(
+//                CacheHelper::getKey('Users', $user->uuid, 'CurrentAccount')
+//            );
 
             if($current)
                 return $current;
@@ -139,6 +141,7 @@ class UserHelper
 
                 //  Checking if the user has master account. If not we are creating a master account
                 if($masterAccount) {
+                    //  @todo: Here we need to check if user has this relation or not.
                     $relation = AccountUsers::create([
                         'iam_user_id'   =>  $user->id,
                         'iam_account_id'    =>  $masterAccount->id,
@@ -160,10 +163,10 @@ class UserHelper
             ->where('id', $relation->iam_account_id)
             ->first();
 
-        Cache::set(
-            CacheHelper::getKey('Users', $user->uuid, 'CurrentAccount'),
-            $current
-        );
+//        Cache::set(
+//            CacheHelper::getKey('Users', $user->uuid, 'CurrentAccount'),
+//            $current
+//        );
 
         return $current;
     }

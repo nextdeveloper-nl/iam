@@ -20,6 +20,7 @@ class AccountsCreateRequest extends AbstractFormRequest
         'description' => 'nullable|string',
         'iam_account_type_id' => 'required|exists:iam_account_types,uuid|uuid',
         'is_active' => 'boolean',
+        'tags' => '',
         ];
     }
     // EDIT AFTER HERE - WARNING: ABOVE THIS LINE MAY BE REGENERATED AND YOU MAY LOSE CODE\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n

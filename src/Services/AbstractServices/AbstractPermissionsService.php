@@ -12,6 +12,7 @@ use NextDeveloper\Commons\Helpers\DatabaseHelper;
 use NextDeveloper\IAM\Database\Models\Permissions;
 use NextDeveloper\IAM\Database\Filters\PermissionsQueryFilter;
 use NextDeveloper\Commons\Exceptions\ModelNotFoundException;
+use NextDeveloper\Events\Services\Events;
 
 /**
  * This class is responsible from managing the data for Permissions
@@ -168,7 +169,7 @@ class AbstractPermissionsService
         $model = Permissions::where('uuid', $id)->first();
 
         
-        event(new PermissionsUpdatingEvent($model));
+        Events::fire('updating:NextDeveloper\IAM\Permissions', $model);
 
         try {
             $isUpdated = $model->update($data);

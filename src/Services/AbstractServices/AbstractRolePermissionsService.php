@@ -12,6 +12,7 @@ use NextDeveloper\Commons\Helpers\DatabaseHelper;
 use NextDeveloper\IAM\Database\Models\RolePermissions;
 use NextDeveloper\IAM\Database\Filters\RolePermissionsQueryFilter;
 use NextDeveloper\Commons\Exceptions\ModelNotFoundException;
+use NextDeveloper\Events\Services\Events;
 
 /**
  * This class is responsible from managing the data for RolePermissions
@@ -192,7 +193,7 @@ class AbstractRolePermissionsService
             );
         }
     
-        event(new RolePermissionsUpdatingEvent($model));
+        Events::fire('updating:NextDeveloper\IAM\RolePermissions', $model);
 
         try {
             $isUpdated = $model->update($data);

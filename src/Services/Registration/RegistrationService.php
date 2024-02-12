@@ -3,6 +3,7 @@
 namespace NextDeveloper\IAM\Services\Registration;
 
 use App\Grants\OneTimeEmail;
+use NextDeveloper\Events\Services\Events;
 use NextDeveloper\I18n\Helpers\i18n;
 use NextDeveloper\IAM\Authorization\Roles\MemberRole;
 use NextDeveloper\IAM\Database\Models\Users;
@@ -29,6 +30,8 @@ class RegistrationService
 
         $role = RolesService::createRoleFromScope(new MemberRole());
         RolesService::assignUserToRole($user, $role, $account);
+
+        Events::fire('registered:NextDeveloper\IAM\Users', $user);
 
         return $user;
     }

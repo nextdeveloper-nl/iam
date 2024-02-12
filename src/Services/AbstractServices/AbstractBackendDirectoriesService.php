@@ -12,6 +12,7 @@ use NextDeveloper\Commons\Helpers\DatabaseHelper;
 use NextDeveloper\IAM\Database\Models\BackendDirectories;
 use NextDeveloper\IAM\Database\Filters\BackendDirectoriesQueryFilter;
 use NextDeveloper\Commons\Exceptions\ModelNotFoundException;
+use NextDeveloper\Events\Services\Events;
 
 /**
  * This class is responsible from managing the data for BackendDirectories
@@ -192,7 +193,7 @@ class AbstractBackendDirectoriesService
             );
         }
     
-        event(new BackendDirectoriesUpdatingEvent($model));
+        Events::fire('updating:NextDeveloper\IAM\BackendDirectories', $model);
 
         try {
             $isUpdated = $model->update($data);

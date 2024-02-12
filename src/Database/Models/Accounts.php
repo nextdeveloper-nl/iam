@@ -61,6 +61,7 @@ class Accounts extends Model
     'description' => 'string',
     'iam_account_type_id' => 'integer',
     'is_active' => 'boolean',
+    'tags' => \NextDeveloper\Commons\Database\Casts\TextArray::class,
     'created_at' => 'datetime',
     'updated_at' => 'datetime',
     'deleted_at' => 'datetime',
@@ -130,6 +131,10 @@ class Accounts extends Model
     {
         return $this->belongsToMany(Accounts::class, 'iam_account_user', 'iam_account_id', 'iam_user_id');
     }
+
+
+
+
 
 
 

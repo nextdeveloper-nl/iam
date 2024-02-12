@@ -12,6 +12,7 @@ use NextDeveloper\Commons\Helpers\DatabaseHelper;
 use NextDeveloper\IAM\Database\Models\AccountUsers;
 use NextDeveloper\IAM\Database\Filters\AccountUsersQueryFilter;
 use NextDeveloper\Commons\Exceptions\ModelNotFoundException;
+use NextDeveloper\Events\Services\Events;
 
 /**
  * This class is responsible from managing the data for AccountUsers
@@ -192,7 +193,7 @@ class AbstractAccountUsersService
             );
         }
     
-        event(new AccountUsersUpdatingEvent($model));
+        Events::fire('updating:NextDeveloper\IAM\AccountUsers', $model);
 
         try {
             $isUpdated = $model->update($data);
