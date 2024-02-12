@@ -19,12 +19,10 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class AccountUsers extends Model
 {
     use Filterable, UuidId, CleanCache, Taggable;
-    use SoftDeletes;
 
+    public $timestamps = false;
 
-    public $timestamps = true;
-
-    protected $table = 'iam_account_users';
+    protected $table = 'iam_account_user';
 
 
     /**
