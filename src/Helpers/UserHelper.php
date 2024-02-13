@@ -97,6 +97,21 @@ class UserHelper
     }
 
     /**
+     * Returns the account by Id
+     *
+     * @param $accountId
+     * @return Accounts|null
+     */
+    public static function getAccountById($accountId) : ?Accounts
+    {
+        $account = Accounts::withoutGlobalScopes()
+            ->where('id', $accountId)
+            ->first();
+
+        return $account;
+    }
+
+    /**
      * Returns all accounts that the user is part of.
      *
      * @param Users $user
