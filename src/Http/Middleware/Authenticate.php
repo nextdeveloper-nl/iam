@@ -10,6 +10,10 @@ class Authenticate extends Middleware
 {
     public function handle($request, Closure $next, ...$guards)
     {
+        //  Using this because when we dont return OPTIONS http 200 then browsers are not sending the actual request
+        if($request->getMethod() == "OPTIONS")
+            return $next($request);
+
         if (!UserHelper::me()) {
             return response()->json([
                 'errors' => [
