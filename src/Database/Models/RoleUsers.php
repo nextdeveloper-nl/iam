@@ -19,7 +19,6 @@ class RoleUsers extends Model
 {
     use Filterable, UuidId, CleanCache, Taggable;
 
-
     public $timestamps = false;
 
     protected $table = 'iam_role_user';

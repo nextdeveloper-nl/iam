@@ -14,6 +14,10 @@ class MemberRole extends AbstractRole implements IAuthorizationRole
 
     public const LEVEL = 254;
 
+    public const DESCRIPTION = 'Member';
+
+    public const DB_PREFIX = '*';
+
     /**
      * Applies basic member role sql
      *
@@ -69,5 +73,10 @@ class MemberRole extends AbstractRole implements IAuthorizationRole
     public function iamUserTable(Builder $builder, Model $model)
     {
 
+    }
+
+    public function getDbPrefix()
+    {
+        return self::DB_PREFIX;
     }
 }

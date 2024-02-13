@@ -54,24 +54,53 @@ class AuthorizationScope implements Scope
 
         $scope = $this->getAnonymous();
 
-        if(UserHelper::currentRole()) {
-            $scope = $this->getDefault();
-            Log::debug('[AuthorizationScope] My user has role. Applying default: ' . get_class($scope));
-        }
+        $roles = UserHelper::getRoles();
 
-        Log::debug('[AuthorizationScope] Checking if the role is applied to this model.');
-        //  If we don't check if the role is applied then we may have a recursive loop here !!!
-        if($this->isRoleApplied($builder, $model)) {
+        //  Here we are exiting if we dont have any roles. Because we don't need to apply any role to the model.
+        if(!$roles) {
+            $scope = $this->getAnonymous();
+            Log::debug('[AuthorizationScope] My user has no role. Applying: ' . get_class($scope));
+
+            $scope->apply($builder, $model);
             return;
         }
 
-        $model->setHidden([
-            'is_authorized' => true
-        ]);
+        foreach ($roles as $role) {
+            if(!$role->class) {
+                UserHelper::removeFromRole($role);
+                continue;
+            }
 
-        Log::debug('[AuthorizationScope] Applying role: ' . get_class($scope));
-        Log::debug('[AuthorizationScope] Applying to model: ' . $model->getTable());
-        $scope->apply($builder, $model);
+            $role = app($role->class);
+
+            Log::debug('[AuthorizationScope] Testing our role against the model: ' . get_class($role)
+                . ' - ' . $model->getTable());
+
+            Log::debug('[AuthorizationScope] The result of canBeApplied is: ' . $role->canBeApplied($model->getTable()) === true ? 'true' : 'false');
+
+            if($role->canBeApplied($model->getTable())) {
+                $scope = $role;
+                Log::debug('[AuthorizationScope] My user has role. Applying: ' . get_class($scope));
+
+                if($this->isRoleApplied($builder, $model)) {
+                    return;
+                }
+
+                $model->setHidden([
+                    'is_authorized' => true
+                ]);
+
+                Log::debug('[AuthorizationScope] Applying role: ' . get_class($scope));
+                Log::debug('[AuthorizationScope] Applying to model: ' . $model->getTable());
+
+                $scope->apply($builder, $model);
+                return;
+            }
+        }
+
+        Log::debug('[AuthorizationScope] Seems like I cannot apply any role, that is why I am adding anonymous role');
+
+        $this->getAnonymous()->apply($builder, $model);
     }
 
     /**

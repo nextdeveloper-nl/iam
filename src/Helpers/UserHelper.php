@@ -55,6 +55,62 @@ class UserHelper
         return $user;
     }
 
+    public static function currentUser()
+    {
+        return self::me();
+    }
+
+    /**
+     * This function finds the user by the given id and returns the user object.
+     *
+     * @param $userId
+     * @return void
+     */
+    public static function setUserById($userId) {
+        $user = Users::withoutGlobalScopes()
+            ->where('id', $userId)
+            ->first();
+
+        return $user;
+    }
+
+    /**
+     * Adds user to the current account. This function automatically adds the user to the master account of the user
+     * and does not asks for approval. So if you are inviting a user to this account, you should NOT use this function.
+     *
+     * @param Users $user
+     * @param Accounts|null $account
+     * @return AccountUsers
+     */
+    public static function addUserToCurrentAccount(Users $user, Accounts $account = null) : AccountUsers
+    {
+        if(!$account)
+            $account = self::currentAccount();
+
+        $relation = AccountUsers::create([
+            'iam_user_id'   =>  $user->id,
+            'iam_account_id'    =>  $account->id,
+            'is_active'     =>  1
+        ]);
+
+        return $relation;
+    }
+
+    /**
+     * Returns the account by Id
+     *
+     * @param $accountId
+     * @return Accounts|null
+     */
+    public static function getAccountById($accountId) : ?Accounts
+    {
+        $account = Accounts::withoutGlobalScopes()
+            ->where('id', $accountId)
+            ->first();
+
+        return $account;
+    }
+
     /**
      * Returns all accounts that the user is part of.
      *
@@ -130,7 +186,7 @@ class UserHelper
 
             //  We are checking about the relation
             $relation = AccountUsers::withoutGlobalScope(AuthorizationScope::class)
-                ->where('id', $user->id)
+                ->where('iam_user_id', $user->id)
                 ->where('is_active', 1)
                 ->first();
 
@@ -288,6 +344,34 @@ class UserHelper
         );
 
         return $role;
+    }
+
+    /**
+     * Returns the roles of the user
+     *
+     * @param Users|null $user
+     * @return Roles|null
+     */
+    public static function getRoles(Users $user = null) : ?Collection
+    {
+        if(!$user)
+            $user = self::me();
+
+        $roles = RolesService::getUserRoles($user, self::currentAccount($user));
+
+        return $roles;
+    }
+
+    public static function removeFromRole($role, Users $users = null) :bool {
+        if(!$users)
+            $users = self::me();
+
+        if(class_basename($role) == 'UserRoles')
+            $role = Roles::withoutGlobalScopes()->where('uuid', $role->uuid)->first();
+
+        $sql = DB::raw('delete from role_users where iam_user_id = ' . $users->id . ' and iam_role_id = ' . $role->id . ';');
+
+        return true;
     }
 
     public static function switchToRoleByRoleId(Users $user = null, $roleId) : ?Roles
