@@ -19,6 +19,7 @@ class RoleUsers extends Model
 {
     use Filterable, UuidId, CleanCache, Taggable;
 
+
     public $timestamps = false;
 
     protected $table = 'iam_role_user';
@@ -112,6 +113,9 @@ class RoleUsers extends Model
     }
 
     // EDIT AFTER HERE - WARNING: ABOVE THIS LINE MAY BE REGENERATED AND YOU MAY LOSE CODE\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n
+
+
+
 
 
 
