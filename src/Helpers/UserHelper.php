@@ -7,8 +7,10 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Validation\UnauthorizedException;
 use NextDeveloper\Commons\Common\Cache\CacheHelper;
 use NextDeveloper\Commons\Database\Models\Languages;
+use NextDeveloper\Events\Services\Events;
 use NextDeveloper\IAM\Database\Models\AccountUsers;
 use NextDeveloper\IAM\Database\Models\Roles;
 use NextDeveloper\IAM\Database\Models\RoleUsers;
@@ -45,8 +47,9 @@ class UserHelper
 
         $token = DB::select("select * from oauth_access_tokens where id = ?", [$authorization]);
 
-        if(!$token)
+        if(!$token) {
             return null;
+        }
 
         $user = Users::withoutGlobalScopes()
             ->where('id', $token[0]->user_id)

@@ -21,5 +21,3 @@ class CheckPrivilege extends Middleware
         return $next($request);
     }
 }
-
-lo|tuxemlo|tuxem
