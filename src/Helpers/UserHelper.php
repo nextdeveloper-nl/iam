@@ -61,6 +61,42 @@ class UserHelper
     }
 
     /**
+     * This function finds the user by the given id and returns the user object.
+     *
+     * @param $userId
+     * @return void
+     */
+    public static function setUserById($userId) {
+        $user = Users::withoutGlobalScopes()
+            ->where('id', $userId)
+            ->first();
+
+        return $user;
+    }
+
+    /**
+     * Adds user to the current account. This function automatically adds the user to the master account of the user
+     * and does not asks for approval. So if you are inviting a user to this account, you should NOT use this function.
+     *
+     * @param Users $user
+     * @param Accounts|null $account
+     * @return AccountUsers
+     */
+    public static function addUserToCurrentAccount(Users $user, Accounts $account = null) : AccountUsers
+    {
+        if(!$account)
+            $account = self::currentAccount();
+
+        $relation = AccountUsers::create([
+            'iam_user_id'   =>  $user->id,
+            'iam_account_id'    =>  $account->id,
+            'is_active'     =>  1
+        ]);
+
+        return $relation;
+    }
+
+    /**
      * Returns all accounts that the user is part of.
      *
      * @param Users $user
