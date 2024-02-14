@@ -27,16 +27,22 @@ class AnonymousRole extends AbstractRole implements IAuthorizationRole
      */
     public function apply(Builder $builder, Model $model)
     {
-        // TODO: Implement apply() method.
-        $isAccountIdExists = DatabaseHelper::isColumnExists($model->getTable(), 'iam_account_id');
-        $isUserIdExists =  DatabaseHelper::isColumnExists($model->getTable(), 'iam_user_id');
+        $isPublicExists = DatabaseHelper::isColumnExists($model->getTable(), 'is_public');
 
-        if($isAccountIdExists) {
-            $builder->whereNull('iam_account_id');
-        }
+        if($isPublicExists) {
+            $builder->where('is_public', true);
+        } else {
+            // TODO: Implement apply() method.
+            $isAccountIdExists = DatabaseHelper::isColumnExists($model->getTable(), 'iam_account_id');
+            $isUserIdExists =  DatabaseHelper::isColumnExists($model->getTable(), 'iam_user_id');
 
-        if($isUserIdExists) {
-            $builder->whereNull('iam_user_id');
+            if($isAccountIdExists) {
+                $builder->whereNull('iam_account_id');
+            }
+
+            if($isUserIdExists) {
+                $builder->whereNull('iam_user_id');
+            }
         }
     }
 

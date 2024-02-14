@@ -76,7 +76,7 @@ class AuthorizationScope implements Scope
             Log::debug('[AuthorizationScope] Testing our role against the model: ' . get_class($role)
                 . ' - ' . $model->getTable());
 
-            Log::debug('[AuthorizationScope] The result of canBeApplied is: ' . $role->canBeApplied($model->getTable()) === true ? 'true' : 'false');
+            Log::debug('[AuthorizationScope] The result of canBeApplied is: ' . ($role->canBeApplied($model->getTable()) === true ? 'true' : 'false'));
 
             if($role->canBeApplied($model->getTable())) {
                 $scope = $role;
