@@ -9,13 +9,17 @@ use NextDeveloper\IAM\Database\Models\Users;
 use NextDeveloper\IAM\Services\AbstractServices\AbstractLoginMechanismsService;
 
 /**
-* This class is responsible from managing the data for LoginMechanisms
-*
-* Class LoginMechanismsService.
-*
-* @package NextDeveloper\IAM\Database\Models
-*/
-class LoginMechanismsService extends AbstractLoginMechanismsService {
+ * This class is responsible from managing the data for LoginMechanisms
+ *
+ * Class LoginMechanismsService.
+ *
+ * @package NextDeveloper\IAM\Database\Models
+ */
+class LoginMechanismsService extends AbstractLoginMechanismsService
+{
+
+    // EDIT AFTER HERE - WARNING: ABOVE THIS LINE MAY BE REGENERATED AND YOU MAY LOSE CODE
+
 
     private $_user;
 

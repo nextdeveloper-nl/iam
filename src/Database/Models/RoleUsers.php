@@ -11,9 +11,16 @@ use NextDeveloper\Commons\Common\Cache\Traits\CleanCache;
 use NextDeveloper\Commons\Database\Traits\Taggable;
 
 /**
- * Class RoleUsers.
+ * RoleUsers model.
  *
- * @package NextDeveloper\IAM\Database\Models
+ * @package  NextDeveloper\IAM\Database\Models
+ * @property integer $id
+ * @property string $uuid
+ * @property integer $iam_role_id
+ * @property integer $iam_user_id
+ * @property integer $iam_account_id
+ * @property boolean $is_active
+ * @property $role_data
  */
 class RoleUsers extends Model
 {
@@ -29,6 +36,14 @@ class RoleUsers extends Model
      @var array
      */
     protected $guarded = [];
+
+    protected $fillable = [
+            'iam_role_id',
+            'iam_user_id',
+            'iam_account_id',
+            'is_active',
+            'role_data',
+    ];
 
     /**
       Here we have the fulltext fields. We can use these for fulltext search if enabled.
@@ -113,6 +128,7 @@ class RoleUsers extends Model
     }
 
     // EDIT AFTER HERE - WARNING: ABOVE THIS LINE MAY BE REGENERATED AND YOU MAY LOSE CODE\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n
+
 
 
 

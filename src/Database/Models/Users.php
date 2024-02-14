@@ -16,9 +16,29 @@ use NextDeveloper\Commons\Common\Cache\Traits\CleanCache;
 use NextDeveloper\Commons\Database\Traits\Taggable;
 
 /**
- * Class Users.
+ * Users model.
  *
- * @package NextDeveloper\IAM\Database\Models
+ * @package  NextDeveloper\IAM\Database\Models
+ * @property integer $id
+ * @property string $uuid
+ * @property string $name
+ * @property string $surname
+ * @property string $email
+ * @property string $fullname
+ * @property string $username
+ * @property string $about
+ * @property string $pronoun
+ * @property \Carbon\Carbon $birthday
+ * @property string $nin
+ * @property integer $common_language_id
+ * @property integer $common_country_id
+ * @property boolean $is_robot
+ * @property integer $iam_user_id
+ * @property string $phone_number
+ * @property array $tags
+ * @property \Carbon\Carbon $created_at
+ * @property \Carbon\Carbon $updated_at
+ * @property \Carbon\Carbon $deleted_at
  */
 class Users extends Model
 {
@@ -35,6 +55,24 @@ class Users extends Model
      @var array
      */
     protected $guarded = [];
+
+    protected $fillable = [
+            'name',
+            'surname',
+            'email',
+            'fullname',
+            'username',
+            'about',
+            'pronoun',
+            'birthday',
+            'nin',
+            'common_language_id',
+            'common_country_id',
+            'is_robot',
+            'iam_user_id',
+            'phone_number',
+            'tags',
+    ];
 
     /**
       Here we have the fulltext fields. We can use these for fulltext search if enabled.
@@ -141,6 +179,7 @@ class Users extends Model
     use SendEmail;
     use SendNotification;
     use SendSMS;
+
 
 
 

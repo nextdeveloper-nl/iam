@@ -12,9 +12,21 @@ use NextDeveloper\Commons\Common\Cache\Traits\CleanCache;
 use NextDeveloper\Commons\Database\Traits\Taggable;
 
 /**
- * Class LoginMechanisms.
+ * LoginMechanisms model.
  *
- * @package NextDeveloper\IAM\Database\Models
+ * @package  NextDeveloper\IAM\Database\Models
+ * @property integer $id
+ * @property string $uuid
+ * @property integer $iam_user_id
+ * @property $login_client
+ * @property $login_data
+ * @property string $login_mechanism
+ * @property boolean $is_latest
+ * @property boolean $is_default
+ * @property boolean $is_active
+ * @property \Carbon\Carbon $created_at
+ * @property \Carbon\Carbon $updated_at
+ * @property \Carbon\Carbon $deleted_at
  */
 class LoginMechanisms extends Model
 {
@@ -31,6 +43,16 @@ class LoginMechanisms extends Model
      @var array
      */
     protected $guarded = [];
+
+    protected $fillable = [
+            'iam_user_id',
+            'login_client',
+            'login_data',
+            'login_mechanism',
+            'is_latest',
+            'is_default',
+            'is_active',
+    ];
 
     /**
       Here we have the fulltext fields. We can use these for fulltext search if enabled.
@@ -122,6 +144,7 @@ class LoginMechanisms extends Model
     }
 
     // EDIT AFTER HERE - WARNING: ABOVE THIS LINE MAY BE REGENERATED AND YOU MAY LOSE CODE\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n
+
 
 
 

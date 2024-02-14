@@ -12,9 +12,36 @@ use NextDeveloper\Commons\Common\Cache\Traits\CleanCache;
 use NextDeveloper\Commons\Database\Traits\Taggable;
 
 /**
- * Class BackendDirectories.
+ * BackendDirectories model.
  *
- * @package NextDeveloper\IAM\Database\Models
+ * @package  NextDeveloper\IAM\Database\Models
+ * @property integer $id
+ * @property string $uuid
+ * @property integer $iam_account_id
+ * @property integer $iaas_virtual_machine_id
+ * @property string $name
+ * @property $type
+ * @property $ldap_server_name
+ * @property $ldap_server_url
+ * @property $ldap_server_port
+ * @property $ldap_base_dn
+ * @property $ldap_bind_username
+ * @property $ldap_bind_password
+ * @property string $default_filter
+ * @property string $default_memberof
+ * @property string $default_group
+ * @property string $default_userid_field
+ * @property string $default_password_field
+ * @property string $default_email_field
+ * @property string $default_alias_field
+ * @property string $default_name_field
+ * @property string $default_surname_field
+ * @property boolean $is_connected
+ * @property boolean $is_connection_secure
+ * @property boolean $is_usable
+ * @property \Carbon\Carbon $created_at
+ * @property \Carbon\Carbon $updated_at
+ * @property \Carbon\Carbon $deleted_at
  */
 class BackendDirectories extends Model
 {
@@ -31,6 +58,31 @@ class BackendDirectories extends Model
      @var array
      */
     protected $guarded = [];
+
+    protected $fillable = [
+            'iam_account_id',
+            'iaas_virtual_machine_id',
+            'name',
+            'type',
+            'ldap_server_name',
+            'ldap_server_url',
+            'ldap_server_port',
+            'ldap_base_dn',
+            'ldap_bind_username',
+            'ldap_bind_password',
+            'default_filter',
+            'default_memberof',
+            'default_group',
+            'default_userid_field',
+            'default_password_field',
+            'default_email_field',
+            'default_alias_field',
+            'default_name_field',
+            'default_surname_field',
+            'is_connected',
+            'is_connection_secure',
+            'is_usable',
+    ];
 
     /**
       Here we have the fulltext fields. We can use these for fulltext search if enabled.
@@ -131,6 +183,7 @@ class BackendDirectories extends Model
     }
 
     // EDIT AFTER HERE - WARNING: ABOVE THIS LINE MAY BE REGENERATED AND YOU MAY LOSE CODE
+
 
 
 
