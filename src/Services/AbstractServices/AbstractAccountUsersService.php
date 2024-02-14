@@ -127,6 +127,18 @@ class AbstractAccountUsersService
      */
     public static function create(array $data)
     {
+        if (array_key_exists('common_language_id', $data)) {
+            $data['common_language_id'] = DatabaseHelper::uuidToId(
+                '\NextDeveloper\Commons\Database\Models\Languages',
+                $data['common_language_id']
+            );
+        }
+        if (array_key_exists('common_country_id', $data)) {
+            $data['common_country_id'] = DatabaseHelper::uuidToId(
+                '\NextDeveloper\Commons\Database\Models\Countries',
+                $data['common_country_id']
+            );
+        }
         if (array_key_exists('iam_user_id', $data)) {
             $data['iam_user_id'] = DatabaseHelper::uuidToId(
                 '\NextDeveloper\IAM\Database\Models\Users',
@@ -140,6 +152,14 @@ class AbstractAccountUsersService
             );
         }
     
+        if(!array_key_exists('iam_account_id', $data)) {
+            $data['iam_account_id'] = UserHelper::currentAccount()->id;
+        }
+
+        if(!array_key_exists('iam_user_id', $data)) {
+            $data['iam_user_id']    = UserHelper::me()->id;
+        }
+
         try {
             $model = AccountUsers::create($data);
         } catch(\Exception $e) {
@@ -180,6 +200,18 @@ class AbstractAccountUsersService
     {
         $model = AccountUsers::where('uuid', $id)->first();
 
+        if (array_key_exists('common_language_id', $data)) {
+            $data['common_language_id'] = DatabaseHelper::uuidToId(
+                '\NextDeveloper\Commons\Database\Models\Languages',
+                $data['common_language_id']
+            );
+        }
+        if (array_key_exists('common_country_id', $data)) {
+            $data['common_country_id'] = DatabaseHelper::uuidToId(
+                '\NextDeveloper\Commons\Database\Models\Countries',
+                $data['common_country_id']
+            );
+        }
         if (array_key_exists('iam_user_id', $data)) {
             $data['iam_user_id'] = DatabaseHelper::uuidToId(
                 '\NextDeveloper\IAM\Database\Models\Users',
