@@ -11,16 +11,21 @@ use NextDeveloper\Commons\Common\Cache\Traits\CleanCache;
 use NextDeveloper\Commons\Database\Traits\Taggable;
 
 /**
- * Class LoginLogs.
+ * LoginLogs model.
  *
- * @package NextDeveloper\IAM\Database\Models
+ * @package  NextDeveloper\IAM\Database\Models
+ * @property integer $id
+ * @property string $uuid
+ * @property integer $iam_user_id
+ * @property $log
+ * @property \Carbon\Carbon $created_at
  */
 class LoginLogs extends Model
 {
     use Filterable, UuidId, CleanCache, Taggable;
 
 
-    public $timestamps = true;
+    public $timestamps = false;
 
     protected $table = 'iam_login_logs';
 
@@ -29,6 +34,11 @@ class LoginLogs extends Model
      @var array
      */
     protected $guarded = [];
+
+    protected $fillable = [
+            'iam_user_id',
+            'log',
+    ];
 
     /**
       Here we have the fulltext fields. We can use these for fulltext search if enabled.
@@ -112,6 +122,9 @@ class LoginLogs extends Model
     }
 
     // EDIT AFTER HERE - WARNING: ABOVE THIS LINE MAY BE REGENERATED AND YOU MAY LOSE CODE\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n
+
+
+
 
 
 

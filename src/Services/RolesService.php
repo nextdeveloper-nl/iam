@@ -17,15 +17,17 @@ use NextDeveloper\IAM\Helpers\UserHelper;
 use NextDeveloper\IAM\Services\AbstractServices\AbstractRolesService;
 
 /**
-* This class is responsible from managing the data for Roles
-*
-* Class RolesService.
-*
-* @package NextDeveloper\IAM\Database\Models
-*/
-class RolesService extends AbstractRolesService {
+ * This class is responsible from managing the data for Roles
+ *
+ * Class RolesService.
+ *
+ * @package NextDeveloper\IAM\Database\Models
+ */
+class RolesService extends AbstractRolesService
+{
 
     // EDIT AFTER HERE - WARNING: ABOVE THIS LINE MAY BE REGENERATED AND YOU MAY LOSE CODE
+
 
     /**
      * Returns the role.
@@ -226,5 +228,4 @@ class RolesService extends AbstractRolesService {
 
         return $roles;
     }
-
 }

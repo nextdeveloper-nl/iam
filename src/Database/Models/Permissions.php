@@ -11,9 +11,20 @@ use NextDeveloper\Commons\Common\Cache\Traits\CleanCache;
 use NextDeveloper\Commons\Database\Traits\Taggable;
 
 /**
- * Class Permissions.
+ * Permissions model.
  *
- * @package NextDeveloper\IAM\Database\Models
+ * @package  NextDeveloper\IAM\Database\Models
+ * @property integer $id
+ * @property string $uuid
+ * @property string $namespace
+ * @property string $service
+ * @property string $method
+ * @property string $name
+ * @property boolean $is_active
+ * @property integer $created_by
+ * @property integer $updated_by
+ * @property \Carbon\Carbon $created_at
+ * @property \Carbon\Carbon $updated_at
  */
 class Permissions extends Model
 {
@@ -29,6 +40,16 @@ class Permissions extends Model
      @var array
      */
     protected $guarded = [];
+
+    protected $fillable = [
+            'namespace',
+            'service',
+            'method',
+            'name',
+            'is_active',
+            'created_by',
+            'updated_by',
+    ];
 
     /**
       Here we have the fulltext fields. We can use these for fulltext search if enabled.
@@ -120,6 +141,9 @@ class Permissions extends Model
     }
 
     // EDIT AFTER HERE - WARNING: ABOVE THIS LINE MAY BE REGENERATED AND YOU MAY LOSE CODE\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n
+
+
+
 
 
 

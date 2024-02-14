@@ -11,9 +11,18 @@ use NextDeveloper\Commons\Common\Cache\Traits\CleanCache;
 use NextDeveloper\Commons\Database\Traits\Taggable;
 
 /**
- * Class RolePermissions.
+ * RolePermissions model.
  *
- * @package NextDeveloper\IAM\Database\Models
+ * @package  NextDeveloper\IAM\Database\Models
+ * @property integer $id
+ * @property string $uuid
+ * @property integer $iam_role_id
+ * @property integer $iam_permission_id
+ * @property boolean $is_active
+ * @property integer $created_by
+ * @property \Carbon\Carbon $created_at
+ * @property integer $updated_by
+ * @property \Carbon\Carbon $updated_at
  */
 class RolePermissions extends Model
 {
@@ -29,6 +38,14 @@ class RolePermissions extends Model
      @var array
      */
     protected $guarded = [];
+
+    protected $fillable = [
+            'iam_role_id',
+            'iam_permission_id',
+            'is_active',
+            'created_by',
+            'updated_by',
+    ];
 
     /**
       Here we have the fulltext fields. We can use these for fulltext search if enabled.
@@ -118,6 +135,9 @@ class RolePermissions extends Model
     }
 
     // EDIT AFTER HERE - WARNING: ABOVE THIS LINE MAY BE REGENERATED AND YOU MAY LOSE CODE\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n
+
+
+
 
 
 

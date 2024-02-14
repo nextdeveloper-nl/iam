@@ -14,9 +14,23 @@ use NextDeveloper\Commons\Common\Cache\Traits\CleanCache;
 use NextDeveloper\Commons\Database\Traits\Taggable;
 
 /**
- * Class Accounts.
+ * Accounts model.
  *
- * @package NextDeveloper\IAM\Database\Models
+ * @package  NextDeveloper\IAM\Database\Models
+ * @property integer $id
+ * @property string $uuid
+ * @property string $name
+ * @property integer $common_domain_id
+ * @property integer $common_country_id
+ * @property $phone_number
+ * @property string $description
+ * @property integer $iam_user_id
+ * @property integer $iam_account_type_id
+ * @property boolean $is_active
+ * @property array $tags
+ * @property \Carbon\Carbon $created_at
+ * @property \Carbon\Carbon $updated_at
+ * @property \Carbon\Carbon $deleted_at
  */
 class Accounts extends Model
 {
@@ -33,6 +47,18 @@ class Accounts extends Model
      @var array
      */
     protected $guarded = [];
+
+    protected $fillable = [
+            'name',
+            'common_domain_id',
+            'common_country_id',
+            'phone_number',
+            'description',
+            'iam_user_id',
+            'iam_account_type_id',
+            'is_active',
+            'tags',
+    ];
 
     /**
       Here we have the fulltext fields. We can use these for fulltext search if enabled.
@@ -131,6 +157,9 @@ class Accounts extends Model
     {
         return $this->belongsToMany(Accounts::class, 'iam_account_user', 'iam_account_id', 'iam_user_id');
     }
+
+
+
 
 
 

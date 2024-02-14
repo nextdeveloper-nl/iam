@@ -11,9 +11,14 @@ use NextDeveloper\Commons\Common\Cache\Traits\CleanCache;
 use NextDeveloper\Commons\Database\Traits\Taggable;
 
 /**
- * Class AccountTypes.
+ * AccountTypes model.
  *
- * @package NextDeveloper\IAM\Database\Models
+ * @package  NextDeveloper\IAM\Database\Models
+ * @property integer $id
+ * @property string $uuid
+ * @property string $name
+ * @property string $description
+ * @property integer $common_country_id
  */
 class AccountTypes extends Model
 {
@@ -29,6 +34,12 @@ class AccountTypes extends Model
      @var array
      */
     protected $guarded = [];
+
+    protected $fillable = [
+            'name',
+            'description',
+            'common_country_id',
+    ];
 
     /**
       Here we have the fulltext fields. We can use these for fulltext search if enabled.
@@ -113,6 +124,9 @@ class AccountTypes extends Model
     }
 
     // EDIT AFTER HERE - WARNING: ABOVE THIS LINE MAY BE REGENERATED AND YOU MAY LOSE CODE\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n
+
+
+
 
 
 

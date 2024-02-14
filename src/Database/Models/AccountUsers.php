@@ -12,9 +12,30 @@ use NextDeveloper\Commons\Database\Traits\Taggable;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 /**
- * Class AccountUsers.
+ * AccountUsers model.
  *
- * @package NextDeveloper\IAM\Database\Models
+ * @package  NextDeveloper\IAM\Database\Models
+ * @property integer $id
+ * @property string $uuid
+ * @property string $name
+ * @property string $surname
+ * @property string $email
+ * @property string $fullname
+ * @property string $username
+ * @property string $about
+ * @property string $pronoun
+ * @property \Carbon\Carbon $birthday
+ * @property string $nin
+ * @property integer $common_language_id
+ * @property integer $common_country_id
+ * @property integer $iam_user_id
+ * @property \Carbon\Carbon $created_at
+ * @property \Carbon\Carbon $updated_at
+ * @property \Carbon\Carbon $deleted_at
+ * @property string $phone_number
+ * @property integer $iam_account_id
+ * @property boolean $is_active
+ * @property $session_data
  */
 class AccountUsers extends Model
 {
@@ -31,6 +52,25 @@ class AccountUsers extends Model
      @var array
      */
     protected $guarded = [];
+
+    protected $fillable = [
+            'name',
+            'surname',
+            'email',
+            'fullname',
+            'username',
+            'about',
+            'pronoun',
+            'birthday',
+            'nin',
+            'common_language_id',
+            'common_country_id',
+            'iam_user_id',
+            'phone_number',
+            'iam_account_id',
+            'is_active',
+            'session_data',
+    ];
 
     /**
       Here we have the fulltext fields. We can use these for fulltext search if enabled.
@@ -132,6 +172,12 @@ class AccountUsers extends Model
     }
 
     // EDIT AFTER HERE - WARNING: ABOVE THIS LINE MAY BE REGENERATED AND YOU MAY LOSE CODE\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n
+
+
+
+
+
+
 
 
 
