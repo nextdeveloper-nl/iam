@@ -91,6 +91,32 @@ class MemberRole extends AbstractRole implements IAuthorizationRole
 
     }
 
+    public function getModule()
+    {
+        return 'iam';
+    }
+
+    public function allowedOperations() :array
+    {
+        return [
+            'iam_accounts:read',
+            'iam_account_types:read',
+            'iam_users:read',
+            'iam_roles:update',
+            'iam_roles:delete',
+            'iam_roles:read',
+            'iam_permissions:read',
+            'iam_user_roles:read',
+            'iam_user_permissions:read',
+            'iam_role_permissions:read',
+            'iam_role_users:read',
+            'iam_account_users:read',
+            'iam_user_accounts:read',
+            'iam_account_users:read',
+            'iam_backend_directories:read'
+        ];
+    }
+
     public function canBeApplied($column)
     {
         if(self::DB_PREFIX === '*') {

@@ -46,6 +46,18 @@ class AnonymousRole extends AbstractRole implements IAuthorizationRole
         }
     }
 
+    public function getModule()
+    {
+        return 'iam';
+    }
+
+    public function allowedOperations() :array
+    {
+        return [
+            'iam_users:read'
+        ];
+    }
+
     public function canBeApplied($column)
     {
         if(self::DB_PREFIX === '*') {
