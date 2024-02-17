@@ -21,7 +21,19 @@ class SystemAdminRole extends AbstractRole implements IAuthorizationRole
         // TODO: Implement apply() method.
     }
 
-    public function canBeApplied($column)
+    public function getModule()
+    {
+        return 'iam';
+    }
+
+    public function allowedOperations() :array
+    {
+        return [
+            '*:*'
+        ];
+    }
+
+    public function canBeApplied($column) : bool
     {
         if(self::DB_PREFIX === '*') {
             return true;

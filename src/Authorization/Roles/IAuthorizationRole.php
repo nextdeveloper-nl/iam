@@ -26,4 +26,8 @@ interface IAuthorizationRole
     public function canBeApplied($column);
 
     public function getDbPrefix();
+
+    public function getModule();
+
+    public function allowedOperations() :array;
 }
