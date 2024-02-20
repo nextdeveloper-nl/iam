@@ -28,6 +28,7 @@ class UsersService extends AbstractUsersService
     // EDIT AFTER HERE - WARNING: ABOVE THIS LINE MAY BE REGENERATED AND YOU MAY LOSE CODE
 
 
+
     public static function get(UsersQueryFilter $filter = null, array $params = []) : Collection|LengthAwarePaginator {
         $user = UserHelper::me();
 
@@ -38,7 +39,7 @@ class UsersService extends AbstractUsersService
 
         $users = AccountUsers::filter($filter)
             ->where('iam_account_id', UserHelper::currentAccount()->id)
-            ->get();
+            ->paginate();
 
         return $users;
     }

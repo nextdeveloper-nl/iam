@@ -8,7 +8,6 @@ use NextDeveloper\Commons\Exceptions\CannotCreateModelException;
 use NextDeveloper\I18n\Helpers\i18n;
 use NextDeveloper\IAM\Database\Models\Accounts;
 use NextDeveloper\IAM\Database\Models\AccountTypes;
-use NextDeveloper\IAM\Database\Models\AccountUsers;
 use NextDeveloper\IAM\Database\Models\UserAccounts;
 use NextDeveloper\IAM\Database\Models\Users;
 use NextDeveloper\IAM\Events\Accounts\AccountsUpdatedEvent;
@@ -26,7 +25,6 @@ class AccountsService extends AbstractAccountsService
 {
 
     // EDIT AFTER HERE - WARNING: ABOVE THIS LINE MAY BE REGENERATED AND YOU MAY LOSE CODE
-
 
     public static function create(array $data) : Accounts
     {
