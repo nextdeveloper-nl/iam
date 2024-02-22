@@ -6,6 +6,7 @@ use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 use NextDeveloper\Commons\Exceptions\CannotCreateModelException;
 use NextDeveloper\I18n\Helpers\i18n;
+use NextDeveloper\IAM\Database\Filters\AccountsQueryFilter;
 use NextDeveloper\IAM\Database\Models\Accounts;
 use NextDeveloper\IAM\Database\Models\AccountTypes;
 use NextDeveloper\IAM\Database\Models\UserAccounts;
@@ -25,6 +26,20 @@ class AccountsService extends AbstractAccountsService
 {
 
     // EDIT AFTER HERE - WARNING: ABOVE THIS LINE MAY BE REGENERATED AND YOU MAY LOSE CODE
+    /**
+     * Custom get function for Accounts
+     *
+     * @param AccountsQueryFilter|null $filter
+     * @param array $params
+     * @return \Illuminate\Database\Eloquent\Collection|\Illuminate\Contracts\Pagination\LengthAwarePaginator
+     */
+    public static function get(AccountsQueryFilter $filter = null, array $params = []): \Illuminate\Database\Eloquent\Collection|\Illuminate\Contracts\Pagination\LengthAwarePaginator
+    {
+        $model = Accounts::filter($filter)
+            ->where('iam_user_id', UserHelper::me()->id);
+
+        return $model->paginate();
+    }
 
     public static function create(array $data) : Accounts
     {
