@@ -32,8 +32,6 @@ use NextDeveloper\Commons\Database\Traits\Taggable;
  * @property string $nin
  * @property integer $common_language_id
  * @property integer $common_country_id
- * @property boolean $is_robot
- * @property integer $iam_user_id
  * @property string $phone_number
  * @property array $tags
  * @property \Carbon\Carbon $created_at
@@ -70,8 +68,6 @@ class Users extends Model
             'nin',
             'common_language_id',
             'common_country_id',
-            'is_robot',
-            'iam_user_id',
             'phone_number',
             'tags',
             'photo_url',
@@ -110,7 +106,6 @@ class Users extends Model
     'nin' => 'string',
     'common_language_id' => 'integer',
     'common_country_id' => 'integer',
-    'is_robot' => 'boolean',
     'phone_number' => 'string',
     'tags' => \NextDeveloper\Commons\Database\Casts\TextArray::class,
     'created_at' => 'datetime',
@@ -185,6 +180,7 @@ class Users extends Model
     use SendEmail;
     use SendNotification;
     use SendSMS;
+
 
 
 

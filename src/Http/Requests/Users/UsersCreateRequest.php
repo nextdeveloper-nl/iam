@@ -24,7 +24,6 @@ class UsersCreateRequest extends AbstractFormRequest
         'nin' => 'nullable|string',
         'common_language_id' => 'nullable|exists:common_languages,uuid|uuid',
         'common_country_id' => 'nullable|exists:common_countries,uuid|uuid',
-        'is_robot' => 'boolean',
         'phone_number' => 'nullable|string',
         'tags' => '',
         'photo_url' => 'nullable|string',
