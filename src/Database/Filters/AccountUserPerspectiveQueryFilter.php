@@ -4,34 +4,14 @@ namespace NextDeveloper\IAM\Database\Filters;
 
 use Illuminate\Database\Eloquent\Builder;
 use NextDeveloper\Commons\Database\Filters\AbstractQueryFilter;
-            
+                
 
 /**
  * This class automatically puts where clause on database so that use can filter
  * data returned from the query.
  */
-class UsersQueryFilter extends AbstractQueryFilter
+class AccountUserPerspectiveQueryFilter extends AbstractQueryFilter
 {
-    /**
-     * Filter by tags
-     *
-     * @param  $values
-     * @return Builder
-     */
-    public function tags($values)
-    {
-        $tags = explode(',', $values);
-
-        $search = '';
-
-        for($i = 0; $i < count($tags); $i++) {
-            $search .= "'" . trim($tags[$i]) . "',";
-        }
-
-        $search = substr($search, 0, -1);
-
-        return $this->builder->whereRaw('tags @> ARRAY[' . $search . ']');
-    }
 
     /**
      * @var Builder
@@ -82,20 +62,10 @@ class UsersQueryFilter extends AbstractQueryFilter
     {
         return $this->builder->where('phone_number', 'like', '%' . $value . '%');
     }
-    
-    public function photoUrl($value)
-    {
-        return $this->builder->where('photo_url', 'like', '%' . $value . '%');
-    }
-    
-    public function profilePicture($value)
-    {
-        return $this->builder->where('profile_picture', 'like', '%' . $value . '%');
-    }
 
-    public function isRobot()
+    public function isActive()
     {
-        return $this->builder->where('is_robot', true);
+        return $this->builder->where('is_active', true);
     }
 
     public function birthdayStart($date)
@@ -165,5 +135,14 @@ class UsersQueryFilter extends AbstractQueryFilter
         }
     }
 
-    // EDIT AFTER HERE - WARNING: ABOVE THIS LINE MAY BE REGENERATED AND YOU MAY LOSE CODE\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n
+    public function iamAccountId($value)
+    {
+            $iamAccount = \NextDeveloper\IAM\Database\Models\Accounts::where('uuid', $value)->first();
+
+        if($iamAccount) {
+            return $this->builder->where('iam_account_id', '=', $iamAccount->id);
+        }
+    }
+
+    // EDIT AFTER HERE - WARNING: ABOVE THIS LINE MAY BE REGENERATED AND YOU MAY LOSE CODE
 }

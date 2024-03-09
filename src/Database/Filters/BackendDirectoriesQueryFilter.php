@@ -12,6 +12,7 @@ use NextDeveloper\Commons\Database\Filters\AbstractQueryFilter;
  */
 class BackendDirectoriesQueryFilter extends AbstractQueryFilter
 {
+
     /**
      * @var Builder
      */
@@ -71,43 +72,43 @@ class BackendDirectoriesQueryFilter extends AbstractQueryFilter
     {
         return $this->builder->where('is_connected', true);
     }
-    
+
     public function isConnectionSecure()
     {
         return $this->builder->where('is_connection_secure', true);
     }
-    
+
     public function isUsable()
     {
         return $this->builder->where('is_usable', true);
     }
-    
-    public function createdAtStart($date) 
+
+    public function createdAtStart($date)
     {
         return $this->builder->where('created_at', '>=', $date);
     }
 
-    public function createdAtEnd($date) 
+    public function createdAtEnd($date)
     {
         return $this->builder->where('created_at', '<=', $date);
     }
 
-    public function updatedAtStart($date) 
+    public function updatedAtStart($date)
     {
         return $this->builder->where('updated_at', '>=', $date);
     }
 
-    public function updatedAtEnd($date) 
+    public function updatedAtEnd($date)
     {
         return $this->builder->where('updated_at', '<=', $date);
     }
 
-    public function deletedAtStart($date) 
+    public function deletedAtStart($date)
     {
         return $this->builder->where('deleted_at', '>=', $date);
     }
 
-    public function deletedAtEnd($date) 
+    public function deletedAtEnd($date)
     {
         return $this->builder->where('deleted_at', '<=', $date);
     }

@@ -12,6 +12,7 @@ use NextDeveloper\Commons\Database\Filters\AbstractQueryFilter;
  */
 class PermissionsQueryFilter extends AbstractQueryFilter
 {
+
     /**
      * @var Builder
      */
@@ -49,7 +50,7 @@ class PermissionsQueryFilter extends AbstractQueryFilter
 
         return $this->builder->where('created_by', $operator, $value);
     }
-    
+
     public function updatedBy($value)
     {
         $operator = substr($value, 0, 1);
@@ -62,28 +63,28 @@ class PermissionsQueryFilter extends AbstractQueryFilter
 
         return $this->builder->where('updated_by', $operator, $value);
     }
-    
+
     public function isActive()
     {
         return $this->builder->where('is_active', true);
     }
-    
-    public function createdAtStart($date) 
+
+    public function createdAtStart($date)
     {
         return $this->builder->where('created_at', '>=', $date);
     }
 
-    public function createdAtEnd($date) 
+    public function createdAtEnd($date)
     {
         return $this->builder->where('created_at', '<=', $date);
     }
 
-    public function updatedAtStart($date) 
+    public function updatedAtStart($date)
     {
         return $this->builder->where('updated_at', '>=', $date);
     }
 
-    public function updatedAtEnd($date) 
+    public function updatedAtEnd($date)
     {
         return $this->builder->where('updated_at', '<=', $date);
     }

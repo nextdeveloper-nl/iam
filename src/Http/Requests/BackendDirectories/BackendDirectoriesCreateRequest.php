@@ -15,7 +15,7 @@ class BackendDirectoriesCreateRequest extends AbstractFormRequest
         return [
             'iaas_virtual_machine_id' => 'nullable|exists:iaas_virtual_machines,uuid|uuid',
         'name' => 'required|string',
-        'type' => '',
+        'iam_backend_types' => '',
         'ldap_server_name' => 'nullable',
         'ldap_server_url' => 'nullable',
         'ldap_server_port' => 'nullable',

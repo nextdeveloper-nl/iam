@@ -22,7 +22,7 @@ use NextDeveloper\Commons\Database\Traits\Taggable;
  * @property string $name
  * @property integer $common_domain_id
  * @property integer $common_country_id
- * @property $phone_number
+ * @property string $phone_number
  * @property string $description
  * @property integer $iam_user_id
  * @property integer $iam_account_type_id
@@ -84,6 +84,7 @@ class Accounts extends Model
     'name' => 'string',
     'common_domain_id' => 'integer',
     'common_country_id' => 'integer',
+    'phone_number' => 'string',
     'description' => 'string',
     'iam_account_type_id' => 'integer',
     'is_active' => 'boolean',
@@ -157,6 +158,7 @@ class Accounts extends Model
     {
         return $this->belongsToMany(Accounts::class, 'iam_account_user', 'iam_account_id', 'iam_user_id');
     }
+
 
 
 

@@ -29,7 +29,7 @@ class AbstractBackendDirectoriesTransformer extends AbstractTransformer
             'iam_account_id'  =>  $iamAccountId ? $iamAccountId->uuid : null,
             'iaas_virtual_machine_id'  =>  $iaasVirtualMachineId ? $iaasVirtualMachineId->uuid : null,
             'name'  =>  $model->name,
-            'type'  =>  $model->type,
+            'iam_backend_types'  =>  $model->iam_backend_types,
             'ldap_server_name'  =>  $model->ldap_server_name,
             'ldap_server_url'  =>  $model->ldap_server_url,
             'ldap_server_port'  =>  $model->ldap_server_port,
@@ -56,6 +56,7 @@ class AbstractBackendDirectoriesTransformer extends AbstractTransformer
     }
 
     // EDIT AFTER HERE - WARNING: ABOVE THIS LINE MAY BE REGENERATED AND YOU MAY LOSE CODE
+
 
 
 

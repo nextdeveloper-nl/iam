@@ -13,17 +13,18 @@ use NextDeveloper\Accounts\Database\Models\User;
  */
 class LoginLogsQueryFilter extends AbstractQueryFilter
 {
+
     /**
      * @var Builder
      */
     protected $builder;
 
-    public function createdAtStart($date) 
+    public function createdAtStart($date)
     {
         return $this->builder->where('created_at', '>=', $date);
     }
 
-    public function createdAtEnd($date) 
+    public function createdAtEnd($date)
     {
         return $this->builder->where('created_at', '<=', $date);
     }
