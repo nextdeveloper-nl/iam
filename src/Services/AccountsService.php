@@ -2,9 +2,11 @@
 
 namespace NextDeveloper\IAM\Services;
 
+use App\Jobs\IAM\Accounts\NewAccountCreated;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 use NextDeveloper\Commons\Exceptions\CannotCreateModelException;
+use NextDeveloper\Events\Services\Events;
 use NextDeveloper\I18n\Helpers\i18n;
 use NextDeveloper\IAM\Database\Filters\AccountsQueryFilter;
 use NextDeveloper\IAM\Database\Models\Accounts;
@@ -96,10 +98,20 @@ class AccountsService extends AbstractAccountsService
 
         $accountData = [
             'name'      =>  $name,
-            'iam_user_id'  =>  $user->id
+            'iam_user_id'  =>  $user->id,
+            'iam_account_type_id'   =>  AccountTypes::withoutGlobalScopes()->where('name', 'Individual')->first()->id
         ];
 
-        return self::create($accountData);
+        $account = Accounts::withoutGlobalScopes()->create($accountData);
+
+        Events::fire('created:NextDeveloper\IAM\Accounts', $account);
+
+        //  Also this means that this user has just created an account, meaning that he is registered. So we are
+        //  going to fire the registered event for the user. And dispatch new user created job.
+        (new NewAccountCreated($account))->handle();
+
+        //  We need to bypass the create method here because parent will look for uuid instead of an ID
+        return $account;
     }
 
     public static function createAccount($accountName, Users $user) : Accounts

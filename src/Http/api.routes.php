@@ -200,21 +200,21 @@ Route::prefix('iam')->group(
             }
         );
 
-        Route::prefix('account-users')->group(
+        Route::prefix('account-user-perspective')->group(
             function () {
-                Route::get('/', 'AccountUsers\AccountUsersController@index');
+                Route::get('/', 'AccountUserPerspective\AccountUserPerspectiveController@index');
 
-                Route::get('{iam_account_users}/tags ', 'AccountUsers\AccountUsersController@tags');
-                Route::post('{iam_account_users}/tags ', 'AccountUsers\AccountUsersController@saveTags');
-                Route::get('{iam_account_users}/addresses ', 'AccountUsers\AccountUsersController@addresses');
-                Route::post('{iam_account_users}/addresses ', 'AccountUsers\AccountUsersController@saveAddresses');
+                Route::get('{iam_account_user_perspective}/tags ', 'AccountUserPerspective\AccountUserPerspectiveController@tags');
+                Route::post('{iam_account_user_perspective}/tags ', 'AccountUserPerspective\AccountUserPerspectiveController@saveTags');
+                Route::get('{iam_account_user_perspective}/addresses ', 'AccountUserPerspective\AccountUserPerspectiveController@addresses');
+                Route::post('{iam_account_user_perspective}/addresses ', 'AccountUserPerspective\AccountUserPerspectiveController@saveAddresses');
 
-                Route::get('/{iam_account_users}/{subObjects}', 'AccountUsers\AccountUsersController@relatedObjects');
-                Route::get('/{iam_account_users}', 'AccountUsers\AccountUsersController@show');
+                Route::get('/{iam_account_user_perspective}/{subObjects}', 'AccountUserPerspective\AccountUserPerspectiveController@relatedObjects');
+                Route::get('/{iam_account_user_perspective}', 'AccountUserPerspective\AccountUserPerspectiveController@show');
 
-                Route::post('/', 'AccountUsers\AccountUsersController@store');
-                Route::patch('/{iam_account_users}', 'AccountUsers\AccountUsersController@update');
-                Route::delete('/{iam_account_users}', 'AccountUsers\AccountUsersController@destroy');
+                Route::post('/', 'AccountUserPerspective\AccountUserPerspectiveController@store');
+                Route::patch('/{iam_account_user_perspective}', 'AccountUserPerspective\AccountUserPerspectiveController@update');
+                Route::delete('/{iam_account_user_perspective}', 'AccountUserPerspective\AccountUserPerspectiveController@destroy');
             }
         );
 
@@ -256,6 +256,20 @@ Route::prefix('iam')->group(
 
         // EDIT AFTER HERE - WARNING: ABOVE THIS LINE MAY BE REGENERATED AND YOU MAY LOSE CODE
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
         Route::prefix('my')->group(
             function () {
                 Route::get('/roles', 'Roles\MyRolesController@index');
@@ -270,6 +284,7 @@ Route::prefix('iam')->group(
         );
     }
 );
+
 
 
 

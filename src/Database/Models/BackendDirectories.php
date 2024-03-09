@@ -20,7 +20,7 @@ use NextDeveloper\Commons\Database\Traits\Taggable;
  * @property integer $iam_account_id
  * @property integer $iaas_virtual_machine_id
  * @property string $name
- * @property $type
+ * @property $iam_backend_types
  * @property $ldap_server_name
  * @property $ldap_server_url
  * @property $ldap_server_port
@@ -63,7 +63,7 @@ class BackendDirectories extends Model
             'iam_account_id',
             'iaas_virtual_machine_id',
             'name',
-            'type',
+            'iam_backend_types',
             'ldap_server_name',
             'ldap_server_url',
             'ldap_server_port',
@@ -183,6 +183,7 @@ class BackendDirectories extends Model
     }
 
     // EDIT AFTER HERE - WARNING: ABOVE THIS LINE MAY BE REGENERATED AND YOU MAY LOSE CODE
+
 
 
 

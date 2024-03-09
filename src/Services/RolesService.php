@@ -104,8 +104,10 @@ class RolesService extends AbstractRolesService
         }
 
         //  Getting the roles of user
-        $relation = RoleUsers::where('iam_user_id', $user->id)
-            ->where('iam_role_id', $role->id)->first();
+        $relation = RoleUsers::withoutGlobalScopes()
+            ->where('iam_user_id', $user->id)
+            ->where('iam_role_id', $role->id)
+            ->first();
 
         if(!$account) {
             $account = UserHelper::masterAccount($user);

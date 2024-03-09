@@ -13,6 +13,7 @@ use NextDeveloper\Accounts\Database\Models\User;
  */
 class RoleUsersQueryFilter extends AbstractQueryFilter
 {
+
     /**
      * @var Builder
      */
@@ -22,7 +23,7 @@ class RoleUsersQueryFilter extends AbstractQueryFilter
     {
         return $this->builder->where('is_active', true);
     }
-    
+
     public function iamRoleId($value)
     {
             $iamRole = \NextDeveloper\IAM\Database\Models\Roles::where('uuid', $value)->first();

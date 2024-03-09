@@ -2,27 +2,28 @@
 
 namespace NextDeveloper\IAM\Http\Transformers\AbstractTransformers;
 
-use NextDeveloper\IAM\Database\Models\Users;
+use NextDeveloper\IAM\Database\Models\AccountUserPerspective;
 use NextDeveloper\Commons\Http\Transformers\AbstractTransformer;
 
 /**
- * Class UsersTransformer. This class is being used to manipulate the data we are serving to the customer
+ * Class AccountUserPerspectiveTransformer. This class is being used to manipulate the data we are serving to the customer
  *
  * @package NextDeveloper\IAM\Http\Transformers
  */
-class AbstractUsersTransformer extends AbstractTransformer
+class AbstractAccountUserPerspectiveTransformer extends AbstractTransformer
 {
 
     /**
-     * @param Users $model
+     * @param AccountUserPerspective $model
      *
      * @return array
      */
-    public function transform(Users $model)
+    public function transform(AccountUserPerspective $model)
     {
                         $commonLanguageId = \NextDeveloper\Commons\Database\Models\Languages::where('id', $model->common_language_id)->first();
                     $commonCountryId = \NextDeveloper\Commons\Database\Models\Countries::where('id', $model->common_country_id)->first();
                     $iamUserId = \NextDeveloper\IAM\Database\Models\Users::where('id', $model->iam_user_id)->first();
+                    $iamAccountId = \NextDeveloper\IAM\Database\Models\Accounts::where('id', $model->iam_account_id)->first();
         
         return $this->buildPayload(
             [
@@ -38,15 +39,14 @@ class AbstractUsersTransformer extends AbstractTransformer
             'nin'  =>  $model->nin,
             'common_language_id'  =>  $commonLanguageId ? $commonLanguageId->uuid : null,
             'common_country_id'  =>  $commonCountryId ? $commonCountryId->uuid : null,
-            'is_robot'  =>  $model->is_robot,
             'iam_user_id'  =>  $iamUserId ? $iamUserId->uuid : null,
-            'phone_number'  =>  $model->phone_number,
-            'tags'  =>  $model->tags,
             'created_at'  =>  $model->created_at,
             'updated_at'  =>  $model->updated_at,
             'deleted_at'  =>  $model->deleted_at,
-            'photo_url'  =>  $model->photo_url,
-            'profile_picture'  =>  $model->profile_picture,
+            'phone_number'  =>  $model->phone_number,
+            'iam_account_id'  =>  $iamAccountId ? $iamAccountId->uuid : null,
+            'is_active'  =>  $model->is_active,
+            'session_data'  =>  $model->session_data,
             ]
         );
     }

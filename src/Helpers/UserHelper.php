@@ -179,11 +179,6 @@ class UserHelper
 
         //  We have user
         if($user) {
-            //  We are checking if we have it in cache. If we have we will return it.
-//            $current = Cache::get(
-//                CacheHelper::getKey('Users', $user->uuid, 'CurrentAccount')
-//            );
-
             if($current)
                 return $current;
 
