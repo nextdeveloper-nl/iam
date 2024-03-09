@@ -48,6 +48,19 @@ class RolesService extends AbstractRolesService
     }
 
     /**
+     * Returns the role if it exists in database. If not returns null.
+     *
+     * @param string $role
+     * @return Roles
+     */
+    public static function getRoleByName(string $role) : ?Roles
+    {
+        return Roles::withoutGlobalScope(AuthorizationScope::class)
+            ->where('name', $role)
+            ->first();
+    }
+
+    /**
      * Returns the roles of the user
      *
      * @param Users $user
