@@ -2,7 +2,7 @@
 
 namespace NextDeveloper\IAM\Services\Registration;
 
-use App\Actions\IAM\Users\RegisterUser;
+use App\Actions\IAM\Users\FixRoles;
 use App\Grants\OneTimeEmail;
 use NextDeveloper\Events\Services\Events;
 use NextDeveloper\I18n\Helpers\i18n;
@@ -17,7 +17,7 @@ class RegistrationService
     public static function registerUserWithEmail($email) : Users
     {
         $user = UsersService::createWithEmail($email);
-        dispatch(new RegisterUser($user));
+        dispatch(new FixRoles($user));
         return $user;
     }
 }
