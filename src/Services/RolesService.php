@@ -130,7 +130,8 @@ class RolesService extends AbstractRolesService
             $relation = RoleUsers::create([
                 'iam_user_id'       =>  $user->id,
                 'iam_account_id'    =>  $account->id,
-                'iam_role_id'       =>  $role->id
+                'iam_role_id'       =>  $role->id,
+                'is_active'         =>  true
             ]);
         }
 
@@ -189,13 +190,18 @@ class RolesService extends AbstractRolesService
      */
     public static function setRoleAsActive(RoleUsers $roleUser) : RoleUsers
     {
+        /**
+         * Here design has changed because we are actively looking for all roles while making security checks.
+         * That is why we are not deactivating roles here.
+         */
+
         //  Mark all other roles as not active
-        $roles = RoleUsers::withoutGlobalScopes()
-            ->where('iam_user_id', $roleUser->iam_user_id)
-            ->where('iam_account_id', $roleUser->iam_account_id)
-            ->update([
-                'is_active' =>  0
-            ]);
+//        $roles = RoleUsers::withoutGlobalScopes()
+//            ->where('iam_user_id', $roleUser->iam_user_id)
+//            ->where('iam_account_id', $roleUser->iam_account_id)
+//            ->update([
+//                'is_active' =>  0
+//            ]);
 
         //  Update the requested role as active
         RoleUsers::withoutGlobalScopes()
