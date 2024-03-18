@@ -139,11 +139,19 @@ class AbstractUsersService
                 $data['common_country_id']
             );
         }
-        if (array_key_exists('iam_user_id', $data)) {
-            $data['iam_user_id'] = DatabaseHelper::uuidToId(
-                '\NextDeveloper\IAM\Database\Models\Users',
-                $data['iam_user_id']
+        if (array_key_exists('profile_picture_id', $data)) {
+            $data['profile_picture_id'] = DatabaseHelper::uuidToId(
+                '\NextDeveloper\Commons\Database\Models\Media',
+                $data['profile_picture_id']
             );
+        }
+    
+        if(!array_key_exists('iam_account_id', $data)) {
+            $data['iam_account_id'] = UserHelper::currentAccount()->id;
+        }
+
+        if(!array_key_exists('iam_user_id', $data)) {
+            $data['iam_user_id']    = UserHelper::me()->id;
         }
 
         try {
@@ -198,10 +206,10 @@ class AbstractUsersService
                 $data['common_country_id']
             );
         }
-        if (array_key_exists('iam_user_id', $data)) {
-            $data['iam_user_id'] = DatabaseHelper::uuidToId(
-                '\NextDeveloper\IAM\Database\Models\Users',
-                $data['iam_user_id']
+        if (array_key_exists('profile_picture_id', $data)) {
+            $data['profile_picture_id'] = DatabaseHelper::uuidToId(
+                '\NextDeveloper\Commons\Database\Models\Media',
+                $data['profile_picture_id']
             );
         }
     
