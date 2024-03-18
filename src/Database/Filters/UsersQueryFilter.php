@@ -4,7 +4,7 @@ namespace NextDeveloper\IAM\Database\Filters;
 
 use Illuminate\Database\Eloquent\Builder;
 use NextDeveloper\Commons\Database\Filters\AbstractQueryFilter;
-        
+
 
 /**
  * This class automatically puts where clause on database so that use can filter
@@ -37,60 +37,50 @@ class UsersQueryFilter extends AbstractQueryFilter
      * @var Builder
      */
     protected $builder;
-    
+
     public function name($value)
     {
         return $this->builder->where('name', 'like', '%' . $value . '%');
     }
-    
+
     public function surname($value)
     {
         return $this->builder->where('surname', 'like', '%' . $value . '%');
     }
-    
+
     public function email($value)
     {
         return $this->builder->where('email', 'like', '%' . $value . '%');
     }
-    
+
     public function fullname($value)
     {
         return $this->builder->where('fullname', 'like', '%' . $value . '%');
     }
-    
+
     public function username($value)
     {
         return $this->builder->where('username', 'like', '%' . $value . '%');
     }
-    
+
     public function about($value)
     {
         return $this->builder->where('about', 'like', '%' . $value . '%');
     }
-    
+
     public function pronoun($value)
     {
         return $this->builder->where('pronoun', 'like', '%' . $value . '%');
     }
-    
+
     public function nin($value)
     {
         return $this->builder->where('nin', 'like', '%' . $value . '%');
     }
-    
+
     public function phoneNumber($value)
     {
         return $this->builder->where('phone_number', 'like', '%' . $value . '%');
-    }
-    
-    public function photoUrl($value)
-    {
-        return $this->builder->where('photo_url', 'like', '%' . $value . '%');
-    }
-    
-    public function profilePicture($value)
-    {
-        return $this->builder->where('profile_picture', 'like', '%' . $value . '%');
     }
 
     public function birthdayStart($date)
@@ -151,7 +141,18 @@ class UsersQueryFilter extends AbstractQueryFilter
         }
     }
 
+    public function profilePictureId($value)
+    {
+            $profilePicture = \NextDeveloper\Commons\Database\Models\Media::where('uuid', $value)->first();
+
+        if($profilePicture) {
+            return $this->builder->where('profile_picture_id', '=', $profilePicture->id);
+        }
+    }
+
     // EDIT AFTER HERE - WARNING: ABOVE THIS LINE MAY BE REGENERATED AND YOU MAY LOSE CODE\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n
+
+
 
 
 }

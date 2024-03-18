@@ -22,6 +22,7 @@ class AbstractUsersTransformer extends AbstractTransformer
     {
                         $commonLanguageId = \NextDeveloper\Commons\Database\Models\Languages::where('id', $model->common_language_id)->first();
                     $commonCountryId = \NextDeveloper\Commons\Database\Models\Countries::where('id', $model->common_country_id)->first();
+                    $profilePictureId = \NextDeveloper\Commons\Database\Models\Media::where('id', $model->profile_picture_id)->first();
         
         return $this->buildPayload(
             [
@@ -42,13 +43,14 @@ class AbstractUsersTransformer extends AbstractTransformer
             'created_at'  =>  $model->created_at,
             'updated_at'  =>  $model->updated_at,
             'deleted_at'  =>  $model->deleted_at,
-            'photo_url'  =>  $model->photo_url,
-            'profile_picture'  =>  $model->profile_picture,
+            'profile_picture_id'  =>  $profilePictureId ? $profilePictureId->uuid : null,
             ]
         );
     }
 
     // EDIT AFTER HERE - WARNING: ABOVE THIS LINE MAY BE REGENERATED AND YOU MAY LOSE CODE
+
+
 
 
 }

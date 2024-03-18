@@ -37,8 +37,7 @@ use NextDeveloper\Commons\Database\Traits\Taggable;
  * @property \Carbon\Carbon $created_at
  * @property \Carbon\Carbon $updated_at
  * @property \Carbon\Carbon $deleted_at
- * @property string $photo_url
- * @property string $profile_picture
+ * @property string $profile_picture_id
  */
 class Users extends Model
 {
@@ -70,8 +69,7 @@ class Users extends Model
             'common_country_id',
             'phone_number',
             'tags',
-            'photo_url',
-            'profile_picture',
+            'profile_picture_id',
     ];
 
     /**
@@ -111,8 +109,7 @@ class Users extends Model
     'created_at' => 'datetime',
     'updated_at' => 'datetime',
     'deleted_at' => 'datetime',
-    'photo_url' => 'string',
-    'profile_picture' => 'string',
+    'profile_picture_id' => 'string',
     ];
 
     /**
@@ -180,6 +177,8 @@ class Users extends Model
     use SendEmail;
     use SendNotification;
     use SendSMS;
+
+
 
 
 

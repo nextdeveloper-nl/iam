@@ -26,8 +26,7 @@ class UsersCreateRequest extends AbstractFormRequest
         'common_country_id' => 'nullable|exists:common_countries,uuid|uuid',
         'phone_number' => 'nullable|string',
         'tags' => '',
-        'photo_url' => 'nullable|string',
-        'profile_picture' => 'nullable|string',
+        'profile_picture_id' => 'nullable|string|exists:common_media,uuid|uuid',
         ];
     }
     // EDIT AFTER HERE - WARNING: ABOVE THIS LINE MAY BE REGENERATED AND YOU MAY LOSE CODE\n\n\n\n\n\n\n\n
