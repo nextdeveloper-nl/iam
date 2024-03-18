@@ -1897,5 +1897,61 @@ return [
         return NextDeveloper\IAM\Database\Models\IamUserAccount::findByRef($value);
 },
 
+'iamaccount' => function ($value) {
+        return NextDeveloper\IAM\Database\Models\IamAccount::findByRef($value);
+},
+
+'iamuser' => function ($value) {
+        return NextDeveloper\IAM\Database\Models\IamUser::findByRef($value);
+},
+
+'iamloginlog' => function ($value) {
+        return NextDeveloper\IAM\Database\Models\IamLoginLog::findByRef($value);
+},
+
+'iamaccounttype' => function ($value) {
+        return NextDeveloper\IAM\Database\Models\IamAccountType::findByRef($value);
+},
+
+'iamaccountuser' => function ($value) {
+        return NextDeveloper\IAM\Database\Models\IamAccountUser::findByRef($value);
+},
+
+'iambackenddirectory' => function ($value) {
+        return NextDeveloper\IAM\Database\Models\IamBackendDirectory::findByRef($value);
+},
+
+'iampermission' => function ($value) {
+        return NextDeveloper\IAM\Database\Models\IamPermission::findByRef($value);
+},
+
+'iamloginmechanism' => function ($value) {
+        return NextDeveloper\IAM\Database\Models\IamLoginMechanism::findByRef($value);
+},
+
+'iamroleuser' => function ($value) {
+        return NextDeveloper\IAM\Database\Models\IamRoleUser::findByRef($value);
+},
+
+'iamrole' => function ($value) {
+        return NextDeveloper\IAM\Database\Models\IamRole::findByRef($value);
+},
+
+'iamrolepermission' => function ($value) {
+        return NextDeveloper\IAM\Database\Models\IamRolePermission::findByRef($value);
+},
+
+'iamaccountuserperspective' => function ($value) {
+        return NextDeveloper\IAM\Database\Models\IamAccountUserPerspective::findByRef($value);
+},
+
+'iamuserrole' => function ($value) {
+        return NextDeveloper\IAM\Database\Models\IamUserRole::findByRef($value);
+},
+
+'iamuseraccount' => function ($value) {
+        return NextDeveloper\IAM\Database\Models\IamUserAccount::findByRef($value);
+},
+
 // EDIT AFTER HERE - WARNING: ABOVE THIS LINE MAY BE REGENERATED AND YOU MAY LOSE CODE
 ];
