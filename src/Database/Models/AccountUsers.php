@@ -26,6 +26,7 @@ class AccountUsers extends Model
 {
     use Filterable, UuidId, CleanCache, Taggable;
 
+
     public $timestamps = false;
 
     protected $table = 'iam_account_user';
@@ -125,6 +126,8 @@ class AccountUsers extends Model
     }
 
     // EDIT AFTER HERE - WARNING: ABOVE THIS LINE MAY BE REGENERATED AND YOU MAY LOSE CODE\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n
+
+
 
 
 
