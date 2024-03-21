@@ -217,11 +217,6 @@ class UserHelper
             ->where('id', $relation->iam_account_id)
             ->first();
 
-//        Cache::set(
-//            CacheHelper::getKey('Users', $user->uuid, 'CurrentAccount'),
-//            $current
-//        );
-
         return $current;
     }
 
