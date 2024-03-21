@@ -146,10 +146,6 @@ class AbstractUsersService
             );
         }
 
-        if(!array_key_exists('iam_user_id', $data)) {
-            $data['iam_user_id']    = UserHelper::me()->id;
-        }
-
         try {
             $model = Users::create($data);
         } catch(\Exception $e) {
