@@ -87,6 +87,7 @@ class AbstractLogin
             ->where('login_mechanism', $mechanismName)
             ->where('is_active', 1)
             ->where('is_latest', 1)
+            ->whereNull('deleted_at')
             ->first();
 
         return $mechanism;
