@@ -34,6 +34,7 @@ class LoginMechanismsService extends AbstractLoginMechanismsService
         $mechanisms = LoginMechanisms::withoutGlobalScopes()
             ->where('iam_user_id', $this->_user->id)
             ->where('is_active', 1)
+            ->whereNull('deleted_at')
             ->get();
 
         if(!count($mechanisms))
@@ -43,6 +44,7 @@ class LoginMechanismsService extends AbstractLoginMechanismsService
             ->where('iam_user_id', $this->_user->id)
             ->where('is_active', 1)
             ->where('login_mechanism', 'not like', '2FA%')
+            ->whereNull('deleted_at')
             ->get();
 
         return $mechanisms;
