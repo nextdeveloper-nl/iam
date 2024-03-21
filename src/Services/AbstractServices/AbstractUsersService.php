@@ -145,10 +145,6 @@ class AbstractUsersService
                 $data['profile_picture_id']
             );
         }
-    
-        if(!array_key_exists('iam_account_id', $data)) {
-            $data['iam_account_id'] = UserHelper::currentAccount()->id;
-        }
 
         if(!array_key_exists('iam_user_id', $data)) {
             $data['iam_user_id']    = UserHelper::me()->id;
@@ -212,7 +208,7 @@ class AbstractUsersService
                 $data['profile_picture_id']
             );
         }
-    
+
         Events::fire('updating:NextDeveloper\IAM\Users', $model);
 
         try {

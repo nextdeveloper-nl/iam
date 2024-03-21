@@ -77,4 +77,5 @@ class AbstractLoginMechanismsTransformer extends AbstractTransformer
 
 
 
+
 }

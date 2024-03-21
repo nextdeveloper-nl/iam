@@ -44,11 +44,13 @@ class AbstractUsersTransformer extends AbstractTransformer
             'updated_at'  =>  $model->updated_at,
             'deleted_at'  =>  $model->deleted_at,
             'profile_picture_id'  =>  $profilePictureId ? $profilePictureId->uuid : null,
+            'is_registered'  =>  $model->is_registered,
             ]
         );
     }
 
     // EDIT AFTER HERE - WARNING: ABOVE THIS LINE MAY BE REGENERATED AND YOU MAY LOSE CODE
+
 
 
 
