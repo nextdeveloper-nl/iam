@@ -16,8 +16,14 @@ class RegistrationService
 {
     public static function registerUserWithEmail($email) : Users
     {
+        $user = UsersService::getByEmail($email);
+
+        if($user) {
+            return $user;
+        }
+
         $user = UsersService::createWithEmail($email);
-        dispatch(new FixRoles($user));
+
         return $user;
     }
 }

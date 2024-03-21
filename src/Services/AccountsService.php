@@ -94,7 +94,7 @@ class AccountsService extends AbstractAccountsService
     public static function createInitialAccount(Users $user) : Accounts
     {
         if($user->name == '')
-            $name = i18n::t('My personal account');
+            $name = i18n::t('My personal account', $user->common_language_id);
 
         $accountData = [
             'name'      =>  $name,
@@ -108,7 +108,7 @@ class AccountsService extends AbstractAccountsService
 
         //  Also this means that this user has just created an account, meaning that he is registered. So we are
         //  going to fire the registered event for the user. And dispatch new user created job.
-        (new NewAccountCreated($account))->handle();
+        //(new NewAccountCreated($account))->handle();
 
         //  We need to bypass the create method here because parent will look for uuid instead of an ID
         return $account;
