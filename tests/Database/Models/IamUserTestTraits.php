@@ -67,7 +67,6 @@ trait IamUserTestTraits
                 'pronoun'  =>  'a',
                 'nin'  =>  'a',
                 'phone_number'  =>  'a',
-                'profile_picture_id'  =>  'a',
                     'birthday'  =>  now(),
                             ],
                 ['http_errors' => false]
@@ -509,25 +508,6 @@ trait IamUserTestTraits
             $request = new Request(
                 [
                 'phone_number'  =>  'a'
-                ]
-            );
-
-            $filter = new IamUserQueryFilter($request);
-
-            $model = \NextDeveloper\IAM\Database\Models\IamUser::filter($filter)->first();
-        } catch (\Exception $e) {
-            $this->assertFalse(false, $e->getMessage());
-        }
-
-        $this->assertTrue(true);
-    }
-
-    public function test_iamuser_event_profile_picture_id_filter()
-    {
-        try {
-            $request = new Request(
-                [
-                'profile_picture_id'  =>  'a'
                 ]
             );
 
