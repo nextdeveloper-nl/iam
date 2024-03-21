@@ -11,6 +11,7 @@ use NextDeveloper\I18n\Helpers\i18n;
 use NextDeveloper\IAM\Database\Filters\AccountsQueryFilter;
 use NextDeveloper\IAM\Database\Models\Accounts;
 use NextDeveloper\IAM\Database\Models\AccountTypes;
+use NextDeveloper\IAM\Database\Models\AccountUsers;
 use NextDeveloper\IAM\Database\Models\UserAccounts;
 use NextDeveloper\IAM\Database\Models\Users;
 use NextDeveloper\IAM\Events\Accounts\AccountsUpdatedEvent;
@@ -103,6 +104,13 @@ class AccountsService extends AbstractAccountsService
         ];
 
         $account = Accounts::withoutGlobalScopes()->create($accountData);
+
+        //  Creating the relation to state this is the master user of the account
+        AccountUsers::create([
+            'iam_user_id'   =>  $user->id,
+            'iam_account_id'    =>  $account->id,
+            'is_active'     =>  1
+        ]);
 
         Events::fire('created:NextDeveloper\IAM\Accounts', $account);
 
