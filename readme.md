@@ -52,7 +52,7 @@ In this library we try to support almost all available authentication mechanisms
 
 # Password Management
 For password management we are and will be applying various different practices to increase the security;
-- [ ] using Argon2id for hashing passwords and scrypt for fallback.
+- [x] using Argon2id for hashing passwords and scrypt for fallback.
 - [ ] storing the old passwords to check if the user is not using the very same password
 - [ ] checking the password quality, in terms of complexity
 - [ ] rehashing passwords using rehash algorithms if available.
@@ -73,7 +73,7 @@ When the user is sending the token that we generate instead of JWT token, we nee
 
 We implement application level lookup at the moment but we will be offering Load Balancer level of lookup for reduced cpu usage and overhead.
 
-- [ ] Application lookup
+- [x] Application lookup
 - [ ] Load balancer lookup
 
 # Commercial Support
