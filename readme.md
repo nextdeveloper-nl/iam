@@ -29,7 +29,7 @@ Identity management software is a crucial tool in today's security-conscious dig
 - [ ] Directory Services: These services store, organize, and provide access to information about users and resources.
 - - [ ] LDAP
 - - [ ] Active Directory
-- [ ] Role-Based Access Control (RBAC): This feature enables the assignment of access rights based on roles within the organization. For example, all employees in the marketing department could have similar access rights.
+- [x] Role-Based Access Control (RBAC): This feature enables the assignment of access rights based on roles within the organization. For example, all employees in the marketing department could have similar access rights.
 - [ ] Identity Governance: This includes tools for defining and implementing policies and rules for user access and for auditing and reporting on user access.
 - [ ] Identity Lifecycle Management: This includes the processes for managing identities from the initial creation of the account, through various changes, to the eventual retirement of the account.
 - [ ] Password Management: Tools for managing and resetting passwords, enforcing password policies, etc.
