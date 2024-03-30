@@ -309,8 +309,24 @@ class UserHelper
 
     }
 
+    public static function has($string, $user = null) : bool
+    {
+        //  If null getRoles will get the current user
+        $roles = self::getRoles($user);
+
+        foreach ($roles as $role) {
+            if($role->name == $string)
+                return true;
+        }
+
+        return false;
+    }
+
     public static function currentRole(Users $user = null) : ?Roles
     {
+        trigger_deprecation('nextdeveloper/iam', '1.0', 'This function is deprecated. ' .
+            'No need to switch since all roles are loaded now.');
+
         $currentRole = null;
 
         if(!$user) {
@@ -355,20 +371,26 @@ class UserHelper
         return $roles;
     }
 
-    public static function removeFromRole($role, Users $users = null) :bool {
+    public static function removeFromRole($role, Users $users = null, Accounts $account = null) :bool {
         if(!$users)
             $users = self::me();
+
+        if(!$account)
+            $account = self::currentAccount();
 
         if(class_basename($role) == 'UserRoles')
             $role = Roles::withoutGlobalScopes()->where('uuid', $role->uuid)->first();
 
-        $sql = DB::raw('delete from role_users where iam_user_id = ' . $users->id . ' and iam_role_id = ' . $role->id . ';');
+        $sql = DB::raw('delete from iam_role_users where iam_user_id = ' . $users->id . ' and iam_role_id = ' . $role->id . ' and iam_account_id = ' . $account->id . ';');
 
         return true;
     }
 
     public static function switchToRoleByRoleId(Users $user = null, $roleId) : ?Roles
     {
+        trigger_deprecation('nextdeveloper/iam', '1.0', 'This function is deprecated. ' .
+            'No need to switch since all roles are loaded now.');
+
         if(!$user)
             $user = self::me();
 
@@ -380,8 +402,16 @@ class UserHelper
         return null;
     }
 
+    /**
+     * @param Users $user
+     * @param Roles $role
+     * @return bool
+     */
     public static function switchToRole(Users $user, Roles $role) : bool
     {
+        trigger_deprecation('nextdeveloper/iam', '1.0', 'This function is deprecated. ' .
+            'All roles are loaded now.');
+
         $account = self::currentAccount();
 
         //  Mark all other roles as not active
