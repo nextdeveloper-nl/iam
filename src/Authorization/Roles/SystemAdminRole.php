@@ -10,7 +10,7 @@ class SystemAdminRole extends AbstractRole implements IAuthorizationRole
 {
     public const NAME = 'system-admin';
 
-    public const LEVEL = 100;
+    public const LEVEL = 1;
 
     public const DESCRIPTION = 'System Administrator';
 

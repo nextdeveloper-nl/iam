@@ -15,6 +15,8 @@ use NextDeveloper\IAM\Database\Models\Users;
 use NextDeveloper\IAM\Database\Scopes\AuthorizationScope;
 use NextDeveloper\IAM\Helpers\UserHelper;
 use NextDeveloper\IAM\Services\AbstractServices\AbstractRolesService;
+use NextDeveloper\IAM\Database\Filters\RolesQueryFilter;
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 
 /**
  * This class is responsible from managing the data for Roles
@@ -27,7 +29,21 @@ class RolesService extends AbstractRolesService
 {
 
     // EDIT AFTER HERE - WARNING: ABOVE THIS LINE MAY BE REGENERATED AND YOU MAY LOSE CODE
+    public static function get(RolesQueryFilter $filter = null, array $params = []) : Collection|LengthAwarePaginator{
+        $roles = UserHelper::getRoles();
 
+        $level = 255;
+
+        foreach ($roles as $role) {
+            if($role->level < $level) {
+                $level = $role->level;
+            }
+        }
+
+        $filter->smallerThan($level);
+
+        return parent::get($filter, $params);
+    }
 
     /**
      * Returns the role.

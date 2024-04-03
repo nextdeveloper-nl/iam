@@ -12,7 +12,7 @@ class AnonymousRole extends AbstractRole implements IAuthorizationRole
 {
     public const NAME = 'anonymous';
 
-    public const LEVEL = 0;
+    public const LEVEL = 255;
 
     public const DESCRIPTION = 'Anonymous User';
 
