@@ -2,6 +2,7 @@
 
 namespace NextDeveloper\IAM\Services;
 
+use GPBMetadata\Google\Api\Auth;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\Cache;
 use NextDeveloper\Commons\Common\Cache\CacheHelper;
@@ -40,9 +41,12 @@ class RolesService extends AbstractRolesService
             }
         }
 
-        $filter->smallerThan($level);
+        $roles = Roles::withoutGlobalScope(AuthorizationScope::class)
+            ->filter($filter)
+            ->where('level', '>=', $level)
+            ->get();
 
-        return parent::get($filter, $params);
+        return $roles;
     }
 
     /**
