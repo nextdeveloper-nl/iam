@@ -297,7 +297,7 @@ class UserHelper
      * @param $email
      * @return Users
      */
-    public static function getWithEmail($email) : Users
+    public static function getWithEmail($email) : ?Users
     {
         $users = Users::where('email', $email)->first();
 
@@ -447,8 +447,21 @@ class UserHelper
         if(!self::me())
             return $model;
 
-        $model->iam_user_id     =   self::me()->id;
-        $model->iam_account_id  =   self::currentAccount()->id;
+        if(property_exists($model, 'iam_user_id')) {
+            if(!$model->iam_user_id)
+                $model->iam_user_id = self::me()->id;
+        } else {
+            if(in_array('iam_user_id', $model->getFillable()))
+                $model->iam_user_id = self::me()->id;
+        }
+
+        if(property_exists($model, 'iam_account_id')) {
+            if(!$model->iam_account_id)
+                $model->iam_account_id = self::currentAccount()->id;
+        } else {
+            if(in_array('iam_account_id', $model->getFillable()))
+                $model->iam_account_id = self::currentAccount()->id;
+        }
 
         return $model;
     }
