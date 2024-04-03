@@ -13,7 +13,7 @@ class IamAdminRole extends AbstractRole implements IAuthorizationRole
 {
     public const NAME = 'iam-admin';
 
-    public const LEVEL = 254;
+    public const LEVEL = 100;
 
     public const DESCRIPTION = 'IAM admin role is the highest level of role. It can see and do everything '
         . 'to the accounts that they own.';

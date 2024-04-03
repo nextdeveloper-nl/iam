@@ -3,6 +3,7 @@
 namespace NextDeveloper\IAM\Http\Transformers;
 
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Str;
 use NextDeveloper\Commons\Common\Cache\CacheHelper;
 use NextDeveloper\IAM\Database\Models\Roles;
 use NextDeveloper\Commons\Http\Transformers\AbstractTransformer;
@@ -23,15 +24,17 @@ class RolesTransformer extends AbstractRolesTransformer
      */
     public function transform(Roles $model)
     {
-        $transformed = Cache::get(
-            CacheHelper::getKey('Roles', $model->uuid, 'Transformed')
-        );
+//        $transformed = Cache::get(
+//            CacheHelper::getKey('Roles', $model->uuid, 'Transformed')
+//        );
 
-        if($transformed) {
-            return $transformed;
-        }
+//        if($transformed) {
+//            return $transformed;
+//        }
 
         $transformed = parent::transform($model);
+
+        $transformed['name'] = Str::title($transformed['name']);
 
         Cache::set(
             CacheHelper::getKey('Roles', $model->uuid, 'Transformed'),
