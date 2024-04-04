@@ -36,6 +36,7 @@ class RolesTransformer extends AbstractRolesTransformer
         $transformed = parent::transform($model);
 
         $transformed['name'] = Str::title($transformed['name']);
+        $transformed['name'] = str_replace('-', ' ', $transformed['name']);
 
         //  I add has_role to the transformed data so that we can understand if the user has this role or not.
         $myRoles = UserHelper::getRoles();
