@@ -23,13 +23,13 @@ class UserRolesTransformer extends AbstractUserRolesTransformer
      */
     public function transform(UserRoles $model)
     {
-        $transformed = Cache::get(
-            CacheHelper::getKey('UserRoles', $model->uuid, 'Transformed')
-        );
-
-        if($transformed) {
-            return $transformed;
-        }
+//        $transformed = Cache::get(
+//            CacheHelper::getKey('UserRoles', $model->uuid, 'Transformed')
+//        );
+//
+//        if($transformed) {
+//            return $transformed;
+//        }
 
         $transformed = parent::transform($model);
 

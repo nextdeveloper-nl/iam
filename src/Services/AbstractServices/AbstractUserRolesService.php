@@ -145,7 +145,7 @@ class AbstractUserRolesService
                 $data['iam_account_id']
             );
         }
-    
+
         if(!array_key_exists('iam_account_id', $data)) {
             $data['iam_account_id'] = UserHelper::currentAccount()->id;
         }
@@ -212,7 +212,7 @@ class AbstractUserRolesService
                 $data['iam_account_id']
             );
         }
-    
+
         Events::fire('updating:NextDeveloper\IAM\UserRoles', $model);
 
         try {
