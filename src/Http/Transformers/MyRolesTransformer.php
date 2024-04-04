@@ -15,7 +15,7 @@ use NextDeveloper\IAM\Http\Transformers\AbstractTransformers\AbstractRolesTransf
  *
  * @package NextDeveloper\IAM\Http\Transformers
  */
-class RolesTransformer extends AbstractRolesTransformer
+class MyRolesTransformer extends AbstractRolesTransformer
 {
 
     /**
@@ -37,6 +37,18 @@ class RolesTransformer extends AbstractRolesTransformer
 
         $transformed['name'] = Str::title($transformed['name']);
         $transformed['name'] = str_replace('-', ' ', $transformed['name']);
+
+        //  I add has_role to the transformed data so that we can understand if the user has this role or not.
+        $myRoles = UserHelper::getRoles();
+
+        $transformed['has_role'] = false;
+
+        foreach ($myRoles as $role) {
+            if($role->name == $model->name) {
+                $transformed['has_role'] = true;
+                break;
+            }
+        }
 
         Cache::set(
             CacheHelper::getKey('Roles', $model->uuid, 'Transformed'),
