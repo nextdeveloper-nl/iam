@@ -7,6 +7,7 @@ use Illuminate\Support\Str;
 use NextDeveloper\Commons\Common\Cache\CacheHelper;
 use NextDeveloper\IAM\Database\Models\Roles;
 use NextDeveloper\Commons\Http\Transformers\AbstractTransformer;
+use NextDeveloper\IAM\Helpers\UserHelper;
 use NextDeveloper\IAM\Http\Transformers\AbstractTransformers\AbstractRolesTransformer;
 
 /**
@@ -35,6 +36,18 @@ class RolesTransformer extends AbstractRolesTransformer
         $transformed = parent::transform($model);
 
         $transformed['name'] = Str::title($transformed['name']);
+
+        //  I add has_role to the transformed data so that we can understand if the user has this role or not.
+        $myRoles = UserHelper::getRoles();
+
+        $transformed['has_role'] = false;
+
+        foreach ($myRoles as $role) {
+            if($role->name == $model->name) {
+                $transformed['has_role'] = true;
+                break;
+            }
+        }
 
         Cache::set(
             CacheHelper::getKey('Roles', $model->uuid, 'Transformed'),
