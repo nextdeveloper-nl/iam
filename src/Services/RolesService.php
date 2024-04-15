@@ -93,6 +93,7 @@ class RolesService extends AbstractRolesService
             ->where('iam_user_id', $user->id)
             ->where('iam_account_id', $account->id)
             ->where('is_active', true)
+            ->orderBy('level', 'asc')
             ->get();
 
         return $roles;

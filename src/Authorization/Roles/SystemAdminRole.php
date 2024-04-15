@@ -5,6 +5,7 @@ namespace NextDeveloper\IAM\Authorization\Roles;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
+use NextDeveloper\IAM\Database\Models\Users;
 
 class SystemAdminRole extends AbstractRole implements IAuthorizationRole
 {
@@ -49,5 +50,10 @@ class SystemAdminRole extends AbstractRole implements IAuthorizationRole
     public function getDbPrefix()
     {
         return self::DB_PREFIX;
+    }
+
+    public function checkRules(Users $users): bool
+    {
+        // TODO: Implement checkRules() method.
     }
 }
