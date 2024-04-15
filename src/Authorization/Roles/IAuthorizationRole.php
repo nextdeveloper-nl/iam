@@ -4,6 +4,7 @@ namespace NextDeveloper\IAM\Authorization\Roles;
 
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
+use NextDeveloper\IAM\Database\Models\Users;
 
 interface IAuthorizationRole
 {
@@ -29,5 +30,7 @@ interface IAuthorizationRole
 
     public function getModule();
 
-    public function allowedOperations() :array;
+    public function allowedOperations() : array;
+
+    public function checkRules(Users $users) : bool;
 }

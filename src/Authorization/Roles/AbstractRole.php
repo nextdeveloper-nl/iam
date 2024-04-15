@@ -5,6 +5,7 @@ namespace NextDeveloper\IAM\Authorization\Roles;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Scope;
+use NextDeveloper\IAM\Database\Models\Users;
 
 class AbstractRole implements Scope
 {
@@ -31,5 +32,9 @@ class AbstractRole implements Scope
         }
 
         return $objects;
+    }
+
+    public function checkRoles(Users $users) {
+        return true;
     }
 }
