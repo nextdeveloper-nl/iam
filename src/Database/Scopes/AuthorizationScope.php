@@ -33,7 +33,8 @@ class AuthorizationScope implements Scope
         //  if we cannot get the user and this creates a constant loop. That is why we need to secure
         //  user information from the service.
         if(
-            //$model->getTable() == 'iam_accounts' || //  This creates a recursive loop when we need currentRole
+            $model->getTable() == 'common_currencies' || //  Since this is common table, we dont need to apply any role
+            $model->getTable() == 'common_countries' || //  Since this is common table, we dont need to apply any role
             $model->getTable() == 'iam_users'
             //$model->getTable() == 'iam_roles' ||
             //$model->getTable() == 'iam_role_user' ||
