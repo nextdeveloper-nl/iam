@@ -83,7 +83,15 @@ class UsersService extends AbstractUsersService
             $data['common_language_id'] = $lang->id;
         }
 
-        return parent::create($data);
+        $user = parent::create($data);
+
+        AccountUsersService::create([
+            'iam_account_id'    =>  UserHelper::currentAccount()->id,
+            'iam_user_id'       =>  $user->id,
+            'is_active'         =>  true
+        ]);
+
+        return $user;
     }
 
     public static function getByEmail($email, $createUser = false) : ?Users {

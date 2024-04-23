@@ -22,9 +22,6 @@ use NextDeveloper\IAM\Services\AccountsService;
 use NextDeveloper\IAM\Services\RolesService;
 use NextDeveloper\IAM\Services\UsersService;
 
-//  This is just an alias for UserHelper for fast coding.
-class U extends UserHelper {}
-
 class UserHelper
 {
     /**
@@ -470,3 +467,6 @@ class UserHelper
         throw new \Exception('This function is not implemented yet!');
     }
 }
+
+//  This is just an alias for UserHelper for fast coding.
+class U extends UserHelper {}
