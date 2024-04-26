@@ -97,6 +97,9 @@ class AccountsService extends AbstractAccountsService
         if($user->name == '')
             $name = i18n::t('My personal account', $user->common_language_id);
 
+        if(!$name)
+            $name = 'My personal account';
+
         $accountData = [
             'name'      =>  $name,
             'iam_user_id'  =>  $user->id,
