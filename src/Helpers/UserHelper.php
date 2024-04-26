@@ -306,6 +306,25 @@ class UserHelper
 
     }
 
+    /**
+     * Alias for has function
+     *
+     * @param $string
+     * @param $user
+     * @return bool
+     */
+    public static function hasRole($string, $user = null) : bool
+    {
+        return self::has($string, $user);
+    }
+
+    /**
+     * Checks if the user has related role
+     *
+     * @param $string
+     * @param $user
+     * @return bool
+     */
     public static function has($string, $user = null) : bool
     {
         //  If null getRoles will get the current user
