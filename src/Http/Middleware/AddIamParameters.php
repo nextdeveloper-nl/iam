@@ -18,7 +18,8 @@ class AddIamParameters extends Middleware
 
             if($user) {
                 $request->query->add([
-                    'iam_user_id' => $user->uuid
+                    'iam_user_id' => $user->uuid,
+                    'iamUserId' => $user->uuid
                 ]);
             }
         }
@@ -28,7 +29,8 @@ class AddIamParameters extends Middleware
 
             if($account) {
                 $request->query->add([
-                    'iam_account_id' => $account->uuid
+                    'iam_account_id' => $account->uuid,
+                    'iamAccountId' => $account->uuid
                 ]);
             }
         }
