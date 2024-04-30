@@ -193,11 +193,23 @@ class UserHelper
                 //  Checking if the user has master account. If not we are creating a master account
                 if($masterAccount) {
                     //  @todo: Here we need to check if user has this relation or not.
-                    $relation = AccountUsers::create([
-                        'iam_user_id'   =>  $user->id,
-                        'iam_account_id'    =>  $masterAccount->id,
-                        'is_active'     =>  1
-                    ]);
+                    try {
+                        $relation = AccountUsers::create([
+                            'iam_user_id'   =>  $user->id,
+                            'iam_account_id'    =>  $masterAccount->id,
+                            'is_active'     =>  1
+                        ]);
+                    } catch (\Exception $e) {
+                        if($e->getCode() == 23505) {
+                            $relation = AccountUsers::withoutGlobalScopes()->where('iam_user_id', $user->id)
+                                ->where('iam_account_id', $masterAccount->id)
+                                ->first();
+
+                            $relation->update([
+                                'is_active' =>  1
+                            ]);
+                        }
+                    }
                 } else {
                     $masterAccount = AccountsService::createInitialAccount($user);
 
@@ -306,6 +318,25 @@ class UserHelper
 
     }
 
+    /**
+     * Alias for has function
+     *
+     * @param $string
+     * @param $user
+     * @return bool
+     */
+    public static function hasRole($string, $user = null) : bool
+    {
+        return self::has($string, $user);
+    }
+
+    /**
+     * Checks if the user has related role
+     *
+     * @param $string
+     * @param $user
+     * @return bool
+     */
     public static function has($string, $user = null) : bool
     {
         //  If null getRoles will get the current user
@@ -467,6 +498,3 @@ class UserHelper
         throw new \Exception('This function is not implemented yet!');
     }
 }
-
-//  This is just an alias for UserHelper for fast coding.
-class U extends UserHelper {}

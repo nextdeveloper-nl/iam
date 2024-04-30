@@ -94,8 +94,9 @@ class AccountsService extends AbstractAccountsService
      */
     public static function createInitialAccount(Users $user) : Accounts
     {
-        if($user->name == '')
-            $name = i18n::t('My personal account', $user->common_language_id);
+        $name = 'My personal account';
+
+        $name = i18n::t($name, $user->common_language_id);
 
         $accountData = [
             'name'      =>  $name,

@@ -40,5 +40,15 @@ class RoleHelper
         return UsersService::getById($userRole->iam_user_id);
     }
 
-
+    /**
+     *
+     *
+     * @param $user
+     * @param $role
+     * @return bool
+     */
+    public static function addUserToRole($user, $role)
+    {
+        return RolesService::assignUserToRole($user, $role);
+    }
 }
