@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 use NextDeveloper\Commons\Helpers\DatabaseHelper;
+use NextDeveloper\IAM\Database\Models\Users;
 use NextDeveloper\IAM\Helpers\UserHelper;
 
 class IamAdminRole extends AbstractRole implements IAuthorizationRole
@@ -134,5 +135,10 @@ class IamAdminRole extends AbstractRole implements IAuthorizationRole
     public function getDbPrefix()
     {
         return self::DB_PREFIX;
+    }
+
+    public function checkRules(Users $users): bool
+    {
+        // TODO: Implement checkRules() method.
     }
 }
