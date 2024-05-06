@@ -10,12 +10,13 @@ use NextDeveloper\IAM\Database\Filters\PermissionsQueryFilter;
 use NextDeveloper\IAM\Database\Models\Permissions;
 use NextDeveloper\IAM\Services\PermissionsService;
 use NextDeveloper\IAM\Http\Requests\Permissions\PermissionsCreateRequest;
-use NextDeveloper\Commons\Http\Traits\Tags;
+use NextDeveloper\Commons\Http\Traits\Tags;use NextDeveloper\Commons\Http\Traits\Addresses;
 class PermissionsController extends AbstractController
 {
     private $model = Permissions::class;
 
     use Tags;
+    use Addresses;
     /**
      * This method returns the list of permissions.
      *
@@ -31,6 +32,36 @@ class PermissionsController extends AbstractController
         $data = PermissionsService::get($filter, $request->all());
 
         return ResponsableFactory::makeResponse($this, $data);
+    }
+
+    /**
+     * This function returns the list of actions that can be performed on this object.
+     *
+     * @return void
+     */
+    public function getActions()
+    {
+        $data = PermissionsService::getActions();
+
+        return ResponsableFactory::makeResponse($this, $data);
+    }
+
+    /**
+     * Makes the related action to the object
+     *
+     * @param  $objectId
+     * @param  $action
+     * @return array
+     */
+    public function doAction($objectId, $action)
+    {
+        $actionId = PermissionsService::doAction($objectId, $action);
+
+        return $this->withArray(
+            [
+            'action_id' =>  $actionId
+            ]
+        );
     }
 
     /**
@@ -75,6 +106,12 @@ class PermissionsController extends AbstractController
      */
     public function store(PermissionsCreateRequest $request)
     {
+        if($request->has('validateOnly') && $request->get('validateOnly') == true) {
+            return [
+                'validation'    =>  'success'
+            ];
+        }
+
         $model = PermissionsService::create($request->validated());
 
         return ResponsableFactory::makeResponse($this, $model);
@@ -84,12 +121,18 @@ class PermissionsController extends AbstractController
      * This method updates Permissions object on database.
      *
      * @param  $permissionsId
-     * @param  CountryCreateRequest $request
+     * @param  PermissionsUpdateRequest $request
      * @return mixed|null
      * @throws \NextDeveloper\Commons\Exceptions\CannotCreateModelException
      */
     public function update($permissionsId, PermissionsUpdateRequest $request)
     {
+        if($request->has('validateOnly') && $request->get('validateOnly') == true) {
+            return [
+                'validation'    =>  'success'
+            ];
+        }
+
         $model = PermissionsService::update($permissionsId, $request->validated());
 
         return ResponsableFactory::makeResponse($this, $model);
@@ -99,7 +142,6 @@ class PermissionsController extends AbstractController
      * This method updates Permissions object on database.
      *
      * @param  $permissionsId
-     * @param  CountryCreateRequest $request
      * @return mixed|null
      * @throws \NextDeveloper\Commons\Exceptions\CannotCreateModelException
      */

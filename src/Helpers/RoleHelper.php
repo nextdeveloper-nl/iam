@@ -3,6 +3,8 @@
 namespace NextDeveloper\IAM\Helpers;
 
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
+use NextDeveloper\IAM\Database\Models\Roles;
 use NextDeveloper\IAM\Database\Models\Users;
 use NextDeveloper\IAM\Services\RolesService;
 use NextDeveloper\IAM\Services\UsersService;
@@ -49,6 +51,19 @@ class RoleHelper
      */
     public static function addUserToRole($user, $role)
     {
+        if(is_string($role)) {
+            $roleObj = Roles::withoutGlobalScopes()
+                ->where('name', $role)
+                ->first();
+
+            if(!$roleObj) {
+                Log::error('[RoleHelper] Cannot find the role with name: ' . $role);
+                return null;
+            }
+
+            $role = $roleObj;
+        }
+
         return RolesService::assignUserToRole($user, $role);
     }
 }

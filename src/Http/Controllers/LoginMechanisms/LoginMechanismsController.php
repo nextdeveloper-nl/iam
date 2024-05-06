@@ -10,12 +10,13 @@ use NextDeveloper\IAM\Database\Filters\LoginMechanismsQueryFilter;
 use NextDeveloper\IAM\Database\Models\LoginMechanisms;
 use NextDeveloper\IAM\Services\LoginMechanismsService;
 use NextDeveloper\IAM\Http\Requests\LoginMechanisms\LoginMechanismsCreateRequest;
-use NextDeveloper\Commons\Http\Traits\Tags;
+use NextDeveloper\Commons\Http\Traits\Tags;use NextDeveloper\Commons\Http\Traits\Addresses;
 class LoginMechanismsController extends AbstractController
 {
     private $model = LoginMechanisms::class;
 
     use Tags;
+    use Addresses;
     /**
      * This method returns the list of loginmechanisms.
      *
@@ -31,6 +32,36 @@ class LoginMechanismsController extends AbstractController
         $data = LoginMechanismsService::get($filter, $request->all());
 
         return ResponsableFactory::makeResponse($this, $data);
+    }
+
+    /**
+     * This function returns the list of actions that can be performed on this object.
+     *
+     * @return void
+     */
+    public function getActions()
+    {
+        $data = LoginMechanismsService::getActions();
+
+        return ResponsableFactory::makeResponse($this, $data);
+    }
+
+    /**
+     * Makes the related action to the object
+     *
+     * @param  $objectId
+     * @param  $action
+     * @return array
+     */
+    public function doAction($objectId, $action)
+    {
+        $actionId = LoginMechanismsService::doAction($objectId, $action);
+
+        return $this->withArray(
+            [
+            'action_id' =>  $actionId
+            ]
+        );
     }
 
     /**
@@ -75,6 +106,12 @@ class LoginMechanismsController extends AbstractController
      */
     public function store(LoginMechanismsCreateRequest $request)
     {
+        if($request->has('validateOnly') && $request->get('validateOnly') == true) {
+            return [
+                'validation'    =>  'success'
+            ];
+        }
+
         $model = LoginMechanismsService::create($request->validated());
 
         return ResponsableFactory::makeResponse($this, $model);
@@ -84,12 +121,18 @@ class LoginMechanismsController extends AbstractController
      * This method updates LoginMechanisms object on database.
      *
      * @param  $loginMechanismsId
-     * @param  CountryCreateRequest $request
+     * @param  LoginMechanismsUpdateRequest $request
      * @return mixed|null
      * @throws \NextDeveloper\Commons\Exceptions\CannotCreateModelException
      */
     public function update($loginMechanismsId, LoginMechanismsUpdateRequest $request)
     {
+        if($request->has('validateOnly') && $request->get('validateOnly') == true) {
+            return [
+                'validation'    =>  'success'
+            ];
+        }
+
         $model = LoginMechanismsService::update($loginMechanismsId, $request->validated());
 
         return ResponsableFactory::makeResponse($this, $model);
@@ -99,7 +142,6 @@ class LoginMechanismsController extends AbstractController
      * This method updates LoginMechanisms object on database.
      *
      * @param  $loginMechanismsId
-     * @param  CountryCreateRequest $request
      * @return mixed|null
      * @throws \NextDeveloper\Commons\Exceptions\CannotCreateModelException
      */

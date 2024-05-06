@@ -10,12 +10,13 @@ use NextDeveloper\IAM\Database\Filters\AccountUsersQueryFilter;
 use NextDeveloper\IAM\Database\Models\AccountUsers;
 use NextDeveloper\IAM\Services\AccountUsersService;
 use NextDeveloper\IAM\Http\Requests\AccountUsers\AccountUsersCreateRequest;
-use NextDeveloper\Commons\Http\Traits\Tags;
+use NextDeveloper\Commons\Http\Traits\Tags;use NextDeveloper\Commons\Http\Traits\Addresses;
 class AccountUsersController extends AbstractController
 {
     private $model = AccountUsers::class;
 
     use Tags;
+    use Addresses;
     /**
      * This method returns the list of accountusers.
      *
@@ -31,6 +32,36 @@ class AccountUsersController extends AbstractController
         $data = AccountUsersService::get($filter, $request->all());
 
         return ResponsableFactory::makeResponse($this, $data);
+    }
+
+    /**
+     * This function returns the list of actions that can be performed on this object.
+     *
+     * @return void
+     */
+    public function getActions()
+    {
+        $data = AccountUsersService::getActions();
+
+        return ResponsableFactory::makeResponse($this, $data);
+    }
+
+    /**
+     * Makes the related action to the object
+     *
+     * @param  $objectId
+     * @param  $action
+     * @return array
+     */
+    public function doAction($objectId, $action)
+    {
+        $actionId = AccountUsersService::doAction($objectId, $action);
+
+        return $this->withArray(
+            [
+            'action_id' =>  $actionId
+            ]
+        );
     }
 
     /**
@@ -75,6 +106,12 @@ class AccountUsersController extends AbstractController
      */
     public function store(AccountUsersCreateRequest $request)
     {
+        if($request->has('validateOnly') && $request->get('validateOnly') == true) {
+            return [
+                'validation'    =>  'success'
+            ];
+        }
+
         $model = AccountUsersService::create($request->validated());
 
         return ResponsableFactory::makeResponse($this, $model);
@@ -84,12 +121,18 @@ class AccountUsersController extends AbstractController
      * This method updates AccountUsers object on database.
      *
      * @param  $accountUsersId
-     * @param  CountryCreateRequest $request
+     * @param  AccountUsersUpdateRequest $request
      * @return mixed|null
      * @throws \NextDeveloper\Commons\Exceptions\CannotCreateModelException
      */
     public function update($accountUsersId, AccountUsersUpdateRequest $request)
     {
+        if($request->has('validateOnly') && $request->get('validateOnly') == true) {
+            return [
+                'validation'    =>  'success'
+            ];
+        }
+
         $model = AccountUsersService::update($accountUsersId, $request->validated());
 
         return ResponsableFactory::makeResponse($this, $model);
@@ -99,7 +142,6 @@ class AccountUsersController extends AbstractController
      * This method updates AccountUsers object on database.
      *
      * @param  $accountUsersId
-     * @param  CountryCreateRequest $request
      * @return mixed|null
      * @throws \NextDeveloper\Commons\Exceptions\CannotCreateModelException
      */

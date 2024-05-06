@@ -23,7 +23,7 @@ class AuthorizationScope implements Scope
      */
     public function apply(Builder $builder, Model $model) : void
     {
-        Log::debug('[AuthorizationScope] Adding authorization scope for model: ' . $model->getTable() );
+        Log::info('[AuthorizationScope] Adding authorization scope for model: ' . $model->getTable() );
 
         //  This is here to fix unwanted multiple applications of this scope
         if($this->isRoleApplied($builder, $model))
@@ -42,14 +42,14 @@ class AuthorizationScope implements Scope
             //$model->getTable() == 'iam_view_user_account' ||
             //$model->getTable() == 'iam_login_mechanisms'
         ) {
-            Log::debug('[AuthorizationScope] Bypassing model : ' . $model->getTable());
+            Log::info('[AuthorizationScope] Bypassing model : ' . $model->getTable());
             return;
         }
 
         //  This scope works for automated filtering of model requests. By using this global scope we have the
         //  capability to inject sql to the model. This way we don't need to deal with the security, most of the time.
         if($this->isBypass(request(), config('iam.auth_bypass_uris'))){
-            Log::debug('[AuthorizationScope] Bypassing because URI is: ' . request()->getRequestUri());
+            Log::info('[AuthorizationScope] Bypassing because URI is: ' . request()->getRequestUri());
             return;
         }
 
@@ -60,7 +60,7 @@ class AuthorizationScope implements Scope
         //  Here we are exiting if we dont have any roles. Because we don't need to apply any role to the model.
         if(!$roles) {
             $scope = $this->getAnonymous();
-            Log::debug('[AuthorizationScope] My user has no role. Applying: ' . get_class($scope));
+            Log::info('[AuthorizationScope] My user has no role. Applying: ' . get_class($scope));
 
             $scope->apply($builder, $model);
             return;
@@ -74,14 +74,14 @@ class AuthorizationScope implements Scope
 
             $role = app($role->class);
 
-            Log::debug('[AuthorizationScope] Testing our role against the model: ' . get_class($role)
+            Log::info('[AuthorizationScope] Testing our role against the model: ' . get_class($role)
                 . ' - ' . $model->getTable());
 
-            Log::debug('[AuthorizationScope] The result of canBeApplied is: ' . ($role->canBeApplied($model->getTable()) === true ? 'true' : 'false'));
+            Log::info('[AuthorizationScope] The result of canBeApplied is: ' . ($role->canBeApplied($model->getTable()) === true ? 'true' : 'false'));
 
             if($role->canBeApplied($model->getTable())) {
                 $scope = $role;
-                Log::debug('[AuthorizationScope] My user has role. Applying: ' . get_class($scope));
+                Log::info('[AuthorizationScope] My user has role. Applying: ' . get_class($scope));
 
                 if($this->isRoleApplied($builder, $model)) {
                     return;
@@ -91,15 +91,15 @@ class AuthorizationScope implements Scope
                     'is_authorized' => true
                 ]);
 
-                Log::debug('[AuthorizationScope] Applying role: ' . get_class($scope));
-                Log::debug('[AuthorizationScope] Applying to model: ' . $model->getTable());
+                Log::info('[AuthorizationScope] Applying role: ' . get_class($scope));
+                Log::info('[AuthorizationScope] Applying to model: ' . $model->getTable());
 
                 $scope->apply($builder, $model);
                 return;
             }
         }
 
-        Log::debug('[AuthorizationScope] Seems like I cannot apply any role, that is why I am adding anonymous role');
+        Log::info('[AuthorizationScope] Seems like I cannot apply any role, that is why I am adding anonymous role');
 
         $this->getAnonymous()->apply($builder, $model);
     }

@@ -10,12 +10,13 @@ use NextDeveloper\IAM\Database\Filters\LoginLogsQueryFilter;
 use NextDeveloper\IAM\Database\Models\LoginLogs;
 use NextDeveloper\IAM\Services\LoginLogsService;
 use NextDeveloper\IAM\Http\Requests\LoginLogs\LoginLogsCreateRequest;
-use NextDeveloper\Commons\Http\Traits\Tags;
+use NextDeveloper\Commons\Http\Traits\Tags;use NextDeveloper\Commons\Http\Traits\Addresses;
 class LoginLogsController extends AbstractController
 {
     private $model = LoginLogs::class;
 
     use Tags;
+    use Addresses;
     /**
      * This method returns the list of loginlogs.
      *
@@ -31,6 +32,36 @@ class LoginLogsController extends AbstractController
         $data = LoginLogsService::get($filter, $request->all());
 
         return ResponsableFactory::makeResponse($this, $data);
+    }
+
+    /**
+     * This function returns the list of actions that can be performed on this object.
+     *
+     * @return void
+     */
+    public function getActions()
+    {
+        $data = LoginLogsService::getActions();
+
+        return ResponsableFactory::makeResponse($this, $data);
+    }
+
+    /**
+     * Makes the related action to the object
+     *
+     * @param  $objectId
+     * @param  $action
+     * @return array
+     */
+    public function doAction($objectId, $action)
+    {
+        $actionId = LoginLogsService::doAction($objectId, $action);
+
+        return $this->withArray(
+            [
+            'action_id' =>  $actionId
+            ]
+        );
     }
 
     /**
@@ -75,6 +106,12 @@ class LoginLogsController extends AbstractController
      */
     public function store(LoginLogsCreateRequest $request)
     {
+        if($request->has('validateOnly') && $request->get('validateOnly') == true) {
+            return [
+                'validation'    =>  'success'
+            ];
+        }
+
         $model = LoginLogsService::create($request->validated());
 
         return ResponsableFactory::makeResponse($this, $model);
@@ -84,12 +121,18 @@ class LoginLogsController extends AbstractController
      * This method updates LoginLogs object on database.
      *
      * @param  $loginLogsId
-     * @param  CountryCreateRequest $request
+     * @param  LoginLogsUpdateRequest $request
      * @return mixed|null
      * @throws \NextDeveloper\Commons\Exceptions\CannotCreateModelException
      */
     public function update($loginLogsId, LoginLogsUpdateRequest $request)
     {
+        if($request->has('validateOnly') && $request->get('validateOnly') == true) {
+            return [
+                'validation'    =>  'success'
+            ];
+        }
+
         $model = LoginLogsService::update($loginLogsId, $request->validated());
 
         return ResponsableFactory::makeResponse($this, $model);
@@ -99,7 +142,6 @@ class LoginLogsController extends AbstractController
      * This method updates LoginLogs object on database.
      *
      * @param  $loginLogsId
-     * @param  CountryCreateRequest $request
      * @return mixed|null
      * @throws \NextDeveloper\Commons\Exceptions\CannotCreateModelException
      */
