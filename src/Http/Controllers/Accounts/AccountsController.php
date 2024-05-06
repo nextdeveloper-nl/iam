@@ -3,7 +3,6 @@
 namespace NextDeveloper\IAM\Http\Controllers\Accounts;
 
 use Illuminate\Http\Request;
-use Illuminate\Support\Str;
 use NextDeveloper\IAM\Http\Controllers\AbstractController;
 use NextDeveloper\Commons\Http\Response\ResponsableFactory;
 use NextDeveloper\IAM\Http\Requests\Accounts\AccountsUpdateRequest;
@@ -11,12 +10,13 @@ use NextDeveloper\IAM\Database\Filters\AccountsQueryFilter;
 use NextDeveloper\IAM\Database\Models\Accounts;
 use NextDeveloper\IAM\Services\AccountsService;
 use NextDeveloper\IAM\Http\Requests\Accounts\AccountsCreateRequest;
-use NextDeveloper\Commons\Http\Traits\Tags;
+use NextDeveloper\Commons\Http\Traits\Tags;use NextDeveloper\Commons\Http\Traits\Addresses;
 class AccountsController extends AbstractController
 {
     private $model = Accounts::class;
 
     use Tags;
+    use Addresses;
     /**
      * This method returns the list of accounts.
      *
@@ -32,6 +32,36 @@ class AccountsController extends AbstractController
         $data = AccountsService::get($filter, $request->all());
 
         return ResponsableFactory::makeResponse($this, $data);
+    }
+
+    /**
+     * This function returns the list of actions that can be performed on this object.
+     *
+     * @return void
+     */
+    public function getActions()
+    {
+        $data = AccountsService::getActions();
+
+        return ResponsableFactory::makeResponse($this, $data);
+    }
+
+    /**
+     * Makes the related action to the object
+     *
+     * @param  $objectId
+     * @param  $action
+     * @return array
+     */
+    public function doAction($objectId, $action)
+    {
+        $actionId = AccountsService::doAction($objectId, $action);
+
+        return $this->withArray(
+            [
+            'action_id' =>  $actionId
+            ]
+        );
     }
 
     /**
@@ -67,22 +97,6 @@ class AccountsController extends AbstractController
         return ResponsableFactory::makeResponse($this, $objects);
     }
 
-    public function action($id, $action)
-    {
-        $obj = Accounts::findByUuid($id);
-
-        //  reset-password  =>  ResetPassword
-        $action = Str::kebab($action);
-
-        if(class_exists('\NextDeveloper\IAM\Actions\Accounts\\' . $action)) {
-            $action = '\NextDeveloper\IAM\Actions\Accounts\\' . $action;
-            dispatch( new $action($obj) );
-        } else {
-            throw new \Exception('Cannot find the related action for thi object. '
-                . ' Please provide me a valid action');
-        }
-    }
-
     /**
      * This method created Accounts object on database.
      *
@@ -92,6 +106,12 @@ class AccountsController extends AbstractController
      */
     public function store(AccountsCreateRequest $request)
     {
+        if($request->has('validateOnly') && $request->get('validateOnly') == true) {
+            return [
+                'validation'    =>  'success'
+            ];
+        }
+
         $model = AccountsService::create($request->validated());
 
         return ResponsableFactory::makeResponse($this, $model);
@@ -101,12 +121,18 @@ class AccountsController extends AbstractController
      * This method updates Accounts object on database.
      *
      * @param  $accountsId
-     * @param  CountryCreateRequest $request
+     * @param  AccountsUpdateRequest $request
      * @return mixed|null
      * @throws \NextDeveloper\Commons\Exceptions\CannotCreateModelException
      */
     public function update($accountsId, AccountsUpdateRequest $request)
     {
+        if($request->has('validateOnly') && $request->get('validateOnly') == true) {
+            return [
+                'validation'    =>  'success'
+            ];
+        }
+
         $model = AccountsService::update($accountsId, $request->validated());
 
         return ResponsableFactory::makeResponse($this, $model);
@@ -116,7 +142,6 @@ class AccountsController extends AbstractController
      * This method updates Accounts object on database.
      *
      * @param  $accountsId
-     * @param  CountryCreateRequest $request
      * @return mixed|null
      * @throws \NextDeveloper\Commons\Exceptions\CannotCreateModelException
      */

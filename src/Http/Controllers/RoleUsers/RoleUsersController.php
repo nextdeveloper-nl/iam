@@ -10,12 +10,13 @@ use NextDeveloper\IAM\Database\Filters\RoleUsersQueryFilter;
 use NextDeveloper\IAM\Database\Models\RoleUsers;
 use NextDeveloper\IAM\Services\RoleUsersService;
 use NextDeveloper\IAM\Http\Requests\RoleUsers\RoleUsersCreateRequest;
-use NextDeveloper\Commons\Http\Traits\Tags;
+use NextDeveloper\Commons\Http\Traits\Tags;use NextDeveloper\Commons\Http\Traits\Addresses;
 class RoleUsersController extends AbstractController
 {
     private $model = RoleUsers::class;
 
     use Tags;
+    use Addresses;
     /**
      * This method returns the list of roleusers.
      *
@@ -31,6 +32,36 @@ class RoleUsersController extends AbstractController
         $data = RoleUsersService::get($filter, $request->all());
 
         return ResponsableFactory::makeResponse($this, $data);
+    }
+
+    /**
+     * This function returns the list of actions that can be performed on this object.
+     *
+     * @return void
+     */
+    public function getActions()
+    {
+        $data = RoleUsersService::getActions();
+
+        return ResponsableFactory::makeResponse($this, $data);
+    }
+
+    /**
+     * Makes the related action to the object
+     *
+     * @param  $objectId
+     * @param  $action
+     * @return array
+     */
+    public function doAction($objectId, $action)
+    {
+        $actionId = RoleUsersService::doAction($objectId, $action);
+
+        return $this->withArray(
+            [
+            'action_id' =>  $actionId
+            ]
+        );
     }
 
     /**
@@ -75,6 +106,12 @@ class RoleUsersController extends AbstractController
      */
     public function store(RoleUsersCreateRequest $request)
     {
+        if($request->has('validateOnly') && $request->get('validateOnly') == true) {
+            return [
+                'validation'    =>  'success'
+            ];
+        }
+
         $model = RoleUsersService::create($request->validated());
 
         return ResponsableFactory::makeResponse($this, $model);
@@ -84,12 +121,18 @@ class RoleUsersController extends AbstractController
      * This method updates RoleUsers object on database.
      *
      * @param  $roleUsersId
-     * @param  CountryCreateRequest $request
+     * @param  RoleUsersUpdateRequest $request
      * @return mixed|null
      * @throws \NextDeveloper\Commons\Exceptions\CannotCreateModelException
      */
     public function update($roleUsersId, RoleUsersUpdateRequest $request)
     {
+        if($request->has('validateOnly') && $request->get('validateOnly') == true) {
+            return [
+                'validation'    =>  'success'
+            ];
+        }
+
         $model = RoleUsersService::update($roleUsersId, $request->validated());
 
         return ResponsableFactory::makeResponse($this, $model);
@@ -99,7 +142,6 @@ class RoleUsersController extends AbstractController
      * This method updates RoleUsers object on database.
      *
      * @param  $roleUsersId
-     * @param  CountryCreateRequest $request
      * @return mixed|null
      * @throws \NextDeveloper\Commons\Exceptions\CannotCreateModelException
      */

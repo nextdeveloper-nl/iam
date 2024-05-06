@@ -10,12 +10,13 @@ use NextDeveloper\IAM\Database\Filters\RolesQueryFilter;
 use NextDeveloper\IAM\Database\Models\Roles;
 use NextDeveloper\IAM\Services\RolesService;
 use NextDeveloper\IAM\Http\Requests\Roles\RolesCreateRequest;
-use NextDeveloper\Commons\Http\Traits\Tags;
+use NextDeveloper\Commons\Http\Traits\Tags;use NextDeveloper\Commons\Http\Traits\Addresses;
 class RolesController extends AbstractController
 {
     private $model = Roles::class;
 
     use Tags;
+    use Addresses;
     /**
      * This method returns the list of roles.
      *
@@ -31,6 +32,36 @@ class RolesController extends AbstractController
         $data = RolesService::get($filter, $request->all());
 
         return ResponsableFactory::makeResponse($this, $data);
+    }
+
+    /**
+     * This function returns the list of actions that can be performed on this object.
+     *
+     * @return void
+     */
+    public function getActions()
+    {
+        $data = RolesService::getActions();
+
+        return ResponsableFactory::makeResponse($this, $data);
+    }
+
+    /**
+     * Makes the related action to the object
+     *
+     * @param  $objectId
+     * @param  $action
+     * @return array
+     */
+    public function doAction($objectId, $action)
+    {
+        $actionId = RolesService::doAction($objectId, $action);
+
+        return $this->withArray(
+            [
+            'action_id' =>  $actionId
+            ]
+        );
     }
 
     /**
@@ -75,6 +106,12 @@ class RolesController extends AbstractController
      */
     public function store(RolesCreateRequest $request)
     {
+        if($request->has('validateOnly') && $request->get('validateOnly') == true) {
+            return [
+                'validation'    =>  'success'
+            ];
+        }
+
         $model = RolesService::create($request->validated());
 
         return ResponsableFactory::makeResponse($this, $model);
@@ -84,12 +121,18 @@ class RolesController extends AbstractController
      * This method updates Roles object on database.
      *
      * @param  $rolesId
-     * @param  CountryCreateRequest $request
+     * @param  RolesUpdateRequest $request
      * @return mixed|null
      * @throws \NextDeveloper\Commons\Exceptions\CannotCreateModelException
      */
     public function update($rolesId, RolesUpdateRequest $request)
     {
+        if($request->has('validateOnly') && $request->get('validateOnly') == true) {
+            return [
+                'validation'    =>  'success'
+            ];
+        }
+
         $model = RolesService::update($rolesId, $request->validated());
 
         return ResponsableFactory::makeResponse($this, $model);
@@ -99,7 +142,6 @@ class RolesController extends AbstractController
      * This method updates Roles object on database.
      *
      * @param  $rolesId
-     * @param  CountryCreateRequest $request
      * @return mixed|null
      * @throws \NextDeveloper\Commons\Exceptions\CannotCreateModelException
      */

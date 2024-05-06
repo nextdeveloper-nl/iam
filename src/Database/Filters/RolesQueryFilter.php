@@ -17,17 +17,17 @@ class RolesQueryFilter extends AbstractQueryFilter
      * @var Builder
      */
     protected $builder;
-
+    
     public function name($value)
     {
         return $this->builder->where('name', 'like', '%' . $value . '%');
     }
-
+    
     public function class($value)
     {
         return $this->builder->where('class', 'like', '%' . $value . '%');
     }
-
+    
     public function description($value)
     {
         return $this->builder->where('description', 'like', '%' . $value . '%');
@@ -82,5 +82,6 @@ class RolesQueryFilter extends AbstractQueryFilter
     {
         return $this->builder->where('level', '<', $level);
     }
+
 
 }

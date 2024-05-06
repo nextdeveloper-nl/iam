@@ -10,12 +10,13 @@ use NextDeveloper\IAM\Database\Filters\RolePermissionsQueryFilter;
 use NextDeveloper\IAM\Database\Models\RolePermissions;
 use NextDeveloper\IAM\Services\RolePermissionsService;
 use NextDeveloper\IAM\Http\Requests\RolePermissions\RolePermissionsCreateRequest;
-use NextDeveloper\Commons\Http\Traits\Tags;
+use NextDeveloper\Commons\Http\Traits\Tags;use NextDeveloper\Commons\Http\Traits\Addresses;
 class RolePermissionsController extends AbstractController
 {
     private $model = RolePermissions::class;
 
     use Tags;
+    use Addresses;
     /**
      * This method returns the list of rolepermissions.
      *
@@ -31,6 +32,36 @@ class RolePermissionsController extends AbstractController
         $data = RolePermissionsService::get($filter, $request->all());
 
         return ResponsableFactory::makeResponse($this, $data);
+    }
+
+    /**
+     * This function returns the list of actions that can be performed on this object.
+     *
+     * @return void
+     */
+    public function getActions()
+    {
+        $data = RolePermissionsService::getActions();
+
+        return ResponsableFactory::makeResponse($this, $data);
+    }
+
+    /**
+     * Makes the related action to the object
+     *
+     * @param  $objectId
+     * @param  $action
+     * @return array
+     */
+    public function doAction($objectId, $action)
+    {
+        $actionId = RolePermissionsService::doAction($objectId, $action);
+
+        return $this->withArray(
+            [
+            'action_id' =>  $actionId
+            ]
+        );
     }
 
     /**
@@ -75,6 +106,12 @@ class RolePermissionsController extends AbstractController
      */
     public function store(RolePermissionsCreateRequest $request)
     {
+        if($request->has('validateOnly') && $request->get('validateOnly') == true) {
+            return [
+                'validation'    =>  'success'
+            ];
+        }
+
         $model = RolePermissionsService::create($request->validated());
 
         return ResponsableFactory::makeResponse($this, $model);
@@ -84,12 +121,18 @@ class RolePermissionsController extends AbstractController
      * This method updates RolePermissions object on database.
      *
      * @param  $rolePermissionsId
-     * @param  CountryCreateRequest $request
+     * @param  RolePermissionsUpdateRequest $request
      * @return mixed|null
      * @throws \NextDeveloper\Commons\Exceptions\CannotCreateModelException
      */
     public function update($rolePermissionsId, RolePermissionsUpdateRequest $request)
     {
+        if($request->has('validateOnly') && $request->get('validateOnly') == true) {
+            return [
+                'validation'    =>  'success'
+            ];
+        }
+
         $model = RolePermissionsService::update($rolePermissionsId, $request->validated());
 
         return ResponsableFactory::makeResponse($this, $model);
@@ -99,7 +142,6 @@ class RolePermissionsController extends AbstractController
      * This method updates RolePermissions object on database.
      *
      * @param  $rolePermissionsId
-     * @param  CountryCreateRequest $request
      * @return mixed|null
      * @throws \NextDeveloper\Commons\Exceptions\CannotCreateModelException
      */
