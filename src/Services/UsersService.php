@@ -9,12 +9,9 @@ use NextDeveloper\Commons\Database\Models\Languages;
 use NextDeveloper\IAM\Authorization\Roles\IAuthorizationRole;
 use NextDeveloper\IAM\Database\Filters\UsersQueryFilter;
 use NextDeveloper\IAM\Database\Models\AccountUserPerspective;
-use NextDeveloper\IAM\Database\Models\AccountUsers;
-use NextDeveloper\IAM\Database\Models\UserAccounts;
 use NextDeveloper\IAM\Database\Models\Users;
 use NextDeveloper\IAM\Helpers\UserHelper;
 use NextDeveloper\IAM\Services\AbstractServices\AbstractUsersService;
-use NextDeveloper\IAM\Services\Registration\RegistrationService;
 
 /**
  * This class is responsible from managing the data for Users
