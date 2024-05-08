@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\App;
 use NextDeveloper\Commons\Database\Models\Languages;
 use NextDeveloper\IAM\Authorization\Roles\IAuthorizationRole;
 use NextDeveloper\IAM\Database\Filters\UsersQueryFilter;
+use NextDeveloper\IAM\Database\Models\Accounts;
 use NextDeveloper\IAM\Database\Models\AccountUserPerspective;
 use NextDeveloper\IAM\Database\Models\Users;
 use NextDeveloper\IAM\Helpers\UserHelper;
@@ -71,7 +72,7 @@ class UsersService extends AbstractUsersService
      * @return Users
      * @throws \Exception
      */
-    public static function create(array $data) : Users {
+    public static function create(array $data, Accounts $accounts = null) : Users {
         if(!array_key_exists('common_language_id', $data)) {
             $lang = Languages::withoutGlobalScopes()->where('code', App::currentLocale())->first();
 
@@ -83,8 +84,11 @@ class UsersService extends AbstractUsersService
 
         $user = parent::create($data);
 
+        if(!$accounts)
+            $accounts = UserHelper::currentAccount();
+
         AccountUsersService::create([
-            'iam_account_id'    =>  UserHelper::currentAccount()->id,
+            'iam_account_id'    =>  $accounts->id,
             'iam_user_id'       =>  $user->id,
             'is_active'         =>  true
         ]);
