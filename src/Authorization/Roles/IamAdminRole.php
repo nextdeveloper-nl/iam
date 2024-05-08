@@ -104,8 +104,6 @@ class IamAdminRole extends AbstractRole implements IAuthorizationRole
             'iam_accounts:read',
             'iam_account_types:read',
             'iam_users:read',
-            'iam_roles:update',
-            'iam_roles:delete',
             'iam_roles:read',
             'iam_permissions:read',
             'iam_user_roles:read',

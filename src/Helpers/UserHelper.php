@@ -308,7 +308,9 @@ class UserHelper
      */
     public static function getWithEmail($email) : ?Users
     {
-        $users = Users::where('email', $email)->first();
+        $users = Users::withoutGlobalScope(AuthorizationScope::class)
+            ->where('email', $email)
+            ->first();
 
         return $users;
     }

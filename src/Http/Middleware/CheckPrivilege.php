@@ -14,9 +14,7 @@ class CheckPrivilege extends Middleware
     {
         Log::debug('[CheckPrivilege] Checking if the user has privilege to make the request.');
 
-        /**
-         * Here we will check if the person who makes the request has the privilege to make POST PUT PATCH DELETE requests.
-         */
+        
 
         return $next($request);
     }
