@@ -19,7 +19,9 @@ class AddIamParameters extends Middleware
             if($user) {
                 $request->query->add([
                     'iam_user_id' => $user->uuid,
-                    'iamUserId' => $user->uuid
+                    //  We are removing this below because it is creating a unwanted behaviour of
+                    //  filtering all objects if the owner is themselves
+                    // 'iamUserId' => $user->uuid
                 ]);
             }
         }
@@ -30,7 +32,9 @@ class AddIamParameters extends Middleware
             if($account) {
                 $request->query->add([
                     'iam_account_id' => $account->uuid,
-                    'iamAccountId' => $account->uuid
+                    //  We are removing this below because it is creating a unwanted behaviour of
+                    //  filtering all objects if the owner is themselves
+                    // 'iamAccountId' => $account->uuid
                 ]);
             }
         }
