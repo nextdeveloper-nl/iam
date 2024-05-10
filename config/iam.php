@@ -29,5 +29,6 @@ return [
     'auth_bypass_uris'  =>  [
         '/iam/authenticate/oauth/token'
     ],
-    ''
+    'anonymous_uris'    =>  [
+    ]
 ];
