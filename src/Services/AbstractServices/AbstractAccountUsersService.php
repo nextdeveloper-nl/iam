@@ -9,6 +9,7 @@ use Illuminate\Support\Str;
 use NextDeveloper\IAM\Helpers\UserHelper;
 use NextDeveloper\Commons\Common\Cache\CacheHelper;
 use NextDeveloper\Commons\Helpers\DatabaseHelper;
+use NextDeveloper\Commons\Database\Models\AvailableActions;
 use NextDeveloper\IAM\Database\Models\AccountUsers;
 use NextDeveloper\IAM\Database\Filters\AccountUsersQueryFilter;
 use NextDeveloper\Commons\Exceptions\ModelNotFoundException;
@@ -27,6 +28,8 @@ class AbstractAccountUsersService
     {
         $enablePaginate = array_key_exists('paginate', $params);
 
+        $request = new Request();
+
         /**
         * Here we are adding null request since if filter is null, this means that this function is called from
         * non http application. This is actually not I think its a correct way to handle this problem but it's a workaround.
@@ -34,7 +37,7 @@ class AbstractAccountUsersService
         * Please let me know if you have any other idea about this; baris.bulut@nextdeveloper.com
         */
         if($filter == null) {
-            $filter = new AccountUsersQueryFilter(new Request());
+            $filter = new AccountUsersQueryFilter($request);
         }
 
         $perPage = config('commons.pagination.per_page');
@@ -57,11 +60,16 @@ class AbstractAccountUsersService
 
         $model = AccountUsers::filter($filter);
 
-        if($model && $enablePaginate) {
-            return $model->paginate($perPage);
-        } else {
-            return $model->get();
+        if($enablePaginate) {
+            return new \Illuminate\Pagination\LengthAwarePaginator(
+                $model->skip(($request->get('page', 1) - 1) * $perPage)->take($perPage)->get(),
+                $model->count(),
+                $perPage,
+                $request->get('page', 1)
+            );
         }
+
+        return $model->get();
     }
 
     public static function getAll()
@@ -78,6 +86,38 @@ class AbstractAccountUsersService
     public static function getByRef($ref) : ?AccountUsers
     {
         return AccountUsers::findByRef($ref);
+    }
+
+    public static function getActions()
+    {
+        $model = AccountUsers::class;
+
+        $model = Str::remove('Database\\Models\\', $model);
+
+        $actions = AvailableActions::where('input', $model)
+            ->get();
+
+        return $actions;
+    }
+
+    /**
+     * This method initiates the related action with the given parameters.
+     */
+    public static function doAction($objectId, $action, ...$params)
+    {
+        $object = AccountUsers::where('uuid', $objectId)->first();
+
+        $action = '\\NextDeveloper\\IAM\\Actions\\AccountUsers\\' . Str::studly($action);
+
+        if(class_exists($action)) {
+            $action = new $action($object, $params);
+
+            dispatch($action);
+
+            return $action->getActionId();
+        }
+
+        return null;
     }
 
     /**
@@ -127,23 +167,15 @@ class AbstractAccountUsersService
      */
     public static function create(array $data)
     {
-        if (array_key_exists('common_language_id', $data)) {
-            $data['common_language_id'] = DatabaseHelper::uuidToId(
-                '\NextDeveloper\Commons\Database\Models\Languages',
-                $data['common_language_id']
-            );
-        }
-        if (array_key_exists('common_country_id', $data)) {
-            $data['common_country_id'] = DatabaseHelper::uuidToId(
-                '\NextDeveloper\Commons\Database\Models\Countries',
-                $data['common_country_id']
-            );
-        }
         if (array_key_exists('iam_user_id', $data)) {
             $data['iam_user_id'] = DatabaseHelper::uuidToId(
                 '\NextDeveloper\IAM\Database\Models\Users',
                 $data['iam_user_id']
             );
+        }
+                    
+        if(!array_key_exists('iam_user_id', $data)) {
+            $data['iam_user_id']    = UserHelper::me()->id;
         }
         if (array_key_exists('iam_account_id', $data)) {
             $data['iam_account_id'] = DatabaseHelper::uuidToId(
@@ -151,15 +183,11 @@ class AbstractAccountUsersService
                 $data['iam_account_id']
             );
         }
-    
+            
         if(!array_key_exists('iam_account_id', $data)) {
             $data['iam_account_id'] = UserHelper::currentAccount()->id;
         }
-
-        if(!array_key_exists('iam_user_id', $data)) {
-            $data['iam_user_id']    = UserHelper::me()->id;
-        }
-
+                        
         try {
             $model = AccountUsers::create($data);
         } catch(\Exception $e) {
@@ -200,18 +228,6 @@ class AbstractAccountUsersService
     {
         $model = AccountUsers::where('uuid', $id)->first();
 
-        if (array_key_exists('common_language_id', $data)) {
-            $data['common_language_id'] = DatabaseHelper::uuidToId(
-                '\NextDeveloper\Commons\Database\Models\Languages',
-                $data['common_language_id']
-            );
-        }
-        if (array_key_exists('common_country_id', $data)) {
-            $data['common_country_id'] = DatabaseHelper::uuidToId(
-                '\NextDeveloper\Commons\Database\Models\Countries',
-                $data['common_country_id']
-            );
-        }
         if (array_key_exists('iam_user_id', $data)) {
             $data['iam_user_id'] = DatabaseHelper::uuidToId(
                 '\NextDeveloper\IAM\Database\Models\Users',

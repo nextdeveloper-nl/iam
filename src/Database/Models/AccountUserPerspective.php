@@ -28,14 +28,12 @@ use NextDeveloper\Commons\Database\Traits\Taggable;
  * @property string $nin
  * @property integer $common_language_id
  * @property integer $common_country_id
- * @property integer $iam_user_id
  * @property \Carbon\Carbon $created_at
  * @property \Carbon\Carbon $updated_at
  * @property \Carbon\Carbon $deleted_at
  * @property string $phone_number
  * @property integer $iam_account_id
  * @property boolean $is_active
- * @property $session_data
  */
 class AccountUserPerspective extends Model
 {
@@ -65,11 +63,9 @@ class AccountUserPerspective extends Model
             'nin',
             'common_language_id',
             'common_country_id',
-            'iam_user_id',
             'phone_number',
             'iam_account_id',
             'is_active',
-            'session_data',
     ];
 
     /**
@@ -109,7 +105,6 @@ class AccountUserPerspective extends Model
     'deleted_at' => 'datetime',
     'phone_number' => 'string',
     'is_active' => 'boolean',
-    'session_data' => 'array',
     ];
 
     /**
@@ -172,6 +167,7 @@ class AccountUserPerspective extends Model
     }
 
     // EDIT AFTER HERE - WARNING: ABOVE THIS LINE MAY BE REGENERATED AND YOU MAY LOSE CODE
+
 
 
 

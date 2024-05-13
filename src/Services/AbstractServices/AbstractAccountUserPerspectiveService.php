@@ -9,6 +9,7 @@ use Illuminate\Support\Str;
 use NextDeveloper\IAM\Helpers\UserHelper;
 use NextDeveloper\Commons\Common\Cache\CacheHelper;
 use NextDeveloper\Commons\Helpers\DatabaseHelper;
+use NextDeveloper\Commons\Database\Models\AvailableActions;
 use NextDeveloper\IAM\Database\Models\AccountUserPerspective;
 use NextDeveloper\IAM\Database\Filters\AccountUserPerspectiveQueryFilter;
 use NextDeveloper\Commons\Exceptions\ModelNotFoundException;
@@ -27,6 +28,8 @@ class AbstractAccountUserPerspectiveService
     {
         $enablePaginate = array_key_exists('paginate', $params);
 
+        $request = new Request();
+
         /**
         * Here we are adding null request since if filter is null, this means that this function is called from
         * non http application. This is actually not I think its a correct way to handle this problem but it's a workaround.
@@ -34,7 +37,7 @@ class AbstractAccountUserPerspectiveService
         * Please let me know if you have any other idea about this; baris.bulut@nextdeveloper.com
         */
         if($filter == null) {
-            $filter = new AccountUserPerspectiveQueryFilter(new Request());
+            $filter = new AccountUserPerspectiveQueryFilter($request);
         }
 
         $perPage = config('commons.pagination.per_page');
@@ -57,11 +60,16 @@ class AbstractAccountUserPerspectiveService
 
         $model = AccountUserPerspective::filter($filter);
 
-        if($model && $enablePaginate) {
-            return $model->paginate($perPage);
-        } else {
-            return $model->get();
+        if($enablePaginate) {
+            return new \Illuminate\Pagination\LengthAwarePaginator(
+                $model->skip(($request->get('page', 1) - 1) * $perPage)->take($perPage)->get(),
+                $model->count(),
+                $perPage,
+                $request->get('page', 1)
+            );
         }
+
+        return $model->get();
     }
 
     public static function getAll()
@@ -78,6 +86,38 @@ class AbstractAccountUserPerspectiveService
     public static function getByRef($ref) : ?AccountUserPerspective
     {
         return AccountUserPerspective::findByRef($ref);
+    }
+
+    public static function getActions()
+    {
+        $model = AccountUserPerspective::class;
+
+        $model = Str::remove('Database\\Models\\', $model);
+
+        $actions = AvailableActions::where('input', $model)
+            ->get();
+
+        return $actions;
+    }
+
+    /**
+     * This method initiates the related action with the given parameters.
+     */
+    public static function doAction($objectId, $action, ...$params)
+    {
+        $object = AccountUserPerspective::where('uuid', $objectId)->first();
+
+        $action = '\\NextDeveloper\\IAM\\Actions\\AccountUserPerspective\\' . Str::studly($action);
+
+        if(class_exists($action)) {
+            $action = new $action($object, $params);
+
+            dispatch($action);
+
+            return $action->getActionId();
+        }
+
+        return null;
     }
 
     /**
@@ -139,27 +179,17 @@ class AbstractAccountUserPerspectiveService
                 $data['common_country_id']
             );
         }
-        if (array_key_exists('iam_user_id', $data)) {
-            $data['iam_user_id'] = DatabaseHelper::uuidToId(
-                '\NextDeveloper\IAM\Database\Models\Users',
-                $data['iam_user_id']
-            );
-        }
         if (array_key_exists('iam_account_id', $data)) {
             $data['iam_account_id'] = DatabaseHelper::uuidToId(
                 '\NextDeveloper\IAM\Database\Models\Accounts',
                 $data['iam_account_id']
             );
         }
-    
+            
         if(!array_key_exists('iam_account_id', $data)) {
             $data['iam_account_id'] = UserHelper::currentAccount()->id;
         }
-
-        if(!array_key_exists('iam_user_id', $data)) {
-            $data['iam_user_id']    = UserHelper::me()->id;
-        }
-
+                        
         try {
             $model = AccountUserPerspective::create($data);
         } catch(\Exception $e) {
@@ -210,12 +240,6 @@ class AbstractAccountUserPerspectiveService
             $data['common_country_id'] = DatabaseHelper::uuidToId(
                 '\NextDeveloper\Commons\Database\Models\Countries',
                 $data['common_country_id']
-            );
-        }
-        if (array_key_exists('iam_user_id', $data)) {
-            $data['iam_user_id'] = DatabaseHelper::uuidToId(
-                '\NextDeveloper\IAM\Database\Models\Users',
-                $data['iam_user_id']
             );
         }
         if (array_key_exists('iam_account_id', $data)) {
