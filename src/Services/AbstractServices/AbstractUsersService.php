@@ -9,6 +9,7 @@ use Illuminate\Support\Str;
 use NextDeveloper\IAM\Helpers\UserHelper;
 use NextDeveloper\Commons\Common\Cache\CacheHelper;
 use NextDeveloper\Commons\Helpers\DatabaseHelper;
+use NextDeveloper\Commons\Database\Models\AvailableActions;
 use NextDeveloper\IAM\Database\Models\Users;
 use NextDeveloper\IAM\Database\Filters\UsersQueryFilter;
 use NextDeveloper\Commons\Exceptions\ModelNotFoundException;
@@ -27,6 +28,8 @@ class AbstractUsersService
     {
         $enablePaginate = array_key_exists('paginate', $params);
 
+        $request = new Request();
+
         /**
         * Here we are adding null request since if filter is null, this means that this function is called from
         * non http application. This is actually not I think its a correct way to handle this problem but it's a workaround.
@@ -34,7 +37,7 @@ class AbstractUsersService
         * Please let me know if you have any other idea about this; baris.bulut@nextdeveloper.com
         */
         if($filter == null) {
-            $filter = new UsersQueryFilter(new Request());
+            $filter = new UsersQueryFilter($request);
         }
 
         $perPage = config('commons.pagination.per_page');
@@ -57,11 +60,16 @@ class AbstractUsersService
 
         $model = Users::filter($filter);
 
-        if($model && $enablePaginate) {
-            return $model->paginate($perPage);
-        } else {
-            return $model->get();
+        if($enablePaginate) {
+            return new \Illuminate\Pagination\LengthAwarePaginator(
+                $model->skip(($request->get('page', 1) - 1) * $perPage)->take($perPage)->get(),
+                $model->count(),
+                $perPage,
+                $request->get('page', 1)
+            );
         }
+
+        return $model->get();
     }
 
     public static function getAll()
@@ -78,6 +86,38 @@ class AbstractUsersService
     public static function getByRef($ref) : ?Users
     {
         return Users::findByRef($ref);
+    }
+
+    public static function getActions()
+    {
+        $model = Users::class;
+
+        $model = Str::remove('Database\\Models\\', $model);
+
+        $actions = AvailableActions::where('input', $model)
+            ->get();
+
+        return $actions;
+    }
+
+    /**
+     * This method initiates the related action with the given parameters.
+     */
+    public static function doAction($objectId, $action, ...$params)
+    {
+        $object = Users::where('uuid', $objectId)->first();
+
+        $action = '\\NextDeveloper\\IAM\\Actions\\Users\\' . Str::studly($action);
+
+        if(class_exists($action)) {
+            $action = new $action($object, $params);
+
+            dispatch($action);
+
+            return $action->getActionId();
+        }
+
+        return null;
     }
 
     /**
@@ -145,7 +185,7 @@ class AbstractUsersService
                 $data['profile_picture_id']
             );
         }
-
+                        
         try {
             $model = Users::create($data);
         } catch(\Exception $e) {
@@ -204,7 +244,7 @@ class AbstractUsersService
                 $data['profile_picture_id']
             );
         }
-
+    
         Events::fire('updating:NextDeveloper\IAM\Users', $model);
 
         try {
