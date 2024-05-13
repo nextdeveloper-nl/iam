@@ -11,6 +11,18 @@ use NextDeveloper\Commons\Http\Transformers\StatesTransformer;
 use NextDeveloper\IAM\Database\Models\LoginMechanisms;
 use NextDeveloper\Commons\Http\Transformers\AbstractTransformer;
 use NextDeveloper\IAM\Database\Scopes\AuthorizationScope;
+use NextDeveloper\Commons\Database\Models\Addresses;
+use NextDeveloper\Commons\Database\Models\Comments;
+use NextDeveloper\Commons\Database\Models\Meta;
+use NextDeveloper\Commons\Database\Models\PhoneNumbers;
+use NextDeveloper\Commons\Database\Models\SocialMedia;
+use NextDeveloper\Commons\Database\Models\Votes;
+use NextDeveloper\Commons\Http\Transformers\CommentsTransformer;
+use NextDeveloper\Commons\Http\Transformers\SocialMediaTransformer;
+use NextDeveloper\Commons\Http\Transformers\MetaTransformer;
+use NextDeveloper\Commons\Http\Transformers\VotesTransformer;
+use NextDeveloper\Commons\Http\Transformers\AddressesTransformer;
+use NextDeveloper\Commons\Http\Transformers\PhoneNumbersTransformer;
 
 /**
  * Class LoginMechanismsTransformer. This class is being used to manipulate the data we are serving to the customer
@@ -26,7 +38,13 @@ class AbstractLoginMechanismsTransformer extends AbstractTransformer
     protected array $availableIncludes = [
         'states',
         'actions',
-        'media'
+        'media',
+        'comments',
+        'votes',
+        'socialMedia',
+        'phoneNumbers',
+        'addresses',
+        'meta'
     ];
 
     /**
@@ -36,8 +54,8 @@ class AbstractLoginMechanismsTransformer extends AbstractTransformer
      */
     public function transform(LoginMechanisms $model)
     {
-                        $iamUserId = \NextDeveloper\IAM\Database\Models\Users::where('id', $model->iam_user_id)->first();
-        
+                                                $iamUserId = \NextDeveloper\IAM\Database\Models\Users::where('id', $model->iam_user_id)->first();
+                        
         return $this->buildPayload(
             [
             'id'  =>  $model->uuid,
@@ -76,7 +94,7 @@ class AbstractLoginMechanismsTransformer extends AbstractTransformer
         return $this->collection($actions, new AvailableActionsTransformer());
     }
 
-    public function includeMedia(Datacenters $model)
+    public function includeMedia(LoginMechanisms $model)
     {
         $media = Media::where('object_type', get_class($model))
             ->where('object_id', $model->id)
@@ -85,6 +103,61 @@ class AbstractLoginMechanismsTransformer extends AbstractTransformer
         return $this->collection($media, new MediaTransformer());
     }
 
+    public function includeSocialMedia(LoginMechanisms $model)
+    {
+        $socialMedia = SocialMedia::where('object_type', get_class($model))
+            ->where('object_id', $model->id)
+            ->get();
+
+        return $this->collection($socialMedia, new SocialMediaTransformer());
+    }
+
+    public function includeComments(LoginMechanisms $model)
+    {
+        $comments = Comments::where('object_type', get_class($model))
+            ->where('object_id', $model->id)
+            ->get();
+
+        return $this->collection($comments, new CommentsTransformer());
+    }
+
+    public function includeVotes(LoginMechanisms $model)
+    {
+        $votes = Votes::where('object_type', get_class($model))
+            ->where('object_id', $model->id)
+            ->get();
+
+        return $this->collection($votes, new VotesTransformer());
+    }
+
+    public function includeMeta(LoginMechanisms $model)
+    {
+        $meta = Meta::where('object_type', get_class($model))
+            ->where('object_id', $model->id)
+            ->get();
+
+        return $this->collection($meta, new MetaTransformer());
+    }
+
+    public function includePhoneNumbers(LoginMechanisms $model)
+    {
+        $phoneNumbers = PhoneNumbers::where('object_type', get_class($model))
+            ->where('object_id', $model->id)
+            ->get();
+
+        return $this->collection($phoneNumbers, new PhoneNumbersTransformer());
+    }
+
+    public function includeAddresses(LoginMechanisms $model)
+    {
+        $addresses = Addresses::where('object_type', get_class($model))
+            ->where('object_id', $model->id)
+            ->get();
+
+        return $this->collection($addresses, new AddressesTransformer());
+    }
     // EDIT AFTER HERE - WARNING: ABOVE THIS LINE MAY BE REGENERATED AND YOU MAY LOSE CODE
+
+
 
 }
