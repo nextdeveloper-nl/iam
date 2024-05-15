@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Validation\UnauthorizedException;
 use NextDeveloper\Commons\Common\Cache\CacheHelper;
 use NextDeveloper\Commons\Database\Models\Languages;
@@ -349,6 +350,48 @@ class UserHelper
                 return true;
         }
 
+        return false;
+    }
+
+    public static function can($method, $model) {
+        $roles = self::getRoles();
+
+        $operation = $model->getTable();
+
+        switch ($method) {
+            case 'read':
+                $operation .= ':read';
+                break;
+            case 'create':
+                $operation .= ':create';
+                break;
+            case 'update':
+                $operation .= ':update';
+                break;
+            case 'delete':
+                $operation .= ':delete';
+                break;
+        }
+
+        foreach ($roles as $role) {
+            Log::info('[UserHelper@can] role name: ' . $role->name);
+
+            if (!$role->class) {
+                UserHelper::removeFromRole($role);
+                continue;
+            }
+
+            $role = app($role->class);
+
+            if($role->canBeApplied($model->getTable())) {
+                if(in_array($operation, $role->allowedOperations())) {
+                    Log::info('[UserHelper@can] My user can do this operation: ' . $operation);
+                    return true;
+                }
+            }
+        }
+
+        Log::info('[UserHelper@can] My user cannot do this operation: ' . $operation);
         return false;
     }
 

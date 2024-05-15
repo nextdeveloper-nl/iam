@@ -37,7 +37,7 @@ use NextDeveloper\Commons\Database\Traits\Taggable;
  * @property \Carbon\Carbon $created_at
  * @property \Carbon\Carbon $updated_at
  * @property \Carbon\Carbon $deleted_at
- * @property integer $profile_picture_id
+ * @property integer $profile_picture_identity
  * @property boolean $is_registered
  */
 class Users extends Model
@@ -70,7 +70,7 @@ class Users extends Model
             'common_country_id',
             'phone_number',
             'tags',
-            'profile_picture_id',
+            'profile_picture_identity',
             'is_registered',
     ];
 
@@ -111,7 +111,7 @@ class Users extends Model
     'created_at' => 'datetime',
     'updated_at' => 'datetime',
     'deleted_at' => 'datetime',
-    'profile_picture_id' => 'integer',
+    'profile_picture_identity' => 'integer',
     'is_registered' => 'boolean',
     ];
 
@@ -180,6 +180,7 @@ class Users extends Model
     use SendEmail;
     use SendNotification;
     use SendSMS;
+
 
 
 

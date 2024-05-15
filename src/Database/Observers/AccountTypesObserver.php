@@ -4,19 +4,23 @@ namespace NextDeveloper\IAM\Database\Observers;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Auth;
+use NextDeveloper\Commons\Exceptions\NotAllowedException;
+use NextDeveloper\IAM\Helpers\UserHelper;
 
 /**
  * Class AccountTypesObserver
+ *
  * @package NextDeveloper\IAM\Database\Observers
  */
 class AccountTypesObserver
 {
     /**
-    * Triggered when a new record is retrieved.
-    *
-    * @param Model $model
-    */
-    public function retrieved(Model $model){
+     * Triggered when a new record is retrieved.
+     *
+     * @param Model $model
+     */
+    public function retrieved(Model $model)
+    {
 
     }
 
@@ -27,6 +31,10 @@ class AccountTypesObserver
      */
     public function creating(Model $model)
     {
+        throw_if(
+            !UserHelper::can('create', $model),
+            new NotAllowedException('You are not allowed to create this record')
+        );
     }
 
     /**
@@ -45,6 +53,10 @@ class AccountTypesObserver
      */
     public function saving(Model $model)
     {
+        throw_if(
+            !UserHelper::can('update', $model),
+            new NotAllowedException('You are not allowed to create this record')
+        );
     }
 
     /**
@@ -59,10 +71,13 @@ class AccountTypesObserver
 
     /**
      * @param Model $model
-     *
      */
     public function updating(Model $model)
     {
+        throw_if(
+            !UserHelper::can('update', $model),
+            new NotAllowedException('You are not allowed to create this record')
+        );
     }
 
     /**
@@ -77,10 +92,13 @@ class AccountTypesObserver
 
     /**
      * @param Model $model
-     *
      */
     public function deleting(Model $model)
     {
+        throw_if(
+            !UserHelper::can('delete', $model),
+            new NotAllowedException('You are not allowed to create this record')
+        );
     }
 
     /**
@@ -99,6 +117,10 @@ class AccountTypesObserver
      */
     public function restoring(Model $model)
     {
+        throw_if(
+            !UserHelper::can('restore', $model),
+            new NotAllowedException('You are not allowed to create this record')
+        );
     }
 
     /**
