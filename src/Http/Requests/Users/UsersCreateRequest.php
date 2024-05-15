@@ -26,7 +26,7 @@ class UsersCreateRequest extends AbstractFormRequest
         'common_country_id' => 'nullable|exists:common_countries,uuid|uuid',
         'phone_number' => 'nullable|string',
         'tags' => '',
-        'profile_picture_id' => 'nullable|exists:common_media,uuid|uuid',
+        'profile_picture_identity' => 'nullable|integer',
         'is_registered' => 'boolean',
         ];
     }

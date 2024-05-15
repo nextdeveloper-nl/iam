@@ -4,7 +4,7 @@ namespace NextDeveloper\IAM\Database\Filters;
 
 use Illuminate\Database\Eloquent\Builder;
 use NextDeveloper\Commons\Database\Filters\AbstractQueryFilter;
-            
+        
 
 /**
  * This class automatically puts where clause on database so that use can filter
@@ -83,6 +83,19 @@ class UsersQueryFilter extends AbstractQueryFilter
         return $this->builder->where('phone_number', 'like', '%' . $value . '%');
     }
 
+    public function profilePictureIdentity($value)
+    {
+        $operator = substr($value, 0, 1);
+
+        if ($operator != '<' || $operator != '>') {
+            $operator = '=';
+        } else {
+            $value = substr($value, 1);
+        }
+
+        return $this->builder->where('profile_picture_identity', $operator, $value);
+    }
+
     public function isRegistered()
     {
         return $this->builder->where('is_registered', true);
@@ -146,16 +159,8 @@ class UsersQueryFilter extends AbstractQueryFilter
         }
     }
 
-    public function profilePictureId($value)
-    {
-            $profilePicture = \NextDeveloper\Commons\Database\Models\Media::where('uuid', $value)->first();
-
-        if($profilePicture) {
-            return $this->builder->where('profile_picture_id', '=', $profilePicture->id);
-        }
-    }
-
     // EDIT AFTER HERE - WARNING: ABOVE THIS LINE MAY BE REGENERATED AND YOU MAY LOSE CODE\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n
+
 
 
 

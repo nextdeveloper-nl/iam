@@ -56,7 +56,6 @@ class AbstractUsersTransformer extends AbstractTransformer
     {
                                                 $commonLanguageId = \NextDeveloper\Commons\Database\Models\Languages::where('id', $model->common_language_id)->first();
                                                             $commonCountryId = \NextDeveloper\Commons\Database\Models\Countries::where('id', $model->common_country_id)->first();
-                                                            $profilePictureId = \NextDeveloper\Commons\Database\Models\Media::where('id', $model->profile_picture_id)->first();
                         
         return $this->buildPayload(
             [
@@ -77,7 +76,7 @@ class AbstractUsersTransformer extends AbstractTransformer
             'created_at'  =>  $model->created_at,
             'updated_at'  =>  $model->updated_at,
             'deleted_at'  =>  $model->deleted_at,
-            'profile_picture_id'  =>  $profilePictureId ? $profilePictureId->uuid : null,
+            'profile_picture_identity'  =>  $model->profile_picture_identity,
             'is_registered'  =>  $model->is_registered,
             ]
         );
@@ -167,6 +166,7 @@ class AbstractUsersTransformer extends AbstractTransformer
         return $this->collection($addresses, new AddressesTransformer());
     }
     // EDIT AFTER HERE - WARNING: ABOVE THIS LINE MAY BE REGENERATED AND YOU MAY LOSE CODE
+
 
 
 
