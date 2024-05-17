@@ -81,8 +81,6 @@ class UserHelper
             ->where('id', $userId)
             ->first();
 
-        \SessionRegistry::set('user', $user);
-
         self::$user = $user;
 
         return $user;
@@ -92,8 +90,6 @@ class UserHelper
         $account = Accounts::withoutGlobalScopes()
             ->where('id', $accountId)
             ->first();
-
-        \SessionRegistry::set('account', $account);
 
         return $account;
     }
