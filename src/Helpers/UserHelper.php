@@ -27,6 +27,8 @@ class UserHelper
 {
     private static $user;
 
+    private static $account;
+
     /**
      * This function returns the User object for the current logged in user.
      *
@@ -84,6 +86,16 @@ class UserHelper
         self::$user = $user;
 
         return $user;
+    }
+
+    public static function setCurrentAccountById($accountId) {
+        $account = Accounts::withoutGlobalScopes()
+            ->where('id', $accountId)
+            ->first();
+
+        \SessionRegistry::set('account', $account);
+
+        return $account;
     }
 
     /**
@@ -179,6 +191,10 @@ class UserHelper
      */
     public static function currentAccount(Users $user = null) : ?Accounts
     {
+        //  :WARNING: Don't forget to change the account when the user changes the account
+        if(self::$account)
+            return self::$account;
+
         $current = null;
         $relation = null;
 
@@ -238,6 +254,8 @@ class UserHelper
             ->where('id', $relation->iam_account_id)
             ->first();
 
+        self::$account = $current;
+
         return $current;
     }
 
@@ -249,6 +267,9 @@ class UserHelper
      */
     public static function switchAccountTo(Accounts $account = null) : Accounts
     {
+        //  We need to reset the current account object not to create any problems
+        self::$account = null;
+
         $me = self::me();
 
         $teams = UserHelper::allAccounts($me);
