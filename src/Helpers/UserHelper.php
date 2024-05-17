@@ -25,6 +25,8 @@ use NextDeveloper\IAM\Services\UsersService;
 
 class UserHelper
 {
+    private static $user;
+
     /**
      * This function returns the User object for the current logged in user.
      *
@@ -32,6 +34,9 @@ class UserHelper
      */
     public static function me()
     {
+        if(self::$user)
+            return self::$user;
+
         /**
          * This will return the User object of the logged in user
          */
@@ -53,12 +58,14 @@ class UserHelper
             ->where('id', $token[0]->user_id)
             ->first();
 
+        self::$user = $user;
+
         return $user;
     }
 
     public static function currentUser()
     {
-        return self::me();
+        return self::$user;
     }
 
     /**
@@ -71,6 +78,10 @@ class UserHelper
         $user = Users::withoutGlobalScopes()
             ->where('id', $userId)
             ->first();
+
+        \SessionRegistry::set('user', $user);
+
+        self::$user = $user;
 
         return $user;
     }
