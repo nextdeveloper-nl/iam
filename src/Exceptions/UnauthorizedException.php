@@ -35,18 +35,4 @@ class UnauthorizedException extends AbstractCommonsException
 
         parent::__construct($message, $code, $previous);
     }
-
-    /**
-     * @param \Illuminate\Http\Request
-     *
-     * @return mixed
-     */
-    public function render($request) {
-        $message = $this->getMessage();
-
-        $message = $this->defaultMessage . ' Here is an additional message, that may solve your problem: ' . $message;
-
-        return response()->api()->errorUnprocessable( $message ?: $this->defaultMessage );
-    }
-
 }
