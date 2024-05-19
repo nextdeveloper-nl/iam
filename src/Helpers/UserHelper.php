@@ -381,46 +381,32 @@ class UserHelper
         return false;
     }
 
-    public static function can($method, $model) {
-        $roles = self::getRoles();
-
-        $operation = $model->getTable();
-
-        switch ($method) {
-            case 'read':
-                $operation .= ':read';
-                break;
-            case 'create':
-                $operation .= ':create';
-                break;
-            case 'update':
-                $operation .= ':update';
-                break;
-            case 'delete':
-                $operation .= ':delete';
-                break;
-        }
+    public static function getRoleForModel($model, Users $user = null) : ?Roles
+    {
+        $roles = self::getRoles($user);
 
         foreach ($roles as $role) {
-            Log::info('[UserHelper@can] role name: ' . $role->name);
+            $roleClass = app($role->class);
 
-            if (!$role->class) {
-                UserHelper::removeFromRole($role);
-                continue;
-            }
-
-            $role = app($role->class);
-
-            if($role->canBeApplied($model->getTable())) {
-                if(in_array($operation, $role->allowedOperations())) {
-                    Log::info('[UserHelper@can] My user can do this operation: ' . $operation);
-                    return true;
-                }
+            if($roleClass->canBeApplied($model->getTable())) {
+                return Roles::withoutGlobalScope(AuthorizationScope::class)
+                    ->where('id', $role->iam_role_id)
+                    ->first();
             }
         }
 
-        Log::info('[UserHelper@can] My user cannot do this operation: ' . $operation);
-        return false;
+        return null;
+    }
+
+    public static function can($method, $model, Users $user = null) {
+        if(!$user)
+            $user = self::me();
+
+        $roleForModel = self::getRoleForModel($model, $user);
+
+        $roleClass = app($roleForModel->class);
+
+        return $roleClass->checkPolicy($method, $model, $user);
     }
 
     public static function currentRole(Users $user = null) : ?Roles

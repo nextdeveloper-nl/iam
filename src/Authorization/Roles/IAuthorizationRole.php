@@ -31,6 +31,4 @@ interface IAuthorizationRole
     public function getModule();
 
     public function allowedOperations() : array;
-
-    public function checkRules(Users $users) : bool;
 }
