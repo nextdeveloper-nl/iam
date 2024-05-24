@@ -44,19 +44,25 @@ class MemberRole extends AbstractRole implements IAuthorizationRole
         $where = [];
 
         if($isAccountIdExists) {
-            Log::info('[MemberRole] Applying iam_account_id');
+            if(config('leo.debug.authorization_role'))
+                Log::info('[MemberRole] Applying iam_account_id');
+
             $where[] = ['iam_account_id', UserHelper::currentAccount()->id];
             $builder->where('iam_account_id', UserHelper::currentAccount()->id);
         }
 
         if($isUserIdExists) {
-            Log::info('[MemberRole] Applying iam_user_id');
+            if(config('leo.debug.authorization_role'))
+                Log::info('[MemberRole] Applying iam_user_id');
+
             $where[] = ['iam_user_id', UserHelper::me()->id];
             $builder->where('iam_user_id', UserHelper::me()->id);
         }
 
         if($isPublicExists) {
-            Log::info('[MemberRole] Applying is_public = true and user model');
+            if(config('leo.debug.authorization_role'))
+                Log::info('[MemberRole] Applying is_public = true and user model');
+
             $builder->where('is_public', true)
                 ->orWhere($where);
         } else {
