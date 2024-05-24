@@ -11,7 +11,8 @@ class AddIamParameters extends Middleware
 {
     public function handle($request, Closure $next, ...$guards)
     {
-        Log::debug('[AddIamParameters] Trying to find user.');
+        if(config('leo.debug.authorization_roles'))
+            Log::debug('[AddIamParameters] Trying to find user.');
 
         if(!$request->has('iam_user_id')) {
             $user = UserHelper::me();

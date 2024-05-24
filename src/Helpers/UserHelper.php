@@ -406,7 +406,12 @@ class UserHelper
 
         $roleClass = app($roleForModel->class);
 
-        return $roleClass->checkPolicy($method, $model, $user);
+        $result = $roleClass->checkPolicy($method, $model, $user);
+
+        if(!$result)
+            Log::warning('[UserHelper@can] User can not do this operation: ' . $method . ' on ' . $model->getTable() . ' with this role: ' . get_class($roleClass));
+
+        return $result;
     }
 
     public static function currentRole(Users $user = null) : ?Roles
