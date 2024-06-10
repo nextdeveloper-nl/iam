@@ -55,7 +55,7 @@ class AccountUsersController extends AbstractController
      */
     public function doAction($objectId, $action)
     {
-        $actionId = AccountUsersService::doAction($objectId, $action);
+        $actionId = AccountUsersService::doAction($objectId, $action, request()->all());
 
         return $this->withArray(
             [

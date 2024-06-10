@@ -110,16 +110,11 @@ class IAMServiceProvider extends AbstractServiceProvider {
      * @return void
      */
     protected function registerRoutes() {
-        if ( ! $this->app->routesAreCached()) {
+        if ( ! $this->app->routesAreCached() && config('leo.allowed_routes.communication', true) ) {
             $this->app['router']
-                ->middleware('auth:nd_oauth')
                 ->namespace('NextDeveloper\IAM\Http\Controllers')
                 ->group(__DIR__.DIRECTORY_SEPARATOR.'Http'.DIRECTORY_SEPARATOR.'api.routes.php');
         }
-
-        $this->app['router']
-            ->namespace('NextDeveloper\IAM\WebSockets\Handlers')
-            ->group(__DIR__.DIRECTORY_SEPARATOR.'WebSockets'.DIRECTORY_SEPARATOR.'socket.routes.php');
     }
 
     /**

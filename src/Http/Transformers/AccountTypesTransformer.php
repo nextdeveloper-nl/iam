@@ -35,6 +35,6 @@ class AccountTypesTransformer extends AbstractAccountTypesTransformer {
             $transformed
         );
 
-        return parent::transform($model);
+        return $transformed;
     }
 }
