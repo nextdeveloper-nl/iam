@@ -110,7 +110,7 @@ class IAMServiceProvider extends AbstractServiceProvider {
      * @return void
      */
     protected function registerRoutes() {
-        if ( ! $this->app->routesAreCached() && config('leo.allowed_routes.communication', true) ) {
+        if ( ! $this->app->routesAreCached() && config('leo.allowed_routes.iam', true) ) {
             $this->app['router']
                 ->namespace('NextDeveloper\IAM\Http\Controllers')
                 ->group(__DIR__.DIRECTORY_SEPARATOR.'Http'.DIRECTORY_SEPARATOR.'api.routes.php');
