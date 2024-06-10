@@ -55,7 +55,7 @@ class BackendDirectoriesController extends AbstractController
      */
     public function doAction($objectId, $action)
     {
-        $actionId = BackendDirectoriesService::doAction($objectId, $action);
+        $actionId = BackendDirectoriesService::doAction($objectId, $action, request()->all());
 
         return $this->withArray(
             [

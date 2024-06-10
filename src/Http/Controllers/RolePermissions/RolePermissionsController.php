@@ -55,7 +55,7 @@ class RolePermissionsController extends AbstractController
      */
     public function doAction($objectId, $action)
     {
-        $actionId = RolePermissionsService::doAction($objectId, $action);
+        $actionId = RolePermissionsService::doAction($objectId, $action, request()->all());
 
         return $this->withArray(
             [

@@ -55,7 +55,7 @@ class AccountUserPerspectiveController extends AbstractController
      */
     public function doAction($objectId, $action)
     {
-        $actionId = AccountUserPerspectiveService::doAction($objectId, $action);
+        $actionId = AccountUserPerspectiveService::doAction($objectId, $action, request()->all());
 
         return $this->withArray(
             [

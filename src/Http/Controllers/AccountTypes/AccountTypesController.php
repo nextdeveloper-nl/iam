@@ -55,7 +55,7 @@ class AccountTypesController extends AbstractController
      */
     public function doAction($objectId, $action)
     {
-        $actionId = AccountTypesService::doAction($objectId, $action);
+        $actionId = AccountTypesService::doAction($objectId, $action, request()->all());
 
         return $this->withArray(
             [

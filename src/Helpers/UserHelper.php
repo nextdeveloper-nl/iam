@@ -373,6 +373,7 @@ class UserHelper
         //  If null getRoles will get the current user
         $roles = self::getRoles($user);
 
+        //  This works correct, if anything goes wrong, look at the database
         foreach ($roles as $role) {
             if($role->name == $string)
                 return true;

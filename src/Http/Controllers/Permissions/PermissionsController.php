@@ -55,7 +55,7 @@ class PermissionsController extends AbstractController
      */
     public function doAction($objectId, $action)
     {
-        $actionId = PermissionsService::doAction($objectId, $action);
+        $actionId = PermissionsService::doAction($objectId, $action, request()->all());
 
         return $this->withArray(
             [
