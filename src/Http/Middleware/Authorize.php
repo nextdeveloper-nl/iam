@@ -26,6 +26,12 @@ class Authorize extends Middleware
         if(count($explode) > 2)
             return $next($request);
 
+        if (count($explode) <= 2) {
+            $tempObject = $explode[1];
+            $explode[1] = config('leo.default_module', 'leo');
+            $explode[2] = $tempObject;
+        }
+
         $module = $explode[1];
         $object = $explode[2];
         $object = str_replace('-', '_', $object);
@@ -61,24 +67,24 @@ class Authorize extends Middleware
                         break;
                 }
 
-                if(!in_array($operationString, $allowedOperations)) {
-
+                if(in_array($operationString, $allowedOperations)) {
+                    return $next($request);
+                } else {
                     Log::debug('[Authorize] The user with email: ' . UserHelper::me()->email . ' is asking' .
-                        ' for operation: ' . $operationString . ' but he is not allowed to do that.');
-
-                    return response()->json([
-                        'errors' => [
-                            'status'    => 403,
-                            'message'   => 'Unauthorized',
-                            'details'   => 'We cannot authorize you to complete this operation, unfortunately.' .
-                                ' You may need to ask your adminto change your role.'
-                        ],
-                    ], 401);
+                        ' for operation: ' . $operationString . ' but he is not allowed to do that' .
+                        ' with this role: ' . $role->name);
                 }
             }
         }
 
-        return $next($request);
+        return response()->json([
+            'errors' => [
+                'status'    => 403,
+                'message'   => 'Unauthorized',
+                'details'   => 'We cannot authorize you to complete this operation, unfortunately.' .
+                    ' You may need to ask your adminto change your role.'
+            ],
+        ], 401);
     }
 
     /**

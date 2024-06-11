@@ -50,7 +50,11 @@ class PublicUsersTransformer extends AbstractUsersTransformer
 
         if($transformed['profile_picture_identity'] != null) {
             $profilePicture = Media::where('id', $transformed['profile_picture_identity'])->first();
-            $transformed['photo_url'] = $profilePicture->cdn_url;
+
+            if($profilePicture != null)
+                $transformed['photo_url'] = $profilePicture->cdn_url;
+            else
+                $transformed['photo_url'] = null;
         }
 
         unset($transformed['profile_picture_identity']);
