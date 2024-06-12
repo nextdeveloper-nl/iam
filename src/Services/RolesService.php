@@ -144,7 +144,7 @@ class RolesService extends AbstractRolesService
             ->first();
 
         if(!$account) {
-            $account = UserHelper::masterAccount($user);
+            $account = UserHelper::currentAccount();
         }
 
         if(!$relation) {
