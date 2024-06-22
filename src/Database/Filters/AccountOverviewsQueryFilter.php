@@ -10,7 +10,7 @@ use NextDeveloper\Commons\Database\Filters\AbstractQueryFilter;
  * This class automatically puts where clause on database so that use can filter
  * data returned from the query.
  */
-class AccountsOverviewsQueryFilter extends AbstractQueryFilter
+class AccountOverviewsQueryFilter extends AbstractQueryFilter
 {
     /**
      * Filter by tags
@@ -135,10 +135,4 @@ class AccountsOverviewsQueryFilter extends AbstractQueryFilter
     }
 
     // EDIT AFTER HERE - WARNING: ABOVE THIS LINE MAY BE REGENERATED AND YOU MAY LOSE CODE
-
-
-
-
-
-
 }

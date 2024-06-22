@@ -9,11 +9,11 @@ use NextDeveloper\IAM\Helpers\UserHelper;
 use NextDeveloper\Events\Services\Events;
 
 /**
- * Class AccountsOverviewsObserver
+ * Class AccountOverviewsObserver
  *
  * @package NextDeveloper\IAM\Database\Observers
  */
-class AccountsOverviewsObserver
+class AccountOverviewsObserver
 {
     /**
      * Triggered when a new record is retrieved.
@@ -37,7 +37,7 @@ class AccountsOverviewsObserver
             new NotAllowedException('You are not allowed to create this record')
         );
 
-        Events::fire('creating:NextDeveloper\IAM\AccountsOverviews', $model);
+        Events::fire('creating:NextDeveloper\IAM\AccountOverviews', $model);
     }
 
     /**
@@ -47,7 +47,7 @@ class AccountsOverviewsObserver
      */
     public function created(Model $model)
     {
-        Events::fire('created:NextDeveloper\IAM\AccountsOverviews', $model);
+        Events::fire('created:NextDeveloper\IAM\AccountOverviews', $model);
     }
 
     /**
@@ -62,7 +62,7 @@ class AccountsOverviewsObserver
             new NotAllowedException('You are not allowed to save this record')
         );
 
-        Events::fire('saving:NextDeveloper\IAM\AccountsOverviews', $model);
+        Events::fire('saving:NextDeveloper\IAM\AccountOverviews', $model);
     }
 
     /**
@@ -72,7 +72,7 @@ class AccountsOverviewsObserver
      */
     public function saved(Model $model)
     {
-        Events::fire('saved:NextDeveloper\IAM\AccountsOverviews', $model);
+        Events::fire('saved:NextDeveloper\IAM\AccountOverviews', $model);
     }
 
 
@@ -86,7 +86,7 @@ class AccountsOverviewsObserver
             new NotAllowedException('You are not allowed to update this record')
         );
 
-        Events::fire('updating:NextDeveloper\IAM\AccountsOverviews', $model);
+        Events::fire('updating:NextDeveloper\IAM\AccountOverviews', $model);
     }
 
     /**
@@ -96,7 +96,7 @@ class AccountsOverviewsObserver
      */
     public function updated(Model $model)
     {
-        Events::fire('updated:NextDeveloper\IAM\AccountsOverviews', $model);
+        Events::fire('updated:NextDeveloper\IAM\AccountOverviews', $model);
     }
 
 
@@ -110,7 +110,7 @@ class AccountsOverviewsObserver
             new NotAllowedException('You are not allowed to delete this record')
         );
 
-        Events::fire('deleting:NextDeveloper\IAM\AccountsOverviews', $model);
+        Events::fire('deleting:NextDeveloper\IAM\AccountOverviews', $model);
     }
 
     /**
@@ -120,7 +120,7 @@ class AccountsOverviewsObserver
      */
     public function deleted(Model $model)
     {
-        Events::fire('deleted:NextDeveloper\IAM\AccountsOverviews', $model);
+        Events::fire('deleted:NextDeveloper\IAM\AccountOverviews', $model);
     }
 
     /**
@@ -135,7 +135,7 @@ class AccountsOverviewsObserver
             new NotAllowedException('You are not allowed to restore this record')
         );
 
-        Events::fire('restoring:NextDeveloper\IAM\AccountsOverviews', $model);
+        Events::fire('restoring:NextDeveloper\IAM\AccountOverviews', $model);
     }
 
     /**
@@ -145,7 +145,7 @@ class AccountsOverviewsObserver
      */
     public function restored(Model $model)
     {
-        Events::fire('restored:NextDeveloper\IAM\AccountsOverviews', $model);
+        Events::fire('restored:NextDeveloper\IAM\AccountOverviews', $model);
     }
     // EDIT AFTER HERE - WARNING: ABOVE THIS LINE MAY BE REGENERATED AND YOU MAY LOSE CODE
 }

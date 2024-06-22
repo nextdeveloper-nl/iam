@@ -2,34 +2,34 @@
 
 namespace NextDeveloper\IAM\Http\Transformers\AbstractTransformers;
 
-use NextDeveloper\Commons\Database\Models\Media;
-use NextDeveloper\Commons\Http\Transformers\MediaTransformer;
-use NextDeveloper\Commons\Database\Models\AvailableActions;
-use NextDeveloper\Commons\Http\Transformers\AvailableActionsTransformer;
-use NextDeveloper\Commons\Database\Models\States;
-use NextDeveloper\Commons\Http\Transformers\StatesTransformer;
-use NextDeveloper\IAM\Database\Models\RoleUsers;
-use NextDeveloper\Commons\Http\Transformers\AbstractTransformer;
-use NextDeveloper\IAM\Database\Scopes\AuthorizationScope;
 use NextDeveloper\Commons\Database\Models\Addresses;
 use NextDeveloper\Commons\Database\Models\Comments;
 use NextDeveloper\Commons\Database\Models\Meta;
 use NextDeveloper\Commons\Database\Models\PhoneNumbers;
 use NextDeveloper\Commons\Database\Models\SocialMedia;
 use NextDeveloper\Commons\Database\Models\Votes;
+use NextDeveloper\Commons\Database\Models\Media;
+use NextDeveloper\Commons\Http\Transformers\MediaTransformer;
+use NextDeveloper\Commons\Database\Models\AvailableActions;
+use NextDeveloper\Commons\Http\Transformers\AvailableActionsTransformer;
+use NextDeveloper\Commons\Database\Models\States;
+use NextDeveloper\Commons\Http\Transformers\StatesTransformer;
 use NextDeveloper\Commons\Http\Transformers\CommentsTransformer;
 use NextDeveloper\Commons\Http\Transformers\SocialMediaTransformer;
 use NextDeveloper\Commons\Http\Transformers\MetaTransformer;
 use NextDeveloper\Commons\Http\Transformers\VotesTransformer;
 use NextDeveloper\Commons\Http\Transformers\AddressesTransformer;
 use NextDeveloper\Commons\Http\Transformers\PhoneNumbersTransformer;
+use NextDeveloper\IAM\Database\Models\AccountOverviews;
+use NextDeveloper\Commons\Http\Transformers\AbstractTransformer;
+use NextDeveloper\IAM\Database\Scopes\AuthorizationScope;
 
 /**
- * Class RoleUsersTransformer. This class is being used to manipulate the data we are serving to the customer
+ * Class AccountOverviewsTransformer. This class is being used to manipulate the data we are serving to the customer
  *
  * @package NextDeveloper\IAM\Http\Transformers
  */
-class AbstractRoleUsersTransformer extends AbstractTransformer
+class AbstractAccountOverviewsTransformer extends AbstractTransformer
 {
 
     /**
@@ -48,29 +48,38 @@ class AbstractRoleUsersTransformer extends AbstractTransformer
     ];
 
     /**
-     * @param RoleUsers $model
+     * @param AccountOverviews $model
      *
      * @return array
      */
-    public function transform(RoleUsers $model)
+    public function transform(AccountOverviews $model)
     {
-                                                $iamRoleId = \NextDeveloper\IAM\Database\Models\Roles::where('id', $model->iam_role_id)->first();
+                                                $commonDomainId = \NextDeveloper\Commons\Database\Models\Domains::where('id', $model->common_domain_id)->first();
+                                                            $commonCountryId = \NextDeveloper\Commons\Database\Models\Countries::where('id', $model->common_country_id)->first();
                                                             $iamUserId = \NextDeveloper\IAM\Database\Models\Users::where('id', $model->iam_user_id)->first();
-                                                            $iamAccountId = \NextDeveloper\IAM\Database\Models\Accounts::where('id', $model->iam_account_id)->first();
+                                                            $iamAccountTypeId = \NextDeveloper\IAM\Database\Models\AccountTypes::where('id', $model->iam_account_type_id)->first();
                         
         return $this->buildPayload(
             [
             'id'  =>  $model->uuid,
-            'iam_role_id'  =>  $iamRoleId ? $iamRoleId->uuid : null,
+            'name'  =>  $model->name,
+            'description'  =>  $model->description,
+            'common_domain_id'  =>  $commonDomainId ? $commonDomainId->uuid : null,
+            'common_country_id'  =>  $commonCountryId ? $commonCountryId->uuid : null,
+            'phone_number'  =>  $model->phone_number,
             'iam_user_id'  =>  $iamUserId ? $iamUserId->uuid : null,
-            'iam_account_id'  =>  $iamAccountId ? $iamAccountId->uuid : null,
+            'iam_account_type_id'  =>  $iamAccountTypeId ? $iamAccountTypeId->uuid : null,
             'is_active'  =>  $model->is_active,
-            'role_data'  =>  $model->role_data,
+            'tags'  =>  $model->tags,
+            'total_user_count'  =>  $model->total_user_count,
+            'registered_user_count'  =>  $model->registered_user_count,
+            'domain_name'  =>  $model->domain_name,
+            'country_name'  =>  $model->country_name,
             ]
         );
     }
 
-    public function includeStates(RoleUsers $model)
+    public function includeStates(AccountOverviews $model)
     {
         $states = States::where('object_type', get_class($model))
             ->where('object_id', $model->id)
@@ -79,7 +88,7 @@ class AbstractRoleUsersTransformer extends AbstractTransformer
         return $this->collection($states, new StatesTransformer());
     }
 
-    public function includeActions(RoleUsers $model)
+    public function includeActions(AccountOverviews $model)
     {
         $input = get_class($model);
         $input = str_replace('\\Database\\Models', '', $input);
@@ -91,7 +100,7 @@ class AbstractRoleUsersTransformer extends AbstractTransformer
         return $this->collection($actions, new AvailableActionsTransformer());
     }
 
-    public function includeMedia(RoleUsers $model)
+    public function includeMedia(AccountOverviews $model)
     {
         $media = Media::where('object_type', get_class($model))
             ->where('object_id', $model->id)
@@ -100,7 +109,7 @@ class AbstractRoleUsersTransformer extends AbstractTransformer
         return $this->collection($media, new MediaTransformer());
     }
 
-    public function includeSocialMedia(RoleUsers $model)
+    public function includeSocialMedia(AccountOverviews $model)
     {
         $socialMedia = SocialMedia::where('object_type', get_class($model))
             ->where('object_id', $model->id)
@@ -109,7 +118,7 @@ class AbstractRoleUsersTransformer extends AbstractTransformer
         return $this->collection($socialMedia, new SocialMediaTransformer());
     }
 
-    public function includeComments(RoleUsers $model)
+    public function includeComments(AccountOverviews $model)
     {
         $comments = Comments::where('object_type', get_class($model))
             ->where('object_id', $model->id)
@@ -118,7 +127,7 @@ class AbstractRoleUsersTransformer extends AbstractTransformer
         return $this->collection($comments, new CommentsTransformer());
     }
 
-    public function includeVotes(RoleUsers $model)
+    public function includeVotes(AccountOverviews $model)
     {
         $votes = Votes::where('object_type', get_class($model))
             ->where('object_id', $model->id)
@@ -127,7 +136,7 @@ class AbstractRoleUsersTransformer extends AbstractTransformer
         return $this->collection($votes, new VotesTransformer());
     }
 
-    public function includeMeta(RoleUsers $model)
+    public function includeMeta(AccountOverviews $model)
     {
         $meta = Meta::where('object_type', get_class($model))
             ->where('object_id', $model->id)
@@ -136,7 +145,7 @@ class AbstractRoleUsersTransformer extends AbstractTransformer
         return $this->collection($meta, new MetaTransformer());
     }
 
-    public function includePhoneNumbers(RoleUsers $model)
+    public function includePhoneNumbers(AccountOverviews $model)
     {
         $phoneNumbers = PhoneNumbers::where('object_type', get_class($model))
             ->where('object_id', $model->id)
@@ -145,7 +154,7 @@ class AbstractRoleUsersTransformer extends AbstractTransformer
         return $this->collection($phoneNumbers, new PhoneNumbersTransformer());
     }
 
-    public function includeAddresses(RoleUsers $model)
+    public function includeAddresses(AccountOverviews $model)
     {
         $addresses = Addresses::where('object_type', get_class($model))
             ->where('object_id', $model->id)
@@ -154,16 +163,4 @@ class AbstractRoleUsersTransformer extends AbstractTransformer
         return $this->collection($addresses, new AddressesTransformer());
     }
     // EDIT AFTER HERE - WARNING: ABOVE THIS LINE MAY BE REGENERATED AND YOU MAY LOSE CODE
-
-
-
-
-
-
-
-
-
-
-
-
 }
