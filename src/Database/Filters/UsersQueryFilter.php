@@ -96,9 +96,13 @@ class UsersQueryFilter extends AbstractQueryFilter
         return $this->builder->where('profile_picture_identity', $operator, $value);
     }
 
-    public function isRegistered()
+    public function isRegistered($value)
     {
-        return $this->builder->where('is_registered', true);
+        if(!is_bool($value)) {
+            $value = false;
+        }
+
+        return $this->builder->where('is_registered', $value);
     }
 
     public function birthdayStart($date)
@@ -160,6 +164,7 @@ class UsersQueryFilter extends AbstractQueryFilter
     }
 
     // EDIT AFTER HERE - WARNING: ABOVE THIS LINE MAY BE REGENERATED AND YOU MAY LOSE CODE\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n
+
 
 
 
