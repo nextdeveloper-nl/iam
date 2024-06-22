@@ -5,13 +5,13 @@ namespace NextDeveloper\IAM\Database\Models;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\Model;
 use NextDeveloper\Commons\Database\Traits\Filterable;
-use NextDeveloper\IAM\Database\Observers\AccountsOverviewsObserver;
+use NextDeveloper\IAM\Database\Observers\AccountOverviewsObserver;
 use NextDeveloper\Commons\Database\Traits\UuidId;
 use NextDeveloper\Commons\Common\Cache\Traits\CleanCache;
 use NextDeveloper\Commons\Database\Traits\Taggable;
 
 /**
- * AccountsOverviews model.
+ * AccountOverviews model.
  *
  * @package  NextDeveloper\IAM\Database\Models
  * @property integer $id
@@ -30,13 +30,15 @@ use NextDeveloper\Commons\Database\Traits\Taggable;
  * @property string $domain_name
  * @property string $country_name
  */
-class AccountsOverviews extends Model
+class AccountOverviews extends Model
 {
     use Filterable, UuidId, CleanCache, Taggable;
 
+
     public $timestamps = false;
 
-    protected $table = 'iam_accounts_overview';
+    protected $table = 'iam_account_overviews';
+
 
     /**
      @var array
@@ -123,7 +125,7 @@ class AccountsOverviews extends Model
         parent::boot();
 
         //  We create and add Observer even if we wont use it.
-        parent::observe(AccountsOverviewsObserver::class);
+        parent::observe(AccountOverviewsObserver::class);
 
         self::registerScopes();
     }
@@ -131,7 +133,7 @@ class AccountsOverviews extends Model
     public static function registerScopes()
     {
         $globalScopes = config('iam.scopes.global');
-        $modelScopes = config('iam.scopes.iam_accounts_overview');
+        $modelScopes = config('iam.scopes.iam_account_overviews');
 
         if(!$modelScopes) { $modelScopes = [];
         }
