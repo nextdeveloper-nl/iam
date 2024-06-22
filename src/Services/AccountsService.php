@@ -6,6 +6,7 @@ use App\Jobs\IAM\Accounts\NewAccountCreated;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 use NextDeveloper\Commons\Exceptions\CannotCreateModelException;
+use NextDeveloper\Commons\Helpers\MetaHelper;
 use NextDeveloper\Events\Services\Events;
 use NextDeveloper\I18n\Helpers\i18n;
 use NextDeveloper\IAM\Database\Filters\AccountsQueryFilter;
@@ -42,6 +43,29 @@ class AccountsService extends AbstractAccountsService
             ->where('iam_user_id', UserHelper::me()->id);
 
         return $model->paginate();
+    }
+
+    public static function update($id, array $data): Accounts
+    {
+        $account = Accounts::where('uuid', $id)->first();
+
+        //  Here we are checking if according to the configuration of the system, the user can change the domain or not.
+        $canChangeDomain = MetaHelper::get(
+            Accounts::class,
+            $account->id,
+            'can_change_domain',
+            config('iam.configuration.iam_accounts.can_change_domain')
+        );
+
+        if(!config('iam.configuration.iam_accounts.can_change_domain')) {
+            unset($data['common_domain_id']);
+        }
+
+        if(count($data) == 0) {
+            return $account;
+        }
+
+        return parent::update($id, $data);
     }
 
     public static function create(array $data) : Accounts
