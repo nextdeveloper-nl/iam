@@ -24,19 +24,31 @@ class LoginMechanismsQueryFilter extends AbstractQueryFilter
         return $this->builder->where('login_mechanism', 'like', '%' . $value . '%');
     }
 
-    public function isLatest()
+    public function isLatest($value)
     {
-        return $this->builder->where('is_latest', true);
+        if(!is_bool($value)) {
+            $value = false;
+        }
+
+        return $this->builder->where('is_latest', $value);
     }
 
-    public function isDefault()
+    public function isDefault($value)
     {
-        return $this->builder->where('is_default', true);
+        if(!is_bool($value)) {
+            $value = false;
+        }
+
+        return $this->builder->where('is_default', $value);
     }
 
-    public function isActive()
+    public function isActive($value)
     {
-        return $this->builder->where('is_active', true);
+        if(!is_bool($value)) {
+            $value = false;
+        }
+
+        return $this->builder->where('is_active', $value);
     }
 
     public function createdAtStart($date)
@@ -79,6 +91,7 @@ class LoginMechanismsQueryFilter extends AbstractQueryFilter
     }
 
     // EDIT AFTER HERE - WARNING: ABOVE THIS LINE MAY BE REGENERATED AND YOU MAY LOSE CODE\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n
+
 
 
 

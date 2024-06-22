@@ -4,14 +4,13 @@ namespace NextDeveloper\IAM\Database\Filters;
 
 use Illuminate\Database\Eloquent\Builder;
 use NextDeveloper\Commons\Database\Filters\AbstractQueryFilter;
-use NextDeveloper\Accounts\Database\Models\User;
                 
 
 /**
  * This class automatically puts where clause on database so that use can filter
  * data returned from the query.
  */
-class AccountsQueryFilter extends AbstractQueryFilter
+class AccountsOverviewsQueryFilter extends AbstractQueryFilter
 {
     /**
      * Filter by tags
@@ -44,14 +43,50 @@ class AccountsQueryFilter extends AbstractQueryFilter
         return $this->builder->where('name', 'like', '%' . $value . '%');
     }
     
+    public function description($value)
+    {
+        return $this->builder->where('description', 'like', '%' . $value . '%');
+    }
+    
     public function phoneNumber($value)
     {
         return $this->builder->where('phone_number', 'like', '%' . $value . '%');
     }
     
-    public function description($value)
+    public function domainName($value)
     {
-        return $this->builder->where('description', 'like', '%' . $value . '%');
+        return $this->builder->where('domain_name', 'like', '%' . $value . '%');
+    }
+    
+    public function countryName($value)
+    {
+        return $this->builder->where('country_name', 'like', '%' . $value . '%');
+    }
+
+    public function totalUserCount($value)
+    {
+        $operator = substr($value, 0, 1);
+
+        if ($operator != '<' || $operator != '>') {
+            $operator = '=';
+        } else {
+            $value = substr($value, 1);
+        }
+
+        return $this->builder->where('total_user_count', $operator, $value);
+    }
+
+    public function registeredUserCount($value)
+    {
+        $operator = substr($value, 0, 1);
+
+        if ($operator != '<' || $operator != '>') {
+            $operator = '=';
+        } else {
+            $value = substr($value, 1);
+        }
+
+        return $this->builder->where('registered_user_count', $operator, $value);
     }
 
     public function isActive($value)
@@ -61,36 +96,6 @@ class AccountsQueryFilter extends AbstractQueryFilter
         }
 
         return $this->builder->where('is_active', $value);
-    }
-
-    public function createdAtStart($date)
-    {
-        return $this->builder->where('created_at', '>=', $date);
-    }
-
-    public function createdAtEnd($date)
-    {
-        return $this->builder->where('created_at', '<=', $date);
-    }
-
-    public function updatedAtStart($date)
-    {
-        return $this->builder->where('updated_at', '>=', $date);
-    }
-
-    public function updatedAtEnd($date)
-    {
-        return $this->builder->where('updated_at', '<=', $date);
-    }
-
-    public function deletedAtStart($date)
-    {
-        return $this->builder->where('deleted_at', '>=', $date);
-    }
-
-    public function deletedAtEnd($date)
-    {
-        return $this->builder->where('deleted_at', '<=', $date);
     }
 
     public function commonDomainId($value)
@@ -129,17 +134,5 @@ class AccountsQueryFilter extends AbstractQueryFilter
         }
     }
 
-    // EDIT AFTER HERE - WARNING: ABOVE THIS LINE MAY BE REGENERATED AND YOU MAY LOSE CODE\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n
-
-
-
-
-
-
-
-
-
-
-
-
+    // EDIT AFTER HERE - WARNING: ABOVE THIS LINE MAY BE REGENERATED AND YOU MAY LOSE CODE
 }

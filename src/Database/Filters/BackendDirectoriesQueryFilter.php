@@ -68,19 +68,31 @@ class BackendDirectoriesQueryFilter extends AbstractQueryFilter
         return $this->builder->where('default_surname_field', 'like', '%' . $value . '%');
     }
 
-    public function isConnected()
+    public function isConnected($value)
     {
-        return $this->builder->where('is_connected', true);
+        if(!is_bool($value)) {
+            $value = false;
+        }
+
+        return $this->builder->where('is_connected', $value);
     }
 
-    public function isConnectionSecure()
+    public function isConnectionSecure($value)
     {
-        return $this->builder->where('is_connection_secure', true);
+        if(!is_bool($value)) {
+            $value = false;
+        }
+
+        return $this->builder->where('is_connection_secure', $value);
     }
 
-    public function isUsable()
+    public function isUsable($value)
     {
-        return $this->builder->where('is_usable', true);
+        if(!is_bool($value)) {
+            $value = false;
+        }
+
+        return $this->builder->where('is_usable', $value);
     }
 
     public function createdAtStart($date)
@@ -132,6 +144,7 @@ class BackendDirectoriesQueryFilter extends AbstractQueryFilter
     }
 
     // EDIT AFTER HERE - WARNING: ABOVE THIS LINE MAY BE REGENERATED AND YOU MAY LOSE CODE
+
 
 
 

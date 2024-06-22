@@ -296,7 +296,43 @@ Route::prefix('iam')->group(
             }
         );
 
+        Route::prefix('accounts-overview')->group(
+            function () {
+                Route::get('/', 'AccountsOverview\AccountsOverviewController@index');
+                Route::get('/actions', 'AccountsOverview\AccountsOverviewController@getActions');
+
+                Route::get('{iam_accounts_overview}/tags ', 'AccountsOverview\AccountsOverviewController@tags');
+                Route::post('{iam_accounts_overview}/tags ', 'AccountsOverview\AccountsOverviewController@saveTags');
+                Route::get('{iam_accounts_overview}/addresses ', 'AccountsOverview\AccountsOverviewController@addresses');
+                Route::post('{iam_accounts_overview}/addresses ', 'AccountsOverview\AccountsOverviewController@saveAddresses');
+
+                Route::get('/{iam_accounts_overview}/{subObjects}', 'AccountsOverview\AccountsOverviewController@relatedObjects');
+                Route::get('/{iam_accounts_overview}', 'AccountsOverview\AccountsOverviewController@show');
+
+                Route::post('/', 'AccountsOverview\AccountsOverviewController@store');
+                Route::post('/{iam_accounts_overview}/do/{action}', 'AccountsOverview\AccountsOverviewController@doAction');
+
+                Route::patch('/{iam_accounts_overview}', 'AccountsOverview\AccountsOverviewController@update');
+                Route::delete('/{iam_accounts_overview}', 'AccountsOverview\AccountsOverviewController@destroy');
+            }
+        );
+
         // EDIT AFTER HERE - WARNING: ABOVE THIS LINE MAY BE REGENERATED AND YOU MAY LOSE CODE
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -382,6 +418,7 @@ Route::prefix('iam')->group(
         );
     }
 );
+
 
 
 

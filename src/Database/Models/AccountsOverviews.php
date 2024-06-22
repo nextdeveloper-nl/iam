@@ -5,32 +5,38 @@ namespace NextDeveloper\IAM\Database\Models;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\Model;
 use NextDeveloper\Commons\Database\Traits\Filterable;
-use NextDeveloper\IAM\Database\Observers\RoleUsersObserver;
+use NextDeveloper\IAM\Database\Observers\AccountsOverviewsObserver;
 use NextDeveloper\Commons\Database\Traits\UuidId;
 use NextDeveloper\Commons\Common\Cache\Traits\CleanCache;
 use NextDeveloper\Commons\Database\Traits\Taggable;
 
 /**
- * RoleUsers model.
+ * AccountsOverviews model.
  *
  * @package  NextDeveloper\IAM\Database\Models
  * @property integer $id
  * @property string $uuid
- * @property integer $iam_role_id
+ * @property string $name
+ * @property string $description
+ * @property integer $common_domain_id
+ * @property integer $common_country_id
+ * @property string $phone_number
  * @property integer $iam_user_id
- * @property integer $iam_account_id
+ * @property integer $iam_account_type_id
  * @property boolean $is_active
- * @property $role_data
+ * @property array $tags
+ * @property integer $total_user_count
+ * @property integer $registered_user_count
+ * @property string $domain_name
+ * @property string $country_name
  */
-class RoleUsers extends Model
+class AccountsOverviews extends Model
 {
     use Filterable, UuidId, CleanCache, Taggable;
 
-
     public $timestamps = false;
 
-    protected $table = 'iam_role_user';
-
+    protected $table = 'iam_accounts_overview';
 
     /**
      @var array
@@ -38,11 +44,19 @@ class RoleUsers extends Model
     protected $guarded = [];
 
     protected $fillable = [
-            'iam_role_id',
+            'name',
+            'description',
+            'common_domain_id',
+            'common_country_id',
+            'phone_number',
             'iam_user_id',
-            'iam_account_id',
+            'iam_account_type_id',
             'is_active',
-            'role_data',
+            'tags',
+            'total_user_count',
+            'registered_user_count',
+            'domain_name',
+            'country_name',
     ];
 
     /**
@@ -66,9 +80,18 @@ class RoleUsers extends Model
      */
     protected $casts = [
     'id' => 'integer',
-    'iam_role_id' => 'integer',
+    'name' => 'string',
+    'description' => 'string',
+    'common_domain_id' => 'integer',
+    'common_country_id' => 'integer',
+    'phone_number' => 'string',
+    'iam_account_type_id' => 'integer',
     'is_active' => 'boolean',
-    'role_data' => 'array',
+    'tags' => \NextDeveloper\Commons\Database\Casts\TextArray::class,
+    'total_user_count' => 'integer',
+    'registered_user_count' => 'integer',
+    'domain_name' => 'string',
+    'country_name' => 'string',
     ];
 
     /**
@@ -100,7 +123,7 @@ class RoleUsers extends Model
         parent::boot();
 
         //  We create and add Observer even if we wont use it.
-        parent::observe(RoleUsersObserver::class);
+        parent::observe(AccountsOverviewsObserver::class);
 
         self::registerScopes();
     }
@@ -108,7 +131,7 @@ class RoleUsers extends Model
     public static function registerScopes()
     {
         $globalScopes = config('iam.scopes.global');
-        $modelScopes = config('iam.scopes.iam_role_user');
+        $modelScopes = config('iam.scopes.iam_accounts_overview');
 
         if(!$modelScopes) { $modelScopes = [];
         }
@@ -127,50 +150,5 @@ class RoleUsers extends Model
         }
     }
 
-    // EDIT AFTER HERE - WARNING: ABOVE THIS LINE MAY BE REGENERATED AND YOU MAY LOSE CODE\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+    // EDIT AFTER HERE - WARNING: ABOVE THIS LINE MAY BE REGENERATED AND YOU MAY LOSE CODE
 }
