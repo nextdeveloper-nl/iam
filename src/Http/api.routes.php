@@ -296,28 +296,73 @@ Route::prefix('iam')->group(
             }
         );
 
-        Route::prefix('account-overviews')->group(
+        Route::prefix('accounts-perspective')->group(
             function () {
-                Route::get('/', 'AccountOverviews\AccountOverviewsController@index');
-                Route::get('/actions', 'AccountOverviews\AccountOverviewsController@getActions');
+                Route::get('/', 'AccountsPerspective\AccountsPerspectiveController@index');
+                Route::get('/actions', 'AccountsPerspective\AccountsPerspectiveController@getActions');
 
-                Route::get('{iam_account_overviews}/tags ', 'AccountOverviews\AccountOverviewsController@tags');
-                Route::post('{iam_account_overviews}/tags ', 'AccountOverviews\AccountOverviewsController@saveTags');
-                Route::get('{iam_account_overviews}/addresses ', 'AccountOverviews\AccountOverviewsController@addresses');
-                Route::post('{iam_account_overviews}/addresses ', 'AccountOverviews\AccountOverviewsController@saveAddresses');
+                Route::get('{iam_accounts_perspective}/tags ', 'AccountsPerspective\AccountsPerspectiveController@tags');
+                Route::post('{iam_accounts_perspective}/tags ', 'AccountsPerspective\AccountsPerspectiveController@saveTags');
+                Route::get('{iam_accounts_perspective}/addresses ', 'AccountsPerspective\AccountsPerspectiveController@addresses');
+                Route::post('{iam_accounts_perspective}/addresses ', 'AccountsPerspective\AccountsPerspectiveController@saveAddresses');
 
-                Route::get('/{iam_account_overviews}/{subObjects}', 'AccountOverviews\AccountOverviewsController@relatedObjects');
-                Route::get('/{iam_account_overviews}', 'AccountOverviews\AccountOverviewsController@show');
+                Route::get('/{iam_accounts_perspective}/{subObjects}', 'AccountsPerspective\AccountsPerspectiveController@relatedObjects');
+                Route::get('/{iam_accounts_perspective}', 'AccountsPerspective\AccountsPerspectiveController@show');
 
-                Route::post('/', 'AccountOverviews\AccountOverviewsController@store');
-                Route::post('/{iam_account_overviews}/do/{action}', 'AccountOverviews\AccountOverviewsController@doAction');
+                Route::post('/', 'AccountsPerspective\AccountsPerspectiveController@store');
+                Route::post('/{iam_accounts_perspective}/do/{action}', 'AccountsPerspective\AccountsPerspectiveController@doAction');
 
-                Route::patch('/{iam_account_overviews}', 'AccountOverviews\AccountOverviewsController@update');
-                Route::delete('/{iam_account_overviews}', 'AccountOverviews\AccountOverviewsController@destroy');
+                Route::patch('/{iam_accounts_perspective}', 'AccountsPerspective\AccountsPerspectiveController@update');
+                Route::delete('/{iam_accounts_perspective}', 'AccountsPerspective\AccountsPerspectiveController@destroy');
             }
         );
 
         // EDIT AFTER HERE - WARNING: ABOVE THIS LINE MAY BE REGENERATED AND YOU MAY LOSE CODE
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -522,6 +567,9 @@ Route::prefix('iam')->group(
         );
     }
 );
+
+
+
 
 
 
