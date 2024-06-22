@@ -5,24 +5,23 @@ namespace NextDeveloper\IAM\Database\Models;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\Model;
 use NextDeveloper\Commons\Database\Traits\Filterable;
-use NextDeveloper\IAM\Database\Observers\AccountOverviewsObserver;
+use NextDeveloper\IAM\Database\Observers\AccountsPerspectiveObserver;
 use NextDeveloper\Commons\Database\Traits\UuidId;
 use NextDeveloper\Commons\Common\Cache\Traits\CleanCache;
 use NextDeveloper\Commons\Database\Traits\Taggable;
 
 /**
- * AccountOverviews model.
+ * AccountsPerspective model.
  *
  * @package  NextDeveloper\IAM\Database\Models
  * @property integer $id
  * @property string $uuid
  * @property string $name
  * @property string $description
- * @property integer $common_domain_id
- * @property integer $common_country_id
  * @property string $phone_number
+ * @property string $account_owner
  * @property integer $iam_user_id
- * @property integer $iam_account_type_id
+ * @property string $account_type
  * @property boolean $is_active
  * @property array $tags
  * @property integer $total_user_count
@@ -30,14 +29,14 @@ use NextDeveloper\Commons\Database\Traits\Taggable;
  * @property string $domain_name
  * @property string $country_name
  */
-class AccountOverviews extends Model
+class AccountsPerspective extends Model
 {
     use Filterable, UuidId, CleanCache, Taggable;
 
 
     public $timestamps = false;
 
-    protected $table = 'iam_account_overviews';
+    protected $table = 'iam_accounts_perspective';
 
 
     /**
@@ -48,11 +47,10 @@ class AccountOverviews extends Model
     protected $fillable = [
             'name',
             'description',
-            'common_domain_id',
-            'common_country_id',
             'phone_number',
+            'account_owner',
             'iam_user_id',
-            'iam_account_type_id',
+            'account_type',
             'is_active',
             'tags',
             'total_user_count',
@@ -84,10 +82,9 @@ class AccountOverviews extends Model
     'id' => 'integer',
     'name' => 'string',
     'description' => 'string',
-    'common_domain_id' => 'integer',
-    'common_country_id' => 'integer',
     'phone_number' => 'string',
-    'iam_account_type_id' => 'integer',
+    'account_owner' => 'string',
+    'account_type' => 'string',
     'is_active' => 'boolean',
     'tags' => \NextDeveloper\Commons\Database\Casts\TextArray::class,
     'total_user_count' => 'integer',
@@ -125,7 +122,7 @@ class AccountOverviews extends Model
         parent::boot();
 
         //  We create and add Observer even if we wont use it.
-        parent::observe(AccountOverviewsObserver::class);
+        parent::observe(AccountsPerspectiveObserver::class);
 
         self::registerScopes();
     }
@@ -133,7 +130,7 @@ class AccountOverviews extends Model
     public static function registerScopes()
     {
         $globalScopes = config('iam.scopes.global');
-        $modelScopes = config('iam.scopes.iam_account_overviews');
+        $modelScopes = config('iam.scopes.iam_accounts_perspective');
 
         if(!$modelScopes) { $modelScopes = [];
         }

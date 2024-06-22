@@ -20,16 +20,16 @@ use NextDeveloper\Commons\Http\Transformers\MetaTransformer;
 use NextDeveloper\Commons\Http\Transformers\VotesTransformer;
 use NextDeveloper\Commons\Http\Transformers\AddressesTransformer;
 use NextDeveloper\Commons\Http\Transformers\PhoneNumbersTransformer;
-use NextDeveloper\IAM\Database\Models\AccountOverviews;
+use NextDeveloper\IAM\Database\Models\AccountsPerspective;
 use NextDeveloper\Commons\Http\Transformers\AbstractTransformer;
 use NextDeveloper\IAM\Database\Scopes\AuthorizationScope;
 
 /**
- * Class AccountOverviewsTransformer. This class is being used to manipulate the data we are serving to the customer
+ * Class AccountsPerspectiveTransformer. This class is being used to manipulate the data we are serving to the customer
  *
  * @package NextDeveloper\IAM\Http\Transformers
  */
-class AbstractAccountOverviewsTransformer extends AbstractTransformer
+class AbstractAccountsPerspectiveTransformer extends AbstractTransformer
 {
 
     /**
@@ -48,27 +48,23 @@ class AbstractAccountOverviewsTransformer extends AbstractTransformer
     ];
 
     /**
-     * @param AccountOverviews $model
+     * @param AccountsPerspective $model
      *
      * @return array
      */
-    public function transform(AccountOverviews $model)
+    public function transform(AccountsPerspective $model)
     {
-                                                $commonDomainId = \NextDeveloper\Commons\Database\Models\Domains::where('id', $model->common_domain_id)->first();
-                                                            $commonCountryId = \NextDeveloper\Commons\Database\Models\Countries::where('id', $model->common_country_id)->first();
-                                                            $iamUserId = \NextDeveloper\IAM\Database\Models\Users::where('id', $model->iam_user_id)->first();
-                                                            $iamAccountTypeId = \NextDeveloper\IAM\Database\Models\AccountTypes::where('id', $model->iam_account_type_id)->first();
+                                                $iamUserId = \NextDeveloper\IAM\Database\Models\Users::where('id', $model->iam_user_id)->first();
                         
         return $this->buildPayload(
             [
             'id'  =>  $model->uuid,
             'name'  =>  $model->name,
             'description'  =>  $model->description,
-            'common_domain_id'  =>  $commonDomainId ? $commonDomainId->uuid : null,
-            'common_country_id'  =>  $commonCountryId ? $commonCountryId->uuid : null,
             'phone_number'  =>  $model->phone_number,
+            'account_owner'  =>  $model->account_owner,
             'iam_user_id'  =>  $iamUserId ? $iamUserId->uuid : null,
-            'iam_account_type_id'  =>  $iamAccountTypeId ? $iamAccountTypeId->uuid : null,
+            'account_type'  =>  $model->account_type,
             'is_active'  =>  $model->is_active,
             'tags'  =>  $model->tags,
             'total_user_count'  =>  $model->total_user_count,
@@ -79,7 +75,7 @@ class AbstractAccountOverviewsTransformer extends AbstractTransformer
         );
     }
 
-    public function includeStates(AccountOverviews $model)
+    public function includeStates(AccountsPerspective $model)
     {
         $states = States::where('object_type', get_class($model))
             ->where('object_id', $model->id)
@@ -88,7 +84,7 @@ class AbstractAccountOverviewsTransformer extends AbstractTransformer
         return $this->collection($states, new StatesTransformer());
     }
 
-    public function includeActions(AccountOverviews $model)
+    public function includeActions(AccountsPerspective $model)
     {
         $input = get_class($model);
         $input = str_replace('\\Database\\Models', '', $input);
@@ -100,7 +96,7 @@ class AbstractAccountOverviewsTransformer extends AbstractTransformer
         return $this->collection($actions, new AvailableActionsTransformer());
     }
 
-    public function includeMedia(AccountOverviews $model)
+    public function includeMedia(AccountsPerspective $model)
     {
         $media = Media::where('object_type', get_class($model))
             ->where('object_id', $model->id)
@@ -109,7 +105,7 @@ class AbstractAccountOverviewsTransformer extends AbstractTransformer
         return $this->collection($media, new MediaTransformer());
     }
 
-    public function includeSocialMedia(AccountOverviews $model)
+    public function includeSocialMedia(AccountsPerspective $model)
     {
         $socialMedia = SocialMedia::where('object_type', get_class($model))
             ->where('object_id', $model->id)
@@ -118,7 +114,7 @@ class AbstractAccountOverviewsTransformer extends AbstractTransformer
         return $this->collection($socialMedia, new SocialMediaTransformer());
     }
 
-    public function includeComments(AccountOverviews $model)
+    public function includeComments(AccountsPerspective $model)
     {
         $comments = Comments::where('object_type', get_class($model))
             ->where('object_id', $model->id)
@@ -127,7 +123,7 @@ class AbstractAccountOverviewsTransformer extends AbstractTransformer
         return $this->collection($comments, new CommentsTransformer());
     }
 
-    public function includeVotes(AccountOverviews $model)
+    public function includeVotes(AccountsPerspective $model)
     {
         $votes = Votes::where('object_type', get_class($model))
             ->where('object_id', $model->id)
@@ -136,7 +132,7 @@ class AbstractAccountOverviewsTransformer extends AbstractTransformer
         return $this->collection($votes, new VotesTransformer());
     }
 
-    public function includeMeta(AccountOverviews $model)
+    public function includeMeta(AccountsPerspective $model)
     {
         $meta = Meta::where('object_type', get_class($model))
             ->where('object_id', $model->id)
@@ -145,7 +141,7 @@ class AbstractAccountOverviewsTransformer extends AbstractTransformer
         return $this->collection($meta, new MetaTransformer());
     }
 
-    public function includePhoneNumbers(AccountOverviews $model)
+    public function includePhoneNumbers(AccountsPerspective $model)
     {
         $phoneNumbers = PhoneNumbers::where('object_type', get_class($model))
             ->where('object_id', $model->id)
@@ -154,7 +150,7 @@ class AbstractAccountOverviewsTransformer extends AbstractTransformer
         return $this->collection($phoneNumbers, new PhoneNumbersTransformer());
     }
 
-    public function includeAddresses(AccountOverviews $model)
+    public function includeAddresses(AccountsPerspective $model)
     {
         $addresses = Addresses::where('object_type', get_class($model))
             ->where('object_id', $model->id)

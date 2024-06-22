@@ -1,35 +1,35 @@
 <?php
 
-namespace NextDeveloper\IAM\Http\Controllers\AccountOverviews;
+namespace NextDeveloper\IAM\Http\Controllers\AccountsPerspective;
 
 use Illuminate\Http\Request;
 use NextDeveloper\IAM\Http\Controllers\AbstractController;
 use NextDeveloper\Commons\Http\Response\ResponsableFactory;
-use NextDeveloper\IAM\Http\Requests\AccountOverviews\AccountOverviewsUpdateRequest;
-use NextDeveloper\IAM\Database\Filters\AccountOverviewsQueryFilter;
-use NextDeveloper\IAM\Database\Models\AccountOverviews;
-use NextDeveloper\IAM\Services\AccountOverviewsService;
-use NextDeveloper\IAM\Http\Requests\AccountOverviews\AccountOverviewsCreateRequest;
+use NextDeveloper\IAM\Http\Requests\AccountsPerspective\AccountsPerspectiveUpdateRequest;
+use NextDeveloper\IAM\Database\Filters\AccountsPerspectiveQueryFilter;
+use NextDeveloper\IAM\Database\Models\AccountsPerspective;
+use NextDeveloper\IAM\Services\AccountsPerspectiveService;
+use NextDeveloper\IAM\Http\Requests\AccountsPerspective\AccountsPerspectiveCreateRequest;
 use NextDeveloper\Commons\Http\Traits\Tags;use NextDeveloper\Commons\Http\Traits\Addresses;
-class AccountOverviewsController extends AbstractController
+class AccountsPerspectiveController extends AbstractController
 {
-    private $model = AccountOverviews::class;
+    private $model = AccountsPerspective::class;
 
     use Tags;
     use Addresses;
     /**
-     * This method returns the list of accountoverviews.
+     * This method returns the list of accountsperspectives.
      *
      * optional http params:
      * - paginate: If you set paginate parameter, the result will be returned paginated.
      *
-     * @param  AccountOverviewsQueryFilter $filter  An object that builds search query
-     * @param  Request                     $request Laravel request object, this holds all data about request. Automatically populated.
+     * @param  AccountsPerspectiveQueryFilter $filter  An object that builds search query
+     * @param  Request                        $request Laravel request object, this holds all data about request. Automatically populated.
      * @return \Illuminate\Http\JsonResponse
      */
-    public function index(AccountOverviewsQueryFilter $filter, Request $request)
+    public function index(AccountsPerspectiveQueryFilter $filter, Request $request)
     {
-        $data = AccountOverviewsService::get($filter, $request->all());
+        $data = AccountsPerspectiveService::get($filter, $request->all());
 
         return ResponsableFactory::makeResponse($this, $data);
     }
@@ -41,7 +41,7 @@ class AccountOverviewsController extends AbstractController
      */
     public function getActions()
     {
-        $data = AccountOverviewsService::getActions();
+        $data = AccountsPerspectiveService::getActions();
 
         return ResponsableFactory::makeResponse($this, $data);
     }
@@ -55,7 +55,7 @@ class AccountOverviewsController extends AbstractController
      */
     public function doAction($objectId, $action)
     {
-        $actionId = AccountOverviewsService::doAction($objectId, $action, request()->all());
+        $actionId = AccountsPerspectiveService::doAction($objectId, $action, request()->all());
 
         return $this->withArray(
             [
@@ -67,7 +67,7 @@ class AccountOverviewsController extends AbstractController
     /**
      * This method receives ID for the related model and returns the item to the client.
      *
-     * @param  $accountOverviewsId
+     * @param  $accountsPerspectiveId
      * @return mixed|null
      * @throws \Laravel\Octane\Exceptions\DdException
      */
@@ -75,7 +75,7 @@ class AccountOverviewsController extends AbstractController
     {
         //  Here we are not using Laravel Route Model Binding. Please check routeBinding.md file
         //  in NextDeveloper Platform Project
-        $model = AccountOverviewsService::getByRef($ref);
+        $model = AccountsPerspectiveService::getByRef($ref);
 
         return ResponsableFactory::makeResponse($this, $model);
     }
@@ -92,19 +92,19 @@ class AccountOverviewsController extends AbstractController
      */
     public function relatedObjects($ref, $subObject)
     {
-        $objects = AccountOverviewsService::relatedObjects($ref, $subObject);
+        $objects = AccountsPerspectiveService::relatedObjects($ref, $subObject);
 
         return ResponsableFactory::makeResponse($this, $objects);
     }
 
     /**
-     * This method created AccountOverviews object on database.
+     * This method created AccountsPerspective object on database.
      *
-     * @param  AccountOverviewsCreateRequest $request
+     * @param  AccountsPerspectiveCreateRequest $request
      * @return mixed|null
      * @throws \NextDeveloper\Commons\Exceptions\CannotCreateModelException
      */
-    public function store(AccountOverviewsCreateRequest $request)
+    public function store(AccountsPerspectiveCreateRequest $request)
     {
         if($request->has('validateOnly') && $request->get('validateOnly') == true) {
             return [
@@ -112,20 +112,20 @@ class AccountOverviewsController extends AbstractController
             ];
         }
 
-        $model = AccountOverviewsService::create($request->validated());
+        $model = AccountsPerspectiveService::create($request->validated());
 
         return ResponsableFactory::makeResponse($this, $model);
     }
 
     /**
-     * This method updates AccountOverviews object on database.
+     * This method updates AccountsPerspective object on database.
      *
-     * @param  $accountOverviewsId
-     * @param  AccountOverviewsUpdateRequest $request
+     * @param  $accountsPerspectiveId
+     * @param  AccountsPerspectiveUpdateRequest $request
      * @return mixed|null
      * @throws \NextDeveloper\Commons\Exceptions\CannotCreateModelException
      */
-    public function update($accountOverviewsId, AccountOverviewsUpdateRequest $request)
+    public function update($accountsPerspectiveId, AccountsPerspectiveUpdateRequest $request)
     {
         if($request->has('validateOnly') && $request->get('validateOnly') == true) {
             return [
@@ -133,21 +133,21 @@ class AccountOverviewsController extends AbstractController
             ];
         }
 
-        $model = AccountOverviewsService::update($accountOverviewsId, $request->validated());
+        $model = AccountsPerspectiveService::update($accountsPerspectiveId, $request->validated());
 
         return ResponsableFactory::makeResponse($this, $model);
     }
 
     /**
-     * This method updates AccountOverviews object on database.
+     * This method updates AccountsPerspective object on database.
      *
-     * @param  $accountOverviewsId
+     * @param  $accountsPerspectiveId
      * @return mixed|null
      * @throws \NextDeveloper\Commons\Exceptions\CannotCreateModelException
      */
-    public function destroy($accountOverviewsId)
+    public function destroy($accountsPerspectiveId)
     {
-        $model = AccountOverviewsService::delete($accountOverviewsId);
+        $model = AccountsPerspectiveService::delete($accountsPerspectiveId);
 
         return $this->noContent();
     }
