@@ -30,5 +30,10 @@ return [
         '/iam/authenticate/oauth/token'
     ],
     'anonymous_uris'    =>  [
+    ],
+    'configuration' =>  [
+        'iam_accounts'  =>  [
+            'can_change_domain' =>  false
+        ]
     ]
 ];
