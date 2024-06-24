@@ -9,7 +9,7 @@ use NextDeveloper\Commons\Database\Models\Languages;
 use NextDeveloper\IAM\Authorization\Roles\IAuthorizationRole;
 use NextDeveloper\IAM\Database\Filters\UsersQueryFilter;
 use NextDeveloper\IAM\Database\Models\Accounts;
-use NextDeveloper\IAM\Database\Models\AccountUserPerspective;
+use NextDeveloper\IAM\Database\Models\AccountUsersPerspective;
 use NextDeveloper\IAM\Database\Models\Users;
 use NextDeveloper\IAM\Helpers\UserHelper;
 use NextDeveloper\IAM\Services\AbstractServices\AbstractUsersService;
@@ -34,7 +34,7 @@ class UsersService extends AbstractUsersService
             return new Collection();
         }
 
-        $users = AccountUserPerspective::filter($filter)
+        $users = AccountUsersPerspective::filter($filter)
             ->where('iam_account_id', UserHelper::currentAccount()->id)
             ->paginate();
 

@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\Model;
 use NextDeveloper\Commons\Database\Traits\Filterable;
-use NextDeveloper\IAM\Database\Observers\AccountUserPerspectiveObserver;
+use NextDeveloper\IAM\Database\Observers\AccountUsersPerspectiveObserver;
 use NextDeveloper\Commons\Database\Traits\UuidId;
 use NextDeveloper\Commons\Common\Cache\Traits\CleanCache;
 use NextDeveloper\Commons\Database\Traits\Taggable;
@@ -35,7 +35,7 @@ use NextDeveloper\Commons\Database\Traits\Taggable;
  * @property integer $iam_account_id
  * @property boolean $is_active
  */
-class AccountUserPerspective extends Model
+class AccountUsersPerspective extends Model
 {
     use Filterable, UuidId, CleanCache, Taggable;
     use SoftDeletes;
@@ -43,7 +43,7 @@ class AccountUserPerspective extends Model
 
     public $timestamps = true;
 
-    protected $table = 'iam_account_user_perspective';
+    protected $table = 'iam_account_users_perspective';
 
 
     /**
@@ -139,7 +139,7 @@ class AccountUserPerspective extends Model
         parent::boot();
 
         //  We create and add Observer even if we wont use it.
-        parent::observe(AccountUserPerspectiveObserver::class);
+        parent::observe(AccountUsersPerspectiveObserver::class);
 
         self::registerScopes();
     }

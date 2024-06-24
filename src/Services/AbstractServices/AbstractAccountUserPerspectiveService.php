@@ -10,7 +10,7 @@ use NextDeveloper\IAM\Helpers\UserHelper;
 use NextDeveloper\Commons\Common\Cache\CacheHelper;
 use NextDeveloper\Commons\Helpers\DatabaseHelper;
 use NextDeveloper\Commons\Database\Models\AvailableActions;
-use NextDeveloper\IAM\Database\Models\AccountUserPerspective;
+use NextDeveloper\IAM\Database\Models\AccountUsersPerspective;
 use NextDeveloper\IAM\Database\Filters\AccountUserPerspectiveQueryFilter;
 use NextDeveloper\Commons\Exceptions\ModelNotFoundException;
 use NextDeveloper\Events\Services\Events;
@@ -58,7 +58,7 @@ class AbstractAccountUserPerspectiveService
             $filter->orderBy($params['orderBy']);
         }
 
-        $model = AccountUserPerspective::filter($filter);
+        $model = AccountUsersPerspective::filter($filter);
 
         if($enablePaginate) {
             return new \Illuminate\Pagination\LengthAwarePaginator(
@@ -74,7 +74,7 @@ class AbstractAccountUserPerspectiveService
 
     public static function getAll()
     {
-        return AccountUserPerspective::all();
+        return AccountUsersPerspective::all();
     }
 
     /**
@@ -83,14 +83,14 @@ class AbstractAccountUserPerspectiveService
      * @param  $ref
      * @return mixed
      */
-    public static function getByRef($ref) : ?AccountUserPerspective
+    public static function getByRef($ref) : ?AccountUsersPerspective
     {
-        return AccountUserPerspective::findByRef($ref);
+        return AccountUsersPerspective::findByRef($ref);
     }
 
     public static function getActions()
     {
-        $model = AccountUserPerspective::class;
+        $model = AccountUsersPerspective::class;
 
         $model = Str::remove('Database\\Models\\', $model);
 
@@ -105,7 +105,7 @@ class AbstractAccountUserPerspectiveService
      */
     public static function doAction($objectId, $action, ...$params)
     {
-        $object = AccountUserPerspective::where('uuid', $objectId)->first();
+        $object = AccountUsersPerspective::where('uuid', $objectId)->first();
 
         $action = '\\NextDeveloper\\IAM\\Actions\\AccountUserPerspective\\' . Str::studly($action);
 
@@ -124,11 +124,11 @@ class AbstractAccountUserPerspectiveService
      * This method returns the model by lookint at its id
      *
      * @param  $id
-     * @return AccountUserPerspective|null
+     * @return AccountUsersPerspective|null
      */
-    public static function getById($id) : ?AccountUserPerspective
+    public static function getById($id) : ?AccountUsersPerspective
     {
-        return AccountUserPerspective::where('id', $id)->first();
+        return AccountUsersPerspective::where('id', $id)->first();
     }
 
     /**
@@ -142,7 +142,7 @@ class AbstractAccountUserPerspectiveService
     public static function relatedObjects($uuid, $object)
     {
         try {
-            $obj = AccountUserPerspective::where('uuid', $uuid)->first();
+            $obj = AccountUsersPerspective::where('uuid', $uuid)->first();
 
             if(!$obj) {
                 throw new ModelNotFoundException('Cannot find the related model');
@@ -185,13 +185,13 @@ class AbstractAccountUserPerspectiveService
                 $data['iam_account_id']
             );
         }
-            
+
         if(!array_key_exists('iam_account_id', $data)) {
             $data['iam_account_id'] = UserHelper::currentAccount()->id;
         }
-                        
+
         try {
-            $model = AccountUserPerspective::create($data);
+            $model = AccountUsersPerspective::create($data);
         } catch(\Exception $e) {
             throw $e;
         }
@@ -205,9 +205,9 @@ class AbstractAccountUserPerspectiveService
      * This function expects the ID inside the object.
      *
      * @param  array $data
-     * @return AccountUserPerspective
+     * @return AccountUsersPerspective
      */
-    public static function updateRaw(array $data) : ?AccountUserPerspective
+    public static function updateRaw(array $data) : ?AccountUsersPerspective
     {
         if(array_key_exists('id', $data)) {
             return self::update($data['id'], $data);
@@ -228,7 +228,7 @@ class AbstractAccountUserPerspectiveService
      */
     public static function update($id, array $data)
     {
-        $model = AccountUserPerspective::where('uuid', $id)->first();
+        $model = AccountUsersPerspective::where('uuid', $id)->first();
 
         if (array_key_exists('common_language_id', $data)) {
             $data['common_language_id'] = DatabaseHelper::uuidToId(
@@ -248,7 +248,7 @@ class AbstractAccountUserPerspectiveService
                 $data['iam_account_id']
             );
         }
-    
+
         Events::fire('updating:NextDeveloper\IAM\AccountUserPerspective', $model);
 
         try {
@@ -275,7 +275,7 @@ class AbstractAccountUserPerspectiveService
      */
     public static function delete($id)
     {
-        $model = AccountUserPerspective::where('uuid', $id)->first();
+        $model = AccountUsersPerspective::where('uuid', $id)->first();
 
         Events::fire('deleted:NextDeveloper\IAM\AccountUserPerspective', $model);
 
