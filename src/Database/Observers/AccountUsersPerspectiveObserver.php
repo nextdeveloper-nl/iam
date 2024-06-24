@@ -12,7 +12,7 @@ use NextDeveloper\IAM\Helpers\UserHelper;
  *
  * @package NextDeveloper\IAM\Database\Observers
  */
-class AccountUserPerspectiveObserver
+class AccountUsersPerspectiveObserver
 {
     /**
      * Triggered when a new record is retrieved.

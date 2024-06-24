@@ -7,13 +7,13 @@ use NextDeveloper\IAM\Http\Controllers\AbstractController;
 use NextDeveloper\Commons\Http\Response\ResponsableFactory;
 use NextDeveloper\IAM\Http\Requests\AccountUserPerspective\AccountUserPerspectiveUpdateRequest;
 use NextDeveloper\IAM\Database\Filters\AccountUserPerspectiveQueryFilter;
-use NextDeveloper\IAM\Database\Models\AccountUserPerspective;
+use NextDeveloper\IAM\Database\Models\AccountUsersPerspective;
 use NextDeveloper\IAM\Services\AccountUserPerspectiveService;
 use NextDeveloper\IAM\Http\Requests\AccountUserPerspective\AccountUserPerspectiveCreateRequest;
 use NextDeveloper\Commons\Http\Traits\Tags;use NextDeveloper\Commons\Http\Traits\Addresses;
 class AccountUserPerspectiveController extends AbstractController
 {
-    private $model = AccountUserPerspective::class;
+    private $model = AccountUsersPerspective::class;
 
     use Tags;
     use Addresses;

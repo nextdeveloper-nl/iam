@@ -8,7 +8,7 @@ use NextDeveloper\Commons\Database\Models\AvailableActions;
 use NextDeveloper\Commons\Http\Transformers\AvailableActionsTransformer;
 use NextDeveloper\Commons\Database\Models\States;
 use NextDeveloper\Commons\Http\Transformers\StatesTransformer;
-use NextDeveloper\IAM\Database\Models\AccountUserPerspective;
+use NextDeveloper\IAM\Database\Models\AccountUsersPerspective;
 use NextDeveloper\Commons\Http\Transformers\AbstractTransformer;
 use NextDeveloper\IAM\Database\Scopes\AuthorizationScope;
 use NextDeveloper\Commons\Database\Models\Addresses;
@@ -48,16 +48,16 @@ class AbstractAccountUserPerspectiveTransformer extends AbstractTransformer
     ];
 
     /**
-     * @param AccountUserPerspective $model
+     * @param AccountUsersPerspective $model
      *
      * @return array
      */
-    public function transform(AccountUserPerspective $model)
+    public function transform(AccountUsersPerspective $model)
     {
                                                 $commonLanguageId = \NextDeveloper\Commons\Database\Models\Languages::where('id', $model->common_language_id)->first();
                                                             $commonCountryId = \NextDeveloper\Commons\Database\Models\Countries::where('id', $model->common_country_id)->first();
                                                             $iamAccountId = \NextDeveloper\IAM\Database\Models\Accounts::where('id', $model->iam_account_id)->first();
-                        
+
         return $this->buildPayload(
             [
             'id'  =>  $model->uuid,
@@ -82,7 +82,7 @@ class AbstractAccountUserPerspectiveTransformer extends AbstractTransformer
         );
     }
 
-    public function includeStates(AccountUserPerspective $model)
+    public function includeStates(AccountUsersPerspective $model)
     {
         $states = States::where('object_type', get_class($model))
             ->where('object_id', $model->id)
@@ -91,7 +91,7 @@ class AbstractAccountUserPerspectiveTransformer extends AbstractTransformer
         return $this->collection($states, new StatesTransformer());
     }
 
-    public function includeActions(AccountUserPerspective $model)
+    public function includeActions(AccountUsersPerspective $model)
     {
         $input = get_class($model);
         $input = str_replace('\\Database\\Models', '', $input);
@@ -103,7 +103,7 @@ class AbstractAccountUserPerspectiveTransformer extends AbstractTransformer
         return $this->collection($actions, new AvailableActionsTransformer());
     }
 
-    public function includeMedia(AccountUserPerspective $model)
+    public function includeMedia(AccountUsersPerspective $model)
     {
         $media = Media::where('object_type', get_class($model))
             ->where('object_id', $model->id)
@@ -112,7 +112,7 @@ class AbstractAccountUserPerspectiveTransformer extends AbstractTransformer
         return $this->collection($media, new MediaTransformer());
     }
 
-    public function includeSocialMedia(AccountUserPerspective $model)
+    public function includeSocialMedia(AccountUsersPerspective $model)
     {
         $socialMedia = SocialMedia::where('object_type', get_class($model))
             ->where('object_id', $model->id)
@@ -121,7 +121,7 @@ class AbstractAccountUserPerspectiveTransformer extends AbstractTransformer
         return $this->collection($socialMedia, new SocialMediaTransformer());
     }
 
-    public function includeComments(AccountUserPerspective $model)
+    public function includeComments(AccountUsersPerspective $model)
     {
         $comments = Comments::where('object_type', get_class($model))
             ->where('object_id', $model->id)
@@ -130,7 +130,7 @@ class AbstractAccountUserPerspectiveTransformer extends AbstractTransformer
         return $this->collection($comments, new CommentsTransformer());
     }
 
-    public function includeVotes(AccountUserPerspective $model)
+    public function includeVotes(AccountUsersPerspective $model)
     {
         $votes = Votes::where('object_type', get_class($model))
             ->where('object_id', $model->id)
@@ -139,7 +139,7 @@ class AbstractAccountUserPerspectiveTransformer extends AbstractTransformer
         return $this->collection($votes, new VotesTransformer());
     }
 
-    public function includeMeta(AccountUserPerspective $model)
+    public function includeMeta(AccountUsersPerspective $model)
     {
         $meta = Meta::where('object_type', get_class($model))
             ->where('object_id', $model->id)
@@ -148,7 +148,7 @@ class AbstractAccountUserPerspectiveTransformer extends AbstractTransformer
         return $this->collection($meta, new MetaTransformer());
     }
 
-    public function includePhoneNumbers(AccountUserPerspective $model)
+    public function includePhoneNumbers(AccountUsersPerspective $model)
     {
         $phoneNumbers = PhoneNumbers::where('object_type', get_class($model))
             ->where('object_id', $model->id)
@@ -157,7 +157,7 @@ class AbstractAccountUserPerspectiveTransformer extends AbstractTransformer
         return $this->collection($phoneNumbers, new PhoneNumbersTransformer());
     }
 
-    public function includeAddresses(AccountUserPerspective $model)
+    public function includeAddresses(AccountUsersPerspective $model)
     {
         $addresses = Addresses::where('object_type', get_class($model))
             ->where('object_id', $model->id)
