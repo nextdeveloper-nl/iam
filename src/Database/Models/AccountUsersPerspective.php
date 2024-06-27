@@ -45,7 +45,6 @@ class AccountUsersPerspective extends Model
 
     protected $table = 'iam_account_users_perspective';
 
-
     /**
      @var array
      */
