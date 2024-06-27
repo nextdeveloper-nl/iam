@@ -15,11 +15,14 @@ class Authorize extends Middleware
         if($request->getMethod() == "OPTIONS")
             return $next($request);
 
-        $roles = UserHelper::getRoles();
-
         $requestUri = $request->getRequestUri();
         $requestMethod = $request->getMethod();
         $explode = explode('/', $requestUri);
+
+        if($explode[0] == 'public')
+            return $next($request);
+
+        $roles = UserHelper::getRoles();
 
         //  If the request is not for a module then we can just return the request
         //  Because this is out of our scope. We are only interested in the requests that are for a module
