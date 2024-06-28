@@ -5,6 +5,7 @@ namespace NextDeveloper\IAM\Http\Middleware;
 use Closure;
 use Illuminate\Auth\Middleware\Authenticate as Middleware;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Str;
 use NextDeveloper\IAM\Helpers\UserHelper;
 
 class Authorize extends Middleware
@@ -19,7 +20,7 @@ class Authorize extends Middleware
         $requestMethod = $request->getMethod();
         $explode = explode('/', $requestUri);
 
-        if($explode[0] == 'public')
+        if(Str::startsWith($requestUri, '/public'))
             return $next($request);
 
         $roles = UserHelper::getRoles();
