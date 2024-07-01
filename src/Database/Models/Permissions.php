@@ -5,6 +5,7 @@ namespace NextDeveloper\IAM\Database\Models;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\Model;
 use NextDeveloper\Commons\Database\Traits\Filterable;
+use NextDeveloper\Commons\Database\Traits\HasStates;
 use NextDeveloper\IAM\Database\Observers\PermissionsObserver;
 use NextDeveloper\Commons\Database\Traits\UuidId;
 use NextDeveloper\Commons\Common\Cache\Traits\CleanCache;
@@ -28,7 +29,7 @@ use NextDeveloper\Commons\Database\Traits\Taggable;
  */
 class Permissions extends Model
 {
-    use Filterable, UuidId, CleanCache, Taggable;
+    use Filterable, UuidId, CleanCache, Taggable, HasStates;
 
 
     public $timestamps = true;
