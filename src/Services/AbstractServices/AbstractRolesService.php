@@ -109,12 +109,13 @@ class AbstractRolesService
 
         $action = '\\NextDeveloper\\IAM\\Actions\\Roles\\' . Str::studly($action);
 
-        if(class_exists($action)) {
-            $action = new $action($object, $params);
+        if(class_exists($class)) {
+            $action = new $class($object, $params);
+            $actionId = $action->getActionId();
 
             dispatch($action);
 
-            return $action->getActionId();
+            return $actionId;
         }
 
         return null;
@@ -167,7 +168,7 @@ class AbstractRolesService
      */
     public static function create(array $data)
     {
-        
+
         try {
             $model = Roles::create($data);
         } catch(\Exception $e) {
@@ -208,7 +209,7 @@ class AbstractRolesService
     {
         $model = Roles::where('uuid', $id)->first();
 
-        
+
         Events::fire('updating:NextDeveloper\IAM\Roles', $model);
 
         try {

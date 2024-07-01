@@ -109,12 +109,13 @@ class AbstractUserAccountsService
 
         $action = '\\NextDeveloper\\IAM\\Actions\\UserAccounts\\' . Str::studly($action);
 
-        if(class_exists($action)) {
-            $action = new $action($object, $params);
+        if(class_exists($class)) {
+            $action = new $class($object, $params);
+            $actionId = $action->getActionId();
 
             dispatch($action);
 
-            return $action->getActionId();
+            return $actionId;
         }
 
         return null;
@@ -185,7 +186,7 @@ class AbstractUserAccountsService
                 $data['iam_user_id']
             );
         }
-                    
+
         if(!array_key_exists('iam_user_id', $data)) {
             $data['iam_user_id']    = UserHelper::me()->id;
         }
@@ -195,11 +196,11 @@ class AbstractUserAccountsService
                 $data['iam_account_id']
             );
         }
-            
+
         if(!array_key_exists('iam_account_id', $data)) {
             $data['iam_account_id'] = UserHelper::currentAccount()->id;
         }
-                        
+
         try {
             $model = UserAccounts::create($data);
         } catch(\Exception $e) {
@@ -264,7 +265,7 @@ class AbstractUserAccountsService
                 $data['iam_account_id']
             );
         }
-    
+
         Events::fire('updating:NextDeveloper\IAM\UserAccounts', $model);
 
         try {

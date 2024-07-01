@@ -109,12 +109,13 @@ class AbstractRolePermissionsService
 
         $action = '\\NextDeveloper\\IAM\\Actions\\RolePermissions\\' . Str::studly($action);
 
-        if(class_exists($action)) {
-            $action = new $action($object, $params);
+        if(class_exists($class)) {
+            $action = new $class($object, $params);
+            $actionId = $action->getActionId();
 
             dispatch($action);
 
-            return $action->getActionId();
+            return $actionId;
         }
 
         return null;
@@ -179,7 +180,7 @@ class AbstractRolePermissionsService
                 $data['iam_permission_id']
             );
         }
-                        
+
         try {
             $model = RolePermissions::create($data);
         } catch(\Exception $e) {
@@ -232,7 +233,7 @@ class AbstractRolePermissionsService
                 $data['iam_permission_id']
             );
         }
-    
+
         Events::fire('updating:NextDeveloper\IAM\RolePermissions', $model);
 
         try {
