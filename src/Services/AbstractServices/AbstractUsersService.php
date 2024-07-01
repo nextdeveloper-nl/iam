@@ -109,12 +109,13 @@ class AbstractUsersService
 
         $action = '\\NextDeveloper\\IAM\\Actions\\Users\\' . Str::studly($action);
 
-        if(class_exists($action)) {
-            $action = new $action($object, $params);
+        if(class_exists($class)) {
+            $action = new $class($object, $params);
+            $actionId = $action->getActionId();
 
             dispatch($action);
 
-            return $action->getActionId();
+            return $actionId;
         }
 
         return null;
@@ -185,7 +186,7 @@ class AbstractUsersService
                 $data['profile_picture_id']
             );
         }
-                        
+
         try {
             $model = Users::create($data);
         } catch(\Exception $e) {
@@ -244,7 +245,7 @@ class AbstractUsersService
                 $data['profile_picture_id']
             );
         }
-    
+
         Events::fire('updating:NextDeveloper\IAM\Users', $model);
 
         try {

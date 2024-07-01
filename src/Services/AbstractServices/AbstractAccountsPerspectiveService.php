@@ -115,9 +115,11 @@ class AbstractAccountsPerspectiveService
 
         if(class_exists($class)) {
             $action = new $class($object, $params);
+            $actionId = $action->getActionId();
+
             dispatch($action);
 
-            return $action->getActionId();
+            return $actionId;
         }
 
         return null;
@@ -176,11 +178,11 @@ class AbstractAccountsPerspectiveService
                 $data['iam_user_id']
             );
         }
-                    
+
         if(!array_key_exists('iam_user_id', $data)) {
             $data['iam_user_id']    = UserHelper::me()->id;
         }
-            
+
         try {
             $model = AccountsPerspective::create($data);
         } catch(\Exception $e) {
@@ -234,7 +236,7 @@ class AbstractAccountsPerspectiveService
                 $data['iam_user_id']
             );
         }
-    
+
         Events::fire('updating:NextDeveloper\IAM\AccountsPerspective', $model);
 
         try {

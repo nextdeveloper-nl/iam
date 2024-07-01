@@ -115,9 +115,11 @@ class AbstractAccountsOverviewsService
 
         if(class_exists($class)) {
             $action = new $class($object, $params);
+            $actionId = $action->getActionId();
+
             dispatch($action);
 
-            return $action->getActionId();
+            return $actionId;
         }
 
         return null;
@@ -188,7 +190,7 @@ class AbstractAccountsOverviewsService
                 $data['iam_user_id']
             );
         }
-                    
+
         if(!array_key_exists('iam_user_id', $data)) {
             $data['iam_user_id']    = UserHelper::me()->id;
         }
@@ -198,7 +200,7 @@ class AbstractAccountsOverviewsService
                 $data['iam_account_type_id']
             );
         }
-                        
+
         try {
             $model = AccountsOverviews::create($data);
         } catch(\Exception $e) {
@@ -270,7 +272,7 @@ class AbstractAccountsOverviewsService
                 $data['iam_account_type_id']
             );
         }
-    
+
         Events::fire('updating:NextDeveloper\IAM\AccountsOverviews', $model);
 
         try {

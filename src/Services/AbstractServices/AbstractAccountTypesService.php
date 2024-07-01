@@ -109,12 +109,13 @@ class AbstractAccountTypesService
 
         $action = '\\NextDeveloper\\IAM\\Actions\\AccountTypes\\' . Str::studly($action);
 
-        if(class_exists($action)) {
-            $action = new $action($object, $params);
+        if(class_exists($class)) {
+            $action = new $class($object, $params);
+            $actionId = $action->getActionId();
 
             dispatch($action);
 
-            return $action->getActionId();
+            return $actionId;
         }
 
         return null;
@@ -173,7 +174,7 @@ class AbstractAccountTypesService
                 $data['common_country_id']
             );
         }
-                        
+
         try {
             $model = AccountTypes::create($data);
         } catch(\Exception $e) {
@@ -220,7 +221,7 @@ class AbstractAccountTypesService
                 $data['common_country_id']
             );
         }
-    
+
         Events::fire('updating:NextDeveloper\IAM\AccountTypes', $model);
 
         try {

@@ -109,12 +109,13 @@ class AbstractUserRolesService
 
         $action = '\\NextDeveloper\\IAM\\Actions\\UserRoles\\' . Str::studly($action);
 
-        if(class_exists($action)) {
-            $action = new $action($object, $params);
+        if(class_exists($class)) {
+            $action = new $class($object, $params);
+            $actionId = $action->getActionId();
 
             dispatch($action);
 
-            return $action->getActionId();
+            return $actionId;
         }
 
         return null;
@@ -179,7 +180,7 @@ class AbstractUserRolesService
                 $data['iam_user_id']
             );
         }
-                    
+
         if(!array_key_exists('iam_user_id', $data)) {
             $data['iam_user_id']    = UserHelper::me()->id;
         }
@@ -189,11 +190,11 @@ class AbstractUserRolesService
                 $data['iam_account_id']
             );
         }
-            
+
         if(!array_key_exists('iam_account_id', $data)) {
             $data['iam_account_id'] = UserHelper::currentAccount()->id;
         }
-                        
+
         try {
             $model = UserRoles::create($data);
         } catch(\Exception $e) {
@@ -252,7 +253,7 @@ class AbstractUserRolesService
                 $data['iam_account_id']
             );
         }
-    
+
         Events::fire('updating:NextDeveloper\IAM\UserRoles', $model);
 
         try {

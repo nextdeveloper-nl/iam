@@ -109,12 +109,13 @@ class AbstractLoginLogsService
 
         $action = '\\NextDeveloper\\IAM\\Actions\\LoginLogs\\' . Str::studly($action);
 
-        if(class_exists($action)) {
-            $action = new $action($object, $params);
+        if(class_exists($class)) {
+            $action = new $class($object, $params);
+            $actionId = $action->getActionId();
 
             dispatch($action);
 
-            return $action->getActionId();
+            return $actionId;
         }
 
         return null;
@@ -173,11 +174,11 @@ class AbstractLoginLogsService
                 $data['iam_user_id']
             );
         }
-                    
+
         if(!array_key_exists('iam_user_id', $data)) {
             $data['iam_user_id']    = UserHelper::me()->id;
         }
-            
+
         try {
             $model = LoginLogs::create($data);
         } catch(\Exception $e) {
@@ -224,7 +225,7 @@ class AbstractLoginLogsService
                 $data['iam_user_id']
             );
         }
-    
+
         Events::fire('updating:NextDeveloper\IAM\LoginLogs', $model);
 
         try {
