@@ -33,6 +33,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @property array $tags
  * @property string $profile_picture
  * @property boolean $is_registered
+ * @property boolean $is_active
  * @property integer $iam_account_id
  * @property \Carbon\Carbon $created_at
  * @property \Carbon\Carbon $updated_at
@@ -69,6 +70,7 @@ class UsersPerspective extends Model
             'tags',
             'profile_picture',
             'is_registered',
+            'is_active',
             'iam_account_id',
     ];
 
@@ -108,6 +110,7 @@ class UsersPerspective extends Model
     'tags' => \NextDeveloper\Commons\Database\Casts\TextArray::class,
     'profile_picture' => 'string',
     'is_registered' => 'boolean',
+    'is_active' => 'boolean',
     'created_at' => 'datetime',
     'updated_at' => 'datetime',
     'deleted_at' => 'datetime',
@@ -173,6 +176,7 @@ class UsersPerspective extends Model
     }
 
     // EDIT AFTER HERE - WARNING: ABOVE THIS LINE MAY BE REGENERATED AND YOU MAY LOSE CODE
+
 
 
 }

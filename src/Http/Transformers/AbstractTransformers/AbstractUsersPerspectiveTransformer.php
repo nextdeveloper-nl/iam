@@ -74,6 +74,7 @@ class AbstractUsersPerspectiveTransformer extends AbstractTransformer
             'tags'  =>  $model->tags,
             'profile_picture'  =>  $model->profile_picture,
             'is_registered'  =>  $model->is_registered,
+            'is_active'  =>  $model->is_active,
             'iam_account_id'  =>  $iamAccountId ? $iamAccountId->uuid : null,
             'created_at'  =>  $model->created_at,
             'updated_at'  =>  $model->updated_at,
@@ -166,4 +167,5 @@ class AbstractUsersPerspectiveTransformer extends AbstractTransformer
         return $this->collection($addresses, new AddressesTransformer());
     }
     // EDIT AFTER HERE - WARNING: ABOVE THIS LINE MAY BE REGENERATED AND YOU MAY LOSE CODE
+
 }

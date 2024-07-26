@@ -107,6 +107,15 @@ class UsersPerspectiveQueryFilter extends AbstractQueryFilter
         return $this->builder->where('is_registered', $value);
     }
 
+    public function isActive($value)
+    {
+        if(!is_bool($value)) {
+            $value = false;
+        }
+
+        return $this->builder->where('is_active', $value);
+    }
+
     public function birthdayStart($date)
     {
         return $this->builder->where('birthday', '>=', $date);
@@ -157,6 +166,7 @@ class UsersPerspectiveQueryFilter extends AbstractQueryFilter
     }
 
     // EDIT AFTER HERE - WARNING: ABOVE THIS LINE MAY BE REGENERATED AND YOU MAY LOSE CODE
+
 
 
 }
