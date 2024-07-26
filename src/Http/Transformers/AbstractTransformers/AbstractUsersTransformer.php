@@ -78,6 +78,7 @@ class AbstractUsersTransformer extends AbstractTransformer
             'deleted_at'  =>  $model->deleted_at,
             'profile_picture_identity'  =>  $model->profile_picture_identity,
             'is_registered'  =>  $model->is_registered,
+            'is_active'  =>  $model->is_active,
             ]
         );
     }
@@ -166,4 +167,5 @@ class AbstractUsersTransformer extends AbstractTransformer
         return $this->collection($addresses, new AddressesTransformer());
     }
     // EDIT AFTER HERE - WARNING: ABOVE THIS LINE MAY BE REGENERATED AND YOU MAY LOSE CODE
+
 }

@@ -137,15 +137,16 @@ class RolesService extends AbstractRolesService
             return false;
         }
 
+        if(!$account) {
+            $account = UserHelper::currentAccount();
+        }
+
         //  Getting the roles of user
         $relation = RoleUsers::withoutGlobalScopes()
             ->where('iam_user_id', $user->id)
             ->where('iam_role_id', $role->id)
+            ->where('iam_account_id', $account->id)
             ->first();
-
-        if(!$account) {
-            $account = UserHelper::currentAccount();
-        }
 
         if(!$relation) {
             $relation = RoleUsers::create([

@@ -195,4 +195,15 @@ class AccountsService extends AbstractAccountsService
 
         return $accounts->fresh();
     }
+
+    public static function addUserToAccount(Users $users, Accounts $accounts)
+    {
+        AccountUsers::create([
+            'iam_user_id'       =>  $users->id,
+            'iam_account_id'    =>  $accounts->id,
+            'is_active'         =>  true
+        ]);
+
+        return true;
+    }
 }

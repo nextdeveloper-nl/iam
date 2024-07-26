@@ -16,7 +16,6 @@ class UsersUpdateRequest extends AbstractFormRequest
             'name' => 'nullable|string',
         'surname' => 'nullable|string',
         'email' => 'nullable|string',
-        'fullname' => 'nullable|string',
         'username' => 'nullable|string',
         'about' => 'nullable|string',
         'pronoun' => 'nullable|string',
@@ -27,7 +26,7 @@ class UsersUpdateRequest extends AbstractFormRequest
         'phone_number' => 'nullable|string',
         'tags' => '',
         'profile_picture_identity' => 'nullable|integer',
-        'is_registered' => 'boolean',
+        'is_active' => 'boolean',
         ];
     }
     // EDIT AFTER HERE - WARNING: ABOVE THIS LINE MAY BE REGENERATED AND YOU MAY LOSE CODE\n\n\n\n\n\n\n\n

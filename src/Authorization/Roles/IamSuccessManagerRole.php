@@ -4,19 +4,16 @@ namespace NextDeveloper\IAM\Authorization\Roles;
 
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
-use NextDeveloper\Commons\Helpers\DatabaseHelper;
 use NextDeveloper\IAM\Database\Models\Users;
-use NextDeveloper\IAM\Helpers\UserHelper;
 
-class IamSupportRole extends AbstractRole implements IAuthorizationRole
+class IamSuccessManagerRole extends AbstractRole implements IAuthorizationRole
 {
-    public const NAME = 'iam-support';
+    public const NAME = 'iam-success-manager';
 
     public const LEVEL = 120;
 
-    public const DESCRIPTION = 'Member';
+    public const DESCRIPTION = 'Success manager role for IAM module';
 
     public const DB_PREFIX = '*';
 
