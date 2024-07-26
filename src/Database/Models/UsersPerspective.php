@@ -10,11 +10,14 @@ use NextDeveloper\IAM\Database\Observers\UsersPerspectiveObserver;
 use NextDeveloper\Commons\Database\Traits\UuidId;
 use NextDeveloper\Commons\Common\Cache\Traits\CleanCache;
 use NextDeveloper\Commons\Database\Traits\Taggable;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 /**
  * UsersPerspective model.
  *
  * @package  NextDeveloper\IAM\Database\Models
+ * @property integer $id
+ * @property string $uuid
  * @property string $name
  * @property string $surname
  * @property string $email
@@ -30,12 +33,17 @@ use NextDeveloper\Commons\Database\Traits\Taggable;
  * @property array $tags
  * @property string $profile_picture
  * @property boolean $is_registered
+ * @property integer $iam_account_id
+ * @property \Carbon\Carbon $created_at
+ * @property \Carbon\Carbon $updated_at
+ * @property \Carbon\Carbon $deleted_at
  */
 class UsersPerspective extends Model
 {
     use Filterable, UuidId, CleanCache, Taggable, HasStates;
+    use SoftDeletes;
 
-    public $timestamps = false;
+    public $timestamps = true;
 
     protected $table = 'iam_users_perspective';
 
@@ -61,7 +69,7 @@ class UsersPerspective extends Model
             'tags',
             'profile_picture',
             'is_registered',
-        'iam_account_id'
+            'iam_account_id',
     ];
 
     /**
@@ -84,6 +92,7 @@ class UsersPerspective extends Model
      @var array
      */
     protected $casts = [
+    'id' => 'integer',
     'name' => 'string',
     'surname' => 'string',
     'email' => 'string',
@@ -99,6 +108,9 @@ class UsersPerspective extends Model
     'tags' => \NextDeveloper\Commons\Database\Casts\TextArray::class,
     'profile_picture' => 'string',
     'is_registered' => 'boolean',
+    'created_at' => 'datetime',
+    'updated_at' => 'datetime',
+    'deleted_at' => 'datetime',
     ];
 
     /**
@@ -108,6 +120,9 @@ class UsersPerspective extends Model
      */
     protected $dates = [
     'birthday',
+    'created_at',
+    'updated_at',
+    'deleted_at',
     ];
 
     /**
@@ -158,4 +173,6 @@ class UsersPerspective extends Model
     }
 
     // EDIT AFTER HERE - WARNING: ABOVE THIS LINE MAY BE REGENERATED AND YOU MAY LOSE CODE
+
+
 }

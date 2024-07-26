@@ -54,10 +54,11 @@ class AbstractUsersPerspectiveTransformer extends AbstractTransformer
      */
     public function transform(UsersPerspective $model)
     {
-            
+                                                $iamAccountId = \NextDeveloper\IAM\Database\Models\Accounts::where('id', $model->iam_account_id)->first();
+                        
         return $this->buildPayload(
             [
-            'id'  =>  $model->id,
+            'id'  =>  $model->uuid,
             'name'  =>  $model->name,
             'surname'  =>  $model->surname,
             'email'  =>  $model->email,
@@ -73,6 +74,10 @@ class AbstractUsersPerspectiveTransformer extends AbstractTransformer
             'tags'  =>  $model->tags,
             'profile_picture'  =>  $model->profile_picture,
             'is_registered'  =>  $model->is_registered,
+            'iam_account_id'  =>  $iamAccountId ? $iamAccountId->uuid : null,
+            'created_at'  =>  $model->created_at,
+            'updated_at'  =>  $model->updated_at,
+            'deleted_at'  =>  $model->deleted_at,
             ]
         );
     }
