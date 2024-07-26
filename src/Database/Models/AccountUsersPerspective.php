@@ -13,7 +13,7 @@ use NextDeveloper\Commons\Common\Cache\Traits\CleanCache;
 use NextDeveloper\Commons\Database\Traits\Taggable;
 
 /**
- * AccountUserPerspective model.
+ * AccountUsersPerspective model.
  *
  * @package  NextDeveloper\IAM\Database\Models
  * @property integer $id
@@ -41,10 +41,10 @@ class AccountUsersPerspective extends Model
     use Filterable, UuidId, CleanCache, Taggable, HasStates;
     use SoftDeletes;
 
-
     public $timestamps = true;
 
     protected $table = 'iam_account_users_perspective';
+
 
     /**
      @var array
@@ -147,7 +147,7 @@ class AccountUsersPerspective extends Model
     public static function registerScopes()
     {
         $globalScopes = config('iam.scopes.global');
-        $modelScopes = config('iam.scopes.iam_account_user_perspective');
+        $modelScopes = config('iam.scopes.iam_account_users_perspective');
 
         if(!$modelScopes) { $modelScopes = [];
         }
@@ -167,6 +167,7 @@ class AccountUsersPerspective extends Model
     }
 
     // EDIT AFTER HERE - WARNING: ABOVE THIS LINE MAY BE REGENERATED AND YOU MAY LOSE CODE
+
 
 
 

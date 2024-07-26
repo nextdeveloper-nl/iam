@@ -2,41 +2,42 @@
 
 namespace NextDeveloper\IAM\Database\Models;
 
-use Illuminate\Database\Eloquent\SoftDeletes;
+use NextDeveloper\Commons\Database\Traits\HasStates;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\Model;
 use NextDeveloper\Commons\Database\Traits\Filterable;
-use NextDeveloper\Commons\Database\Traits\HasStates;
-use NextDeveloper\IAM\Database\Observers\UserAccountsObserver;
+use NextDeveloper\IAM\Database\Observers\UsersPerspectiveObserver;
 use NextDeveloper\Commons\Database\Traits\UuidId;
 use NextDeveloper\Commons\Common\Cache\Traits\CleanCache;
 use NextDeveloper\Commons\Database\Traits\Taggable;
 
 /**
- * UserAccounts model.
+ * UsersPerspective model.
  *
  * @package  NextDeveloper\IAM\Database\Models
- * @property integer $id
- * @property string $uuid
  * @property string $name
- * @property integer $common_domain_id
- * @property integer $common_country_id
- * @property \Carbon\Carbon $created_at
- * @property \Carbon\Carbon $updated_at
- * @property \Carbon\Carbon $deleted_at
- * @property integer $iam_user_id
- * @property integer $iam_account_id
- * @property boolean $is_active
- * @property $session_data
+ * @property string $surname
+ * @property string $email
+ * @property string $fullname
+ * @property string $username
+ * @property string $about
+ * @property string $pronoun
+ * @property \Carbon\Carbon $birthday
+ * @property string $nin
+ * @property string $country
+ * @property string $language
+ * @property string $phone_number
+ * @property array $tags
+ * @property string $profile_picture
+ * @property boolean $is_registered
  */
-class UserAccounts extends Model
+class UsersPerspective extends Model
 {
     use Filterable, UuidId, CleanCache, Taggable, HasStates;
-    use SoftDeletes;
 
-    public $timestamps = true;
+    public $timestamps = false;
 
-    protected $table = 'iam_user_accounts';
+    protected $table = 'iam_users_perspective';
 
 
     /**
@@ -46,12 +47,21 @@ class UserAccounts extends Model
 
     protected $fillable = [
             'name',
-            'common_domain_id',
-            'common_country_id',
-            'iam_user_id',
-            'iam_account_id',
-            'is_active',
-            'session_data',
+            'surname',
+            'email',
+            'fullname',
+            'username',
+            'about',
+            'pronoun',
+            'birthday',
+            'nin',
+            'country',
+            'language',
+            'phone_number',
+            'tags',
+            'profile_picture',
+            'is_registered',
+        'iam_account_id'
     ];
 
     /**
@@ -74,15 +84,21 @@ class UserAccounts extends Model
      @var array
      */
     protected $casts = [
-    'id' => 'integer',
     'name' => 'string',
-    'common_domain_id' => 'integer',
-    'common_country_id' => 'integer',
-    'created_at' => 'datetime',
-    'updated_at' => 'datetime',
-    'deleted_at' => 'datetime',
-    'is_active' => 'boolean',
-    'session_data' => 'array',
+    'surname' => 'string',
+    'email' => 'string',
+    'fullname' => 'string',
+    'username' => 'string',
+    'about' => 'string',
+    'pronoun' => 'string',
+    'birthday' => 'datetime',
+    'nin' => 'string',
+    'country' => 'string',
+    'language' => 'string',
+    'phone_number' => 'string',
+    'tags' => \NextDeveloper\Commons\Database\Casts\TextArray::class,
+    'profile_picture' => 'string',
+    'is_registered' => 'boolean',
     ];
 
     /**
@@ -91,9 +107,7 @@ class UserAccounts extends Model
      @var array
      */
     protected $dates = [
-    'created_at',
-    'updated_at',
-    'deleted_at',
+    'birthday',
     ];
 
     /**
@@ -116,7 +130,7 @@ class UserAccounts extends Model
         parent::boot();
 
         //  We create and add Observer even if we wont use it.
-        parent::observe(UserAccountsObserver::class);
+        parent::observe(UsersPerspectiveObserver::class);
 
         self::registerScopes();
     }
@@ -124,7 +138,7 @@ class UserAccounts extends Model
     public static function registerScopes()
     {
         $globalScopes = config('iam.scopes.global');
-        $modelScopes = config('iam.scopes.iam_user_accounts');
+        $modelScopes = config('iam.scopes.iam_users_perspective');
 
         if(!$modelScopes) { $modelScopes = [];
         }
@@ -143,62 +157,5 @@ class UserAccounts extends Model
         }
     }
 
-    // EDIT AFTER HERE - WARNING: ABOVE THIS LINE MAY BE REGENERATED AND YOU MAY LOSE CODE\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+    // EDIT AFTER HERE - WARNING: ABOVE THIS LINE MAY BE REGENERATED AND YOU MAY LOSE CODE
 }

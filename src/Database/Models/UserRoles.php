@@ -36,7 +36,6 @@ class UserRoles extends Model
     use Filterable, UuidId, CleanCache, Taggable, HasStates;
     use SoftDeletes;
 
-
     public $timestamps = true;
 
     protected $table = 'iam_user_roles';
@@ -151,6 +150,7 @@ class UserRoles extends Model
     }
 
     // EDIT AFTER HERE - WARNING: ABOVE THIS LINE MAY BE REGENERATED AND YOU MAY LOSE CODE\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n
+
 
 
 

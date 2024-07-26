@@ -275,24 +275,45 @@ Route::prefix('iam')->group(
             }
         );
 
-        Route::prefix('account-user-perspective')->group(
+        Route::prefix('users-perspective')->group(
             function () {
-                Route::get('/', 'AccountUserPerspective\AccountUserPerspectiveController@index');
-                Route::get('/actions', 'AccountUserPerspective\AccountUserPerspectiveController@getActions');
+                Route::get('/', 'UsersPerspective\UsersPerspectiveController@index');
+                Route::get('/actions', 'UsersPerspective\UsersPerspectiveController@getActions');
 
-                Route::get('{iam_account_user_perspective}/tags ', 'AccountUserPerspective\AccountUserPerspectiveController@tags');
-                Route::post('{iam_account_user_perspective}/tags ', 'AccountUserPerspective\AccountUserPerspectiveController@saveTags');
-                Route::get('{iam_account_user_perspective}/addresses ', 'AccountUserPerspective\AccountUserPerspectiveController@addresses');
-                Route::post('{iam_account_user_perspective}/addresses ', 'AccountUserPerspective\AccountUserPerspectiveController@saveAddresses');
+                Route::get('{iam_users_perspective}/tags ', 'UsersPerspective\UsersPerspectiveController@tags');
+                Route::post('{iam_users_perspective}/tags ', 'UsersPerspective\UsersPerspectiveController@saveTags');
+                Route::get('{iam_users_perspective}/addresses ', 'UsersPerspective\UsersPerspectiveController@addresses');
+                Route::post('{iam_users_perspective}/addresses ', 'UsersPerspective\UsersPerspectiveController@saveAddresses');
 
-                Route::get('/{iam_account_user_perspective}/{subObjects}', 'AccountUserPerspective\AccountUserPerspectiveController@relatedObjects');
-                Route::get('/{iam_account_user_perspective}', 'AccountUserPerspective\AccountUserPerspectiveController@show');
+                Route::get('/{iam_users_perspective}/{subObjects}', 'UsersPerspective\UsersPerspectiveController@relatedObjects');
+                Route::get('/{iam_users_perspective}', 'UsersPerspective\UsersPerspectiveController@show');
 
-                Route::post('/', 'AccountUserPerspective\AccountUserPerspectiveController@store');
-                Route::post('/{iam_account_user_perspective}/do/{action}', 'AccountUserPerspective\AccountUserPerspectiveController@doAction');
+                Route::post('/', 'UsersPerspective\UsersPerspectiveController@store');
+                Route::post('/{iam_users_perspective}/do/{action}', 'UsersPerspective\UsersPerspectiveController@doAction');
 
-                Route::patch('/{iam_account_user_perspective}', 'AccountUserPerspective\AccountUserPerspectiveController@update');
-                Route::delete('/{iam_account_user_perspective}', 'AccountUserPerspective\AccountUserPerspectiveController@destroy');
+                Route::patch('/{iam_users_perspective}', 'UsersPerspective\UsersPerspectiveController@update');
+                Route::delete('/{iam_users_perspective}', 'UsersPerspective\UsersPerspectiveController@destroy');
+            }
+        );
+
+        Route::prefix('account-users-perspective')->group(
+            function () {
+                Route::get('/', 'AccountUsersPerspective\AccountUsersPerspectiveController@index');
+                Route::get('/actions', 'AccountUsersPerspective\AccountUsersPerspectiveController@getActions');
+
+                Route::get('{iam_account_users_perspective}/tags ', 'AccountUsersPerspective\AccountUsersPerspectiveController@tags');
+                Route::post('{iam_account_users_perspective}/tags ', 'AccountUsersPerspective\AccountUsersPerspectiveController@saveTags');
+                Route::get('{iam_account_users_perspective}/addresses ', 'AccountUsersPerspective\AccountUsersPerspectiveController@addresses');
+                Route::post('{iam_account_users_perspective}/addresses ', 'AccountUsersPerspective\AccountUsersPerspectiveController@saveAddresses');
+
+                Route::get('/{iam_account_users_perspective}/{subObjects}', 'AccountUsersPerspective\AccountUsersPerspectiveController@relatedObjects');
+                Route::get('/{iam_account_users_perspective}', 'AccountUsersPerspective\AccountUsersPerspectiveController@show');
+
+                Route::post('/', 'AccountUsersPerspective\AccountUsersPerspectiveController@store');
+                Route::post('/{iam_account_users_perspective}/do/{action}', 'AccountUsersPerspective\AccountUsersPerspectiveController@doAction');
+
+                Route::patch('/{iam_account_users_perspective}', 'AccountUsersPerspective\AccountUsersPerspectiveController@update');
+                Route::delete('/{iam_account_users_perspective}', 'AccountUsersPerspective\AccountUsersPerspectiveController@destroy');
             }
         );
 
@@ -553,6 +574,22 @@ Route::prefix('iam')->group(
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
         Route::prefix('my')->group(
             function () {
                 Route::get('/roles', 'Roles\MyRolesController@index');
@@ -567,6 +604,7 @@ Route::prefix('iam')->group(
         );
     }
 );
+
 
 
 

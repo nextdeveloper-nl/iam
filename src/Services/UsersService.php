@@ -9,6 +9,7 @@ use NextDeveloper\Commons\Database\Models\Languages;
 use NextDeveloper\IAM\Authorization\Roles\IAuthorizationRole;
 use NextDeveloper\IAM\Database\Filters\UsersQueryFilter;
 use NextDeveloper\IAM\Database\Models\Accounts;
+use NextDeveloper\IAM\Database\Models\AccountUsers;
 use NextDeveloper\IAM\Database\Models\AccountUsersPerspective;
 use NextDeveloper\IAM\Database\Models\Users;
 use NextDeveloper\IAM\Helpers\UserHelper;
@@ -35,8 +36,7 @@ class UsersService extends AbstractUsersService
         }
 
         $users = AccountUsersPerspective::filter($filter)
-            ->where('iam_account_id', UserHelper::currentAccount()->id)
-            ->paginate();
+            ->whereRaw('id in (select iam_user_id from iam_account_users where iam_account_id = ' . UserHelper::currentAccount()->id . ')');
 
         return $users;
     }
@@ -60,6 +60,12 @@ class UsersService extends AbstractUsersService
     {
         $user = self::create([
             'email' =>  $email
+        ]);
+
+        AccountUsersService::create([
+            'iam_account_id'    =>  UserHelper::currentAccount()->id,
+            'iam_user_id'       =>  $user->id,
+            'is_active'         =>  true
         ]);
 
         return $user;

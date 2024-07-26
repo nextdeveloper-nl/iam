@@ -31,7 +31,6 @@ class Permissions extends Model
 {
     use Filterable, UuidId, CleanCache, Taggable, HasStates;
 
-
     public $timestamps = true;
 
     protected $table = 'iam_permissions';
@@ -141,7 +140,13 @@ class Permissions extends Model
         }
     }
 
+    public function rolePermissions() : \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(\NextDeveloper\IAM\Database\Models\RolePermissions::class);
+    }
+
     // EDIT AFTER HERE - WARNING: ABOVE THIS LINE MAY BE REGENERATED AND YOU MAY LOSE CODE\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n
+
 
 
 

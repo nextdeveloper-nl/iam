@@ -25,7 +25,6 @@ class LoginLogs extends Model
 {
     use Filterable, UuidId, CleanCache, Taggable, HasStates;
 
-
     public $timestamps = false;
 
     protected $table = 'iam_login_logs';
@@ -122,7 +121,13 @@ class LoginLogs extends Model
         }
     }
 
+    public function users() : \Illuminate\Database\Eloquent\Relations\BelongsTo
+    {
+        return $this->belongsTo(\NextDeveloper\IAM\Database\Models\Users::class);
+    }
+    
     // EDIT AFTER HERE - WARNING: ABOVE THIS LINE MAY BE REGENERATED AND YOU MAY LOSE CODE\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n
+
 
 
 
