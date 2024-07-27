@@ -67,6 +67,17 @@ class RolesService extends AbstractRolesService
         return $Roles;
     }
 
+    public static function assignDefaultRoles(Users $users, Accounts $accounts)
+    {
+        foreach (config('leo.services') as $serviceConfig) {
+            if ($serviceConfig['is_default']) {
+                $roleObject = new $serviceConfig['role'];
+                $getRole = RolesService::getRole($roleObject);
+                RolesService::assignUserToRole($users, $getRole, $accounts);
+            }
+        }
+    }
+
     /**
      * Returns the role if it exists in database. If not returns null.
      *
