@@ -22,6 +22,7 @@ use NextDeveloper\IAM\Exceptions\CannotFindUserException;
 use NextDeveloper\IAM\Services\AccountsService;
 use NextDeveloper\IAM\Services\RolesService;
 use NextDeveloper\IAM\Services\UsersService;
+use PharIo\Manifest\Author;
 
 class UserHelper
 {
@@ -126,6 +127,20 @@ class UserHelper
     {
         $account = Accounts::withoutGlobalScopes()
             ->where('id', $accountId)
+            ->first();
+
+        return $account;
+    }
+
+    public static function getAccountByUuid($uuid) : ?Accounts
+    {
+        $account = Accounts::withoutGlobalScope(AuthorizationScope::class)
+            ->where('uuid', $uuid)
+            ->first();
+
+        $accountUserRelation = AccountUsers::withoutGlobalScope(AuthorizationScope::class)
+            ->where('iam_account_id', $account->id)
+            ->where('iam_user_id', UserHelper::me()->id)
             ->first();
 
         return $account;
@@ -269,7 +284,7 @@ class UserHelper
         $me = self::me();
 
         $teams = UserHelper::allAccounts($me);
-
+;
         $isInTeam = false;
 
         foreach ($teams as $team) {
@@ -286,16 +301,11 @@ class UserHelper
                 );
             }
 
-            AccountUsers::where('iam_user_id', $me->id)
-                ->update([
-                    'is_active' =>  0
-                ]);
+            DB::update('update iam_account_user set is_active = false where iam_user_id = ' . $me->id . ';');
 
-            AccountUsers::where('iam_user_id', $me->id)
-                ->where('iam_account_id', $account->id)
-                ->update([
-                    'is_active' =>  1
-                ]);
+            DB::update('update iam_account_user set is_active = true where iam_user_id = ' . $me->id . ' and iam_account_id = ' . $account->id . ';');
+
+            RolesService::assignDefaultRoles($me, $account);
 
             Cache::delete(
                 CacheHelper::getKey('Users', $me->uuid)
