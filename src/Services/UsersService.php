@@ -36,7 +36,8 @@ class UsersService extends AbstractUsersService
         }
 
         $users = AccountUsersPerspective::filter($filter)
-            ->whereRaw('id in (select iam_user_id from iam_account_users where iam_account_id = ' . UserHelper::currentAccount()->id . ')');
+            ->whereRaw('id in (select iam_user_id from iam_account_user where iam_account_id = ' . UserHelper::currentAccount()->id . ')')
+            ->get();
 
         return $users;
     }
