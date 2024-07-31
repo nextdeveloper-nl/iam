@@ -38,7 +38,7 @@ class UsersTransformer extends AbstractUsersTransformer
 
         if($transformed['profile_picture_identity'] != null) {
             $profilePicture = Media::where('id', $transformed['profile_picture_identity'])->first();
-            
+
             if($profilePicture)
                 $transformed['photo_url'] = $profilePicture->cdn_url;
             else
