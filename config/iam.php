@@ -35,5 +35,19 @@ return [
         'iam_accounts'  =>  [
             'can_change_domain' =>  false
         ]
-    ]
+    ],
+
+    /**
+     * This is the nin service configuration.
+     * You can add more services to the 'nin' array.
+     */
+    'nin' => [
+        'tr' => [
+            'endpoints' => [
+                'citizen' => env('TR_NIN_CITIZEN_ENDPOINT','https://tckimlik.nvi.gov.tr/Service/KPSPublic.asmx?WSDL'),
+                'foreign' => env('TR_NIN_FOREIGN_ENDPOINT','https://tckimlik.nvi.gov.tr/Service/KPSPublicYabanciDogrula.asmx?WSDL'),
+            ],
+            'class' => \NextDeveloper\IAM\Services\NinClients\TurkiyeNinService::class
+        ],
+    ],
 ];
