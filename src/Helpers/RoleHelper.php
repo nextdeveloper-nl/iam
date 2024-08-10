@@ -42,6 +42,11 @@ class RoleHelper
         return UsersService::getById($userRole->iam_user_id);
     }
 
+    public static function getRoleByName(string $roleName): ?Roles
+    {
+        return RolesService::getRoleByName($roleName);
+    }
+
     /**
      *
      *
