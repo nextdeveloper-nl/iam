@@ -34,6 +34,7 @@ return [
     'configuration' =>  [
         'iam_accounts'  =>  [
             'can_change_domain' =>  false
-        ]
+        ],
+        'autoadd_users_with_same_domain'    =>  false
     ]
 ];
