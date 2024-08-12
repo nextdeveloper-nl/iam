@@ -2,10 +2,12 @@
 
 namespace NextDeveloper\IAM\Helpers;
 
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use NextDeveloper\IAM\Database\Models\Roles;
 use NextDeveloper\IAM\Database\Models\Users;
+use NextDeveloper\IAM\Database\Scopes\AuthorizationScope;
 use NextDeveloper\IAM\Services\RolesService;
 use NextDeveloper\IAM\Services\UsersService;
 
@@ -45,6 +47,13 @@ class RoleHelper
     public static function getRoleByName(string $roleName): ?Roles
     {
         return RolesService::getRoleByName($roleName);
+    }
+
+    public static function getSuccessManagerRoles(): ?Collection
+    {
+        return Roles::withoutGlobalScope(AuthorizationScope::class)
+            ->whereLike('name', '%success-manager')
+            ->get();
     }
 
     /**

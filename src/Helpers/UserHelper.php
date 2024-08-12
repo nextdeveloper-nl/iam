@@ -12,6 +12,7 @@ use Illuminate\Validation\UnauthorizedException;
 use NextDeveloper\Commons\Common\Cache\CacheHelper;
 use NextDeveloper\Commons\Database\Models\Languages;
 use NextDeveloper\Events\Services\Events;
+use NextDeveloper\IAM\Database\Filters\AccountsQueryFilter;
 use NextDeveloper\IAM\Database\Models\AccountUsers;
 use NextDeveloper\IAM\Database\Models\Roles;
 use NextDeveloper\IAM\Database\Models\RoleUsers;
@@ -152,12 +153,17 @@ class UserHelper
      * @param Users $user
      * @return \Illuminate\Support\Collection
      */
-    public static function allAccounts(Users $user = null) : \Illuminate\Support\Collection
+    public static function allAccounts(Users $user = null, AccountsQueryFilter $filter = null) : \Illuminate\Support\Collection
     {
+        $filters = null;
+
         if($user == null)
             $user = self::me();
 
-        $accounts = AccountsService::userAccounts($user);
+        if($filter)
+            $filters = $filter->filters();
+
+        $accounts = AccountsService::userAccounts($user, $filters);
 
         return $accounts;
     }

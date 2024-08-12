@@ -104,9 +104,23 @@ class AccountsService extends AbstractAccountsService
      * @param Users $user
      * @return Collection
      */
-    public static function userAccounts(Users $user) : Collection
+    public static function userAccounts(Users $user, $filters = null) : Collection
     {
-        return UserAccounts::withoutGlobalScopes()->where('iam_user_id', $user->id)->get();
+        $userAccounts = UserAccounts::withoutGlobalScopes();
+
+        $userAccountModel = new UserAccounts();
+
+        foreach ($filters as $key => $value) {
+            if($key == 'iam_user_id' || $key == 'iam_account_id')
+                continue;
+
+            if($userAccountModel->getCasts()[$key] == 'string')
+                $userAccounts = $userAccounts->whereLike($key, '%' . $value . '%');
+            else
+                $userAccounts = $userAccounts->where($key, $value);
+        }
+
+        return $userAccounts->where('iam_user_id', $user->id)->get();
     }
 
     /**

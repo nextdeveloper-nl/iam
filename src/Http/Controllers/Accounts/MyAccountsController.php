@@ -22,7 +22,7 @@ class MyAccountsController extends AbstractController
      * @return \Illuminate\Http\JsonResponse
      */
     public function index(AccountsQueryFilter $filter, Request $request) {
-        return ResponsableFactory::makeResponse($this, UserHelper::allAccounts());
+        return ResponsableFactory::makeResponse($this, UserHelper::allAccounts(UserHelper::me(), $filter));
     }
 
     public function update(Request $request) {

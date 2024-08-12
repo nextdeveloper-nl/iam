@@ -87,7 +87,7 @@ class RolesService extends AbstractRolesService
     public static function getRoleByName(string $role) : ?Roles
     {
         return Roles::withoutGlobalScope(AuthorizationScope::class)
-            ->where('name', $role)
+            ->whereLike('name', $role)
             ->first();
     }
 
