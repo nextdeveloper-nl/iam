@@ -110,6 +110,10 @@ class AccountsService extends AbstractAccountsService
 
         $userAccountModel = new UserAccounts();
 
+        if($filters == null) {
+            return $userAccounts->where('iam_user_id', $user->id)->get();
+        }
+
         foreach ($filters as $key => $value) {
             if($key == 'iam_user_id' || $key == 'iam_account_id')
                 continue;
