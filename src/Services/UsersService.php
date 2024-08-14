@@ -12,6 +12,7 @@ use NextDeveloper\IAM\Database\Models\Accounts;
 use NextDeveloper\IAM\Database\Models\AccountUsers;
 use NextDeveloper\IAM\Database\Models\AccountUsersPerspective;
 use NextDeveloper\IAM\Database\Models\Users;
+use NextDeveloper\IAM\Database\Scopes\AuthorizationScope;
 use NextDeveloper\IAM\Helpers\UserHelper;
 use NextDeveloper\IAM\Services\AbstractServices\AbstractUsersService;
 
@@ -80,25 +81,39 @@ class UsersService extends AbstractUsersService
      * @throws \Exception
      */
     public static function create(array $data, Accounts $accounts = null) : Users {
-        if(!array_key_exists('common_language_id', $data)) {
-            $lang = Languages::withoutGlobalScopes()->where('code', App::currentLocale())->first();
+        $user = Users::withoutGlobalScope(AuthorizationScope::class)
+            ->where('email', $data['email'])
+            ->first();
 
-            if($lang == null)
-                $lang = Languages::withoutGlobalScopes()->where('code', 'en')->first();
+        if(!$user) {
+            if(!array_key_exists('common_language_id', $data)) {
+                $lang = Languages::withoutGlobalScopes()->where('code', App::currentLocale())->first();
 
-            $data['common_language_id'] = $lang->id;
+                if($lang == null)
+                    $lang = Languages::withoutGlobalScopes()->where('code', 'en')->first();
+
+                $data['common_language_id'] = $lang->id;
+            }
+
+            $user = parent::create($data);
         }
-
-        $user = parent::create($data);
 
         if(!$accounts)
             $accounts = UserHelper::currentAccount();
 
-        AccountUsersService::create([
-            'iam_account_id'    =>  $accounts->id,
-            'iam_user_id'       =>  $user->id,
-            'is_active'         =>  true
-        ]);
+        $checkRelation = AccountUsers::withoutGlobalScope(AuthorizationScope::class)
+            ->where([
+                'iam_account_id'    =>  $accounts->id,
+                'iam_user_id'       =>  $user->id
+            ])->first();
+
+        if(!$checkRelation) {
+            AccountUsersService::create([
+                'iam_account_id'    =>  $accounts->id,
+                'iam_user_id'       =>  $user->id,
+                'is_active'         =>  true
+            ]);
+        }
 
         return $user;
     }

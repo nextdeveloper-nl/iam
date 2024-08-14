@@ -35,7 +35,7 @@ return [
         'iam_accounts'  =>  [
             'can_change_domain' =>  false
         ],
-        'autoadd_users_with_same_domain'    =>  false
+        'autoadd_users_with_same_domain'    =>  env('AUTOADD_USERS_WITH_SAME_DOMAIN', true)
     ],
 
     /**
