@@ -5,8 +5,16 @@ namespace NextDeveloper\IAM\Authorization\Roles;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
+use NextDeveloper\Commons\Database\GlobalScopes\LimitScope;
+use NextDeveloper\IAM\Database\Models\UserAccounts;
 use NextDeveloper\IAM\Database\Models\Users;
+use NextDeveloper\IAM\Database\Scopes\AuthorizationScope;
+use NextDeveloper\IAM\Helpers\UserHelper;
 
+/**
+ * This role is created for partners and CRM users to be able to help the customer to make certain actions. That is why
+ * Iam success manager has only right to make read operations and simple write operations like updating the account object.
+ */
 class IamSuccessManagerRole extends AbstractRole implements IAuthorizationRole
 {
     public const NAME = 'iam-success-manager';
@@ -27,7 +35,14 @@ class IamSuccessManagerRole extends AbstractRole implements IAuthorizationRole
     public function apply(Builder $builder, Model $model)
     {
         //  This role is basicly a replica of Member Role. That is why we are calling the MemberRole here.
-        (new MemberRole)->apply($builder, $model);
+        $myAccounts = UserAccounts::withoutGlobalScope(AuthorizationScope::class)
+            ->withoutGlobalScope(LimitScope::class)
+            ->where('iam_user_id', UserHelper::me()->id)
+            ->pluck('iam_account_id');
+
+        if($model->getTable() == 'iam_accounts') {
+            $builder->whereIn('id', $myAccounts);
+        }
     }
 
     public function getModule()
