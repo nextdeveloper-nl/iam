@@ -23,7 +23,7 @@ class IamSuccessManagerRole extends AbstractRole implements IAuthorizationRole
 
     public const DESCRIPTION = 'Success manager role for IAM module';
 
-    public const DB_PREFIX = '*';
+    public const DB_PREFIX = 'iam';
 
     /**
      * Applies basic member role sql
