@@ -55,6 +55,8 @@ class AbstractUsersPerspectiveTransformer extends AbstractTransformer
     public function transform(UsersPerspective $model)
     {
         $iamAccountId = \NextDeveloper\IAM\Database\Models\Accounts::where('id', $model->iam_account_id)->first();
+        $commonCountryId = \NextDeveloper\Commons\Database\Models\Countries::where('id', $model->common_country_id)->first();
+        $commonLanguageId = \NextDeveloper\Commons\Database\Models\Languages::where('id', $model->common_language_id)->first();
 
         return $this->buildPayload(
             [
@@ -73,6 +75,8 @@ class AbstractUsersPerspectiveTransformer extends AbstractTransformer
                 'phone_number' => $model->phone_number,
                 'tags' => $model->tags,
                 'profile_picture' => $model->profile_picture,
+                'common_country_id' =>  $commonCountryId ?? $commonCountryId->uuid,
+                'common_langulage_id'   =>  $commonLanguageId ?? $commonLanguageId->uuid,
                 'has_valid_google_login'    =>  $model->has_valid_google_login,
                 'is_registered' => $model->is_registered,
                 'is_active' => $model->is_active,
