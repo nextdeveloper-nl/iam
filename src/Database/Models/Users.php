@@ -337,6 +337,31 @@ class Users extends Model
         return $this->hasMany(\NextDeveloper\IAAS\Database\Models\AnsiblePlaybookExecutions::class);
     }
 
+    public function subscriptions() : \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(\NextDeveloper\Marketplace\Database\Models\Subscriptions::class);
+    }
+
+    public function products() : \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(\NextDeveloper\Marketplace\Database\Models\Products::class);
+    }
+
+    public function markets() : \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(\NextDeveloper\Marketplace\Database\Models\Markets::class);
+    }
+
+    public function invoices() : \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(\NextDeveloper\Accounting\Database\Models\Invoices::class);
+    }
+
+    public function creditCards() : \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(\NextDeveloper\Accounting\Database\Models\CreditCards::class);
+    }
+
     // EDIT AFTER HERE - WARNING: ABOVE THIS LINE MAY BE REGENERATED AND YOU MAY LOSE CODE
 
     use Authenticatable;

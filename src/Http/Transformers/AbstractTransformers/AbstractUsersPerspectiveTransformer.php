@@ -54,31 +54,32 @@ class AbstractUsersPerspectiveTransformer extends AbstractTransformer
      */
     public function transform(UsersPerspective $model)
     {
-                                                $iamAccountId = \NextDeveloper\IAM\Database\Models\Accounts::where('id', $model->iam_account_id)->first();
-                        
+        $iamAccountId = \NextDeveloper\IAM\Database\Models\Accounts::where('id', $model->iam_account_id)->first();
+
         return $this->buildPayload(
             [
-            'id'  =>  $model->uuid,
-            'name'  =>  $model->name,
-            'surname'  =>  $model->surname,
-            'email'  =>  $model->email,
-            'fullname'  =>  $model->fullname,
-            'username'  =>  $model->username,
-            'about'  =>  $model->about,
-            'pronoun'  =>  $model->pronoun,
-            'birthday'  =>  $model->birthday,
-            'nin'  =>  $model->nin,
-            'country'  =>  $model->country,
-            'language'  =>  $model->language,
-            'phone_number'  =>  $model->phone_number,
-            'tags'  =>  $model->tags,
-            'profile_picture'  =>  $model->profile_picture,
-            'is_registered'  =>  $model->is_registered,
-            'is_active'  =>  $model->is_active,
-            'iam_account_id'  =>  $iamAccountId ? $iamAccountId->uuid : null,
-            'created_at'  =>  $model->created_at,
-            'updated_at'  =>  $model->updated_at,
-            'deleted_at'  =>  $model->deleted_at,
+                'id' => $model->uuid,
+                'name' => $model->name,
+                'surname' => $model->surname,
+                'email' => $model->email,
+                'fullname' => $model->fullname,
+                'username' => $model->username,
+                'about' => $model->about,
+                'pronoun' => $model->pronoun,
+                'birthday' => $model->birthday,
+                'nin' => $model->nin,
+                'country' => $model->country,
+                'language' => $model->language,
+                'phone_number' => $model->phone_number,
+                'tags' => $model->tags,
+                'profile_picture' => $model->profile_picture,
+                'has_valid_google_login'    =>  $model->has_valid_google_login,
+                'is_registered' => $model->is_registered,
+                'is_active' => $model->is_active,
+                'iam_account_id' => $iamAccountId ? $iamAccountId->uuid : null,
+                'created_at' => $model->created_at,
+                'updated_at' => $model->updated_at,
+                'deleted_at' => $model->deleted_at,
             ]
         );
     }
