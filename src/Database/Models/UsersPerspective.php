@@ -50,98 +50,100 @@ class UsersPerspective extends Model
 
 
     /**
-     @var array
+     * @var array
      */
     protected $guarded = [];
 
     protected $fillable = [
-            'name',
-            'surname',
-            'email',
-            'fullname',
-            'username',
-            'about',
-            'pronoun',
-            'birthday',
-            'nin',
-            'country',
-            'language',
-            'phone_number',
-            'tags',
-            'profile_picture',
-            'is_registered',
-            'is_active',
-            'iam_account_id',
+        'name',
+        'surname',
+        'email',
+        'fullname',
+        'username',
+        'about',
+        'pronoun',
+        'birthday',
+        'nin',
+        'country',
+        'language',
+        'phone_number',
+        'tags',
+        'has_valid_google_login',
+        'profile_picture',
+        'is_registered',
+        'is_active',
+        'iam_account_id',
     ];
 
     /**
-      Here we have the fulltext fields. We can use these for fulltext search if enabled.
+     * Here we have the fulltext fields. We can use these for fulltext search if enabled.
      */
     protected $fullTextFields = [
 
     ];
 
     /**
-     @var array
+     * @var array
      */
     protected $appends = [
 
     ];
 
     /**
-     We are casting fields to objects so that we can work on them better
+     * We are casting fields to objects so that we can work on them better
      *
-     @var array
+     * @var array
      */
     protected $casts = [
-    'id' => 'integer',
-    'name' => 'string',
-    'surname' => 'string',
-    'email' => 'string',
-    'fullname' => 'string',
-    'username' => 'string',
-    'about' => 'string',
-    'pronoun' => 'string',
-    'birthday' => 'datetime',
-    'nin' => 'string',
-    'country' => 'string',
-    'language' => 'string',
-    'phone_number' => 'string',
-    'tags' => \NextDeveloper\Commons\Database\Casts\TextArray::class,
-    'profile_picture' => 'string',
-    'is_registered' => 'boolean',
-    'is_active' => 'boolean',
-    'created_at' => 'datetime',
-    'updated_at' => 'datetime',
-    'deleted_at' => 'datetime',
+        'id' => 'integer',
+        'name' => 'string',
+        'surname' => 'string',
+        'email' => 'string',
+        'fullname' => 'string',
+        'username' => 'string',
+        'about' => 'string',
+        'pronoun' => 'string',
+        'birthday' => 'datetime',
+        'nin' => 'string',
+        'country' => 'string',
+        'language' => 'string',
+        'phone_number' => 'string',
+        'tags' => \NextDeveloper\Commons\Database\Casts\TextArray::class,
+        'profile_picture' => 'string',
+        'is_registered' => 'boolean',
+        'is_active' => 'boolean',
+        'has_valid_google_login'    =>  'boolean',
+        'created_at' => 'datetime',
+        'updated_at' => 'datetime',
+        'deleted_at' => 'datetime',
     ];
 
     /**
-     We are casting data fields.
+     * We are casting data fields.
      *
-     @var array
+     * @var array
      */
     protected $dates = [
-    'birthday',
-    'created_at',
-    'updated_at',
-    'deleted_at',
+        'birthday',
+        'created_at',
+        'updated_at',
+        'deleted_at',
     ];
 
     /**
-     @var array
+     * @var array
      */
     protected $with = [
 
     ];
 
     /**
-     @var int
+     * @var int
      */
     protected $perPage = 20;
 
     /**
-     @return void
+     * @return void
      */
     public static function boot()
     {
@@ -158,9 +160,11 @@ class UsersPerspective extends Model
         $globalScopes = config('iam.scopes.global');
         $modelScopes = config('iam.scopes.iam_users_perspective');
 
-        if(!$modelScopes) { $modelScopes = [];
+        if (!$modelScopes) {
+            $modelScopes = [];
         }
-        if (!$globalScopes) { $globalScopes = [];
+        if (!$globalScopes) {
+            $globalScopes = [];
         }
 
         $scopes = array_merge(
@@ -168,7 +172,7 @@ class UsersPerspective extends Model
             $modelScopes
         );
 
-        if($scopes) {
+        if ($scopes) {
             foreach ($scopes as $scope) {
                 static::addGlobalScope(app($scope));
             }
@@ -176,7 +180,6 @@ class UsersPerspective extends Model
     }
 
     // EDIT AFTER HERE - WARNING: ABOVE THIS LINE MAY BE REGENERATED AND YOU MAY LOSE CODE
-
 
 
 }

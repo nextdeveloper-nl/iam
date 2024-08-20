@@ -28,7 +28,7 @@ class UsersPerspectiveTransformer extends AbstractUsersPerspectiveTransformer
         );
 
         if($transformed) {
-            return $transformed;
+            //return $transformed;
         }
 
         $transformed = parent::transform($model);
