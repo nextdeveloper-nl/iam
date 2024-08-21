@@ -18,6 +18,7 @@ use NextDeveloper\IAM\Database\Models\Roles;
 use NextDeveloper\IAM\Database\Models\RoleUsers;
 use NextDeveloper\IAM\Database\Models\Users;
 use NextDeveloper\IAM\Database\Models\Accounts;
+use NextDeveloper\IAM\Database\Models\UsersPerspective;
 use NextDeveloper\IAM\Database\Scopes\AuthorizationScope;
 use NextDeveloper\IAM\Exceptions\CannotFindUserException;
 use NextDeveloper\IAM\Services\AccountsService;
@@ -58,7 +59,7 @@ class UserHelper
             return null;
         }
 
-        $user = Users::withoutGlobalScopes()
+        $user = UsersPerspective::withoutGlobalScopes()
             ->where('id', $token[0]->user_id)
             ->first();
 
