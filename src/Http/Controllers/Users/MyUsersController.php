@@ -23,8 +23,6 @@ class MyUsersController extends AbstractController
     public function index(UsersQueryFilter $filter, Request $request) {
         $me = UserHelper::me();
 
-        $me = UsersPerspective::where('id', $me->id)->first();
-
         return ResponsableFactory::makeResponse($this, $me);
     }
 
