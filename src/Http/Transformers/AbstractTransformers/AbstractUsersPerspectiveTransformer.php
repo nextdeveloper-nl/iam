@@ -76,7 +76,7 @@ class AbstractUsersPerspectiveTransformer extends AbstractTransformer
                 'tags' => $model->tags,
                 'profile_picture' => $model->profile_picture,
                 'common_country_id' =>  $commonCountryId ?? $commonCountryId->uuid,
-                'common_langulage_id'   =>  $commonLanguageId ?? $commonLanguageId->uuid,
+                'common_language_id'   =>  $commonLanguageId ?? $commonLanguageId->uuid,
                 'has_valid_google_login'    =>  $model->has_valid_google_login,
                 'is_registered' => $model->is_registered,
                 'is_active' => $model->is_active,
