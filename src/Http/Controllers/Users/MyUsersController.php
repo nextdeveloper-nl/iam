@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use NextDeveloper\Commons\Http\Controllers\AbstractController;
 use NextDeveloper\Commons\Http\Response\ResponsableFactory;
 use NextDeveloper\IAM\Database\Models\UsersPerspective;
+use NextDeveloper\IAM\Database\Scopes\AuthorizationScope;
 use NextDeveloper\IAM\Helpers\UserHelper;
 use NextDeveloper\IAM\Database\Filters\UsersQueryFilter;
 use NextDeveloper\IAM\Http\Requests\Users\UsersUpdateRequest;
@@ -22,6 +23,10 @@ class MyUsersController extends AbstractController
      */
     public function index(UsersQueryFilter $filter, Request $request) {
         $me = UserHelper::me();
+
+        $me = UsersPerspective::withoutGlobalScope(AuthorizationScope::class)
+            ->where('id', $me->id)
+            ->first();
 
         return ResponsableFactory::makeResponse($this, $me);
     }

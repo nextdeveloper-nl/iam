@@ -4,14 +4,11 @@ namespace NextDeveloper\IAM\Helpers;
 
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Validation\UnauthorizedException;
 use NextDeveloper\Commons\Common\Cache\CacheHelper;
 use NextDeveloper\Commons\Database\Models\Languages;
-use NextDeveloper\Events\Services\Events;
 use NextDeveloper\IAM\Database\Filters\AccountsQueryFilter;
 use NextDeveloper\IAM\Database\Models\AccountUsers;
 use NextDeveloper\IAM\Database\Models\Roles;
@@ -23,8 +20,6 @@ use NextDeveloper\IAM\Database\Scopes\AuthorizationScope;
 use NextDeveloper\IAM\Exceptions\CannotFindUserException;
 use NextDeveloper\IAM\Services\AccountsService;
 use NextDeveloper\IAM\Services\RolesService;
-use NextDeveloper\IAM\Services\UsersService;
-use PharIo\Manifest\Author;
 
 class UserHelper
 {
@@ -59,7 +54,7 @@ class UserHelper
             return null;
         }
 
-        $user = UsersPerspective::withoutGlobalScopes()
+        $user = Users::withoutGlobalScopes()
             ->where('id', $token[0]->user_id)
             ->first();
 
