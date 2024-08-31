@@ -29,7 +29,7 @@ Identity management software is a crucial tool in today's security-conscious dig
 - [ ] Directory Services: These services store, organize, and provide access to information about users and resources.
 - - [ ] LDAP
 - - [ ] Active Directory
-- [ ] Role-Based Access Control (RBAC): This feature enables the assignment of access rights based on roles within the organization. For example, all employees in the marketing department could have similar access rights.
+- [x] Role-Based Access Control (RBAC): This feature enables the assignment of access rights based on roles within the organization. For example, all employees in the marketing department could have similar access rights.
 - [ ] Identity Governance: This includes tools for defining and implementing policies and rules for user access and for auditing and reporting on user access.
 - [ ] Identity Lifecycle Management: This includes the processes for managing identities from the initial creation of the account, through various changes, to the eventual retirement of the account.
 - [ ] Password Management: Tools for managing and resetting passwords, enforcing password policies, etc.
@@ -52,7 +52,7 @@ In this library we try to support almost all available authentication mechanisms
 
 # Password Management
 For password management we are and will be applying various different practices to increase the security;
-- [ ] using Argon2id for hashing passwords and scrypt for fallback.
+- [x] using Argon2id for hashing passwords and scrypt for fallback.
 - [ ] storing the old passwords to check if the user is not using the very same password
 - [ ] checking the password quality, in terms of complexity
 - [ ] rehashing passwords using rehash algorithms if available.
@@ -73,7 +73,7 @@ When the user is sending the token that we generate instead of JWT token, we nee
 
 We implement application level lookup at the moment but we will be offering Load Balancer level of lookup for reduced cpu usage and overhead.
 
-- [ ] Application lookup
+- [x] Application lookup
 - [ ] Load balancer lookup
 
 # Commercial Support

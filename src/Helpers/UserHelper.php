@@ -72,9 +72,9 @@ class UserHelper
      * This function finds the user by the given id and returns the user object.
      *
      * @param $userId
-     * @return void
+     * @return Users
      */
-    public static function setUserById($userId) {
+    public static function setUserById($userId): Users {
         $user = Users::withoutGlobalScopes()
             ->where('id', $userId)
             ->first();
@@ -88,6 +88,8 @@ class UserHelper
         $account = Accounts::withoutGlobalScopes()
             ->where('id', $accountId)
             ->first();
+
+        self::$account = $account;
 
         return $account;
     }
