@@ -216,7 +216,7 @@ class AccountsService extends AbstractAccountsService
 
     public static function addUserToAccount(Users $users, Accounts $accounts)
     {
-        AccountUsers::create([
+        AccountUsers::firstOrCreate([
             'iam_user_id'       =>  $users->id,
             'iam_account_id'    =>  $accounts->id,
             'is_active'         =>  true
