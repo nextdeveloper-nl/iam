@@ -51,13 +51,12 @@ class AccountsService extends AbstractAccountsService
 
         //  Here we are checking if according to the configuration of the system, the user can change the domain or not.
         $canChangeDomain = MetaHelper::get(
-            Accounts::class,
-            $account->id,
+            $account,
             'can_change_domain',
             config('iam.configuration.iam_accounts.can_change_domain')
         );
 
-        if(!config('iam.configuration.iam_accounts.can_change_domain')) {
+        if(!$canChangeDomain) {
             unset($data['common_domain_id']);
         }
 

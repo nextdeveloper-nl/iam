@@ -17,22 +17,22 @@ class PermissionsQueryFilter extends AbstractQueryFilter
      * @var Builder
      */
     protected $builder;
-    
+
     public function namespace($value)
     {
         return $this->builder->where('namespace', 'like', '%' . $value . '%');
     }
-    
+
     public function service($value)
     {
         return $this->builder->where('service', 'like', '%' . $value . '%');
     }
-    
+
     public function method($value)
     {
         return $this->builder->where('method', 'like', '%' . $value . '%');
     }
-    
+
     public function name($value)
     {
         return $this->builder->where('name', 'like', '%' . $value . '%');
@@ -66,9 +66,7 @@ class PermissionsQueryFilter extends AbstractQueryFilter
 
     public function isActive($value)
     {
-        if(!is_bool($value)) {
-            $value = false;
-        }
+
 
         return $this->builder->where('is_active', $value);
     }
