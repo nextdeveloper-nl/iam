@@ -5,7 +5,7 @@ namespace NextDeveloper\IAM\Database\Filters;
 use Illuminate\Database\Eloquent\Builder;
 use NextDeveloper\Commons\Database\Filters\AbstractQueryFilter;
 use NextDeveloper\Accounts\Database\Models\User;
-    
+
 
 /**
  * This class automatically puts where clause on database so that use can filter
@@ -18,7 +18,7 @@ class LoginMechanismsQueryFilter extends AbstractQueryFilter
      * @var Builder
      */
     protected $builder;
-    
+
     public function loginMechanism($value)
     {
         return $this->builder->where('login_mechanism', 'like', '%' . $value . '%');
@@ -26,27 +26,21 @@ class LoginMechanismsQueryFilter extends AbstractQueryFilter
 
     public function isLatest($value)
     {
-        if(!is_bool($value)) {
-            $value = false;
-        }
+
 
         return $this->builder->where('is_latest', $value);
     }
 
     public function isDefault($value)
     {
-        if(!is_bool($value)) {
-            $value = false;
-        }
+
 
         return $this->builder->where('is_default', $value);
     }
 
     public function isActive($value)
     {
-        if(!is_bool($value)) {
-            $value = false;
-        }
+
 
         return $this->builder->where('is_active', $value);
     }

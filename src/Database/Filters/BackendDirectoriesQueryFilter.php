@@ -4,7 +4,7 @@ namespace NextDeveloper\IAM\Database\Filters;
 
 use Illuminate\Database\Eloquent\Builder;
 use NextDeveloper\Commons\Database\Filters\AbstractQueryFilter;
-        
+
 
 /**
  * This class automatically puts where clause on database so that use can filter
@@ -17,52 +17,52 @@ class BackendDirectoriesQueryFilter extends AbstractQueryFilter
      * @var Builder
      */
     protected $builder;
-    
+
     public function name($value)
     {
         return $this->builder->where('name', 'like', '%' . $value . '%');
     }
-    
+
     public function defaultFilter($value)
     {
         return $this->builder->where('default_filter', 'like', '%' . $value . '%');
     }
-    
+
     public function defaultMemberof($value)
     {
         return $this->builder->where('default_memberof', 'like', '%' . $value . '%');
     }
-    
+
     public function defaultGroup($value)
     {
         return $this->builder->where('default_group', 'like', '%' . $value . '%');
     }
-    
+
     public function defaultUseridField($value)
     {
         return $this->builder->where('default_userid_field', 'like', '%' . $value . '%');
     }
-    
+
     public function defaultPasswordField($value)
     {
         return $this->builder->where('default_password_field', 'like', '%' . $value . '%');
     }
-    
+
     public function defaultEmailField($value)
     {
         return $this->builder->where('default_email_field', 'like', '%' . $value . '%');
     }
-    
+
     public function defaultAliasField($value)
     {
         return $this->builder->where('default_alias_field', 'like', '%' . $value . '%');
     }
-    
+
     public function defaultNameField($value)
     {
         return $this->builder->where('default_name_field', 'like', '%' . $value . '%');
     }
-    
+
     public function defaultSurnameField($value)
     {
         return $this->builder->where('default_surname_field', 'like', '%' . $value . '%');
@@ -70,27 +70,21 @@ class BackendDirectoriesQueryFilter extends AbstractQueryFilter
 
     public function isConnected($value)
     {
-        if(!is_bool($value)) {
-            $value = false;
-        }
+
 
         return $this->builder->where('is_connected', $value);
     }
 
     public function isConnectionSecure($value)
     {
-        if(!is_bool($value)) {
-            $value = false;
-        }
+
 
         return $this->builder->where('is_connection_secure', $value);
     }
 
     public function isUsable($value)
     {
-        if(!is_bool($value)) {
-            $value = false;
-        }
+
 
         return $this->builder->where('is_usable', $value);
     }
