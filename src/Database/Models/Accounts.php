@@ -332,6 +332,11 @@ class Accounts extends Model
         return $this->hasMany(\NextDeveloper\Accounting\Database\Models\CreditCards::class);
     }
 
+    public function projects() : \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(\NextDeveloper\CRM\Database\Models\Projects::class);
+    }
+
     // EDIT AFTER HERE - WARNING: ABOVE THIS LINE MAY BE REGENERATED AND YOU MAY LOSE CODE\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n
 
     //    public function users()
