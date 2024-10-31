@@ -123,4 +123,44 @@ class UsersService extends AbstractUsersService
 
         return $user;
     }
+
+    /**
+     * This method returns the model by looking at its id
+     *
+     * @param  $id
+     * @param array $data
+     * @return Users|null
+     * @throws \Exception
+     */
+    public static function update($id, array $data)
+    {
+        // Check if the user exists
+        $model = Users::where('uuid', $id)->first();
+
+        if (!$model) {
+            throw new \Exception('User not found');
+        }
+
+        // If the user is profile verified, do not update the profile
+        if ($model->is_profile_verified) {
+            return $model;
+        }
+
+        // If the user is NIN verified, do not update the name, email, birthday, and NIN
+        if ($model->is_nin_verified) {
+            unset($data['name'], $data['email'], $data['birthday'], $data['nin']);
+        }
+
+        // If the user is email verified, do not update the email
+        if ($model->is_email_verified) {
+            unset($data['email']);
+        }
+
+        // If the user is phone number verified, do not update the phone number
+        if ($model->is_phone_number_verified) {
+            unset($data['phone_number']);
+        }
+
+        return parent::update($id, $data);
+    }
 }
