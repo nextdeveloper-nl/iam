@@ -41,6 +41,10 @@ use NextDeveloper\Commons\Database\Traits\Taggable;
  * @property integer $profile_picture_identity
  * @property boolean $is_registered
  * @property boolean $is_active
+ * @property boolean $is_nin_verified
+ * @property boolean $is_email_verified
+ * @property boolean $is_phone_number_verified
+ * @property boolean $is_profile_verified
  */
 class Users extends Model
 {
@@ -74,6 +78,10 @@ class Users extends Model
             'profile_picture_identity',
             'is_registered',
             'is_active',
+            'is_nin_verified',
+            'is_email_verified',
+            'is_phone_number_verified',
+            'is_profile_verified'
     ];
 
     /**
@@ -116,6 +124,11 @@ class Users extends Model
     'profile_picture_identity' => 'integer',
     'is_registered' => 'boolean',
     'is_active' => 'boolean',
+    'is_nin_verified' => 'boolean',
+    'is_email_verified' => 'boolean',
+    'is_phone_number_verified' => 'boolean',
+    'is_profile_verified' => 'boolean'
+
     ];
 
     /**
