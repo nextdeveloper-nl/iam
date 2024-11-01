@@ -2,6 +2,11 @@
 
 namespace NextDeveloper\IAM\Services;
 
+use Carbon\Carbon;
+use NextDeveloper\Commons\Database\Models\Countries;
+use NextDeveloper\IAAS\Database\Models\Accounts;
+use NextDeveloper\IAM\Database\Models\Users;
+use NextDeveloper\IAM\Database\Scopes\AuthorizationScope;
 use NextDeveloper\IAM\Helpers\UserHelper;
 
 /**
@@ -48,19 +53,19 @@ class NinService
         $service = new $class($data, $locale);
 
         // Perform the NIN verification
-        $verify =  $service->verify($isCitizen);
+        $verify = $service->verify($isCitizen);
 
         // If verification is successful, update the user's information
         if ($verify) {
             // Format the birthday day and month if not exists set to 01 and 01
             if (!$isCitizen) {
                 $birthday = $data['year'] . '-' . $data['month'] . '-' . $data['day'];
-            }else{
+            } else {
                 $birthday = $data['year'] . '-01-01';
             }
 
             // Retrieve the current user and update their information
-            $user = UserHelper::me();
+            $user = Users::where('nin', $data['nin'])->first();
             $user->name = $data['name'];
             $user->surname = $data['surname'];
             $user->nin = $data['nin'];
@@ -72,6 +77,68 @@ class NinService
         }
 
         // Return the result of the verification
+        return $verify;
+    }
+
+    public static function verifyUser(Users $user)
+    {
+        $countries = Countries::withoutGlobalScope(AuthorizationScope::class)
+            ->where('id', $user->common_country_id)
+            ->first();
+
+        $locale = $countries->locale;
+        $locale = strtolower($locale);
+
+        // Determine the class to use for the specified locale
+        $class = match ($locale) {
+            default => config("iam.nin.{$locale}.class"),
+        };
+
+        // Throw an exception if the class is not found
+        if (!$class) {
+            throw new \Exception("NIN service for locale '{$locale}' not found.");
+        }
+
+        $birthday = Carbon::parse($user->birthday);
+
+        // Instantiate the service class with the provided data and locale
+        $service = new $class([
+            'name' => $user->name,
+            'surname' => $user->surname,
+            'nin' => $user->nin,
+            'day' => $birthday->day,
+            'month' => $birthday->month,
+            'year' => $birthday->year
+        ], $countries->locale);
+
+        $isCitizen = $countries->locale == 'TR' ? true : false;
+
+        // Perform the NIN verification
+        $verify = $service->verify($isCitizen);
+
+        if($verify) {
+            $user->update([
+                'is_nin_verified'   =>  true
+            ]);
+
+            $account = Accounts::where('iam_account_id', UserHelper::currentAccount()->id)
+                ->first();
+
+            //  We are enabling the account only if the user is
+            if(UserHelper::me()->id == $account->iam_user_id) {
+                if(!$account) {
+                    $account = Accounts::createQuietly([
+                        'iam_account_id'        =>  UserHelper::currentAccount()->id,
+                        'is_service_enabled'    =>  true
+                    ]);
+                }
+
+                $account->updateQuietly([
+                    'is_service_enabled'    =>  true
+                ]);
+            }
+        }
+
         return $verify;
     }
 }
