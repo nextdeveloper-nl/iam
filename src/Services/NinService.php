@@ -125,7 +125,7 @@ class NinService
                 ->first();
 
             //  We are enabling the account only if the user is
-            if(UserHelper::me()->id == $account->iam_user_id) {
+            if(UserHelper::me()->id == UserHelper::currentAccount()->iam_user_id) {
                 if(!$account) {
                     $account = Accounts::createQuietly([
                         'iam_account_id'        =>  UserHelper::currentAccount()->id,
