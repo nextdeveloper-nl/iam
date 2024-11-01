@@ -160,6 +160,12 @@ class UsersService extends AbstractUsersService
             unset($data['phone_number']);
         }
 
-        return parent::update($id, $data);
+        $updated = parent::update($id, $data);
+
+        if(array_key_exists('nin', $data)) {
+            NinService::verifyUser($model);
+        }
+
+        return $updated;
     }
 }
