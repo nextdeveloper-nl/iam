@@ -27,7 +27,6 @@ class UsersService extends AbstractUsersService
 {
 
     // EDIT AFTER HERE - WARNING: ABOVE THIS LINE MAY BE REGENERATED AND YOU MAY LOSE CODE
-
     public static function get(UsersQueryFilter $filter = null, array $params = []) : Collection|LengthAwarePaginator {
         $user = UserHelper::me();
 
