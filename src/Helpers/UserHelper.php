@@ -433,6 +433,11 @@ class UserHelper
             RolesService::assignDefaultRoles($user, self::currentAccount());
 
             $roleForModel = self::getRoleForModel($model, $user);
+
+            //  If still we dont have role for the related model, this means that the role is not in the default
+            //  roles. Thats why we return false.
+            if(!$roleForModel)
+                return false;
         }
 
         $roleClass = app($roleForModel->class);
