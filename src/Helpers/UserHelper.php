@@ -2,6 +2,7 @@
 
 namespace NextDeveloper\IAM\Helpers;
 
+use App\Models\User;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Cache;
@@ -34,7 +35,7 @@ class UserHelper
      */
     public static function me()
     {
-        if(self::$user)
+        if (self::$user)
             return self::$user;
 
         /**
@@ -43,14 +44,14 @@ class UserHelper
         $headers = request()->headers->all();
         $authorization = $headers['authorization'][0] ?? null;
 
-        if(!$authorization)
+        if (!$authorization)
             return null;
 
         $authorization = str_replace('Bearer ', '', $authorization);
 
         $token = DB::select("select * from oauth_access_tokens where id = ?", [$authorization]);
 
-        if(!$token) {
+        if (!$token) {
             return null;
         }
 
@@ -74,7 +75,8 @@ class UserHelper
      * @param $userId
      * @return Users
      */
-    public static function setUserById($userId): Users {
+    public static function setUserById($userId): Users
+    {
         $user = Users::withoutGlobalScopes()
             ->where('id', $userId)
             ->first();
@@ -84,7 +86,8 @@ class UserHelper
         return $user;
     }
 
-    public static function setCurrentAccountById($accountId) {
+    public static function setCurrentAccountById($accountId)
+    {
         $account = Accounts::withoutGlobalScopes()
             ->where('id', $accountId)
             ->first();
@@ -102,15 +105,15 @@ class UserHelper
      * @param Accounts|null $account
      * @return AccountUsers
      */
-    public static function addUserToCurrentAccount(Users $user, Accounts $account = null) : AccountUsers
+    public static function addUserToCurrentAccount(Users $user, Accounts $account = null): AccountUsers
     {
-        if(!$account)
+        if (!$account)
             $account = self::currentAccount();
 
         $relation = AccountUsers::create([
-            'iam_user_id'   =>  $user->id,
-            'iam_account_id'    =>  $account->id,
-            'is_active'     =>  1
+            'iam_user_id' => $user->id,
+            'iam_account_id' => $account->id,
+            'is_active' => 1
         ]);
 
         return $relation;
@@ -122,7 +125,7 @@ class UserHelper
      * @param $accountId
      * @return Accounts|null
      */
-    public static function getAccountById($accountId) : ?Accounts
+    public static function getAccountById($accountId): ?Accounts
     {
         $account = Accounts::withoutGlobalScopes()
             ->where('id', $accountId)
@@ -131,7 +134,7 @@ class UserHelper
         return $account;
     }
 
-    public static function getAccountByUuid($uuid) : ?Accounts
+    public static function getAccountByUuid($uuid): ?Accounts
     {
         $account = Accounts::withoutGlobalScope(AuthorizationScope::class)
             ->where('uuid', $uuid)
@@ -151,14 +154,14 @@ class UserHelper
      * @param Users $user
      * @return \Illuminate\Support\Collection
      */
-    public static function allAccounts(Users $user = null, AccountsQueryFilter $filter = null) : \Illuminate\Support\Collection
+    public static function allAccounts(Users $user = null, AccountsQueryFilter $filter = null): \Illuminate\Support\Collection
     {
         $filters = null;
 
-        if($user == null)
+        if ($user == null)
             $user = self::me();
 
-        if($filter)
+        if ($filter)
             $filters = $filter->filters();
 
         $accounts = AccountsService::userAccounts($user, $filters);
@@ -169,13 +172,13 @@ class UserHelper
     /**
      * @throws CannotFindUserException
      */
-    public static function masterAccount(Users $user = null) : Accounts
+    public static function masterAccount(Users $user = null): Accounts
     {
-        if(!$user) {
+        if (!$user) {
             $user = self::me();
         }
 
-        if(!$user) {
+        if (!$user) {
             throw new CannotFindUserException();
         }
 
@@ -183,15 +186,16 @@ class UserHelper
             ->where('iam_user_id', $user->id)
             ->first();
 
-        if(!$account) {
+        if (!$account) {
             $account = AccountsService::createInitialAccount($user);
         }
 
         return $account;
     }
 
-    public static function getLocale(Users $users = null) : Languages {
-        if(!$users)
+    public static function getLocale(Users $users = null): Languages
+    {
+        if (!$users)
             $users = self::me();
 
         $lang = Languages::where('id', $users->common_language_id)->first();
@@ -204,22 +208,22 @@ class UserHelper
      *
      * @return Accounts
      */
-    public static function currentAccount(Users $user = null) : ?Accounts
+    public static function currentAccount(Users $user = null): ?Accounts
     {
         //  :WARNING: Don't forget to change the account when the user changes the account
-        if(self::$account)
+        if (self::$account)
             return self::$account;
 
         $current = null;
         $relation = null;
 
-        if(!$user) {
+        if (!$user) {
             $user = self::me();
         }
 
         //  We have user
-        if($user) {
-            if($current)
+        if ($user) {
+            if ($current)
                 return $current;
 
             //  We are checking about the relation
@@ -230,26 +234,26 @@ class UserHelper
 
             //  If we don't have relation it means that we dont have current account information
             //  that is why we are creating the relation
-            if(!$relation) {
+            if (!$relation) {
                 $masterAccount = self::masterAccount($user);
 
                 //  Checking if the user has master account. If not we are creating a master account
-                if($masterAccount) {
+                if ($masterAccount) {
                     //  @todo: Here we need to check if user has this relation or not.
                     try {
                         $relation = AccountUsers::create([
-                            'iam_user_id'   =>  $user->id,
-                            'iam_account_id'    =>  $masterAccount->id,
-                            'is_active'     =>  1
+                            'iam_user_id' => $user->id,
+                            'iam_account_id' => $masterAccount->id,
+                            'is_active' => 1
                         ]);
                     } catch (\Exception $e) {
-                        if($e->getCode() == 23505) {
+                        if ($e->getCode() == 23505) {
                             $relation = AccountUsers::withoutGlobalScopes()->where('iam_user_id', $user->id)
                                 ->where('iam_account_id', $masterAccount->id)
                                 ->first();
 
                             $relation->update([
-                                'is_active' =>  1
+                                'is_active' => 1
                             ]);
                         }
                     }
@@ -261,8 +265,7 @@ class UserHelper
                         ->first();
                 }
             }
-        }
-        else
+        } else
             return null;
 
         $current = Accounts::withoutGlobalScope(AuthorizationScope::class)
@@ -280,24 +283,23 @@ class UserHelper
      * @param Accounts $account
      * @return Accounts
      */
-    public static function switchAccountTo(Accounts $account = null) : Accounts
+    public static function switchAccountTo(Accounts $account = null): Accounts
     {
         //  We need to reset the current account object not to create any problems
         self::$account = null;
 
         $me = self::me();
 
-        $teams = UserHelper::allAccounts($me);
-;
+        $teams = UserHelper::allAccounts($me);;
         $isInTeam = false;
 
         foreach ($teams as $team) {
-            if($account->id == $team->id) {
+            if ($account->id == $team->id) {
                 $isInTeam = true;
             }
         }
 
-        if($isInTeam) {
+        if ($isInTeam) {
             foreach ($teams as $team) {
                 //  We are deleting this cache since they may all be changed
                 Cache::delete(
@@ -325,7 +327,8 @@ class UserHelper
      *
      * @return Collection
      */
-    public static function teamMates() :?Collection {
+    public static function teamMates(): ?Collection
+    {
         /**
          * This will return the list of people that are in the same team with this user
          */
@@ -337,7 +340,8 @@ class UserHelper
      *
      * @return Collection Set of users in all accounts
      */
-    public static function all() :Collection {
+    public static function all(): Collection
+    {
         /**
          * This will return all users under master account and team accounts
          */
@@ -349,7 +353,7 @@ class UserHelper
      * @param $email
      * @return Users
      */
-    public static function getWithEmail($email) : ?Users
+    public static function getWithEmail($email): ?Users
     {
         $users = Users::withoutGlobalScope(AuthorizationScope::class)
             ->where('email', $email)
@@ -358,7 +362,7 @@ class UserHelper
         return $users;
     }
 
-    public static function hasAccount($accountId) : ?Accounts
+    public static function hasAccount($accountId): ?Accounts
     {
 
     }
@@ -370,7 +374,7 @@ class UserHelper
      * @param $user
      * @return bool
      */
-    public static function hasRole($string, $user = null) : bool
+    public static function hasRole($string, $user = null): bool
     {
         return self::has($string, $user);
     }
@@ -382,28 +386,28 @@ class UserHelper
      * @param $user
      * @return bool
      */
-    public static function has($string, $user = null) : bool
+    public static function has($string, $user = null): bool
     {
         //  If null getRoles will get the current user
         $roles = self::getRoles($user);
 
         //  This works correct, if anything goes wrong, look at the database
         foreach ($roles as $role) {
-            if($role->name == $string)
+            if ($role->name == $string)
                 return true;
         }
 
         return false;
     }
 
-    public static function getRoleForModel($model, Users $user = null) : ?Roles
+    public static function getRoleForModel($model, Users $user = null): ?Roles
     {
         $roles = self::getRoles($user);
 
         foreach ($roles as $role) {
             $roleClass = app($role->class);
 
-            if($roleClass->canBeApplied($model->getTable())) {
+            if ($roleClass->canBeApplied($model->getTable())) {
                 return Roles::withoutGlobalScope(AuthorizationScope::class)
                     ->where('id', $role->iam_role_id)
                     ->first();
@@ -413,35 +417,47 @@ class UserHelper
         return null;
     }
 
-    public static function can($method, $model, Users $user = null) {
-        if(!$user)
+    public static function can($method, $model, Users $user = null)
+    {
+        if (!$user)
             $user = self::me();
 
         $roleForModel = self::getRoleForModel($model, $user);
+
+        $roleClass = null;
+
+        if (!$roleForModel) {
+            Log::warning('[UserHelper@can] $roleForModel is null. This means that the user ' .
+                'does not have any role in the system. Maybe we should ');
+
+            RolesService::assignDefaultRoles($user, self::currentAccount());
+
+            $roleForModel = self::getRoleForModel($model, $user);
+        }
 
         $roleClass = app($roleForModel->class);
 
         $result = $roleClass->checkPolicy($method, $model, $user);
 
-        if(!$result)
+        if (!$result)
             Log::warning('[UserHelper@can] User can not do this operation: ' . $method . ' on ' . $model->getTable() . ' with this role: ' . get_class($roleClass));
 
         return $result;
     }
 
-    public static function currentRole(Users $user = null) : ?Roles
+    public static function currentRole(Users $user = null): ?Roles
     {
         trigger_deprecation('nextdeveloper/iam', '1.0', 'This function is deprecated. ' .
             'No need to switch since all roles are loaded now.');
 
         $currentRole = null;
 
-        if(!$user) {
+        if (!$user) {
             $user = self::me();
         }
 
         //  If we still dont have the user then we dont have the user created.
-        if(!$user) {
+        if (!$user) {
             return null;
         }
 
@@ -449,7 +465,7 @@ class UserHelper
             CacheHelper::getKey('Users', $user->uuid, 'CurrentRole'),
         );
 
-        if($currentRole)
+        if ($currentRole)
             return $currentRole;
 
         $role = RolesService::getUserRole($user, self::currentAccount($user));
@@ -468,9 +484,9 @@ class UserHelper
      * @param Users|null $user
      * @return Roles|null
      */
-    public static function getRoles(Users $user = null) : ?Collection
+    public static function getRoles(Users $user = null): ?Collection
     {
-        if(!$user)
+        if (!$user)
             $user = self::me();
 
         $roles = RolesService::getUserRoles($user, self::currentAccount($user));
@@ -478,14 +494,15 @@ class UserHelper
         return $roles;
     }
 
-    public static function removeFromRole($role, Users $users = null, Accounts $account = null) :bool {
-        if(!$users)
+    public static function removeFromRole($role, Users $users = null, Accounts $account = null): bool
+    {
+        if (!$users)
             $users = self::me();
 
-        if(!$account)
+        if (!$account)
             $account = self::currentAccount();
 
-        if(class_basename($role) == 'UserRoles')
+        if (class_basename($role) == 'UserRoles')
             $role = Roles::withoutGlobalScopes()->where('uuid', $role->uuid)->first();
 
         $sql = DB::raw('delete from iam_role_users where iam_user_id = ' . $users->id . ' and iam_role_id = ' . $role->id . ' and iam_account_id = ' . $account->id . ';');
@@ -493,17 +510,17 @@ class UserHelper
         return true;
     }
 
-    public static function switchToRoleByRoleId(Users $user = null, $roleId) : ?Roles
+    public static function switchToRoleByRoleId(Users $user = null, $roleId): ?Roles
     {
         trigger_deprecation('nextdeveloper/iam', '1.0', 'This function is deprecated. ' .
             'No need to switch since all roles are loaded now.');
 
-        if(!$user)
+        if (!$user)
             $user = self::me();
 
         $role = Roles::where('uuid', $roleId)->first();
 
-        if(self::switchToRole($user, $role))
+        if (self::switchToRole($user, $role))
             return self::currentRole();
 
         return null;
@@ -514,7 +531,7 @@ class UserHelper
      * @param Roles $role
      * @return bool
      */
-    public static function switchToRole(Users $user, Roles $role) : bool
+    public static function switchToRole(Users $user, Roles $role): bool
     {
         trigger_deprecation('nextdeveloper/iam', '1.0', 'This function is deprecated. ' .
             'All roles are loaded now.');
@@ -525,7 +542,7 @@ class UserHelper
         $roles = RoleUsers::where('iam_user_id', $user->id)
             ->where('iam_account_id', $account->id)
             ->update([
-                'is_active' =>  0
+                'is_active' => 0
             ]);
 
         //  Update the requested role as active
@@ -533,7 +550,7 @@ class UserHelper
             ->where('iam_account_id', $account->id)
             ->where('iam_role_id', $role->id)
             ->update([
-                'is_active' =>  1
+                'is_active' => 1
             ]);
 
         $currentRole = Cache::set(
@@ -550,30 +567,32 @@ class UserHelper
      * @param $model
      * @return void
      */
-    public static function applyUserFields(Model $model) : Model {
-        if(!self::me())
+    public static function applyUserFields(Model $model): Model
+    {
+        if (!self::me())
             return $model;
 
-        if(property_exists($model, 'iam_user_id')) {
-            if(!$model->iam_user_id)
+        if (property_exists($model, 'iam_user_id')) {
+            if (!$model->iam_user_id)
                 $model->iam_user_id = self::me()->id;
         } else {
-            if(in_array('iam_user_id', $model->getFillable()))
+            if (in_array('iam_user_id', $model->getFillable()))
                 $model->iam_user_id = self::me()->id;
         }
 
-        if(property_exists($model, 'iam_account_id')) {
-            if(!$model->iam_account_id)
+        if (property_exists($model, 'iam_account_id')) {
+            if (!$model->iam_account_id)
                 $model->iam_account_id = self::currentAccount()->id;
         } else {
-            if(in_array('iam_account_id', $model->getFillable()))
+            if (in_array('iam_account_id', $model->getFillable()))
                 $model->iam_account_id = self::currentAccount()->id;
         }
 
         return $model;
     }
 
-    public static function getAccountOwner(Accounts $accounts) : Users {
+    public static function getAccountOwner(Accounts $accounts): Users
+    {
         throw new \Exception('This function is not implemented yet!');
     }
 }
