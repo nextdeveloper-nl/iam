@@ -54,23 +54,24 @@ class AbstractAccountsPerspectiveTransformer extends AbstractTransformer
      */
     public function transform(AccountsPerspective $model)
     {
-                                                $iamUserId = \NextDeveloper\IAM\Database\Models\Users::where('id', $model->iam_user_id)->first();
-                        
+        $iamUserId = \NextDeveloper\IAM\Database\Models\Users::where('id', $model->iam_user_id)->first();
+
         return $this->buildPayload(
             [
-            'id'  =>  $model->uuid,
-            'name'  =>  $model->name,
-            'description'  =>  $model->description,
-            'phone_number'  =>  $model->phone_number,
-            'account_owner'  =>  $model->account_owner,
-            'iam_user_id'  =>  $iamUserId ? $iamUserId->uuid : null,
-            'account_type'  =>  $model->account_type,
-            'is_active'  =>  $model->is_active,
-            'tags'  =>  $model->tags,
-            'total_user_count'  =>  $model->total_user_count,
-            'registered_user_count'  =>  $model->registered_user_count,
-            'domain_name'  =>  $model->domain_name,
-            'country_name'  =>  $model->country_name,
+                'id' => $model->uuid,
+                'name' => $model->name,
+                'description' => $model->description,
+                'phone_number' => $model->phone_number,
+                'account_owner' => $model->account_owner,
+                'iam_user_id' => $iamUserId ? $iamUserId->uuid : null,
+                'account_type' => $model->account_type,
+                'is_active' => $model->is_active,
+                'tags' => $model->tags,
+                'total_user_count' => $model->total_user_count,
+                'registered_user_count' => $model->registered_user_count,
+                'domain_name' => $model->domain_name,
+                'country_name' => $model->country_name,
+                'common_country_id' => $model->common_country_id
             ]
         );
     }
