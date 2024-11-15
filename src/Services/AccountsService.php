@@ -56,9 +56,9 @@ class AccountsService extends AbstractAccountsService
             config('iam.configuration.iam_accounts.can_change_domain')
         );
 
-        if(!$canChangeDomain) {
-            unset($data['common_domain_id']);
-        }
+//        if(!$canChangeDomain) {
+//            unset($data['common_domain_id']);
+//        }
 
         if(count($data) == 0) {
             return $account;
