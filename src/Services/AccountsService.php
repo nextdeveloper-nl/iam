@@ -3,8 +3,10 @@
 namespace NextDeveloper\IAM\Services;
 
 use App\Jobs\IAM\Accounts\NewAccountCreated;
+use App\Models\User;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use NextDeveloper\Commons\Exceptions\CannotCreateModelException;
 use NextDeveloper\Commons\Helpers\MetaHelper;
 use NextDeveloper\Events\Services\Events;
@@ -220,6 +222,30 @@ class AccountsService extends AbstractAccountsService
             'iam_account_id'    =>  $accounts->id,
             'is_active'         =>  true
         ]);
+
+        return true;
+    }
+
+    public static function kickUser($id) : bool
+    {
+        if(UserHelper::me()->id != UserHelper::currentAccount()->iam_user_id)
+            return false;
+
+        $user = Users::where('uuid', $id)->first();
+
+        if(!$user) {
+            Log::error(__METHOD__ . ' | Trying to kick a user from the team but I cannot find the user :/');
+            return false;
+        }
+
+        if($user->id == UserHelper::me()->id) {
+            return false;
+        }
+
+        AccountUsers::withoutGlobalScopes()->where([
+            'iam_user_id'       =>  $user->id,
+            'iam_account_id'    =>  UserHelper::currentAccount()->id
+        ])->delete();
 
         return true;
     }
