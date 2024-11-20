@@ -118,7 +118,8 @@ class NinService
 
         if($verify) {
             $user->update([
-                'is_nin_verified'   =>  true
+                'is_nin_verified'       =>  true,
+                'is_profile_verified'   =>  true
             ]);
 
             $account = Accounts::where('iam_account_id', UserHelper::currentAccount()->id)
