@@ -33,7 +33,13 @@ return [
     ],
     'configuration' =>  [
         'iam_accounts'  =>  [
-            'can_change_domain' =>  false
+            //  This item should be used as can_change but we implemented as can_change even if its setup.
+            //  So we need to re-implement t
+            'can_change_domain' =>  false,
+
+            //  This means that if the account has (ex: plusclouds.com) a domain. User should not be registered
+            //  and/or added to the team without that domain.
+            'allow_external_users' =>  false
         ],
         'autoadd_users_with_same_domain'    =>  env('AUTOADD_USERS_WITH_SAME_DOMAIN', true)
     ],
