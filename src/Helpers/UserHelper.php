@@ -598,6 +598,6 @@ class UserHelper
 
     public static function getAccountOwner(Accounts $accounts): Users
     {
-        throw new \Exception('This function is not implemented yet!');
+        return Users::where('id', $accounts->iam_user_id)->first();
     }
 }
