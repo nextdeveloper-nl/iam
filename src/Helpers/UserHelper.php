@@ -283,8 +283,6 @@ class UserHelper
             $current = Accounts::withoutGlobalScope(AuthorizationScope::class)
                 ->where('id', $relation->iam_account_id)
                 ->first();
-
-            $current = null;
         }
 
         self::$account = $current;
@@ -532,6 +530,18 @@ class UserHelper
             $user = self::me();
 
         $roles = RolesService::getUserRoles($user, self::currentAccount($user));
+
+        //  This means that user dont have any roles. To fix this issue, we are adding default roles.
+        if(!$roles) {
+            $account = self::currentAccount($user);
+
+            if(!$account)
+                $account = self::masterAccount($user, true);
+
+            RolesService::assignDefaultRoles($user, $account);
+
+            $roles = RolesService::getUserRoles($user, $account);
+        }
 
         return $roles;
     }

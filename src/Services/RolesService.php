@@ -100,6 +100,9 @@ class RolesService extends AbstractRolesService
      */
     public static function getUserRoles($user, $account) :?Collection
     {
+        if(!$account)
+            return null;
+
         $roles = UserRoles::withoutGlobalScope(AuthorizationScope::class)
             ->where('iam_user_id', $user->id)
             ->where('iam_account_id', $account->id)
