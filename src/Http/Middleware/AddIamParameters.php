@@ -37,6 +37,11 @@ class AddIamParameters extends Middleware
                     //  filtering all objects if the owner is themselves
                     // 'iamAccountId' => $account->uuid
                 ]);
+            } else {
+                $request->query->add([
+                    //  Actually sending the iam_account_id to null.
+                    'iam_account_id' => 0
+                ]);
             }
         }
 
