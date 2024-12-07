@@ -35,7 +35,8 @@ class AccountCreatedEnvelope extends Mailable
                 )
             ],
             from: new Address(
-                'no-reply@plusclouds.com'
+                address: config('leo.mail.from'),
+                name: config('leo.mail.from_name')
             ),
             replyTo: [
                 new Address(
