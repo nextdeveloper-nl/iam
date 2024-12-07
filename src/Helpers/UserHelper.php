@@ -271,9 +271,11 @@ class UserHelper
         } else
             return null;
 
-        $current = Accounts::withoutGlobalScope(AuthorizationScope::class)
-            ->where('id', $relation->iam_account_id)
-            ->first();
+        if($relation) {
+            $current = Accounts::withoutGlobalScope(AuthorizationScope::class)
+                ->where('id', $relation->iam_account_id)
+                ->first();
+        }
 
         self::$account = $current;
 
