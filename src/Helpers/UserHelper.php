@@ -49,6 +49,9 @@ class UserHelper
 
         $authorization = str_replace('Bearer ', '', $authorization);
 
+        if(trim($authorization) == null)
+            return null;
+
         $token = DB::select("select * from oauth_access_tokens where id = ?", [$authorization]);
 
         if (!$token) {
@@ -172,21 +175,21 @@ class UserHelper
     /**
      * @throws CannotFindUserException
      */
-    public static function masterAccount(Users $user = null): Accounts
+    public static function masterAccount(Users $user = null, $createAccount = false): ?Accounts
     {
         if (!$user) {
             $user = self::me();
         }
 
         if (!$user) {
-            throw new CannotFindUserException();
+            throw new CannotFindUserException('We could not find this user.');
         }
 
         $account = Accounts::withoutGlobalScopes()
             ->where('iam_user_id', $user->id)
             ->first();
 
-        if (!$account) {
+        if (!$account && $createAccount) {
             $account = AccountsService::createInitialAccount($user);
         }
 
@@ -332,6 +335,28 @@ class UserHelper
         /**
          * This will return the list of people that are in the same team with this user
          */
+    }
+
+    public static function isTeamMate(Users $user): bool
+    {
+        //  This happens when the user is not logged in OR the background process is actually trying to create
+        //  this user.
+        if(!UserHelper::currentAccount())
+            return false;
+
+        $userAccountRelation = AccountUsers::withoutGlobalScope(AuthorizationScope::class)
+            ->where([
+                'iam_account_id'    =>  UserHelper::currentAccount()->id,
+                'iam_user_id'       =>  $user->id
+            ])->first();
+
+        //  Marking this because we need to know if the user registered is being registered under his master account
+        //  If user is related to an account but it's not a master account, then we set;
+        if($userAccountRelation) {
+            return true;
+        }
+
+        return false;
     }
 
     /**
@@ -599,5 +624,10 @@ class UserHelper
     public static function getAccountOwner(Accounts $accounts): Users
     {
         return Users::where('id', $accounts->iam_user_id)->first();
+    }
+
+    public static function getLeoOwner(): Users
+    {
+        return self::getWithEmail(config('leo.leo_owner_email'));
     }
 }

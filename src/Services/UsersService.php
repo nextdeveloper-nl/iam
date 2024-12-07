@@ -13,6 +13,7 @@ use NextDeveloper\IAM\Database\Models\AccountUsers;
 use NextDeveloper\IAM\Database\Models\AccountUsersPerspective;
 use NextDeveloper\IAM\Database\Models\Users;
 use NextDeveloper\IAM\Database\Scopes\AuthorizationScope;
+use NextDeveloper\IAM\Exceptions\CannotFindAccountException;
 use NextDeveloper\IAM\Helpers\UserHelper;
 use NextDeveloper\IAM\Services\AbstractServices\AbstractUsersService;
 
@@ -59,15 +60,32 @@ class UsersService extends AbstractUsersService
      */
     public static function createWithEmail($email) : Users
     {
-        $user = self::create([
-            'email' =>  $email
-        ]);
+        $user = Users::withoutGlobalScope(AuthorizationScope::class)
+            ->where('email', $email)
+            ->first();
 
-        AccountUsersService::create([
-            'iam_account_id'    =>  UserHelper::currentAccount()->id,
-            'iam_user_id'       =>  $user->id,
-            'is_active'         =>  true
-        ]);
+        if(!$user) {
+            $user = self::create([
+                'email' =>  $email
+            ]);
+        }
+
+        if(UserHelper::currentAccount()) {
+            $checkRelation = AccountUsers::withoutGlobalScope(AuthorizationScope::class)
+                ->where([
+                    'iam_account_id'    =>  UserHelper::currentAccount()->id,
+                    'iam_user_id'       =>  $user->id
+                ])->first();
+
+            //  This is a fix, just to be sure that the current account and the user given is related.
+            if(!$checkRelation) {
+                AccountUsersService::create([
+                    'iam_account_id'    =>  UserHelper::currentAccount()->id,
+                    'iam_user_id'       =>  $user->id,
+                    'is_active'         =>  true
+                ]);
+            }
+        }
 
         return $user;
     }
@@ -97,21 +115,26 @@ class UsersService extends AbstractUsersService
             $user = parent::create($data);
         }
 
+        //  If we dont have account information, then we automatically add to our current account.
         if(!$accounts)
             $accounts = UserHelper::currentAccount();
 
-        $checkRelation = AccountUsers::withoutGlobalScope(AuthorizationScope::class)
-            ->where([
-                'iam_account_id'    =>  $accounts->id,
-                'iam_user_id'       =>  $user->id
-            ])->first();
+        //  If we have any account, then we add the user to account. If we dont have any account, then we dont
+        //  create any initial account.
+        if($accounts) {
+            $checkRelation = AccountUsers::withoutGlobalScope(AuthorizationScope::class)
+                ->where([
+                    'iam_account_id'    =>  $accounts->id,
+                    'iam_user_id'       =>  $user->id
+                ])->first();
 
-        if(!$checkRelation) {
-            AccountUsersService::create([
-                'iam_account_id'    =>  $accounts->id,
-                'iam_user_id'       =>  $user->id,
-                'is_active'         =>  true
-            ]);
+            if(!$checkRelation) {
+                AccountUsersService::create([
+                    'iam_account_id'    =>  $accounts->id,
+                    'iam_user_id'       =>  $user->id,
+                    'is_active'         =>  true
+                ]);
+            }
         }
 
         return $user;
