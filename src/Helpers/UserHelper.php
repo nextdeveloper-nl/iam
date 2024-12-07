@@ -49,10 +49,18 @@ class UserHelper
 
         $authorization = str_replace('Bearer ', '', $authorization);
 
-        if(trim($authorization) == null)
+        //  There is a weird situation where sometimes clients can send null or null as text.
+        if(trim($authorization) == null || trim($authorization) == 'null')
             return null;
 
-        $token = DB::select("select * from oauth_access_tokens where id = ?", [$authorization]);
+        try {
+            $token = DB::select("select * from oauth_access_tokens where id = ?", [$authorization]);
+        } catch (\Exception $e) {
+            Log::error(__METHOD__ . ' | We have an error while checking for the token: ' . $e->getMessage());
+            Log::error($e->getTraceAsString());
+
+            return null;
+        }
 
         if (!$token) {
             return null;
@@ -275,6 +283,8 @@ class UserHelper
             $current = Accounts::withoutGlobalScope(AuthorizationScope::class)
                 ->where('id', $relation->iam_account_id)
                 ->first();
+
+            $current = null;
         }
 
         self::$account = $current;
