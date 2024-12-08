@@ -269,7 +269,7 @@ class UserHelper
                         }
                     }
                 } else {
-                    $masterAccount = AccountsService::createInitialAccount($user);
+                    AccountsService::createInitialAccount($user);
 
                     $relation = AccountUsers::where('iam_user_id', $user->id)
                         ->where('is_active', 1)
@@ -530,18 +530,6 @@ class UserHelper
             $user = self::me();
 
         $roles = RolesService::getUserRoles($user, self::currentAccount($user));
-
-        //  This means that user dont have any roles. To fix this issue, we are adding default roles.
-        if(!$roles) {
-            $account = self::currentAccount($user);
-
-            if(!$account)
-                $account = self::masterAccount($user, true);
-
-            RolesService::assignDefaultRoles($user, $account);
-
-            $roles = RolesService::getUserRoles($user, $account);
-        }
 
         return $roles;
     }
