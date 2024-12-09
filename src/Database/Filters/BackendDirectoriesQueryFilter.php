@@ -20,7 +20,7 @@ class BackendDirectoriesQueryFilter extends AbstractQueryFilter
 
     public function name($value)
     {
-        return $this->builder->where('name', 'like', '%' . $value . '%');
+        return $this->builder->where('name', 'ilike', '%' . $value . '%');
     }
 
     public function defaultFilter($value)
