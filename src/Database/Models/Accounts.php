@@ -342,6 +342,16 @@ class Accounts extends Model
         return $this->hasMany(\NextDeveloper\Blogs\Database\Models\Posts::class);
     }
 
+    public function tickets() : \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(\NextDeveloper\Support\Database\Models\Tickets::class);
+    }
+
+    public function ticketComments() : \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(\NextDeveloper\Support\Database\Models\TicketComments::class);
+    }
+
     // EDIT AFTER HERE - WARNING: ABOVE THIS LINE MAY BE REGENERATED AND YOU MAY LOSE CODE\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n
 
     //    public function users()
