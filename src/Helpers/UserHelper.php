@@ -370,6 +370,34 @@ class UserHelper
     }
 
     /**
+     * Returns true if the give user (if null current user) is the owner of the account. Otherwise returns false.
+     *
+     * @param Users|null $user
+     * @return void
+     */
+    public static function isTeamOwner(Users $user = null) : bool
+    {
+        if(!$user)
+            $user = self::currentUser();
+
+        if(self::currentAccount()->iam_user_id == $user->id)
+            return true;
+
+        return false;
+    }
+
+    /**
+     * Alias of isTeamOwner. Works for both.
+     *
+     * @param Users|null $user
+     * @return bool
+     */
+    public static function isAccountOwner(Users $user = null) : bool
+    {
+        return self::isTeamOwner($user);
+    }
+
+    /**
      * This function will return all the users connected to master account and sub accounts. This list also
      * includes the current user. That is why it returns a collections.
      *
