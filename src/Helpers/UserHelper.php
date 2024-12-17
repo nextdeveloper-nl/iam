@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Str;
 use NextDeveloper\Commons\Common\Cache\CacheHelper;
 use NextDeveloper\Commons\Database\Models\Languages;
 use NextDeveloper\IAM\Database\Filters\AccountsQueryFilter;
@@ -425,9 +426,17 @@ class UserHelper
         return $users;
     }
 
-    public static function hasAccount($accountId): ?Accounts
+    public static function getWithId($id): ?Users
     {
+        if(Str::isUuid($id)) {
+            return Users::withoutGlobalScope(AuthorizationScope::class)
+                ->where('uuid', $id)
+                ->first();
+        }
 
+        return Users::withoutGlobalScope(AuthorizationScope::class)
+            ->where('id', $id)
+            ->first();
     }
 
     /**
