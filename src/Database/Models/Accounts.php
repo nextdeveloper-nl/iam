@@ -352,6 +352,21 @@ class Accounts extends Model
         return $this->hasMany(\NextDeveloper\Support\Database\Models\TicketComments::class);
     }
 
+    public function addresses() : \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(\NextDeveloper\Commons\Database\Models\Addresses::class);
+    }
+
+    public function actionLogs() : \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(\NextDeveloper\Commons\Database\Models\ActionLogs::class);
+    }
+
+    public function actions() : \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(\NextDeveloper\Commons\Database\Models\Actions::class);
+    }
+
     // EDIT AFTER HERE - WARNING: ABOVE THIS LINE MAY BE REGENERATED AND YOU MAY LOSE CODE\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n
 
     //    public function users()

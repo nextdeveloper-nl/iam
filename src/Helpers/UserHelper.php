@@ -668,7 +668,7 @@ class UserHelper
         return $model;
     }
 
-    public static function getAccountOwner(Accounts $accounts): Users
+    public static function getAccountOwner(Accounts $accounts): ?Users
     {
         return Users::where('id', $accounts->iam_user_id)->first();
     }
