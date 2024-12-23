@@ -64,6 +64,8 @@ class UserHelper
         }
 
         if (!$token) {
+            Log::error('[UserHelper] Cannot find the user related to token. Maybe user is not' .
+                ' registered or token is expired?');
             return null;
         }
 
@@ -567,6 +569,10 @@ class UserHelper
             $user = self::me();
 
         $roles = RolesService::getUserRoles($user, self::currentAccount($user));
+
+        if(!$roles) {
+            Log::error('[UserHelper] Cannot find any roles for user: ' . $user->uuid);
+        }
 
         return $roles;
     }
