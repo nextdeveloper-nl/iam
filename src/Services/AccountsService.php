@@ -2,13 +2,13 @@
 
 namespace NextDeveloper\IAM\Services;
 
-use App\Jobs\IAM\Accounts\NewAccountCreated;
-use App\Models\User;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use NextDeveloper\Commons\Database\Models\Domains;
 use NextDeveloper\Commons\Exceptions\CannotCreateModelException;
 use NextDeveloper\Commons\Helpers\MetaHelper;
+use NextDeveloper\Commons\Services\DomainsService;
 use NextDeveloper\Events\Services\Events;
 use NextDeveloper\I18n\Helpers\i18n;
 use NextDeveloper\IAM\Database\Filters\AccountsQueryFilter;
@@ -17,7 +17,9 @@ use NextDeveloper\IAM\Database\Models\AccountTypes;
 use NextDeveloper\IAM\Database\Models\AccountUsers;
 use NextDeveloper\IAM\Database\Models\UserAccounts;
 use NextDeveloper\IAM\Database\Models\Users;
+use NextDeveloper\IAM\Database\Scopes\AuthorizationScope;
 use NextDeveloper\IAM\Events\Accounts\AccountsUpdatedEvent;
+use NextDeveloper\IAM\Exceptions\UnauthorizedException;
 use NextDeveloper\IAM\Helpers\UserHelper;
 use NextDeveloper\IAM\Services\AbstractServices\AbstractAccountsService;
 
@@ -58,9 +60,38 @@ class AccountsService extends AbstractAccountsService
             config('iam.configuration.iam_accounts.can_change_domain')
         );
 
-//        if(!$canChangeDomain) {
-//            unset($data['common_domain_id']);
-//        }
+        //  If we are getting common_domain_id from the request, we are trying to find our how we should act
+        if(array_key_exists('common_domain_id', $data)) {
+            $existingDomain = Domains::withoutGlobalScope(AuthorizationScope::class)
+                ->where('uuid', $data['common_domain_id'])
+                ->first();
+
+            if($existingDomain) {
+                if(!$existingDomain->iam_account_id)
+                    $existingDomain->updateQuietly(['iam_account_id', $account->id]);
+                else {
+                    throw new UnauthorizedException('Cannot update this account with the given domain, ' .
+                        'because the ownership of the domain is on some other account.');
+                }
+
+                $data['common_domain_id'] = $existingDomain->id;
+            }
+        }
+
+        //  For temporary time only.
+        unset($data['tags']);
+
+        //  If we are getting tags as string, we will convert it to text array
+        if(array_key_exists('tags', $data)) {
+            if(!is_array($data['tags'])) {
+                try {
+                    $tags = json_encode($data['tags']);
+                    $data['tags']   = $tags;
+                } catch (\Exception) {}
+            } else {
+                $data['tags'] = explode(',', $data['tags']);
+            }
+        }
 
         if(count($data) == 0) {
             return $account;
