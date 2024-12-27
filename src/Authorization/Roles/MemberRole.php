@@ -42,6 +42,7 @@ class MemberRole extends AbstractRole implements IAuthorizationRole
         $isUserIdExists =  DatabaseHelper::isColumnExists($model->getTable(), 'iam_user_id');
 
         $where = [];
+        $amISuccessManager = UserHelper::has('success-manager');
 
         if($isAccountIdExists) {
             if(config('leo.debug.authorization_role'))
@@ -51,7 +52,7 @@ class MemberRole extends AbstractRole implements IAuthorizationRole
             $builder->where('iam_account_id', UserHelper::currentAccount()->id);
         }
 
-        if($isUserIdExists) {
+        if($isUserIdExists && !$amISuccessManager) {
             if(config('leo.debug.authorization_role'))
                 Log::info('[MemberRole] Applying iam_user_id');
 
