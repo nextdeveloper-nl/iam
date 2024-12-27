@@ -11,6 +11,7 @@ use NextDeveloper\Commons\Helpers\MetaHelper;
 use NextDeveloper\Commons\Services\DomainsService;
 use NextDeveloper\Events\Services\Events;
 use NextDeveloper\I18n\Helpers\i18n;
+use NextDeveloper\IAAS\Exceptions\CannotUpdateResourcesException;
 use NextDeveloper\IAM\Database\Filters\AccountsQueryFilter;
 use NextDeveloper\IAM\Database\Models\Accounts;
 use NextDeveloper\IAM\Database\Models\AccountTypes;
@@ -53,6 +54,13 @@ class AccountsService extends AbstractAccountsService
     {
         $account = Accounts::where('uuid', $id)->first();
 
+        if(!$account) {
+            new CannotUpdateResourcesException('You are not the owner of this accountor you dont ' .
+                'have the privilege to update this account. Therefore you cannot ' .
+                'update the account information. Only the account owner can update this information. ' .
+                'Please reach to the account owner');
+        }
+
         //  Here we are checking if according to the configuration of the system, the user can change the domain or not.
         $canChangeDomain = MetaHelper::get(
             $account,
@@ -67,14 +75,17 @@ class AccountsService extends AbstractAccountsService
                 ->first();
 
             if($existingDomain) {
-                if(!$existingDomain->iam_account_id)
+                if(!$existingDomain->iam_account_id) {
                     $existingDomain->updateQuietly(['iam_account_id', $account->id]);
-                else {
-                    throw new UnauthorizedException('Cannot update this account with the given domain, ' .
-                        'because the ownership of the domain is on some other account.');
+                    $data['common_domain_id'] = $existingDomain->id;
                 }
-
-                $data['common_domain_id'] = $existingDomain->id;
+                else {
+                    //  If the owner of the domain is not this account
+                    if($existingDomain->iam_account_id != UserHelper::currentAccount()->id) {
+                        throw new UnauthorizedException('Cannot update this account with the given domain, ' .
+                            'because the ownership of the domain is on some other account.');
+                    }
+                }
             }
         }
 
@@ -156,7 +167,7 @@ class AccountsService extends AbstractAccountsService
                 $userAccounts = $userAccounts->where($key, $value);
         }
 
-        return $userAccounts->where('iam_user_id', $user->id)->get();
+        return $userAccounts->where('iam_user_id', $user->id)->order('name', 'asc')->get();
     }
 
     /**
