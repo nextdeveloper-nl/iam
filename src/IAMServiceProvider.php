@@ -124,7 +124,7 @@ class IAMServiceProvider extends AbstractServiceProvider {
     protected function registerCommands() {
         if ($this->app->runningInConsole()) {
             $this->commands([
-
+                Console\Commands\RefreshTokenCommand::class,
             ]);
         }
     }
