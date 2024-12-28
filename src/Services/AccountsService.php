@@ -167,7 +167,7 @@ class AccountsService extends AbstractAccountsService
                 $userAccounts = $userAccounts->where($key, $value);
         }
 
-        return $userAccounts->where('iam_user_id', $user->id)->order('name', 'asc')->get();
+        return $userAccounts->where('iam_user_id', $user->id)->orderBy('updated_at', 'desc')->get();
     }
 
     /**
