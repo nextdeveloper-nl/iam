@@ -55,6 +55,7 @@ class AbstractAccountsPerspectiveTransformer extends AbstractTransformer
     public function transform(AccountsPerspective $model)
     {
         $iamUserId = \NextDeveloper\IAM\Database\Models\Users::where('id', $model->iam_user_id)->first();
+        $commonDomainId = \NextDeveloper\Commons\Database\Models\Domains::where('id', $model->common_domain_id)->first();
 
         return $this->buildPayload(
             [
@@ -70,6 +71,7 @@ class AbstractAccountsPerspectiveTransformer extends AbstractTransformer
                 'total_user_count' => $model->total_user_count,
                 'registered_user_count' => $model->registered_user_count,
                 'domain_name' => $model->domain_name,
+                'common_domain_id'  => $commonDomainId ? $commonDomainId->uuid : null,
                 'country_name' => $model->country_name,
                 'common_country_id' => $model->common_country_id
             ]
