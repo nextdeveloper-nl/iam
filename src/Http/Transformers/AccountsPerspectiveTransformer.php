@@ -3,7 +3,10 @@
 namespace NextDeveloper\IAM\Http\Transformers;
 
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Str;
 use NextDeveloper\Commons\Common\Cache\CacheHelper;
+use NextDeveloper\Commons\Database\Models\Countries;
+use NextDeveloper\Commons\Database\Models\Domains;
 use NextDeveloper\IAM\Database\Models\AccountsPerspective;
 use NextDeveloper\Commons\Http\Transformers\AbstractTransformer;
 use NextDeveloper\IAM\Http\Transformers\AbstractTransformers\AbstractAccountsPerspectiveTransformer;
@@ -32,6 +35,16 @@ class AccountsPerspectiveTransformer extends AbstractAccountsPerspectiveTransfor
         }
 
         $transformed = parent::transform($model);
+
+        //  I dont know why this id is coming as ID not UUID, but I fixed the problem here.
+        if(intval($transformed['common_country_id']) == $transformed['common_country_id']) {
+            $transformed['common_country_id'] = Countries::where('id', $transformed['common_country_id'])->first()->id;
+        }
+
+        //  I put this here just in case.
+        if(intval($transformed['common_domain_id']) == $transformed['common_domain_id']) {
+            $transformed['common_domain_id'] = Domains::where('id', $transformed['common_domain_id'])->first()->id;
+        }
 
         Cache::set(
             CacheHelper::getKey('AccountsPerspective', $model->uuid, 'Transformed'),
