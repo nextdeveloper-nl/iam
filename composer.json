@@ -9,7 +9,8 @@
         "php": ">=8.2.0",
         "league/fractal": "*",
         "monolog/monolog": "*",
-        "beyondcode/laravel-websockets": "*"
+        "beyondcode/laravel-websockets": "*",
+        "laravel/socialite": "*"
     },
     "require-dev": {
         "illuminate/support": "5.5.*",
