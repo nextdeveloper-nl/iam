@@ -18,7 +18,7 @@ class AccountsCreateRequest extends AbstractFormRequest
             'common_country_id' => 'nullable|exists:common_countries,uuid|uuid',
             'phone_number' => 'nullable|string',
             'description' => 'nullable|string',
-            'profile_image_url' => 'string',
+            'profile_image_url' => 'nullable|string',
             'iam_account_type_id' => 'required|exists:iam_account_types,uuid|uuid',
             'is_active' => 'boolean',
             'tags' => '',
