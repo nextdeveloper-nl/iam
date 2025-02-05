@@ -421,6 +421,16 @@ class Users extends Model
         return $this->hasMany(\NextDeveloper\Commons\Database\Models\Actions::class);
     }
 
+    public function contracts() : \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(\NextDeveloper\Accounting\Database\Models\Contracts::class);
+    }
+
+    public function contractItems() : \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(\NextDeveloper\Accounting\Database\Models\ContractItems::class);
+    }
+
     // EDIT AFTER HERE - WARNING: ABOVE THIS LINE MAY BE REGENERATED AND YOU MAY LOSE CODE
 
     use Authenticatable;

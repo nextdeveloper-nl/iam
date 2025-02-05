@@ -6,6 +6,7 @@ use GPBMetadata\Google\Api\Auth;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\Cache;
 use NextDeveloper\Commons\Common\Cache\CacheHelper;
+use NextDeveloper\Commons\Database\GlobalScopes\LimitScope;
 use NextDeveloper\IAM\Authorization\Roles\IAuthorizationRole;
 use NextDeveloper\IAM\Authorization\Roles\MemberRole;
 use NextDeveloper\IAM\Database\Models\Accounts;
@@ -104,6 +105,9 @@ class RolesService extends AbstractRolesService
             return null;
 
         $roles = UserRoles::withoutGlobalScope(AuthorizationScope::class)
+            // Here we have limits scope because if a user has more than 20 roles,
+            // then some of them are not put into account
+            ->withoutGlobalScope(LimitScope::class)
             ->where('iam_user_id', $user->id)
             ->where('iam_account_id', $account->id)
             ->where('is_active', true)
