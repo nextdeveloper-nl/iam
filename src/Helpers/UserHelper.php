@@ -577,6 +577,15 @@ class UserHelper
         return $roles;
     }
 
+    public static function dumpRoles(Users $user = null) : void
+    {
+        $roles = self::getRoles($user);
+
+        foreach ($roles as $role) {
+            dump($role->name);
+        }
+    }
+
     public static function removeFromRole($role, Users $users = null, Accounts $account = null): bool
     {
         if (!$users)

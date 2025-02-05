@@ -7,7 +7,6 @@ use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Str;
 use NextDeveloper\IAM\Helpers\UserHelper;
-use NextDeveloper\Commons\Common\Cache\CacheHelper;
 use NextDeveloper\Commons\Helpers\DatabaseHelper;
 use NextDeveloper\Commons\Database\Models\AvailableActions;
 use NextDeveloper\IAM\Database\Models\Accounts;
@@ -107,7 +106,11 @@ class AbstractAccountsService
     {
         $object = Accounts::where('uuid', $objectId)->first();
 
-        $action = '\\NextDeveloper\\IAM\\Actions\\Accounts\\' . Str::studly($action);
+        $action = AvailableActions::where('name', $action)
+            ->where('input', 'NextDeveloper\IAM\Accounts')
+            ->first();
+
+        $class = $action->class;
 
         if(class_exists($class)) {
             $action = new $class($object, $params);

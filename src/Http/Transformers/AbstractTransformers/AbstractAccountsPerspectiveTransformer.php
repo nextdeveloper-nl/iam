@@ -70,6 +70,7 @@ class AbstractAccountsPerspectiveTransformer extends AbstractTransformer
                 'tags' => $model->tags,
                 'total_user_count' => $model->total_user_count,
                 'registered_user_count' => $model->registered_user_count,
+                'profile_image_url' =>  $model->profile_image_url,
                 'domain_name' => $model->domain_name,
                 'common_domain_id'  => $commonDomainId ? $commonDomainId->uuid : null,
                 'country_name' => $model->country_name,

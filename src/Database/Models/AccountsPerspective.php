@@ -40,82 +40,84 @@ class AccountsPerspective extends Model
 
 
     /**
-     @var array
+     * @var array
      */
     protected $guarded = [];
 
     protected $fillable = [
-            'name',
-            'description',
-            'phone_number',
-            'account_owner',
-            'iam_user_id',
-            'account_type',
-            'is_active',
-            'tags',
-            'total_user_count',
-            'registered_user_count',
-            'domain_name',
-            'country_name',
+        'name',
+        'description',
+        'phone_number',
+        'account_owner',
+        'iam_user_id',
+        'account_type',
+        'is_active',
+        'tags',
+        'total_user_count',
+        'registered_user_count',
+        'profile_image_url',
+        'domain_name',
+        'country_name',
     ];
 
     /**
-      Here we have the fulltext fields. We can use these for fulltext search if enabled.
+     * Here we have the fulltext fields. We can use these for fulltext search if enabled.
      */
     protected $fullTextFields = [
 
     ];
 
     /**
-     @var array
+     * @var array
      */
     protected $appends = [
 
     ];
 
     /**
-     We are casting fields to objects so that we can work on them better
+     * We are casting fields to objects so that we can work on them better
      *
-     @var array
+     * @var array
      */
     protected $casts = [
-    'id' => 'integer',
-    'name' => 'string',
-    'description' => 'string',
-    'phone_number' => 'string',
-    'account_owner' => 'string',
-    'account_type' => 'string',
-    'is_active' => 'boolean',
-    'tags' => \NextDeveloper\Commons\Database\Casts\TextArray::class,
-    'total_user_count' => 'integer',
-    'registered_user_count' => 'integer',
-    'domain_name' => 'string',
-    'country_name' => 'string',
+        'id' => 'integer',
+        'name' => 'string',
+        'description' => 'string',
+        'phone_number' => 'string',
+        'account_owner' => 'string',
+        'account_type' => 'string',
+        'profile_image_url' => 'string',
+        'is_active' => 'boolean',
+        'tags' => \NextDeveloper\Commons\Database\Casts\TextArray::class,
+        'total_user_count' => 'integer',
+        'registered_user_count' => 'integer',
+        'domain_name' => 'string',
+        'country_name' => 'string',
     ];
 
     /**
-     We are casting data fields.
+     * We are casting data fields.
      *
-     @var array
+     * @var array
      */
     protected $dates = [
 
     ];
 
     /**
-     @var array
+     * @var array
      */
     protected $with = [
 
     ];
 
     /**
-     @var int
+     * @var int
      */
     protected $perPage = 20;
 
     /**
-     @return void
+     * @return void
      */
     public static function boot()
     {
@@ -132,9 +134,11 @@ class AccountsPerspective extends Model
         $globalScopes = config('iam.scopes.global');
         $modelScopes = config('iam.scopes.iam_accounts_perspective');
 
-        if(!$modelScopes) { $modelScopes = [];
+        if (!$modelScopes) {
+            $modelScopes = [];
         }
-        if (!$globalScopes) { $globalScopes = [];
+        if (!$globalScopes) {
+            $globalScopes = [];
         }
 
         $scopes = array_merge(
@@ -142,7 +146,7 @@ class AccountsPerspective extends Model
             $modelScopes
         );
 
-        if($scopes) {
+        if ($scopes) {
             foreach ($scopes as $scope) {
                 static::addGlobalScope(app($scope));
             }
@@ -150,8 +154,6 @@ class AccountsPerspective extends Model
     }
 
     // EDIT AFTER HERE - WARNING: ABOVE THIS LINE MAY BE REGENERATED AND YOU MAY LOSE CODE
-
-
 
 
 }
