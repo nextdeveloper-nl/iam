@@ -61,11 +61,15 @@ class AbstractAccountTypesService
         $model = AccountTypes::filter($filter);
 
         if($enablePaginate) {
+            $modelCount = $model->count();
+            $page = array_key_exists('page', $params) ? $params['page'] : 1;
+            $items = $model->skip(($page - 1) * $perPage)->take($perPage)->get();
+
             return new \Illuminate\Pagination\LengthAwarePaginator(
-                $model->skip(((array_key_exists('page', $params) ? $params['page'] : 1) - 1) * $perPage)->take($perPage)->get(),
-                $model->count(),
+                $items,
+                $modelCount,
                 $perPage,
-                request()->get('page', 1)
+                $page
             );
         }
 
