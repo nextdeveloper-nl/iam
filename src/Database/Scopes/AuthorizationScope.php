@@ -131,11 +131,14 @@ class AuthorizationScope implements Scope
      */
     private function isRoleApplied(Builder $builder, Model $model) : bool
     {
+        //  Here we have a bug about security, even though the builder is not there, its not applying the same
+        //  builder for the second iteration.
+        /*
         if($model->getHidden()) {
             //  @todo: Should be revisited
             return true;
         }
-
+*/
         return false;
     }
 
