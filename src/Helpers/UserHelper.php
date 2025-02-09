@@ -95,8 +95,6 @@ class UserHelper
             ->where('id', $userId)
             ->first();
 
-        Log::warning('Switching user to ' . $user->email);
-
         self::$user = $user;
 
         return $user;
@@ -107,8 +105,6 @@ class UserHelper
         $account = Accounts::withoutGlobalScopes()
             ->where('id', $accountId)
             ->first();
-
-        Log::warning('Switching account to ' . $account->email);
 
         self::$account = $account;
 
