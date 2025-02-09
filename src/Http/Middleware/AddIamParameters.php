@@ -19,7 +19,7 @@ class AddIamParameters extends Middleware
 
             if($user) {
                 $request->query->add([
-                    'iam_user_id' => $user->uuid,
+                    //'iam_user_id' => $user->uuid,
                     //  We are removing this below because it is creating a unwanted behaviour of
                     //  filtering all objects if the owner is themselves
                     // 'iamUserId' => $user->uuid
