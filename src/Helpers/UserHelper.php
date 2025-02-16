@@ -697,4 +697,15 @@ class UserHelper
     {
         return self::masterAccount(self::getLeoOwner());
     }
+
+    public static function setAdminAsCurrentUser()
+    {
+        UserHelper::setUserById(self::getLeoOwner()->id);
+        UserHelper::setCurrentAccountById(self::getLeoOwnerAccount()->id);
+    }
+
+    public static function setCurrentUserAndAccount(Users $user, Accounts $account) {
+        self::setUserById($user->id);
+        self::setCurrentAccountById($account->id);
+    }
 }
