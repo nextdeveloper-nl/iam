@@ -692,4 +692,9 @@ class UserHelper
     {
         return self::getWithEmail(config('leo.leo_owner_email'));
     }
+
+    public static function getLeoOwnerAccount(): Accounts
+    {
+        return self::masterAccount(self::getLeoOwner());
+    }
 }
