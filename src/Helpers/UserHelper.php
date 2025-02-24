@@ -498,8 +498,6 @@ class UserHelper
 
         $roleForModel = self::getRoleForModel($model, $user);
 
-        $roleClass = null;
-
         if (!$roleForModel) {
             Log::warning('[UserHelper@can] $roleForModel is null. This means that the user ' .
                 'does not have any role in the system. Maybe we should ');
