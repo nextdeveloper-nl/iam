@@ -698,8 +698,8 @@ class UserHelper
 
     public static function setAdminAsCurrentUser()
     {
-        UserHelper::setUserById(self::getLeoOwner()->id);
-        UserHelper::setCurrentAccountById(self::getLeoOwnerAccount()->id);
+        UserHelper::setUserById(config('leo.current_user_id'));
+        UserHelper::setCurrentAccountById(config('leo.current_account_id'));
     }
 
     public static function setCurrentUserAndAccount(Users $user, Accounts $account) {
