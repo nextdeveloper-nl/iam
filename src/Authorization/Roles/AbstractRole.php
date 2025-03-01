@@ -156,7 +156,7 @@ class AbstractRole implements Scope
 
         if(!$isAllowed) {
             Log::warning('[AbstractRole@checkUpdatePolicy] My user can not do this operation: '
-                . $operation . ' with this role: ' . get_class($this) . '. Its because you dont own this object.');
+                . $operation . ' with this role: ' . get_class($this) . '. Its because you dont own this object: ' . $model->uuid);
         }
 
         return $isAllowed;
@@ -188,7 +188,7 @@ class AbstractRole implements Scope
 
         if(!$isAllowed) {
             Log::warning('[AbstractRole@checkUpdatePolicy] My user can not do this operation: '
-                . $operation . ' with this role: ' . get_class($this) . '. Its because you dont own this object.');
+                . $operation . ' with this role: ' . get_class($this) . '. Its because you dont own this object: ' . $model->uuid);
         }
 
         return $isAllowed;

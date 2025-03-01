@@ -498,8 +498,6 @@ class UserHelper
 
         $roleForModel = self::getRoleForModel($model, $user);
 
-        $roleClass = null;
-
         if (!$roleForModel) {
             Log::warning('[UserHelper@can] $roleForModel is null. This means that the user ' .
                 'does not have any role in the system. Maybe we should ');
@@ -700,8 +698,8 @@ class UserHelper
 
     public static function setAdminAsCurrentUser()
     {
-        UserHelper::setUserById(self::getLeoOwner()->id);
-        UserHelper::setCurrentAccountById(self::getLeoOwnerAccount()->id);
+        UserHelper::setUserById(config('leo.current_user_id'));
+        UserHelper::setCurrentAccountById(config('leo.current_account_id'));
     }
 
     public static function setCurrentUserAndAccount(Users $user, Accounts $account) {
