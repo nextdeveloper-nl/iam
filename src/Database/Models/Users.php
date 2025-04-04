@@ -436,6 +436,36 @@ class Users extends Model
         return $this->hasMany(\NextDeveloper\Marketplace\Database\Models\Providers::class);
     }
 
+    public function emailAddresses() : \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(\NextDeveloper\Intelligence\Database\Models\EmailAddresses::class);
+    }
+
+    public function mailboxes() : \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(\NextDeveloper\Intelligence\Database\Models\Mailboxes::class);
+    }
+
+    public function socialMedia() : \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(\NextDeveloper\Intelligence\Database\Models\SocialMedia::class);
+    }
+
+    public function campaigns() : \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(\NextDeveloper\CRM\Database\Models\Campaigns::class);
+    }
+
+    public function targetUsers() : \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(\NextDeveloper\CRM\Database\Models\TargetUsers::class);
+    }
+
+    public function targets() : \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(\NextDeveloper\CRM\Database\Models\Targets::class);
+    }
+
     // EDIT AFTER HERE - WARNING: ABOVE THIS LINE MAY BE REGENERATED AND YOU MAY LOSE CODE
 
     use Authenticatable;
