@@ -80,6 +80,11 @@ class AuthorizationScope implements Scope
                 continue;
             }
 
+            if(!class_exists($role->class)) {
+                //UserHelper::removeFromRole($role);
+                continue;
+            }
+
             $role = app($role->class);
 
             if(config('leo.debug.authorization_scope'))
