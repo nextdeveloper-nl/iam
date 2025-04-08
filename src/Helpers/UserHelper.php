@@ -479,6 +479,10 @@ class UserHelper
         $roles = self::getRoles($user);
 
         foreach ($roles as $role) {
+            if(!class_exists($role->class)) {
+                continue;
+            }
+
             $roleClass = app($role->class);
 
             if ($roleClass->canBeApplied($model->getTable())) {
