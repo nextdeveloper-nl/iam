@@ -80,6 +80,7 @@ class AuthorizationScope implements Scope
                 continue;
             }
 
+            //  Here we are checking if the class exists. If not, we are skipping this check.
             if(!class_exists($role->class)) {
                 //UserHelper::removeFromRole($role);
                 continue;
