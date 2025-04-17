@@ -39,7 +39,9 @@ class Authorize extends Middleware
         $module = $explode[1];
         $object = $explode[2];
 
-        $object = substr($object, 0, strpos($object, '?'));
+        if(strpos($object, '?') !== false) {
+            $object = substr($object, 0, strpos($object, '?'));
+        }
         $object = str_replace('-', '_', $object);
 
         foreach ($roles as $role) {
