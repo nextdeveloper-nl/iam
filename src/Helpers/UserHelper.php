@@ -685,8 +685,14 @@ class UserHelper
         return $model;
     }
 
-    public static function getAccountOwner(Accounts $accounts): ?Users
+    public static function getAccountOwner(Accounts|int $accounts): ?Users
     {
+        if(is_int($accounts)) {
+            $accounts = Accounts::withoutGlobalScope(AuthorizationScope::class)
+                ->where('id', $accounts)
+                ->first();
+        }
+
         return Users::where('id', $accounts->iam_user_id)->first();
     }
 
