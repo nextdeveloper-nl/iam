@@ -24,77 +24,77 @@ class BackendsQueryFilter extends AbstractQueryFilter
 
     public function ldapServerName($value)
     {
-        return $this->builder->where('ldap_server_name', 'like', '%' . $value . '%');
+        return $this->builder->where('ldap_server_name', 'ilike', '%' . $value . '%');
     }
 
     public function ldapServerUrl($value)
     {
-        return $this->builder->where('ldap_server_url', 'like', '%' . $value . '%');
+        return $this->builder->where('ldap_server_url', 'ilike', '%' . $value . '%');
     }
 
     public function ldapServerPort($value)
     {
-        return $this->builder->where('ldap_server_port', 'like', '%' . $value . '%');
+        return $this->builder->where('ldap_server_port', 'ilike', '%' . $value . '%');
     }
 
     public function ldapBaseDn($value)
     {
-        return $this->builder->where('ldap_base_dn', 'like', '%' . $value . '%');
+        return $this->builder->where('ldap_base_dn', 'ilike', '%' . $value . '%');
     }
 
     public function ldapBindUsername($value)
     {
-        return $this->builder->where('ldap_bind_username', 'like', '%' . $value . '%');
+        return $this->builder->where('ldap_bind_username', 'ilike', '%' . $value . '%');
     }
 
     public function ldapBindPassword($value)
     {
-        return $this->builder->where('ldap_bind_password', 'like', '%' . $value . '%');
+        return $this->builder->where('ldap_bind_password', 'ilike', '%' . $value . '%');
     }
 
     public function defaultFilter($value)
     {
-        return $this->builder->where('default_filter', 'like', '%' . $value . '%');
+        return $this->builder->where('default_filter', 'ilike', '%' . $value . '%');
     }
 
     public function defaultMemberof($value)
     {
-        return $this->builder->where('default_memberof', 'like', '%' . $value . '%');
+        return $this->builder->where('default_memberof', 'ilike', '%' . $value . '%');
     }
 
     public function defaultGroup($value)
     {
-        return $this->builder->where('default_group', 'like', '%' . $value . '%');
+        return $this->builder->where('default_group', 'ilike', '%' . $value . '%');
     }
 
     public function defaultUseridField($value)
     {
-        return $this->builder->where('default_userid_field', 'like', '%' . $value . '%');
+        return $this->builder->where('default_userid_field', 'ilike', '%' . $value . '%');
     }
 
     public function defaultPasswordField($value)
     {
-        return $this->builder->where('default_password_field', 'like', '%' . $value . '%');
+        return $this->builder->where('default_password_field', 'ilike', '%' . $value . '%');
     }
 
     public function defaultEmailField($value)
     {
-        return $this->builder->where('default_email_field', 'like', '%' . $value . '%');
+        return $this->builder->where('default_email_field', 'ilike', '%' . $value . '%');
     }
 
     public function defaultAliasField($value)
     {
-        return $this->builder->where('default_alias_field', 'like', '%' . $value . '%');
+        return $this->builder->where('default_alias_field', 'ilike', '%' . $value . '%');
     }
 
     public function defaultFirstNameField($value)
     {
-        return $this->builder->where('default_first_name_field', 'like', '%' . $value . '%');
+        return $this->builder->where('default_first_name_field', 'ilike', '%' . $value . '%');
     }
 
     public function defaultLastNameField($value)
     {
-        return $this->builder->where('default_last_name_field', 'like', '%' . $value . '%');
+        return $this->builder->where('default_last_name_field', 'ilike', '%' . $value . '%');
     }
 
     public function isConnected()

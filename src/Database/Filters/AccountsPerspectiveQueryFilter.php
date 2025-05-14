@@ -40,37 +40,37 @@ class AccountsPerspectiveQueryFilter extends AbstractQueryFilter
 
     public function name($value)
     {
-        return $this->builder->where('name', 'like', '%' . $value . '%');
+        return $this->builder->where('name', 'ilike', '%' . $value . '%');
     }
 
     public function description($value)
     {
-        return $this->builder->where('description', 'like', '%' . $value . '%');
+        return $this->builder->where('description', 'ilike', '%' . $value . '%');
     }
 
     public function phoneNumber($value)
     {
-        return $this->builder->where('phone_number', 'like', '%' . $value . '%');
+        return $this->builder->where('phone_number', 'ilike', '%' . $value . '%');
     }
 
     public function accountOwner($value)
     {
-        return $this->builder->where('account_owner', 'like', '%' . $value . '%');
+        return $this->builder->where('account_owner', 'ilike', '%' . $value . '%');
     }
 
     public function accountType($value)
     {
-        return $this->builder->where('account_type', 'like', '%' . $value . '%');
+        return $this->builder->where('account_type', 'ilike', '%' . $value . '%');
     }
 
     public function domainName($value)
     {
-        return $this->builder->where('domain_name', 'like', '%' . $value . '%');
+        return $this->builder->where('domain_name', 'ilike', '%' . $value . '%');
     }
 
     public function countryName($value)
     {
-        return $this->builder->where('country_name', 'like', '%' . $value . '%');
+        return $this->builder->where('country_name', 'ilike', '%' . $value . '%');
     }
 
     public function totalUserCount($value)

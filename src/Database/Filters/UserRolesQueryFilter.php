@@ -26,12 +26,12 @@ class UserRolesQueryFilter extends AbstractQueryFilter
 
     public function class($value)
     {
-        return $this->builder->where('class', 'like', '%' . $value . '%');
+        return $this->builder->where('class', 'ilike', '%' . $value . '%');
     }
 
     public function description($value)
     {
-        return $this->builder->where('description', 'like', '%' . $value . '%');
+        return $this->builder->where('description', 'ilike', '%' . $value . '%');
     }
 
     public function level($value)
