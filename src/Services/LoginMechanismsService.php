@@ -61,7 +61,7 @@ class LoginMechanismsService extends AbstractLoginMechanismsService
 
     public function getTwoFA() : ?LoginMechanisms {
         return LoginMechanisms::where('iam_user_id', $this->_user->id)
-            ->where('login_mechanism', 'like', '2FA%')
+            ->where('login_mechanism', 'ilike', '2FA%')
             ->where('is_latest', 1)
             ->where('is_active', 1)
             ->first();

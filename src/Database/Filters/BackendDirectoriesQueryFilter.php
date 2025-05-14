@@ -25,47 +25,47 @@ class BackendDirectoriesQueryFilter extends AbstractQueryFilter
 
     public function defaultFilter($value)
     {
-        return $this->builder->where('default_filter', 'like', '%' . $value . '%');
+        return $this->builder->where('default_filter', 'ilike', '%' . $value . '%');
     }
 
     public function defaultMemberof($value)
     {
-        return $this->builder->where('default_memberof', 'like', '%' . $value . '%');
+        return $this->builder->where('default_memberof', 'ilike', '%' . $value . '%');
     }
 
     public function defaultGroup($value)
     {
-        return $this->builder->where('default_group', 'like', '%' . $value . '%');
+        return $this->builder->where('default_group', 'ilike', '%' . $value . '%');
     }
 
     public function defaultUseridField($value)
     {
-        return $this->builder->where('default_userid_field', 'like', '%' . $value . '%');
+        return $this->builder->where('default_userid_field', 'ilike', '%' . $value . '%');
     }
 
     public function defaultPasswordField($value)
     {
-        return $this->builder->where('default_password_field', 'like', '%' . $value . '%');
+        return $this->builder->where('default_password_field', 'ilike', '%' . $value . '%');
     }
 
     public function defaultEmailField($value)
     {
-        return $this->builder->where('default_email_field', 'like', '%' . $value . '%');
+        return $this->builder->where('default_email_field', 'ilike', '%' . $value . '%');
     }
 
     public function defaultAliasField($value)
     {
-        return $this->builder->where('default_alias_field', 'like', '%' . $value . '%');
+        return $this->builder->where('default_alias_field', 'ilike', '%' . $value . '%');
     }
 
     public function defaultNameField($value)
     {
-        return $this->builder->where('default_name_field', 'like', '%' . $value . '%');
+        return $this->builder->where('default_name_field', 'ilike', '%' . $value . '%');
     }
 
     public function defaultSurnameField($value)
     {
-        return $this->builder->where('default_surname_field', 'like', '%' . $value . '%');
+        return $this->builder->where('default_surname_field', 'ilike', '%' . $value . '%');
     }
 
     public function isConnected($value)

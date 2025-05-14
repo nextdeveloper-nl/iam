@@ -21,7 +21,7 @@ class LoginMechanismsQueryFilter extends AbstractQueryFilter
 
     public function loginMechanism($value)
     {
-        return $this->builder->where('login_mechanism', 'like', '%' . $value . '%');
+        return $this->builder->where('login_mechanism', 'ilike', '%' . $value . '%');
     }
 
     public function isLatest($value)
