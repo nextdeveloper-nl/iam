@@ -42,7 +42,7 @@ class AbstractLogin
     public static function getName($obj) : string
     {
         $name = class_basename($obj);
-        
+
         return $name;
     }
 
@@ -54,7 +54,7 @@ class AbstractLogin
      * @return void
      */
     public function removeOldTokens($clientId, $identifier, $userId) {
-        $sql = 'delete from oauth_access_tokens where id != "' . $identifier . '" and client_id = "' . $clientId . '" and user_id = ' . $userId . ';';
+        $sql = 'delete from oauth_access_tokens where id != "' . $identifier . '" and client_id = "' . $clientId . '" and user_id = ' . $userId . ' and expires_at < now();';
 
         DB::delete($sql);
     }
