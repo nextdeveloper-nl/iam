@@ -358,7 +358,7 @@ class Accounts extends Model
 
     public function addresses(): \Illuminate\Database\Eloquent\Relations\HasMany
     {
-        return $this->hasMany(\NextDeveloper\Commons\Database\Models\Addresses::class);
+        return $this->hasMany(\NextDeveloper\Commons\Database\Models\Addresses::class, 'iam_account_id');
     }
 
     public function actionLogs(): \Illuminate\Database\Eloquent\Relations\HasMany
