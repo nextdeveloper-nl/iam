@@ -73,6 +73,7 @@ class AbstractUsersPerspectiveTransformer extends AbstractTransformer
                 'country' => $model->country,
                 'language' => $model->language,
                 'phone_number' => $model->phone_number,
+                'roles' =>  $model->roles,
                 'tags' => $model->tags,
                 'profile_picture' => $model->profile_picture,
                 'common_country_id' =>  $commonCountryId ? $commonCountryId->uuid : null,
