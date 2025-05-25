@@ -2,9 +2,9 @@
 
 namespace NextDeveloper\IAM\Services;
 
-use GPBMetadata\Google\Api\Auth;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Log;
 use NextDeveloper\Commons\Common\Cache\CacheHelper;
 use NextDeveloper\Commons\Database\GlobalScopes\LimitScope;
 use NextDeveloper\IAM\Authorization\Roles\IAuthorizationRole;
@@ -70,12 +70,15 @@ class RolesService extends AbstractRolesService
 
     public static function assignDefaultRoles(Users $users, Accounts $accounts)
     {
-        foreach (config('leo.services') as $serviceConfig) {
-            if ($serviceConfig['is_default']) {
-                $roleObject = new $serviceConfig['role'];
-                $getRole = RolesService::getRole($roleObject);
-                RolesService::assignUserToRole($users, $getRole, $accounts);
+        foreach (config('leo.register.default_roles') as $roleName) {
+            $getRole = RolesService::getRoleByName($roleName);
+
+            if(!$getRole) {
+                Log::error(__METHOD__ . ' | Applying default roles but cannot find this role; ' . $roleName);
+                continue;
             }
+
+            RolesService::assignUserToRole($users, $getRole, $accounts);
         }
     }
 
