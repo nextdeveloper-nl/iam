@@ -112,6 +112,7 @@ class UsersPerspective extends Model
         'common_language_id'    =>  'integer',
         'language' => 'string',
         'phone_number' => 'string',
+        'roles' => \NextDeveloper\Commons\Database\Casts\TextArray::class,
         'tags' => \NextDeveloper\Commons\Database\Casts\TextArray::class,
         'profile_picture' => 'string',
         'is_registered' => 'boolean',

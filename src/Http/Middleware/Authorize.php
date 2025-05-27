@@ -45,6 +45,9 @@ class Authorize extends Middleware
         $object = str_replace('-', '_', $object);
 
         foreach ($roles as $role) {
+            if(!class_exists($role->class))
+                continue;
+
             $roleObject = app($role->class);
 
             $allowedOperations = $roleObject->allowedOperations();
