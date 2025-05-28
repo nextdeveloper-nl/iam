@@ -716,4 +716,29 @@ class UserHelper
         self::setUserById($user->id);
         self::setCurrentAccountById($account->id);
     }
+
+    /**
+     * Get all users that have a specific role.
+     *
+     * @param string $roleName The name of the role to find users for
+     */
+    public static function getUsersWithRole(string $roleName)
+    {
+        $role = RolesService::getRoleByName($roleName);
+
+        if (!$role) {
+            Log::error("[UserHelper] Role with name $roleName not found");
+            return collect();
+        }
+
+        // Get users with a role in one query using join
+        return Users::query()
+            ->join('iam_role_user', 'iam_role_user.iam_user_id', '=', 'iam_users.id')
+            ->where('iam_role_user.iam_role_id', $role->id)
+            ->where('iam_role_user.is_active', 1)
+            ->select('iam_users.*')
+            ->distinct()
+            ->get();
+    }
+   
 }
