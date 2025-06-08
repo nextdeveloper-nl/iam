@@ -740,5 +740,5 @@ class UserHelper
             ->distinct()
             ->get();
     }
-   
+
 }
