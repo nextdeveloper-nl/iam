@@ -2,12 +2,15 @@
 
 namespace NextDeveloper\IAM\Services;
 
+use Helpers\AccountingHelper;
+use Helpers\InvoiceHelper;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use NextDeveloper\Commons\Database\Models\Domains;
 use NextDeveloper\Commons\Exceptions\CannotCreateModelException;
 use NextDeveloper\Commons\Helpers\MetaHelper;
+use NextDeveloper\Commons\Helpers\StateHelper;
 use NextDeveloper\Commons\Services\DomainsService;
 use NextDeveloper\Events\Services\Events;
 use NextDeveloper\I18n\Helpers\i18n;
@@ -106,6 +109,30 @@ class AccountsService extends AbstractAccountsService
 
         if(count($data) == 0) {
             return $account;
+        }
+
+        if(class_exists(\NextDeveloper\Accounting\Database\Models\Accounts::class)) {
+            $accountingAccount = AccountingHelper::getAccountingAccount($account->id);
+
+            if($accountingAccount) {
+                $hasInvoice = InvoiceHelper::hasInvoice($accountingAccount);
+
+                if($hasInvoice && array_key_exists('common_country_id', $data)) {
+                    Log::info(__METHOD__ . '| Not updating the country of the account because ' .
+                        'it has invoices. Please contact support to change the country of the account.');
+
+                    StateHelper::setState(
+                        obj: $account,
+                        stateName: 'country',
+                        value: 'cannot_change_country',
+                        objectState: StateHelper::STATE_ERROR,
+                        reason: 'Cannot change country of the account because it has invoices. ' .
+                            'Please contact support to change the country of the account.'
+                    );
+
+                    unset($data['common_country_id']);
+                }
+            }
         }
 
         return parent::update($id, $data);
