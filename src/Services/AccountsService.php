@@ -2,7 +2,7 @@
 
 namespace NextDeveloper\IAM\Services;
 
-use Helpers\AccountingHelper;
+use NextDeveloper\Accounting\Helpers\AccountingHelper;
 use Helpers\InvoiceHelper;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
