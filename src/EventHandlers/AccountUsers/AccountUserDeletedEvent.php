@@ -2,8 +2,8 @@
 
 namespace NextDeveloper\IAM\EventHandlers\AccountUserDeletedEvent;
 
-use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
+use Illuminate\Queue\InteractsWithQueue;
 
 /**
  * Class AccountUserDeletedEvent

@@ -2,8 +2,8 @@
 
 namespace NextDeveloper\IAM\EventHandlers\RolePermissions;
 
-use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
+use Illuminate\Queue\InteractsWithQueue;
 
 /**
  * Class IamRolePermissionUpdatingEvent

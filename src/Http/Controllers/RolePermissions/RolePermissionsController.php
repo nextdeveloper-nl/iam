@@ -3,14 +3,16 @@
 namespace NextDeveloper\IAM\Http\Controllers\RolePermissions;
 
 use Illuminate\Http\Request;
-use NextDeveloper\IAM\Http\Controllers\AbstractController;
 use NextDeveloper\Commons\Http\Response\ResponsableFactory;
-use NextDeveloper\IAM\Http\Requests\RolePermissions\RolePermissionsUpdateRequest;
+use NextDeveloper\Commons\Http\Traits\Addresses;
+use NextDeveloper\Commons\Http\Traits\Tags;
 use NextDeveloper\IAM\Database\Filters\RolePermissionsQueryFilter;
 use NextDeveloper\IAM\Database\Models\RolePermissions;
-use NextDeveloper\IAM\Services\RolePermissionsService;
+use NextDeveloper\IAM\Http\Controllers\AbstractController;
 use NextDeveloper\IAM\Http\Requests\RolePermissions\RolePermissionsCreateRequest;
-use NextDeveloper\Commons\Http\Traits\Tags;use NextDeveloper\Commons\Http\Traits\Addresses;
+use NextDeveloper\IAM\Http\Requests\RolePermissions\RolePermissionsUpdateRequest;
+use NextDeveloper\IAM\Services\RolePermissionsService;
+
 class RolePermissionsController extends AbstractController
 {
     private $model = RolePermissions::class;

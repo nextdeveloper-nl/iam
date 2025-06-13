@@ -2,6 +2,7 @@
 
 namespace NextDeveloper\IAM\Services;
 
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Log;
@@ -9,6 +10,7 @@ use NextDeveloper\Commons\Common\Cache\CacheHelper;
 use NextDeveloper\Commons\Database\GlobalScopes\LimitScope;
 use NextDeveloper\IAM\Authorization\Roles\IAuthorizationRole;
 use NextDeveloper\IAM\Authorization\Roles\MemberRole;
+use NextDeveloper\IAM\Database\Filters\RolesQueryFilter;
 use NextDeveloper\IAM\Database\Models\Accounts;
 use NextDeveloper\IAM\Database\Models\Roles;
 use NextDeveloper\IAM\Database\Models\RoleUsers;
@@ -17,8 +19,6 @@ use NextDeveloper\IAM\Database\Models\Users;
 use NextDeveloper\IAM\Database\Scopes\AuthorizationScope;
 use NextDeveloper\IAM\Helpers\UserHelper;
 use NextDeveloper\IAM\Services\AbstractServices\AbstractRolesService;
-use NextDeveloper\IAM\Database\Filters\RolesQueryFilter;
-use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 
 /**
  * This class is responsible from managing the data for Roles

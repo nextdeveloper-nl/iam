@@ -8,7 +8,6 @@ use Illuminate\Database\Eloquent\Scope;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use NextDeveloper\IAM\Authorization\Roles\AnonymousRole;
-use NextDeveloper\IAM\Database\Models\Users;
 use NextDeveloper\IAM\Helpers\UserHelper;
 use NextDeveloper\IAM\Services\RolesService;
 

@@ -3,18 +3,17 @@
 namespace NextDeveloper\IAM\Database\Models;
 
 use Illuminate\Auth\Authenticatable;
-use Illuminate\Database\Eloquent\SoftDeletes;
-use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
+use NextDeveloper\Commons\Common\Cache\Traits\CleanCache;
 use NextDeveloper\Commons\Database\Traits\Filterable;
 use NextDeveloper\Commons\Database\Traits\HasStates;
+use NextDeveloper\Commons\Database\Traits\Taggable;
+use NextDeveloper\Commons\Database\Traits\UuidId;
 use NextDeveloper\Communication\Database\Traits\SendEmail;
 use NextDeveloper\Communication\Database\Traits\SendNotification;
 use NextDeveloper\Communication\Database\Traits\SendSMS;
 use NextDeveloper\IAM\Database\Observers\UsersObserver;
-use NextDeveloper\Commons\Database\Traits\UuidId;
-use NextDeveloper\Commons\Common\Cache\Traits\CleanCache;
-use NextDeveloper\Commons\Database\Traits\Taggable;
 
 /**
  * Users model.

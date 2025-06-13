@@ -4,7 +4,6 @@ namespace NextDeveloper\IAM\Authorization\Roles;
 
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
-use NextDeveloper\IAM\Database\Models\Users;
 
 interface IAuthorizationRole
 {

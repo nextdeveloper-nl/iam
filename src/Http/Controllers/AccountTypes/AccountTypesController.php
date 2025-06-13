@@ -3,14 +3,16 @@
 namespace NextDeveloper\IAM\Http\Controllers\AccountTypes;
 
 use Illuminate\Http\Request;
-use NextDeveloper\IAM\Http\Controllers\AbstractController;
 use NextDeveloper\Commons\Http\Response\ResponsableFactory;
-use NextDeveloper\IAM\Http\Requests\AccountTypes\AccountTypesUpdateRequest;
+use NextDeveloper\Commons\Http\Traits\Addresses;
+use NextDeveloper\Commons\Http\Traits\Tags;
 use NextDeveloper\IAM\Database\Filters\AccountTypesQueryFilter;
 use NextDeveloper\IAM\Database\Models\AccountTypes;
-use NextDeveloper\IAM\Services\AccountTypesService;
+use NextDeveloper\IAM\Http\Controllers\AbstractController;
 use NextDeveloper\IAM\Http\Requests\AccountTypes\AccountTypesCreateRequest;
-use NextDeveloper\Commons\Http\Traits\Tags;use NextDeveloper\Commons\Http\Traits\Addresses;
+use NextDeveloper\IAM\Http\Requests\AccountTypes\AccountTypesUpdateRequest;
+use NextDeveloper\IAM\Services\AccountTypesService;
+
 class AccountTypesController extends AbstractController
 {
     private $model = AccountTypes::class;

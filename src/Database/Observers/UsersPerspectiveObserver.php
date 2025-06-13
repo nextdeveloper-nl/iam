@@ -3,10 +3,9 @@
 namespace NextDeveloper\IAM\Database\Observers;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Facades\Auth;
 use NextDeveloper\Commons\Exceptions\NotAllowedException;
-use NextDeveloper\IAM\Helpers\UserHelper;
 use NextDeveloper\Events\Services\Events;
+use NextDeveloper\IAM\Helpers\UserHelper;
 
 /**
  * Class UsersPerspectiveObserver

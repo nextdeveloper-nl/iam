@@ -5,10 +5,10 @@ namespace NextDeveloper\IAM\Http\Controllers\Users;
 use Illuminate\Http\Request;
 use NextDeveloper\Commons\Http\Controllers\AbstractController;
 use NextDeveloper\Commons\Http\Response\ResponsableFactory;
+use NextDeveloper\IAM\Database\Filters\UsersQueryFilter;
 use NextDeveloper\IAM\Database\Models\UsersPerspective;
 use NextDeveloper\IAM\Database\Scopes\AuthorizationScope;
 use NextDeveloper\IAM\Helpers\UserHelper;
-use NextDeveloper\IAM\Database\Filters\UsersQueryFilter;
 use NextDeveloper\IAM\Http\Requests\Users\UsersUpdateRequest;
 use NextDeveloper\IAM\Services\UsersService;
 

@@ -4,8 +4,6 @@ namespace NextDeveloper\IAM\Auth\Providers;
 
 use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Contracts\Auth\UserProvider;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Str;
 use NextDeveloper\IAM\Database\Models\Users;
 
 class IamUserProvider implements UserProvider

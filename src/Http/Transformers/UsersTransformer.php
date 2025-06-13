@@ -6,7 +6,6 @@ use Illuminate\Support\Facades\Cache;
 use NextDeveloper\Commons\Common\Cache\CacheHelper;
 use NextDeveloper\Commons\Database\Models\Media;
 use NextDeveloper\IAM\Database\Models\Users;
-use NextDeveloper\Commons\Http\Transformers\AbstractTransformer;
 use NextDeveloper\IAM\Http\Transformers\AbstractTransformers\AbstractUsersTransformer;
 
 /**

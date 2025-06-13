@@ -2,7 +2,6 @@
 
 namespace NextDeveloper\IAM\Database\Abstract;
 
-use Illuminate\Auth\Authenticatable;
 use Illuminate\Database\Eloquent\Model;
 
 class AuthorizationModel extends Model

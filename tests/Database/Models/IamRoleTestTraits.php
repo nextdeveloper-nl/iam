@@ -2,14 +2,13 @@
 
 namespace NextDeveloper\IAM\Tests\Database\Models;
 
-use Tests\TestCase;
 use GuzzleHttp\Client;
-use Illuminate\Http\Response;
 use Illuminate\Http\Request;
-use NextDeveloper\IAM\Database\Filters\IamRoleQueryFilter;
-use NextDeveloper\IAM\Services\AbstractServices\AbstractIamRoleService;
+use Illuminate\Http\Response;
 use Illuminate\Pagination\LengthAwarePaginator;
 use League\Fractal\Resource\Collection;
+use NextDeveloper\IAM\Database\Filters\IamRoleQueryFilter;
+use NextDeveloper\IAM\Services\AbstractServices\AbstractIamRoleService;
 
 trait IamRoleTestTraits
 {

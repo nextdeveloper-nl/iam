@@ -3,14 +3,16 @@
 namespace NextDeveloper\IAM\Http\Controllers\RoleUsers;
 
 use Illuminate\Http\Request;
-use NextDeveloper\IAM\Http\Controllers\AbstractController;
 use NextDeveloper\Commons\Http\Response\ResponsableFactory;
-use NextDeveloper\IAM\Http\Requests\RoleUsers\RoleUsersUpdateRequest;
+use NextDeveloper\Commons\Http\Traits\Addresses;
+use NextDeveloper\Commons\Http\Traits\Tags;
 use NextDeveloper\IAM\Database\Filters\RoleUsersQueryFilter;
 use NextDeveloper\IAM\Database\Models\RoleUsers;
-use NextDeveloper\IAM\Services\RoleUsersService;
+use NextDeveloper\IAM\Http\Controllers\AbstractController;
 use NextDeveloper\IAM\Http\Requests\RoleUsers\RoleUsersCreateRequest;
-use NextDeveloper\Commons\Http\Traits\Tags;use NextDeveloper\Commons\Http\Traits\Addresses;
+use NextDeveloper\IAM\Http\Requests\RoleUsers\RoleUsersUpdateRequest;
+use NextDeveloper\IAM\Services\RoleUsersService;
+
 class RoleUsersController extends AbstractController
 {
     private $model = RoleUsers::class;
