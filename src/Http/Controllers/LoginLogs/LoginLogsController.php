@@ -3,14 +3,16 @@
 namespace NextDeveloper\IAM\Http\Controllers\LoginLogs;
 
 use Illuminate\Http\Request;
-use NextDeveloper\IAM\Http\Controllers\AbstractController;
 use NextDeveloper\Commons\Http\Response\ResponsableFactory;
-use NextDeveloper\IAM\Http\Requests\LoginLogs\LoginLogsUpdateRequest;
+use NextDeveloper\Commons\Http\Traits\Addresses;
+use NextDeveloper\Commons\Http\Traits\Tags;
 use NextDeveloper\IAM\Database\Filters\LoginLogsQueryFilter;
 use NextDeveloper\IAM\Database\Models\LoginLogs;
-use NextDeveloper\IAM\Services\LoginLogsService;
+use NextDeveloper\IAM\Http\Controllers\AbstractController;
 use NextDeveloper\IAM\Http\Requests\LoginLogs\LoginLogsCreateRequest;
-use NextDeveloper\Commons\Http\Traits\Tags;use NextDeveloper\Commons\Http\Traits\Addresses;
+use NextDeveloper\IAM\Http\Requests\LoginLogs\LoginLogsUpdateRequest;
+use NextDeveloper\IAM\Services\LoginLogsService;
+
 class LoginLogsController extends AbstractController
 {
     private $model = LoginLogs::class;

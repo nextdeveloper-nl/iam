@@ -6,7 +6,6 @@ use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Str;
 use NextDeveloper\Commons\Common\Cache\CacheHelper;
 use NextDeveloper\IAM\Database\Models\Roles;
-use NextDeveloper\Commons\Http\Transformers\AbstractTransformer;
 use NextDeveloper\IAM\Helpers\UserHelper;
 use NextDeveloper\IAM\Http\Transformers\AbstractTransformers\AbstractRolesTransformer;
 

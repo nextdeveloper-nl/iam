@@ -3,14 +3,16 @@
 namespace NextDeveloper\IAM\Http\Controllers\AccountUsers;
 
 use Illuminate\Http\Request;
-use NextDeveloper\IAM\Http\Controllers\AbstractController;
 use NextDeveloper\Commons\Http\Response\ResponsableFactory;
-use NextDeveloper\IAM\Http\Requests\AccountUsers\AccountUsersUpdateRequest;
+use NextDeveloper\Commons\Http\Traits\Addresses;
+use NextDeveloper\Commons\Http\Traits\Tags;
 use NextDeveloper\IAM\Database\Filters\AccountUsersQueryFilter;
 use NextDeveloper\IAM\Database\Models\AccountUsers;
-use NextDeveloper\IAM\Services\AccountUsersService;
+use NextDeveloper\IAM\Http\Controllers\AbstractController;
 use NextDeveloper\IAM\Http\Requests\AccountUsers\AccountUsersCreateRequest;
-use NextDeveloper\Commons\Http\Traits\Tags;use NextDeveloper\Commons\Http\Traits\Addresses;
+use NextDeveloper\IAM\Http\Requests\AccountUsers\AccountUsersUpdateRequest;
+use NextDeveloper\IAM\Services\AccountUsersService;
+
 class AccountUsersController extends AbstractController
 {
     private $model = AccountUsers::class;

@@ -3,14 +3,16 @@
 namespace NextDeveloper\IAM\Http\Controllers\Roles;
 
 use Illuminate\Http\Request;
-use NextDeveloper\IAM\Http\Controllers\AbstractController;
 use NextDeveloper\Commons\Http\Response\ResponsableFactory;
-use NextDeveloper\IAM\Http\Requests\Roles\RolesUpdateRequest;
+use NextDeveloper\Commons\Http\Traits\Addresses;
+use NextDeveloper\Commons\Http\Traits\Tags;
 use NextDeveloper\IAM\Database\Filters\RolesQueryFilter;
 use NextDeveloper\IAM\Database\Models\Roles;
-use NextDeveloper\IAM\Services\RolesService;
+use NextDeveloper\IAM\Http\Controllers\AbstractController;
 use NextDeveloper\IAM\Http\Requests\Roles\RolesCreateRequest;
-use NextDeveloper\Commons\Http\Traits\Tags;use NextDeveloper\Commons\Http\Traits\Addresses;
+use NextDeveloper\IAM\Http\Requests\Roles\RolesUpdateRequest;
+use NextDeveloper\IAM\Services\RolesService;
+
 class RolesController extends AbstractController
 {
     private $model = Roles::class;

@@ -3,14 +3,16 @@
 namespace NextDeveloper\IAM\Http\Controllers\BackendDirectories;
 
 use Illuminate\Http\Request;
-use NextDeveloper\IAM\Http\Controllers\AbstractController;
 use NextDeveloper\Commons\Http\Response\ResponsableFactory;
-use NextDeveloper\IAM\Http\Requests\BackendDirectories\BackendDirectoriesUpdateRequest;
+use NextDeveloper\Commons\Http\Traits\Addresses;
+use NextDeveloper\Commons\Http\Traits\Tags;
 use NextDeveloper\IAM\Database\Filters\BackendDirectoriesQueryFilter;
 use NextDeveloper\IAM\Database\Models\BackendDirectories;
-use NextDeveloper\IAM\Services\BackendDirectoriesService;
+use NextDeveloper\IAM\Http\Controllers\AbstractController;
 use NextDeveloper\IAM\Http\Requests\BackendDirectories\BackendDirectoriesCreateRequest;
-use NextDeveloper\Commons\Http\Traits\Tags;use NextDeveloper\Commons\Http\Traits\Addresses;
+use NextDeveloper\IAM\Http\Requests\BackendDirectories\BackendDirectoriesUpdateRequest;
+use NextDeveloper\IAM\Services\BackendDirectoriesService;
+
 class BackendDirectoriesController extends AbstractController
 {
     private $model = BackendDirectories::class;

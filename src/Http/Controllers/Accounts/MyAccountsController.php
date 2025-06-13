@@ -5,9 +5,9 @@ namespace NextDeveloper\IAM\Http\Controllers\Accounts;
 use Illuminate\Http\Request;
 use NextDeveloper\Commons\Http\Controllers\AbstractController;
 use NextDeveloper\Commons\Http\Response\ResponsableFactory;
+use NextDeveloper\IAM\Database\Filters\AccountsQueryFilter;
 use NextDeveloper\IAM\Database\Models\Accounts;
 use NextDeveloper\IAM\Helpers\UserHelper;
-use NextDeveloper\IAM\Database\Filters\AccountsQueryFilter;
 
 class MyAccountsController extends AbstractController
 {

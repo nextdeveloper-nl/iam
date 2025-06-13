@@ -2,8 +2,8 @@
 
 namespace NextDeveloper\IAM\EventHandlers\PermissionsUpdatedEvent;
 
-use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
+use Illuminate\Queue\InteractsWithQueue;
 
 /**
  * Class PermissionsUpdatedEvent

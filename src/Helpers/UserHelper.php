@@ -2,7 +2,6 @@
 
 namespace NextDeveloper\IAM\Helpers;
 
-use App\Models\User;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Cache;
@@ -12,12 +11,11 @@ use Illuminate\Support\Str;
 use NextDeveloper\Commons\Common\Cache\CacheHelper;
 use NextDeveloper\Commons\Database\Models\Languages;
 use NextDeveloper\IAM\Database\Filters\AccountsQueryFilter;
+use NextDeveloper\IAM\Database\Models\Accounts;
 use NextDeveloper\IAM\Database\Models\AccountUsers;
 use NextDeveloper\IAM\Database\Models\Roles;
 use NextDeveloper\IAM\Database\Models\RoleUsers;
 use NextDeveloper\IAM\Database\Models\Users;
-use NextDeveloper\IAM\Database\Models\Accounts;
-use NextDeveloper\IAM\Database\Models\UsersPerspective;
 use NextDeveloper\IAM\Database\Scopes\AuthorizationScope;
 use NextDeveloper\IAM\Exceptions\CannotFindUserException;
 use NextDeveloper\IAM\Services\AccountsService;

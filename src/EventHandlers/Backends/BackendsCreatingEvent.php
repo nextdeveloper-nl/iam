@@ -2,8 +2,8 @@
 
 namespace NextDeveloper\IAM\EventHandlers\BackendsCreatingEvent;
 
-use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
+use Illuminate\Queue\InteractsWithQueue;
 
 /**
  * Class BackendsCreatingEvent

@@ -8,8 +8,6 @@ use Illuminate\Database\Eloquent\Scope;
 use Illuminate\Support\Facades\Log;
 use NextDeveloper\IAM\Database\Models\Users;
 use NextDeveloper\IAM\Helpers\UserHelper;
-use PhpParser\Node\Expr\AssignOp\Mod;
-use function Laravel\Prompts\warning;
 
 class AbstractRole implements Scope
 {

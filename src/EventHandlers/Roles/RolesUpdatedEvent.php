@@ -2,8 +2,8 @@
 
 namespace NextDeveloper\IAM\EventHandlers\RolesUpdatedEvent;
 
-use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
+use Illuminate\Queue\InteractsWithQueue;
 
 /**
  * Class RolesUpdatedEvent

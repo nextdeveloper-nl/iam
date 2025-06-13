@@ -3,12 +3,10 @@
 namespace NextDeveloper\IAM\Http\Transformers;
 
 use Illuminate\Support\Facades\Cache;
-use Illuminate\Support\Str;
 use NextDeveloper\Commons\Common\Cache\CacheHelper;
 use NextDeveloper\Commons\Database\Models\Countries;
 use NextDeveloper\Commons\Database\Models\Domains;
 use NextDeveloper\IAM\Database\Models\AccountsPerspective;
-use NextDeveloper\Commons\Http\Transformers\AbstractTransformer;
 use NextDeveloper\IAM\Http\Transformers\AbstractTransformers\AbstractAccountsPerspectiveTransformer;
 
 /**

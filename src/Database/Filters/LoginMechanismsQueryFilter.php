@@ -3,8 +3,8 @@
 namespace NextDeveloper\IAM\Database\Filters;
 
 use Illuminate\Database\Eloquent\Builder;
-use NextDeveloper\Commons\Database\Filters\AbstractQueryFilter;
 use NextDeveloper\Accounts\Database\Models\User;
+use NextDeveloper\Commons\Database\Filters\AbstractQueryFilter;
 
 
 /**

@@ -3,14 +3,16 @@
 namespace NextDeveloper\IAM\Http\Controllers\UsersPerspective;
 
 use Illuminate\Http\Request;
-use NextDeveloper\IAM\Http\Controllers\AbstractController;
 use NextDeveloper\Commons\Http\Response\ResponsableFactory;
-use NextDeveloper\IAM\Http\Requests\UsersPerspective\UsersPerspectiveUpdateRequest;
+use NextDeveloper\Commons\Http\Traits\Addresses as AddressesTrait;
+use NextDeveloper\Commons\Http\Traits\Tags as TagsTrait;
 use NextDeveloper\IAM\Database\Filters\UsersPerspectiveQueryFilter;
 use NextDeveloper\IAM\Database\Models\UsersPerspective;
-use NextDeveloper\IAM\Services\UsersPerspectiveService;
+use NextDeveloper\IAM\Http\Controllers\AbstractController;
 use NextDeveloper\IAM\Http\Requests\UsersPerspective\UsersPerspectiveCreateRequest;
-use NextDeveloper\Commons\Http\Traits\Tags as TagsTrait;use NextDeveloper\Commons\Http\Traits\Addresses as AddressesTrait;
+use NextDeveloper\IAM\Http\Requests\UsersPerspective\UsersPerspectiveUpdateRequest;
+use NextDeveloper\IAM\Services\UsersPerspectiveService;
+
 class UsersPerspectiveController extends AbstractController
 {
     private $model = UsersPerspective::class;

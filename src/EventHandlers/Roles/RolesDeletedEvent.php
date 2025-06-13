@@ -2,8 +2,8 @@
 
 namespace NextDeveloper\IAM\EventHandlers\RolesDeletedEvent;
 
-use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
+use Illuminate\Queue\InteractsWithQueue;
 
 /**
  * Class RolesDeletedEvent

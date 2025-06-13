@@ -6,7 +6,6 @@ use Closure;
 use Illuminate\Auth\Middleware\Authenticate as Middleware;
 use Illuminate\Support\Facades\Log;
 use Laravel\Passport\Bridge\User;
-use NextDeveloper\IAM\Helpers\UserHelper;
 
 class CheckPrivilege extends Middleware
 {
@@ -14,7 +13,7 @@ class CheckPrivilege extends Middleware
     {
         Log::debug('[CheckPrivilege] Checking if the user has privilege to make the request.');
 
-        
+
 
         return $next($request);
     }

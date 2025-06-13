@@ -3,9 +3,9 @@
 namespace NextDeveloper\IAM\Database\Filters;
 
 use Illuminate\Database\Eloquent\Builder;
-use NextDeveloper\Commons\Database\Filters\AbstractQueryFilter;
 use NextDeveloper\Accounts\Database\Models\User;
-    
+use NextDeveloper\Commons\Database\Filters\AbstractQueryFilter;
+
 
 /**
  * This class automatically puts where clause on database so that use can filter

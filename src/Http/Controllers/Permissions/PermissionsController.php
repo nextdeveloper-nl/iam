@@ -3,14 +3,16 @@
 namespace NextDeveloper\IAM\Http\Controllers\Permissions;
 
 use Illuminate\Http\Request;
-use NextDeveloper\IAM\Http\Controllers\AbstractController;
 use NextDeveloper\Commons\Http\Response\ResponsableFactory;
-use NextDeveloper\IAM\Http\Requests\Permissions\PermissionsUpdateRequest;
+use NextDeveloper\Commons\Http\Traits\Addresses;
+use NextDeveloper\Commons\Http\Traits\Tags;
 use NextDeveloper\IAM\Database\Filters\PermissionsQueryFilter;
 use NextDeveloper\IAM\Database\Models\Permissions;
-use NextDeveloper\IAM\Services\PermissionsService;
+use NextDeveloper\IAM\Http\Controllers\AbstractController;
 use NextDeveloper\IAM\Http\Requests\Permissions\PermissionsCreateRequest;
-use NextDeveloper\Commons\Http\Traits\Tags;use NextDeveloper\Commons\Http\Traits\Addresses;
+use NextDeveloper\IAM\Http\Requests\Permissions\PermissionsUpdateRequest;
+use NextDeveloper\IAM\Services\PermissionsService;
+
 class PermissionsController extends AbstractController
 {
     private $model = Permissions::class;

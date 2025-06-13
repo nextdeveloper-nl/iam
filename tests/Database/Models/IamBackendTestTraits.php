@@ -2,14 +2,13 @@
 
 namespace NextDeveloper\IAM\Tests\Database\Models;
 
-use Tests\TestCase;
 use GuzzleHttp\Client;
-use Illuminate\Http\Response;
 use Illuminate\Http\Request;
-use NextDeveloper\IAM\Database\Filters\IamBackendQueryFilter;
-use NextDeveloper\IAM\Services\AbstractServices\AbstractIamBackendService;
+use Illuminate\Http\Response;
 use Illuminate\Pagination\LengthAwarePaginator;
 use League\Fractal\Resource\Collection;
+use NextDeveloper\IAM\Database\Filters\IamBackendQueryFilter;
+use NextDeveloper\IAM\Services\AbstractServices\AbstractIamBackendService;
 
 trait IamBackendTestTraits
 {

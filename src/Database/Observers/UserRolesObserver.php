@@ -3,7 +3,6 @@
 namespace NextDeveloper\IAM\Database\Observers;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Facades\Auth;
 
 /**
  * Class UserRolesObserver

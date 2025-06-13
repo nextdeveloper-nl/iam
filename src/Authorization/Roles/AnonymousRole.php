@@ -7,7 +7,6 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
 use NextDeveloper\Commons\Helpers\DatabaseHelper;
 use NextDeveloper\IAM\Database\Models\Users;
-use NextDeveloper\IAM\Helpers\UserHelper;
 
 class AnonymousRole extends AbstractRole implements IAuthorizationRole
 {

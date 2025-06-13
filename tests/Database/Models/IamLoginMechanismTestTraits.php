@@ -2,14 +2,13 @@
 
 namespace NextDeveloper\IAM\Tests\Database\Models;
 
-use Tests\TestCase;
 use GuzzleHttp\Client;
-use Illuminate\Http\Response;
 use Illuminate\Http\Request;
-use NextDeveloper\IAM\Database\Filters\IamLoginMechanismQueryFilter;
-use NextDeveloper\IAM\Services\AbstractServices\AbstractIamLoginMechanismService;
+use Illuminate\Http\Response;
 use Illuminate\Pagination\LengthAwarePaginator;
 use League\Fractal\Resource\Collection;
+use NextDeveloper\IAM\Database\Filters\IamLoginMechanismQueryFilter;
+use NextDeveloper\IAM\Services\AbstractServices\AbstractIamLoginMechanismService;
 
 trait IamLoginMechanismTestTraits
 {

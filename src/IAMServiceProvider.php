@@ -2,9 +2,7 @@
 
 namespace NextDeveloper\IAM;
 
-use Illuminate\Support\Facades\Auth;
 use NextDeveloper\Commons\AbstractServiceProvider;
-use NextDeveloper\IAM\Auth\Providers\IamUserProvider;
 
 /**
  * Class IAMServiceProvider

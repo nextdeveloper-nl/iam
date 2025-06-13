@@ -3,14 +3,16 @@
 namespace NextDeveloper\IAM\Http\Controllers\AccountUserPerspective;
 
 use Illuminate\Http\Request;
-use NextDeveloper\IAM\Http\Controllers\AbstractController;
 use NextDeveloper\Commons\Http\Response\ResponsableFactory;
-use NextDeveloper\IAM\Http\Requests\AccountUserPerspective\AccountUserPerspectiveUpdateRequest;
+use NextDeveloper\Commons\Http\Traits\Addresses;
+use NextDeveloper\Commons\Http\Traits\Tags;
 use NextDeveloper\IAM\Database\Filters\AccountUserPerspectiveQueryFilter;
 use NextDeveloper\IAM\Database\Models\AccountUsersPerspective;
-use NextDeveloper\IAM\Services\AccountUserPerspectiveService;
+use NextDeveloper\IAM\Http\Controllers\AbstractController;
 use NextDeveloper\IAM\Http\Requests\AccountUserPerspective\AccountUserPerspectiveCreateRequest;
-use NextDeveloper\Commons\Http\Traits\Tags;use NextDeveloper\Commons\Http\Traits\Addresses;
+use NextDeveloper\IAM\Http\Requests\AccountUserPerspective\AccountUserPerspectiveUpdateRequest;
+use NextDeveloper\IAM\Services\AccountUserPerspectiveService;
+
 class AccountUserPerspectiveController extends AbstractController
 {
     private $model = AccountUsersPerspective::class;
