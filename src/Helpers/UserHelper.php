@@ -53,6 +53,10 @@ class UserHelper
             return null;
 
         try {
+            if(!Str::isUuid($authorization)) {
+                return null;
+            }
+
             $token = DB::select("select * from oauth_access_tokens where id = ?", [$authorization]);
         } catch (\Exception $e) {
             Log::error(__METHOD__ . ' | We have an error while checking for the token: ' . $e->getMessage());
