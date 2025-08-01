@@ -205,6 +205,10 @@ class AccountsService extends AbstractAccountsService
      */
     public static function createInitialAccount(Users $user) : Accounts
     {
+        if(UserHelper::masterAccount($user)) {
+            return UserHelper::masterAccount($user);
+        }
+
         $name = 'My personal account';
 
         $name = i18n::t($name, $user->common_language_id);

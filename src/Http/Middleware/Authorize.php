@@ -20,8 +20,6 @@ class Authorize extends Middleware
         $requestMethod = $request->getMethod();
         $explode = explode('/', $requestUri);
 
-        Log::info('[Authorize] Request URI: ' . $requestUri);
-
         if(Str::startsWith($requestUri, '/public'))
             return $next($request);
 
