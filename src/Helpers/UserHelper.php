@@ -502,6 +502,16 @@ class UserHelper
         if (!$user)
             $user = self::me();
 
+        if(!$user) {
+            Log::error('[UserHelper@can] User is null. This means that the user is not logged in or ' .
+                'the user is not registered in the system. Please check the user registration process.');
+
+            Log::error('[UserHelper@can] Method: ' . $method . ' Model: ' . get_class($model) . ' User: ' . json_encode($user));
+
+            return null;
+        }
+
+
         $roleForModel = self::getRoleForModel($model, $user);
 
         if (!$roleForModel) {
