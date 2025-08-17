@@ -68,6 +68,7 @@ class AbstractRole implements Scope
                 return $this->checkReadPolicy($user, $model);
                 break;
             case 'create':
+            case 'restore':
                 return $this->checkCreatePolicy($user, $model);
                 break;
             case 'update':
