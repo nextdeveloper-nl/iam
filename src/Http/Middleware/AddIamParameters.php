@@ -53,6 +53,7 @@ class AddIamParameters extends Middleware
             }
         }
 
+        Log::info('AddIamParams: ' . $request->getRequestUri());
         return $next($request);
     }
 }

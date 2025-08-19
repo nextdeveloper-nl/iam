@@ -18,6 +18,10 @@ class Authorize extends Middleware
 
         $requestUri = $request->getRequestUri();
         $requestMethod = $request->getMethod();
+
+        if(Str::startsWith($requestUri, '/'))
+            $requestUri = substr($requestUri, 1); // Remove leading slash for consistency
+
         $explode = explode('/', $requestUri);
 
         if(Str::startsWith($requestUri, '/public'))
@@ -30,14 +34,20 @@ class Authorize extends Middleware
         if(count($explode) > 2)
             return $next($request);
 
-        if (count($explode) <= 2) {
-            $tempObject = $explode[1];
-            $explode[1] = config('leo.default_module', 'leo');
-            $explode[2] = $tempObject;
+        //  Perspective is a special case, we need to remove it from the object name
+        if(Str::contains($explode[1], '_perspective')) {
+            $explode[1] = str_replace('_perspective', '', $explode[1]);
         }
 
-        $module = $explode[1];
-        $object = $explode[2];
+        //  I dont know why we did here like that ?
+//        if (count($explode) <= 2) {
+//            $tempObject = $explode[1];
+//            $explode[1] = config('leo.default_module', 'leo');
+//            $explode[2] = $tempObject;
+//        }
+
+        $module = $explode[0];
+        $object = $explode[1];
 
         if(strpos($object, '?') !== false) {
             $object = substr($object, 0, strpos($object, '?'));
@@ -79,8 +89,10 @@ class Authorize extends Middleware
                 }
 
                 if(in_array($operationString, $allowedOperations)) {
+                    Log::info('Authorize: ' . $request->getRequestUri());
                     return $next($request);
                 } else {
+                    Log::debug('[Authorize|Short] Not allowed ' . $operationString . ' / ' . $role->name . ' ]');
                     Log::debug('[Authorize] The user with email: ' . UserHelper::me()->email . ' is asking' .
                         ' for operation: ' . $operationString . ' but he is not allowed to do that' .
                         ' with this role: ' . $role->name);
@@ -93,7 +105,7 @@ class Authorize extends Middleware
                 'status'    => 403,
                 'message'   => 'Unauthorized',
                 'details'   => 'We cannot authorize you to complete this operation, unfortunately.' .
-                    ' You may need to ask your adminto change your role.'
+                    ' You may need to ask your admin to change your role.'
             ],
         ], 403);
     }
