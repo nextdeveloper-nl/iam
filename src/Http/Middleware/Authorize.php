@@ -19,13 +19,13 @@ class Authorize extends Middleware
         $requestUri = $request->getRequestUri();
         $requestMethod = $request->getMethod();
 
+        if(Str::startsWith($requestUri, '/public'))
+            return $next($request);
+
         if(Str::startsWith($requestUri, '/'))
             $requestUri = substr($requestUri, 1); // Remove leading slash for consistency
 
         $explode = explode('/', $requestUri);
-
-        if(Str::startsWith($requestUri, '/public'))
-            return $next($request);
 
         $roles = UserHelper::getRoles();
 

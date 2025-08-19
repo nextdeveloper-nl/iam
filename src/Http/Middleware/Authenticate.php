@@ -16,6 +16,11 @@ class Authenticate extends Middleware
         if($request->getMethod() == "OPTIONS")
             return $next($request);
 
+        if(Str::startsWith($request->getRequestUri(), '/public')) {
+            Log::debug('[Authenticate] Request URI starts with /public that is why I am not authenticating.');
+            return $next($request);
+        }
+
         //  If the request is for an anonymous uri then we can just return the request
         //  Because this is out of our scope. We are only interested in the requests that are for a module
         if(config('app.anonymous_uris')) {
