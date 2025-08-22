@@ -19,8 +19,12 @@ class Authorize extends Middleware
         $requestUri = $request->getRequestUri();
         $requestMethod = $request->getMethod();
 
-        if(Str::startsWith($requestUri, '/public'))
+        if(Str::startsWith($requestUri, '/public')) {
+            if(config('leo.debug.authorization_roles'))
+                Log::debug('[Authorize] Request URI starts with /public that is why I am not adding IAM params.');
+
             return $next($request);
+        }
 
         if(Str::startsWith($requestUri, '/'))
             $requestUri = substr($requestUri, 1); // Remove leading slash for consistency
@@ -38,13 +42,6 @@ class Authorize extends Middleware
         if(Str::contains($explode[1], '_perspective')) {
             $explode[1] = str_replace('_perspective', '', $explode[1]);
         }
-
-        //  I dont know why we did here like that ?
-//        if (count($explode) <= 2) {
-//            $tempObject = $explode[1];
-//            $explode[1] = config('leo.default_module', 'leo');
-//            $explode[2] = $tempObject;
-//        }
 
         $module = $explode[0];
         $object = $explode[1];
@@ -88,10 +85,16 @@ class Authorize extends Middleware
                         break;
                 }
 
+                $withoutPerspective = str_replace('_perspective', '', $operationString);
+
                 if(in_array($operationString, $allowedOperations)) {
                     Log::info('Authorize: ' . $request->getRequestUri());
                     return $next($request);
+                } elseif(in_array($withoutPerspective, $allowedOperations)) {
+                    Log::info('Authorize: ' . $request->getRequestUri());
+                    return $next($request);
                 } else {
+
                     Log::debug('[Authorize|Short] Not allowed ' . $operationString . ' / ' . $role->name . ' ]');
                     Log::debug('[Authorize] The user with email: ' . UserHelper::me()->email . ' is asking' .
                         ' for operation: ' . $operationString . ' but he is not allowed to do that' .

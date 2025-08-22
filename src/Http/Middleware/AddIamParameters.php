@@ -15,7 +15,9 @@ class AddIamParameters extends Middleware
         $requestUri = $request->getRequestUri();
 
         if(Str::startsWith($requestUri, '/public')) {
-            Log::debug('[Authorize] Request URI starts with /public that is why I am not adding IAM params.');
+            if(config('leo.debug.authorization_roles'))
+                Log::debug('[AddIamParameters] Request URI starts with /public that is why I am not adding IAM params.');
+
             return $next($request);
         }
 
