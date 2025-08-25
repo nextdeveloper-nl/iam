@@ -511,7 +511,6 @@ class UserHelper
             return null;
         }
 
-
         $roleForModel = self::getRoleForModel($model, $user);
 
         if (!$roleForModel) {
