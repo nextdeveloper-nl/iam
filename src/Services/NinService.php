@@ -3,6 +3,7 @@
 namespace NextDeveloper\IAM\Services;
 
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Log;
 use NextDeveloper\Commons\Database\Models\Countries;
 use NextDeveloper\IAAS\Database\Models\Accounts;
 use NextDeveloper\IAM\Database\Models\Users;
@@ -85,6 +86,11 @@ class NinService
         $countries = Countries::withoutGlobalScope(AuthorizationScope::class)
             ->where('id', $user->common_country_id)
             ->first();
+
+        if(!$countries) {
+            Log::error(__METHOD__ . ' | Cannot verify user NIN. Country not found for user: ' . $user->email);
+            return false;
+        }
 
         $locale = $countries->locale;
         $locale = strtolower($locale);
