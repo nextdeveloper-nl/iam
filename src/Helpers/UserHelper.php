@@ -27,6 +27,8 @@ class UserHelper
 
     private static $account;
 
+    private static $isBypassRolesCheck = false;
+
     /**
      * This function returns the User object for the current logged in user.
      *
@@ -497,8 +499,20 @@ class UserHelper
         return null;
     }
 
+    public static function bypassRolesCheck($bypass = null) : bool
+    {
+        if($bypass && is_bool($bypass)) {
+            self::$isBypassRolesCheck = $bypass;
+        }
+
+        return self::$isBypassRolesCheck;
+    }
+
     public static function can($method, $model, Users $user = null)
     {
+        if(self::bypassRolesCheck())
+            return true;
+
         if (!$user)
             $user = self::me();
 
