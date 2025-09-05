@@ -67,7 +67,7 @@ class UserHelper
 
         if (!$token) {
             Log::error('[UserHelper] Cannot find the user related to token. Maybe user is not' .
-                ' registered or token is expired?');
+                ' registered or token is expired? Request is coming to url: ' . request()->getRequestUri());
             return null;
         }
 

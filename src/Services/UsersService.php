@@ -169,11 +169,6 @@ class UsersService extends AbstractUsersService
             throw new \Exception('User not found');
         }
 
-        // If the user is profile verified, do not update the profile
-        if ($model->is_profile_verified) {
-            return $model;
-        }
-
         // If the user is NIN verified, do not update the name, email, birthday, and NIN
         if ($model->is_nin_verified) {
             unset($data['name'], $data['email'], $data['birthday'], $data['nin']);
