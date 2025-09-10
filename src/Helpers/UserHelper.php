@@ -68,6 +68,11 @@ class UserHelper
         }
 
         if (!$token) {
+            if(Str::startsWith(request()->getRequestUri(), '/public/')) {
+                //  This is a public route, we dont need to log this as error
+                return null;
+            }
+
             Log::error('[UserHelper] Cannot find the user related to token. Maybe user is not' .
                 ' registered or token is expired? Request is coming to url: ' . request()->getRequestUri());
             return null;
