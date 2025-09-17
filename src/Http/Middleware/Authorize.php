@@ -98,9 +98,13 @@ class Authorize extends Middleware
             $skipCheck = true;
         }
 
+        $testedAgainstRoles = [];
+
         //  We already know the result because we checked from cache
         if(!$skipCheck) {
             foreach ($roles as $role) {
+                $testedAgainstRoles[] = $role->name;
+
                 if(!class_exists($role->class))
                     continue;
 
@@ -149,7 +153,7 @@ class Authorize extends Middleware
         }
 
         Cache::set('auth' . UserHelper::me()->id . '|' . UserHelper::currentAccount()->id . '|' . $operationString, [
-            'role' => $role->name,
+            'tested-against' => implode('|', $testedAgainstRoles),
             'operation' => $operationString,
             'allowed' => false
         ], 600);
