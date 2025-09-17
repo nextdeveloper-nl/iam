@@ -4,6 +4,7 @@ namespace NextDeveloper\IAM\Http\Middleware;
 
 use Closure;
 use Illuminate\Auth\Middleware\Authenticate as Middleware;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 use NextDeveloper\IAM\Helpers\UserHelper;
@@ -55,54 +56,100 @@ class Authorize extends Middleware
         }
         $object = str_replace('-', '_', $object);
 
-        foreach ($roles as $role) {
-            if(!class_exists($role->class))
-                continue;
+        /**
+         * Creating the operation string based on the request method
+         */
+        $operationString = '';
 
-            $roleObject = app($role->class);
+        switch ($requestMethod) {
+            case 'GET':
+                $operationString = $module . '_' . $object . ':read';
+                break;
+            case 'POST':
+                $operationString = $module . '_' . $object . ':create';
+                break;
+            case 'PATCH':
+            case 'PUT':
+                $operationString = $module . '_' . $object . ':update';
+                break;
+            case 'DELETE':
+                $operationString = $module . '_' . $object . ':delete';
+                break;
+        }
 
-            $allowedOperations = $roleObject->allowedOperations();
+        $skipCheck = false;
 
-            if($allowedOperations[0] == "*:*") {
+        //  Here we are checking the authorization cache, if the user is authorized for this operation
+        $authCache = Cache::get('auth' . UserHelper::me()->id . '|' . UserHelper::currentAccount()->id . '|' . $operationString);
+
+        if($authCache) {
+            //  If the operation is allowed then we can return the request
+            if($authCache['allowed'] == true) {
+                if(config('leo.debug.authorization_roles'))
+                    Log::debug('[Authorize] Operation starts with ' . $operationString . ' is in cache, so we are allowing it.');
+
                 return $next($request);
             }
 
-            //  Now we need to check if the current request is allowed for the current user
-            foreach ($allowedOperations as $operation) {
-                $explode = explode(':', $operation);
+            //  If the operation is not allowed then we can return a 403 error
+            if(config('leo.debug.authorization_roles'))
+                Log::debug('[Authorize] Operation starts with ' . $operationString . ' is in cache, so we are denying it.');
 
-                $operationString = '';
+            $skipCheck = true;
+        }
 
-                switch ($requestMethod) {
-                    case 'GET':
-                        $operationString = $module . '_' . $object . ':read';
-                        break;
-                    case 'POST':
-                        $operationString = $module . '_' . $object . ':create';
-                        break;
-                    case 'PATCH':
-                    case 'PUT':
-                        $operationString = $module . '_' . $object . ':update';
-                        break;
-                    case 'DELETE':
-                        $operationString = $module . '_' . $object . ':delete';
-                        break;
+        //  We already know the result because we checked from cache
+        if(!$skipCheck) {
+            foreach ($roles as $role) {
+                if(!class_exists($role->class))
+                    continue;
+
+                $roleObject = app($role->class);
+
+                $allowedOperations = $roleObject->allowedOperations();
+
+                if($allowedOperations[0] == "*:*") {
+                    return $next($request);
                 }
 
-                $withoutPerspective = str_replace('_perspective', '', $operationString);
+                Log::debug('[Authorize] Checking if operation: ' . $operationString . ' is in allowed operations for role: ' . $role->name);
 
-                if(in_array($operationString, $allowedOperations)) {
-                    Log::info('Authorize: ' . $request->getRequestUri());
-                    return $next($request);
-                } elseif(in_array($withoutPerspective, $allowedOperations)) {
-                    Log::info('Authorize: ' . $request->getRequestUri());
-                    return $next($request);
-                } else {
+                //  Now we need to check if the current request is allowed for the current user
+                foreach ($allowedOperations as $operation) {
+                    $withoutPerspective = str_replace('_perspective', '', $operationString);
 
-                    Log::debug('[Authorize|Short] Not allowed ' . $operationString . ' / ' . $role->name . ' ]');
-                    Log::debug('[Authorize] The user with email: ' . UserHelper::me()->email . ' is asking' .
-                        ' for operation: ' . $operationString . ' but he is not allowed to do that' .
-                        ' with this role: ' . $role->name);
+                    if(in_array($operationString, $allowedOperations)) {
+                        Log::info('Authorize: ' . $request->getRequestUri());
+
+                        Cache::set('auth' . UserHelper::me()->id . '|' . UserHelper::currentAccount()->id . '|' . $operationString, [
+                            'role' => $role->name,
+                            'operation' => $operationString,
+                            'allowed' => true
+                        ], 600);
+
+                        return $next($request);
+                    } elseif(in_array($withoutPerspective, $allowedOperations)) {
+                        //  We are caching the authorization for 10 minutes, because we don't want to check the same
+                        Cache::set('auth' . UserHelper::me()->id . '|' . UserHelper::currentAccount()->id . '|' . $operationString, [
+                            'role' => $role->name,
+                            'operation' => $operationString,
+                            'allowed' => true
+                        ], 600);
+
+                        Log::info('Authorize: ' . $request->getRequestUri());
+                        return $next($request);
+                    } else {
+                        Cache::set('auth' . UserHelper::me()->id . '|' . UserHelper::currentAccount()->id . '|' . $operationString, [
+                            'role' => $role->name,
+                            'operation' => $operationString,
+                            'allowed' => false
+                        ], 600);
+
+                        Log::debug('[Authorize|Short] Not allowed ' . $operationString . ' / ' . $role->name . ' ]');
+                        Log::debug('[Authorize] The user with email: ' . UserHelper::me()->email . ' is asking' .
+                            ' for operation: ' . $operationString . ' but he is not allowed to do that' .
+                            ' with this role: ' . $role->name);
+                    }
                 }
             }
         }
