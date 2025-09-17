@@ -102,6 +102,9 @@ class AuthorizationScope implements Scope
                     Log::info('[AuthorizationScope] My user has role. Applying: ' . get_class($scope));
 
                 if($this->isRoleApplied($builder, $model)) {
+                    if(config('leo.debug.authorization_scope'))
+                        Log::info('[AuthorizationScope] Role is already applied, so I am skipping it.');
+
                     return;
                 }
 

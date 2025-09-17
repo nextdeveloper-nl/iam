@@ -21,7 +21,8 @@ class AbstractRole implements Scope
         return false;
     }
 
-    public function allowedObjects() {
+    public function allowedObjects()
+    {
         $operations = $this->allowedOperations();
 
         $objects = [];
@@ -29,14 +30,16 @@ class AbstractRole implements Scope
         foreach ($operations as $operation) {
             $object = explode(':', $operation)[0];
 
-            if(!in_array($object, $objects))
+            if (! in_array($object, $objects)) {
                 $objects[] = $object;
+            }
         }
 
         return $objects;
     }
 
-    public function checkRoles(Users $users) {
+    public function checkRoles(Users $users)
+    {
         return true;
     }
 
@@ -48,15 +51,12 @@ class AbstractRole implements Scope
     /**
      * This function checks if the user has the privilege to perform the operation
      *
-     * @param $method
-     * @param Model $model
-     * @param Users $user
      * @return void
      */
-    public function checkPolicy($method, Model $model, Users $user) : bool
+    public function checkPolicy($method, Model $model, Users $user): bool
     {
-        if($method == 'save') {
-            if($model->exists) {
+        if ($method == 'save') {
+            if ($model->exists) {
                 $method = 'update';
             } else {
                 $method = 'create';
@@ -82,18 +82,19 @@ class AbstractRole implements Scope
         return false;
     }
 
-    public function checkReadPolicy(Users $user, Model $model) : bool
+    public function checkReadPolicy(Users $user, Model $model): bool
     {
-        $operation = $model->getTable() . ':read';
+        $operation = $model->getTable().':read';
 
         //  Not checking the policy
-        if(in_array('!' . $operation, $this->allowedOperations())) {
+        if (in_array('!'.$operation, $this->allowedOperations())) {
             return true;
         }
 
-        if(!in_array($operation, $this->allowedOperations())) {
+        if (! in_array($operation, $this->allowedOperations())) {
             Log::warning('[AbstractRole@checkReadPolicy] My user can not do this operation: '
-                . $operation . ' with this role: ' . get_class($this));
+                .$operation.' with this role: '.get_class($this));
+
             return false;
         }
 
@@ -103,22 +104,21 @@ class AbstractRole implements Scope
     /**
      * This function checks if the user has the privilege to perform the create operation
      *
-     * @param Model $model
-     * @param Users $user
      * @return void
      */
-    public function checkCreatePolicy(Users $user, Model $model) : bool
+    public function checkCreatePolicy(Users $user, Model $model): bool
     {
-        $operation = $model->getTable() . ':create';
+        $operation = $model->getTable().':create';
 
         //  Not checking the policy
-        if(in_array('!' . $operation, $this->allowedOperations())) {
+        if (in_array('!'.$operation, $this->allowedOperations())) {
             return true;
         }
 
-        if(!in_array($operation, $this->allowedOperations())) {
+        if (! in_array($operation, $this->allowedOperations())) {
             Log::warning('[AbstractRole@checkCreatePolicy] My user can not do this operation: '
-                . $operation . ' with this role: ' . get_class($this));
+                .$operation.' with this role: '.get_class($this));
+
             return false;
         }
 
@@ -127,35 +127,32 @@ class AbstractRole implements Scope
 
     /**
      * Default policy for related updating the related model is to own the model.
-     *
-     * @param Model $model
-     * @param Users $user
-     * @return bool
      */
-    public function checkUpdatePolicy(Model $model, Users $user) : bool
+    public function checkUpdatePolicy(Model $model, Users $user): bool
     {
-        $operation = $model->getTable() . ':update';
+        $operation = $model->getTable().':update';
 
         //  Not checking the policy
-        if(in_array('!' . $operation, $this->allowedOperations())) {
+        if (in_array('!'.$operation, $this->allowedOperations())) {
             return true;
         }
 
-        if(!in_array($operation, $this->allowedOperations())) {
+        if (! in_array($operation, $this->allowedOperations())) {
             Log::warning('[AbstractRole@checkUpdatePolicy] My user can not do this operation: '
-                . $operation . ' with this role: ' . get_class($this));
+                .$operation.' with this role: '.get_class($this));
+
             return false;
         }
 
-        if(!$model->iam_account_id) {
+        if (! $model->iam_account_id) {
             return true;
         }
 
         $isAllowed = $model->iam_account_id == UserHelper::currentAccount()->id;
 
-        if(!$isAllowed) {
+        if (! $isAllowed) {
             Log::warning('[AbstractRole@checkUpdatePolicy] My user can not do this operation: '
-                . $operation . ' with this role: ' . get_class($this) . '. Its because you dont own this object: ' . $model->uuid);
+                .$operation.' with this role: '.get_class($this).'. Its because you dont own this object: '.$model->uuid);
         }
 
         return $isAllowed;
@@ -163,31 +160,28 @@ class AbstractRole implements Scope
 
     /**
      * Default policy to delete the model is to own the model
-     *
-     * @param Model $model
-     * @param Users $user
-     * @return bool
      */
-    public function checkDeletePolicy(Model $model, Users $user) : bool
+    public function checkDeletePolicy(Model $model, Users $user): bool
     {
-        $operation = $model->getTable() . ':delete';
+        $operation = $model->getTable().':delete';
 
         //  Not checking the policy
-        if(in_array('!' . $operation, $this->allowedOperations())) {
+        if (in_array('!'.$operation, $this->allowedOperations())) {
             return true;
         }
 
-        if(!in_array($operation, $this->allowedOperations())) {
-            Log::warning('[AbstractRole@checkUpdatePolicy] My user can not do this operation: ' . $operation
-                . ' with this role: ' . get_class($this));
+        if (! in_array($operation, $this->allowedOperations())) {
+            Log::warning('[AbstractRole@checkUpdatePolicy] My user can not do this operation: '.$operation
+                .' with this role: '.get_class($this));
+
             return false;
         }
 
         $isAllowed = $model->iam_account_id == UserHelper::currentAccount()->id;
 
-        if(!$isAllowed) {
+        if (! $isAllowed) {
             Log::warning('[AbstractRole@checkUpdatePolicy] My user can not do this operation: '
-                . $operation . ' with this role: ' . get_class($this) . '. Its because you dont own this object: ' . $model->uuid);
+                .$operation.' with this role: '.get_class($this).'. Its because you dont own this object: '.$model->uuid);
         }
 
         return $isAllowed;
