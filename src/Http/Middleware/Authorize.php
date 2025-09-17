@@ -139,12 +139,6 @@ class Authorize extends Middleware
                         Log::info('Authorize: ' . $request->getRequestUri());
                         return $next($request);
                     } else {
-                        Cache::set('auth' . UserHelper::me()->id . '|' . UserHelper::currentAccount()->id . '|' . $operationString, [
-                            'role' => $role->name,
-                            'operation' => $operationString,
-                            'allowed' => false
-                        ], 600);
-
                         Log::debug('[Authorize|Short] Not allowed ' . $operationString . ' / ' . $role->name . ' ]');
                         Log::debug('[Authorize] The user with email: ' . UserHelper::me()->email . ' is asking' .
                             ' for operation: ' . $operationString . ' but he is not allowed to do that' .
@@ -153,6 +147,12 @@ class Authorize extends Middleware
                 }
             }
         }
+
+        Cache::set('auth' . UserHelper::me()->id . '|' . UserHelper::currentAccount()->id . '|' . $operationString, [
+            'role' => $role->name,
+            'operation' => $operationString,
+            'allowed' => false
+        ], 600);
 
         return response()->json([
             'errors' => [
