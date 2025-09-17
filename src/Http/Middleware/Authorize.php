@@ -80,7 +80,7 @@ class Authorize extends Middleware
         $skipCheck = false;
 
         //  Here we are checking the authorization cache, if the user is authorized for this operation
-        $authCache = Cache::get(UserHelper::me()->id . '|' . UserHelper::currentAccount()->id . '|' . $operationString);
+        $authCache = Cache::get('auth' . UserHelper::me()->id . '|' . UserHelper::currentAccount()->id . '|' . $operationString);
 
         if($authCache) {
             //  If the operation is allowed then we can return the request
@@ -121,7 +121,7 @@ class Authorize extends Middleware
                     if(in_array($operationString, $allowedOperations)) {
                         Log::info('Authorize: ' . $request->getRequestUri());
 
-                        Cache::set(UserHelper::me()->id . '|' . UserHelper::currentAccount()->id . '|' . $operationString, [
+                        Cache::set('auth' . UserHelper::me()->id . '|' . UserHelper::currentAccount()->id . '|' . $operationString, [
                             'role' => $role->name,
                             'operation' => $operationString,
                             'allowed' => true
@@ -130,7 +130,7 @@ class Authorize extends Middleware
                         return $next($request);
                     } elseif(in_array($withoutPerspective, $allowedOperations)) {
                         //  We are caching the authorization for 10 minutes, because we don't want to check the same
-                        Cache::set(UserHelper::me()->id . '|' . UserHelper::currentAccount()->id . '|' . $operationString, [
+                        Cache::set('auth' . UserHelper::me()->id . '|' . UserHelper::currentAccount()->id . '|' . $operationString, [
                             'role' => $role->name,
                             'operation' => $operationString,
                             'allowed' => true
@@ -139,7 +139,7 @@ class Authorize extends Middleware
                         Log::info('Authorize: ' . $request->getRequestUri());
                         return $next($request);
                     } else {
-                        Cache::set(UserHelper::me()->id . '|' . UserHelper::currentAccount()->id . '|' . $operationString, [
+                        Cache::set('auth' . UserHelper::me()->id . '|' . UserHelper::currentAccount()->id . '|' . $operationString, [
                             'role' => $role->name,
                             'operation' => $operationString,
                             'allowed' => false
