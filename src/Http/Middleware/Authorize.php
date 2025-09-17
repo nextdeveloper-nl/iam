@@ -153,6 +153,7 @@ class Authorize extends Middleware
         }
 
         Cache::set('auth' . UserHelper::me()->id . '|' . UserHelper::currentAccount()->id . '|' . $operationString, [
+            'request-uri' => $request->getRequestUri(),
             'tested-against' => implode('|', $testedAgainstRoles),
             'operation' => $operationString,
             'allowed' => false
