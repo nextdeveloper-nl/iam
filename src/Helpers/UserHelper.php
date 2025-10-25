@@ -87,6 +87,15 @@ class UserHelper
         return $user;
     }
 
+    public static function getUserWithId($userId, $skipAccessCheck = false)
+    {
+        if($skipAccessCheck) {
+            return Users::withoutGlobalScope(AuthorizationScope::class)->where('id', $userId)->first();
+        }
+
+        return Users::where('id', $userId)->first();
+    }
+
     public static function currentUser()
     {
         return self::$user;
@@ -603,7 +612,10 @@ class UserHelper
         $roles = RolesService::getUserRoles($user, self::currentAccount($user));
 
         if(!$roles) {
-            Log::error('[UserHelper] Cannot find any roles for user: ' . $user->uuid);
+            if($user)
+                Log::error('[UserHelper] Cannot find any roles for user: ' . $user->uuid);
+            else
+                Log::error('[UserHelper] Roles are trying to be access when we make this request: ' . request()->getRequestUri());
         }
 
         return $roles;

@@ -17,6 +17,9 @@ class Authorize extends Middleware
         if($request->getMethod() == "OPTIONS")
             return $next($request);
 
+        if($request->getRequestUri() == '/generator/all')
+            return $next($request);
+
         $requestUri = $request->getRequestUri();
         $requestMethod = $request->getMethod();
 

@@ -63,6 +63,13 @@ class AbstractRole implements Scope
             }
         }
 
+        $isPublicExists = \NextDeveloper\Commons\Helpers\DatabaseHelper::isColumnExists($model->getTable(), 'is_public');
+
+        if($method == 'update' && $isPublicExists) {
+            //  Cannot update public objects
+            return false;
+        }
+
         switch ($method) {
             case 'read':
                 return $this->checkReadPolicy($user, $model);
