@@ -87,6 +87,15 @@ class UserHelper
         return $user;
     }
 
+    public static function getUserWithId($userId, $skipAccessCheck = false)
+    {
+        if($skipAccessCheck) {
+            return Users::withoutGlobalScope(AuthorizationScope::class)->where('id', $userId)->first();
+        }
+
+        return Users::where('id', $userId)->first();
+    }
+
     public static function currentUser()
     {
         return self::$user;
@@ -603,7 +612,10 @@ class UserHelper
         $roles = RolesService::getUserRoles($user, self::currentAccount($user));
 
         if(!$roles) {
-            Log::error('[UserHelper] Cannot find any roles for user: ' . $user->uuid);
+            if($user)
+                Log::error('[UserHelper] Cannot find any roles for user: ' . $user->uuid);
+            else
+                Log::error('[UserHelper] Roles are trying to be access when we make this request: ' . request()->getRequestUri());
         }
 
         return $roles;
@@ -752,7 +764,7 @@ class UserHelper
      *
      * @param string $roleName The name of the role to find users for
      */
-    public static function getUsersWithRole(string $roleName)
+    public static function getUsersWithRole(string $roleName, Accounts $accounts = null)
     {
         $role = RolesService::getRoleByName($roleName);
 
@@ -761,14 +773,19 @@ class UserHelper
             return collect();
         }
 
-        // Get users with a role in one query using join
-        return Users::query()
+        $query = Users::query()
             ->join('iam_role_user', 'iam_role_user.iam_user_id', '=', 'iam_users.id')
             ->where('iam_role_user.iam_role_id', $role->id)
             ->where('iam_role_user.is_active', 1)
             ->select('iam_users.*')
-            ->distinct()
-            ->get();
+            ->distinct();
+
+        if($accounts) {
+            $query->where('iam_role_user.iam_account_id', $accounts->id);
+        }
+
+        // Get users with a role in one query using join
+        return $query->get();
     }
 
 }
