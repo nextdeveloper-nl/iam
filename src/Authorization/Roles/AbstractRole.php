@@ -92,9 +92,9 @@ class AbstractRole implements Scope
     public function checkReadPolicy(Users $user, Model $model): bool
     {
         //  If this is the system user then we allow it
-        if($user->email == config('leo.leo_owner_email'))
+        if(UserHelper::hasRole('system-admin'))
             return true;
-        
+
         $operation = $model->getTable().':read';
 
         //  Not checking the policy
@@ -120,7 +120,7 @@ class AbstractRole implements Scope
     public function checkCreatePolicy(Users $user, Model $model): bool
     {
         //  If this is the system user then we allow it
-        if($user->email == config('leo.leo_owner_email'))
+        if(UserHelper::hasRole('system-admin'))
             return true;
 
         $operation = $model->getTable().':create';
@@ -146,7 +146,7 @@ class AbstractRole implements Scope
     public function checkUpdatePolicy(Model $model, Users $user): bool
     {
         //  If this is the system user then we allow it
-        if($user->email == config('leo.leo_owner_email'))
+        if(UserHelper::hasRole('system-admin'))
             return true;
 
         $operation = $model->getTable().':update';
