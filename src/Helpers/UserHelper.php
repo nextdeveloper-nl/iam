@@ -519,6 +519,9 @@ class UserHelper
             self::$isBypassRolesCheck = $bypass;
         }
 
+        if(self::hasRole('system-admin', self::me()))
+            return true;
+
         return self::$isBypassRolesCheck;
     }
 
