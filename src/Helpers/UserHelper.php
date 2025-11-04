@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 use NextDeveloper\Commons\Common\Cache\CacheHelper;
 use NextDeveloper\Commons\Database\Models\Languages;
+use NextDeveloper\Commons\Database\Models\Media;
 use NextDeveloper\IAM\Database\Filters\AccountsQueryFilter;
 use NextDeveloper\IAM\Database\Models\Accounts;
 use NextDeveloper\IAM\Database\Models\AccountUsers;
@@ -791,4 +792,32 @@ class UserHelper
         return $query->get();
     }
 
+    public static function getUsersProfilePictureUrl(string $email, string $profilePictureIdentity = null): string
+    {
+        $profile_picture_url = null;
+
+        if($profilePictureIdentity != null) {
+            $profilePicture = Media::where('id', $profilePictureIdentity)
+                ->first();
+
+            $profile_picture_url = $profilePicture?->cdn_url;
+        }
+
+        // Use Gravatar as fallback when the profile picture is not available
+        if(!$profile_picture_url) {
+            $profile_picture_url = UserHelper::getGravatarUrl($email ?? null);
+        }
+
+        return $profile_picture_url;
+    }
+
+    public static function getGravatarUrl(?string $email, int $size = 200, string $default = 'identicon'): string
+    {
+        if (!$email) {
+            return "https://www.gravatar.com/avatar/?s={$size}&d={$default}";
+        }
+
+        $hash = md5(strtolower(trim($email)));
+        return "https://www.gravatar.com/avatar/{$hash}?s={$size}&d={$default}";
+    }
 }
