@@ -432,6 +432,21 @@ class UserHelper
     }
 
     /**
+     * Returns the user with the given username
+     *
+     * @param $username
+     * @return Users|null
+     */
+    public static function getWithUsername($username): ?Users
+    {
+        $users = Users::withoutGlobalScope(AuthorizationScope::class)
+            ->where('username', $username)
+            ->first();
+
+        return $users;
+    }
+
+    /**
      * Returns the user with the given email address
      *
      * @param $email
