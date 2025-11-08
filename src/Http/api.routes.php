@@ -340,6 +340,33 @@ Route::prefix('iam')->group(
 
         // EDIT AFTER HERE - WARNING: ABOVE THIS LINE MAY BE REGENERATED AND YOU MAY LOSE CODE
 
+        Route::prefix('/authentication')->group(function() {
+            Route::prefix('login-mechanisms')->group(function () {
+                Route::get('/', [\NextDeveloper\IAM\Http\Controllers\Authentication\LoginMechanismsController::class, 'index']);
+            });
+
+            Route::prefix('oauth')->group(function() {
+                Route::get('session', [\NextDeveloper\IAM\Http\Controllers\Authentication\OauthController::class, 'createSession']);
+                Route::post('username-password-login', [\NextDeveloper\IAM\Http\Controllers\Authentication\OauthController::class, 'usernamePasswordLogin']);
+                Route::post('email-password-login', [\NextDeveloper\IAM\Http\Controllers\Authentication\OauthController::class, 'emailPasswordLogin']);
+            });
+
+            Route::prefix('password')->group(function() {
+                //  Routes to be built
+                //  Route::post('/update')
+                //  Route::put('/reset')
+            });
+
+            //  Routes to be made
+            /*
+            Route::prefix('/google')->group(function() {});
+            Route::prefix('/facebook')->group(function() {});
+            Route::prefix('/twitter')->group(function() {});
+            Route::prefix('/linkedin')->group(function() {});
+            Route::prefix('/github')->group(function() {});
+            */
+        });
+
         Route::prefix('my')->group(
             function () {
                 Route::get('/roles', 'Roles\MyRolesController@index');
@@ -354,23 +381,3 @@ Route::prefix('iam')->group(
         );
     }
 );
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
