@@ -4,6 +4,7 @@ namespace NextDeveloper\IAM\Services;
 
 use App\Grants\OneTimeEmail;
 use Illuminate\Database\Eloquent\Collection;
+use NextDeveloper\IAM\AuthenticationGrants\OneTimeEmail;
 use NextDeveloper\IAM\Database\Models\LoginMechanisms;
 use NextDeveloper\IAM\Database\Models\Users;
 use NextDeveloper\IAM\Exceptions\UnauthorizedException;
@@ -30,7 +31,29 @@ class LoginMechanismsService extends AbstractLoginMechanismsService
     }
 
     // EDIT AFTER HERE - WARNING: ABOVE THIS LINE MAY BE REGENERATED AND YOU MAY LOSE CODE
-    public function getByUser(): Collection
+
+    public static function getByUserObject($user) : Collection
+    {
+        $mechanisms = LoginMechanisms::withoutGlobalScopes()
+            ->where('iam_user_id', $user->id)
+            ->where('is_active', 1)
+            ->whereNull('deleted_at')
+            ->get();
+
+        if(!count($mechanisms))
+            (new OneTimeEmail())->create($user);
+
+        $mechanisms = LoginMechanisms::withoutGlobalScopes()
+            ->where('iam_user_id', $user->id)
+            ->where('is_active', 1)
+            ->where('login_mechanism', 'not like', '2FA%')
+            ->whereNull('deleted_at')
+            ->get();
+
+        return $mechanisms;
+    }
+
+    public function getByUser() : Collection
     {
         $mechanisms = LoginMechanisms::withoutGlobalScopes()
             ->where('iam_user_id', $this->_user->id)

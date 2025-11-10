@@ -5,7 +5,7 @@ Identity management software is a crucial tool in today's security-conscious dig
 
 - [x] User Provisioning: This feature enables administrators to create, modify, disable or delete user accounts and permissions across IT systems in a timely manner. This also includes account (or team) provisioning. 
 - [ ] Authentication: Authentication ensures that users are who they claim to be. This could include multi-factor authentication (MFA), biometric authentication, or password management.
-- - [ ] Password
+- - [x] Password
 - - [x] One Time Email (OTP)
 - - [ ] One Time SMS (OTP)
 - - [ ] Google
@@ -23,7 +23,7 @@ Identity management software is a crucial tool in today's security-conscious dig
 - - [ ] OneLogin
 - - [ ] Okta
 - - [ ] Auth0
-- [ ] Authorization: After verifying identity through authentication, the system determines what actions the user is allowed to perform, what files they can access, what resources they can use, etc.
+- [x] Authorization: After verifying identity through authentication, the system determines what actions the user is allowed to perform, what files they can access, what resources they can use, etc.
 - [ ] Single Sign-On (SSO): This feature allows users to log in once and gain access to a variety of applications, eliminating the need to remember multiple passwords.
 - [ ] Federated Identity: This allows users to use the same credentials across different systems or even across different organizations.
 - [ ] Directory Services: These services store, organize, and provide access to information about users and resources.
@@ -37,7 +37,7 @@ Identity management software is a crucial tool in today's security-conscious dig
 - [ ] Integration with Other Systems: Identity management systems need to integrate with other systems, like HR systems, to automate the process of adding, changing, and removing users as employees join, move within, or leave the organization.
 - [ ] 2FA implementations
 - - [ ] SMS one time code
-- - [ ] Email one time code 
+- - [x] Email one time code 
 - - [ ] Whatsapp one time code
 - - [ ] Telegram one time code
 - - [ ] Various push mechanisms for one time code
@@ -53,8 +53,8 @@ In this library we try to support almost all available authentication mechanisms
 # Password Management
 For password management we are and will be applying various different practices to increase the security;
 - [x] using Argon2id for hashing passwords and scrypt for fallback.
-- [ ] storing the old passwords to check if the user is not using the very same password
-- [ ] checking the password quality, in terms of complexity
+- [x] storing the old passwords to check if the user is not using the very same password
+- [x] checking the password quality, in terms of complexity
 - [ ] rehashing passwords using rehash algorithms if available.
 
 Notes to developers;

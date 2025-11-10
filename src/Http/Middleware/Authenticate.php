@@ -16,6 +16,13 @@ class Authenticate extends Middleware
         if($request->getMethod() == "OPTIONS")
             return $next($request);
 
+        if(Str::startsWith($request->getRequestUri(), '/iam/authentication')) {
+            if(config('leo.debug.authorization_roles'))
+                Log::debug('[Authenticate] Request URI starts with /iam/authentication that is why I am not authenticating.');
+
+            return $next($request);
+        }
+
         if(Str::startsWith($request->getRequestUri(), '/public')) {
             if(config('leo.debug.authorization_roles'))
                 Log::debug('[Authenticate] Request URI starts with /public that is why I am not authenticating.');
