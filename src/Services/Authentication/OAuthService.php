@@ -14,9 +14,8 @@ use NextDeveloper\IAM\Exceptions\OAuthExceptions;
 
 class OAuthService
 {
-    public static function createSession($clientId, $clientSecret, $requestUri) :?string {
+    public static function createSession($clientId, $requestUri, $scope = []) :?string {
         $oauthClient = OauthClients::where('id', $clientId)
-            ->where('secret', $clientSecret)
             ->where('redirect', $requestUri)
             ->first();
 
@@ -24,18 +23,24 @@ class OAuthService
             return null;
         }
 
-        $randomCode = Str::random(64);
+        $session = Str::random(64);
 
-        Cache::put('auth-session:' . $randomCode, [
+        Cache::put('auth-session:' . $session, [
             'client_id' => $clientId,
-            'client_secret' => $clientSecret,
             'redirect' => $requestUri,
+            'scope' => $scope,
+            'requires_2fa' => false,
         ], 3000);
 
-        return $randomCode;
+        return $session;
     }
 
-    public static function loginWithEmailPassword($code, $email, $password)
+    public static function getLoginRequirements($session, $email)
+    {
+
+    }
+
+    public static function loginWithEmailPassword($session, $email, $password)
     {
         $user = Users::withoutGlobalScope(AuthorizationScope::class)
             ->where('email', $email)
@@ -46,9 +51,13 @@ class OAuthService
         }
     }
 
-    public static function loginWithUsernamePassword($code, $username, $password)
+    public static function loginWithUsernamePassword($session, $username, $password)
     {
-        $session = Cache::get('auth-session:' . $code);
+        $sessionData = Cache::get('auth-session:' . $session);
+
+        if(!$sessionData || !isset($sessionData['user_id'])) {
+            throw OAuthExceptions::invalidSession();
+        }
 
         $user = Users::withoutGlobalScope(AuthorizationScope::class)
             ->where('username', $username)
@@ -57,6 +66,8 @@ class OAuthService
         if(!$user) {
             throw OAuthExceptions::userNotFound();
         }
+
+        $sessionData['user_id'] = $user->id;
 
         $mechanism = LoginMechanisms::withoutGlobalScope(AuthorizationScope::class)
             ->where('iam_user_id', $user->id)
@@ -68,11 +79,41 @@ class OAuthService
 
         $isLoggedIn = (new Password())->attempt($mechanism, $password);
 
+        $sessionData['password_login'] = $isLoggedIn;
 
+        Cache::set('auth-session:' . $session, $sessionData, 3000);
+
+        return $isLoggedIn;
+    }
+
+    public static function getAuthCode($session)
+    {
+        $sessionData = Cache::get('auth-session:' . $session);
+
+        if(!$sessionData || !isset($sessionData['user_id'])) {
+            throw OAuthExceptions::invalidSession();
+        }
+
+        if(
+            (isset($sessionData['password']) && $sessionData['password'] === true) ||
+            (isset($sessionData['email_otp']) && $sessionData['email_otp'] === true)
+        ) {
+            throw OAuthExceptions::invalidSession('User is not logged in with any logging mechanism.');
+        }
+
+        $authCode = Str::random(128);
+
+        Cache::put('auth-code:' . $authCode, $sessionData, 3000);
+
+        return $authCode;
     }
 
     public static function loginWithEmailOTP($code, $password)
     {
+        $sessionData = Cache::get('auth-session:' . $session);
 
+        if(!$sessionData || !isset($sessionData['user_id'])) {
+            throw OAuthExceptions::invalidSession();
+        }
     }
 }

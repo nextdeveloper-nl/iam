@@ -347,6 +347,8 @@ Route::prefix('iam')->group(
 
             Route::prefix('oauth')->group(function() {
                 Route::get('session', [\NextDeveloper\IAM\Http\Controllers\Authentication\OauthController::class, 'createSession']);
+                Route::get('auth-code/{session}', [\NextDeveloper\IAM\Http\Controllers\Authentication\OauthController::class, 'getAuthCode']);
+
                 Route::post('username-password-login', [\NextDeveloper\IAM\Http\Controllers\Authentication\OauthController::class, 'usernamePasswordLogin']);
                 Route::post('email-password-login', [\NextDeveloper\IAM\Http\Controllers\Authentication\OauthController::class, 'emailPasswordLogin']);
             });

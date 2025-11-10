@@ -24,7 +24,7 @@ class LoginMechanismsController extends AbstractController
             $user = UserHelper::getWithUsername($request->validated('username'));
 
         return ResponseHelper::data(
-            LoginMechanismsService::get
+            LoginMechanismsService::getByUserObject($user)
         );
     }
 }

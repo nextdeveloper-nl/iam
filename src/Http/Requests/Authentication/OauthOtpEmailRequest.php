@@ -14,7 +14,7 @@ class OauthOtpEmailRequest extends AbstractFormRequest
     {
         return [
             'password' => 'string',
-            'code'  => 'string'
+            'session'  => 'string'
         ];
     }
 }

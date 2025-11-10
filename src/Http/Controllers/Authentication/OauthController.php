@@ -15,7 +15,6 @@ class OauthController extends AbstractController
     {
         $session = OAuthService::createSession(
             clientId: $request->validated('client_id'),
-            clientSecret: $request->validated('client_secret'),
             requestUri: $request->validated('redirect_uri'),
         );
 
@@ -25,17 +24,32 @@ class OauthController extends AbstractController
         return ResponseHelper::data($session);
     }
 
+    public static function getSessionRequirements() {
+
+    }
+
     public static function usernamePasswordLogin(OauthUsernamePasswordLoginRequest $request) {
-        $token = OAuthService::loginWithUsernamePassword(
-            code: $request->validated('code'),
+        $session = OAuthService::loginWithUsernamePassword(
+            session: $request->validated('session'),
             username: $request->validated('username'),
             password: $request->validated('password')
         );
 
-        if($token instanceof \Exception)
-            throw $token;
+        if($session instanceof \Exception)
+            throw $session;
 
-        return ResponseHelper::data($token);
+        //  Returning the session token
+        return ResponseHelper::data($session);
+    }
+
+    public static function getAuthCode($session)
+    {
+        return OAuthService::getAuthCode($session);
+    }
+
+    public static function sendEmailOtp(OauthOtpEmailRequest $request)
+    {
+
     }
 
     public static function otpEmailLogin() {

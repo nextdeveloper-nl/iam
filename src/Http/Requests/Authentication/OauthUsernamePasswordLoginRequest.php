@@ -15,7 +15,7 @@ class OauthUsernamePasswordLoginRequest extends AbstractFormRequest
         return [
             'username'     => 'string',
             'password' => 'string',
-            'code'  => 'string'
+            'session'  => 'string'
         ];
     }
 }
