@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Cache;
 use NextDeveloper\Commons\Common\Cache\CacheHelper;
 use NextDeveloper\Commons\Database\Models\Media;
 use NextDeveloper\IAM\Database\Models\Users;
+use NextDeveloper\IAM\Helpers\UserHelper;
 use NextDeveloper\IAM\Http\Transformers\AbstractTransformers\AbstractUsersTransformer;
 
 /**
@@ -33,16 +34,11 @@ class UsersTransformer extends AbstractUsersTransformer
 
         $transformed = parent::transform($model);
 
-        $transformed['photo_url'] = null;
-
-        if($transformed['profile_picture_identity'] != null) {
-            $profilePicture = Media::where('id', $transformed['profile_picture_identity'])->first();
-
-            if($profilePicture)
-                $transformed['photo_url'] = $profilePicture->cdn_url;
-            else
-                $transformed['photo_url'] = null;
-        }
+        // Get a profile picture url
+        $transformed['profile_picture_url'] = UserHelper::getUsersProfilePictureUrl(
+            $transformed['email'],
+            $transformed['profile_picture_identity'] ?? null
+        );
 
         Cache::set(
             CacheHelper::getKey('Users', $model->uuid, 'Transformed'),

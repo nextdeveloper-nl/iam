@@ -165,6 +165,9 @@ Route::prefix('iam')->group(
                 Route::post('/', 'LoginMechanisms\LoginMechanismsController@store');
                 Route::post('/{iam_login_mechanisms}/do/{action}', 'LoginMechanisms\LoginMechanismsController@doAction');
 
+                // Password management endpoints
+                Route::post('/set-password', 'LoginMechanisms\LoginMechanismsController@setPassword');
+
                 Route::patch('/{iam_login_mechanisms}', 'LoginMechanisms\LoginMechanismsController@update');
                 Route::delete('/{iam_login_mechanisms}', 'LoginMechanisms\LoginMechanismsController@destroy');
             }
@@ -339,7 +342,6 @@ Route::prefix('iam')->group(
         );
 
         // EDIT AFTER HERE - WARNING: ABOVE THIS LINE MAY BE REGENERATED AND YOU MAY LOSE CODE
-
         Route::prefix('/authentication')->group(function() {
             Route::prefix('login-mechanisms')->group(function () {
                 Route::get('/', [\NextDeveloper\IAM\Http\Controllers\Authentication\LoginMechanismsController::class, 'index']);
