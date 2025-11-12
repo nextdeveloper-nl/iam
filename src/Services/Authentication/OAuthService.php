@@ -43,8 +43,8 @@ class OAuthService
     {
         $sessionData = Cache::get('auth-session:' . $sessionId);
 
-        if(!$sessionId) {
-            throw OAuthExceptions::invalidSession();
+        if(!$sessionData) {
+            return null;
         }
 
         $data = [

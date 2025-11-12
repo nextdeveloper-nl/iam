@@ -9,8 +9,8 @@ class OAuthExceptions extends \Exception
 {
     public static function invalidSession($hint = null, Throwable $previous = null)
     {
-        $errorMessage = I18n::t('The request is missing a required parameter, includes an invalid parameter value, ' .
-            'includes a parameter more than once, or is otherwise malformed.');
+        $errorMessage = I18n::t('We dont have any session matching the provided session id. Please make sure that '
+            . 'you are providing correct session id.');
 
         $hint = ($hint === null) ? null : $hint;
 
