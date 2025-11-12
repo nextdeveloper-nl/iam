@@ -168,6 +168,10 @@ class OAuthService
         if($username)
             $user = UserHelper::getWithUsername($username);
 
+        if(!$user) {
+            throw OAuthExceptions::userNotFound();
+        }
+
         $sessionData['iam_user_id'] = $user->id;
         $sessionData['email'] = $user->email;
         $sessionData['username'] = $user->username;
