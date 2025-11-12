@@ -2,16 +2,13 @@
 
 namespace NextDeveloper\IAM\AuthenticationGrants;
 
-use App\Envelopes\NewEmailOtpGeneratedEnvelope;
 use DateInterval;
-use League\OAuth2\Server\Exception\OAuthServerException;
-use League\OAuth2\Server\Exception\UniqueTokenIdentifierConstraintViolationException;
-use League\OAuth2\Server\ResponseTypes\ResponseTypeInterface;
 use NextDeveloper\Communication\Helpers\Communicate;
 use NextDeveloper\Events\Services\Events;
 use NextDeveloper\IAM\Authorization\Roles\MemberRole;
 use NextDeveloper\IAM\Database\Models\LoginMechanisms;
 use NextDeveloper\IAM\Database\Models\Users;
+use NextDeveloper\IAM\Envelopes\Authentication\NewEmailOtpGeneratedEnvelope;
 use NextDeveloper\IAM\Services\LoginMechanisms\AbstractLogin;
 use NextDeveloper\IAM\Services\LoginMechanisms\ILoginService;
 use NextDeveloper\IAM\Services\UsersService;
@@ -39,6 +36,9 @@ class OneTimeEmail extends AbstractLogin implements ILoginService
                 'login_mechanism'  => self::LOGINNAME,
             ]);
 
+            $this->generatePassword($latestMechanism);
+        } else {
+            //  We are generating a new password for the existing mechanism
             $this->generatePassword($latestMechanism);
         }
 
@@ -147,7 +147,9 @@ class OneTimeEmail extends AbstractLogin implements ILoginService
 
         $user = Users::where('id', $mechanism->iam_user_id)->first();
 
-        (new Communicate($user))->sendEnvelopeNow(new NewEmailOtpGeneratedEnvelope($mechanism));
+        $otpEnvelope = config('iam.auth_envalopes.otp-email');
+
+        (new Communicate($user))->sendEnvelopeNow(new $otpEnvelope($mechanism));
 
         Events::fire('otp_generated:NextDeveloper\IAM\LoginMechanisms', $mechanism);
 

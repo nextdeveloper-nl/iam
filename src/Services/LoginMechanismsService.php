@@ -2,7 +2,6 @@
 
 namespace NextDeveloper\IAM\Services;
 
-use App\Grants\OneTimeEmail;
 use Illuminate\Database\Eloquent\Collection;
 use NextDeveloper\IAM\AuthenticationGrants\OneTimeEmail;
 use NextDeveloper\IAM\Database\Models\LoginMechanisms;
@@ -38,15 +37,17 @@ class LoginMechanismsService extends AbstractLoginMechanismsService
             ->whereNull('deleted_at')
             ->get();
 
-        if(!count($mechanisms))
+        //  We are not running this section because we want the user to ask for the Email OTP explicitly.
+        if(false && !count($mechanisms)) {
             (new OneTimeEmail())->create($user);
 
-        $mechanisms = LoginMechanisms::withoutGlobalScopes()
-            ->where('iam_user_id', $user->id)
-            ->where('is_active', 1)
-            ->where('login_mechanism', 'not like', '2FA%')
-            ->whereNull('deleted_at')
-            ->get();
+            $mechanisms = LoginMechanisms::withoutGlobalScopes()
+                ->where('iam_user_id', $user->id)
+                ->where('is_active', 1)
+                ->where('login_mechanism', 'not like', '2FA%')
+                ->whereNull('deleted_at')
+                ->get();
+        }
 
         return $mechanisms;
     }

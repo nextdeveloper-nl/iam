@@ -4,7 +4,7 @@ namespace NextDeveloper\IAM\Http\Requests\Authentication;
 
 use NextDeveloper\Commons\Http\Requests\AbstractFormRequest;
 
-class GetLoginMechanismsRequest extends AbstractFormRequest
+class OauthPasswordValidationRequest extends AbstractFormRequest
 {
 
     /**
@@ -13,8 +13,7 @@ class GetLoginMechanismsRequest extends AbstractFormRequest
     public function rules()
     {
         return [
-            'email' => 'email',
-            'username'  =>  'string',
+            'password' => 'string',
         ];
     }
 }

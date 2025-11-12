@@ -2,18 +2,22 @@
 
 namespace NextDeveloper\IAM\Services\Authentication;
 
-use App\Grants\OneTimeEmail;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Str;
+use NextDeveloper\IAM\AuthenticationGrants\OneTimeEmail;
 use NextDeveloper\IAM\AuthenticationGrants\Password;
 use NextDeveloper\IAM\Database\Models\LoginMechanisms;
 use NextDeveloper\IAM\Database\Models\OauthClients;
 use NextDeveloper\IAM\Database\Models\Users;
 use NextDeveloper\IAM\Database\Scopes\AuthorizationScope;
 use NextDeveloper\IAM\Exceptions\OAuthExceptions;
+use NextDeveloper\IAM\Helpers\UserHelper;
+use NextDeveloper\IAM\Services\LoginMechanismsService;
 
 class OAuthService
 {
+    private const TIMEOUT = 3000;
+
     public static function createSession($clientId, $requestUri, $scope = []) :?string {
         $oauthClient = OauthClients::where('id', $clientId)
             ->where('redirect', $requestUri)
@@ -23,32 +27,159 @@ class OAuthService
             return null;
         }
 
-        $session = Str::random(64);
+        $session = Str::random(32);
 
         Cache::put('auth-session:' . $session, [
             'client_id' => $clientId,
             'redirect' => $requestUri,
             'scope' => $scope,
             'requires_2fa' => false,
-        ], 3000);
+        ], self::TIMEOUT);
 
         return $session;
     }
 
-    public static function getLoginRequirements($session, $email)
+    public static function getValidationStatus($sessionId)
     {
+        $sessionData = Cache::get('auth-session:' . $sessionId);
 
+        if(!$sessionId) {
+            throw OAuthExceptions::invalidSession();
+        }
+
+        if(!isset($sessionData['iam_user_id'])) {
+            return false;
+        }
+
+        return [
+            'is_2fa_enabled' => $sessionData['is_2fa_enabled'] ?? false,
+            'is_password_validated' => $sessionData['is_password_validated'] ?? false,
+            'is_otp_email_validated' => $sessionData['is_otp_email_validated'] ?? false,
+            'requires_2fa' => $sessionData['requires_2fa'] ?? false,
+            'can_get_auth_code' => (
+                (isset($sessionData['is_password_validated']) && $sessionData['is_password_validated'] === true) ||
+                (isset($sessionData['is_otp_email_validated']) && $sessionData['is_otp_email_validated'] === true)
+            )
+        ];
     }
 
-    public static function loginWithEmailPassword($session, $email, $password)
+    public static function sendOtpEmail($sessionId)
     {
-        $user = Users::withoutGlobalScope(AuthorizationScope::class)
-            ->where('email', $email)
-            ->first();
+        $sessionData = Cache::get('auth-session:' . $sessionId);
+
+        if(!$sessionId) {
+            throw OAuthExceptions::invalidSession();
+        }
+
+        if(!isset($sessionData['iam_user_id'])) {
+            throw OAuthExceptions::userNotFound();
+        }
+
+        $user = UserHelper::getWithEmail($sessionData['email']);
 
         if(!$user) {
-            return OAuthExceptions::userNotFound();
+            throw OAuthExceptions::userNotFound();
         }
+
+        (new \NextDeveloper\IAM\AuthenticationGrants\OneTimeEmail())->create($user);
+
+        return true;
+    }
+
+    public static function validateOtpEmail($sessionId, $otp)
+    {
+        $sessionData = Cache::get('auth-session:' . $sessionId);
+
+        if(!$sessionId || !isset($sessionData['iam_user_id'])) {
+            throw OAuthExceptions::invalidSession();
+        }
+
+        $user = UserHelper::getWithEmail($sessionData['email']);
+
+        $loginMechanisms = LoginMechanismsService::getByUserObject($user);
+
+        $oneTimeEmail = null;
+
+        foreach ($loginMechanisms as $loginMechanism) {
+            if($loginMechanism->login_mechanism === OneTimeEmail::LOGINNAME) {
+                $oneTimeEmail = $loginMechanism;
+                break;
+            }
+        }
+
+        if(!$oneTimeEmail) {
+            throw OAuthExceptions::mechanismNotFound();
+        }
+
+        $isLoggedIn = (new OneTimeEmail())->attempt($oneTimeEmail, $otp);
+
+        $sessionData['is_otp_email_validated'] = $isLoggedIn;
+
+        Cache::put('auth-session:' . $sessionId, $sessionData, self::TIMEOUT);
+
+        return $isLoggedIn;
+    }
+
+    public static function validatePassword($sessionId, $password)
+    {
+        $sessionData = Cache::get('auth-session:' . $sessionId);
+
+        if(!$sessionId || !isset($sessionData['iam_user_id'])) {
+            throw OAuthExceptions::invalidSession();
+        }
+
+        $user = UserHelper::getWithEmail($sessionData['email']);
+
+        $loginMechanisms = LoginMechanismsService::getByUserObject($user);
+
+        $passwordMechanism = null;
+
+        foreach ($loginMechanisms as $mechanism) {
+            if($mechanism->login_mechanism === Password::LOGINNAME) {
+                $passwordMechanism = $mechanism;
+                break;
+            }
+        }
+
+        if(!$passwordMechanism) {
+            throw OAuthExceptions::mechanismNotFound();
+        }
+
+        $isLoggedIn = (new Password())->attempt($passwordMechanism, $password);
+
+        $sessionData['is_password_validated'] = $isLoggedIn;
+
+        Cache::put('auth-session:' . $sessionId, $sessionData, self::TIMEOUT);
+
+        return $isLoggedIn;
+    }
+
+    public static function getLoginMechanisms($sessionId, $username = null, $email = null){
+        $sessionData = Cache::get('auth-session:' . $sessionId);
+
+        $user = null;
+
+        if($email)
+            $user = UserHelper::getWithEmail($email);
+
+        if($username)
+            $user = UserHelper::getWithUsername($username);
+
+        $sessionData['iam_user_id'] = $user->id;
+        $sessionData['email'] = $user->email;
+        $sessionData['username'] = $user->username;
+
+        Cache::put('auth-session:' . $sessionId, $sessionData, self::TIMEOUT);
+
+        $mechanisms = LoginMechanismsService::getByUserObject($user);
+
+        $mechanismList = [];
+
+        foreach ($mechanisms as $mechanism) {
+            $mechanismList[] = $mechanism->login_mechanism;
+        }
+
+        return $mechanismList;
     }
 
     public static function loginWithUsernamePassword($session, $username, $password)
@@ -81,7 +212,7 @@ class OAuthService
 
         $sessionData['password_login'] = $isLoggedIn;
 
-        Cache::set('auth-session:' . $session, $sessionData, 3000);
+        Cache::set('auth-session:' . $session, $sessionData, self::TIMEOUT);
 
         return $isLoggedIn;
     }
@@ -103,17 +234,8 @@ class OAuthService
 
         $authCode = Str::random(128);
 
-        Cache::put('auth-code:' . $authCode, $sessionData, 3000);
+        Cache::put('auth-code:' . $authCode, $sessionData, self::TIMEOUT);
 
         return $authCode;
-    }
-
-    public static function loginWithEmailOTP($code, $password)
-    {
-        $sessionData = Cache::get('auth-session:' . $session);
-
-        if(!$sessionData || !isset($sessionData['user_id'])) {
-            throw OAuthExceptions::invalidSession();
-        }
     }
 }

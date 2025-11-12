@@ -341,22 +341,20 @@ Route::prefix('iam')->group(
         // EDIT AFTER HERE - WARNING: ABOVE THIS LINE MAY BE REGENERATED AND YOU MAY LOSE CODE
 
         Route::prefix('/authentication')->group(function() {
-            Route::prefix('login-mechanisms')->group(function () {
-                Route::get('/', [\NextDeveloper\IAM\Http\Controllers\Authentication\LoginMechanismsController::class, 'index']);
-            });
-
             Route::prefix('oauth')->group(function() {
                 Route::get('session', [\NextDeveloper\IAM\Http\Controllers\Authentication\OauthController::class, 'createSession']);
-                Route::get('auth-code/{session}', [\NextDeveloper\IAM\Http\Controllers\Authentication\OauthController::class, 'getAuthCode']);
 
-                Route::post('username-password-login', [\NextDeveloper\IAM\Http\Controllers\Authentication\OauthController::class, 'usernamePasswordLogin']);
-                Route::post('email-password-login', [\NextDeveloper\IAM\Http\Controllers\Authentication\OauthController::class, 'emailPasswordLogin']);
-            });
+                Route::prefix('{session}')->group(function() {
+                    Route::get('auth-code', [\NextDeveloper\IAM\Http\Controllers\Authentication\OauthController::class, 'getAuthCode']);
+                    Route::get('login-mechanisms', [\NextDeveloper\IAM\Http\Controllers\Authentication\OauthController::class, 'getLoginMechanisms']);
 
-            Route::prefix('password')->group(function() {
-                //  Routes to be built
-                //  Route::post('/update')
-                //  Route::put('/reset')
+                    Route::get('send-otp-email', [\NextDeveloper\IAM\Http\Controllers\Authentication\OauthController::class, 'sendOtpEmail']);
+
+                    Route::get('validation-status', [\NextDeveloper\IAM\Http\Controllers\Authentication\OauthController::class, 'getValidationStatus']);
+
+                    Route::post('validate-password', [\NextDeveloper\IAM\Http\Controllers\Authentication\OauthController::class, 'validatePassword']);
+                    Route::post('validate-otp-email', [\NextDeveloper\IAM\Http\Controllers\Authentication\OauthController::class, 'validateOtpEmail']);
+                });
             });
 
             //  Routes to be made

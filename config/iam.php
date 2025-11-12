@@ -1,11 +1,16 @@
 <?php
 
+use NextDeveloper\IAM\Envelopes\Authentication\NewEmailOtpGeneratedEnvelope;
+
 return [
     'hash_algorithms' => [
         PASSWORD_ARGON2ID,
         PASSWORD_ARGON2I,
         PASSWORD_BCRYPT,
         PASSWORD_DEFAULT
+    ],
+    'auth_envalopes'    =>  [
+        'otp-email' =>  env('IAM_AUTH_OTP_EMAIL_ENVELOPE', NewEmailOtpGeneratedEnvelope::class)
     ],
     'roles' =>  [
         'member'    =>  [
