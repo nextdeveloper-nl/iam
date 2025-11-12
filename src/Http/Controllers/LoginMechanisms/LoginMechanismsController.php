@@ -8,9 +8,12 @@ use NextDeveloper\Commons\Http\Traits\Addresses;
 use NextDeveloper\Commons\Http\Traits\Tags;
 use NextDeveloper\IAM\Database\Filters\LoginMechanismsQueryFilter;
 use NextDeveloper\IAM\Database\Models\LoginMechanisms;
+use NextDeveloper\IAM\Exceptions\CannotFindUserException;
+use NextDeveloper\IAM\Exceptions\UnauthorizedException;
 use NextDeveloper\IAM\Http\Controllers\AbstractController;
 use NextDeveloper\IAM\Http\Requests\LoginMechanisms\LoginMechanismsCreateRequest;
 use NextDeveloper\IAM\Http\Requests\LoginMechanisms\LoginMechanismsUpdateRequest;
+use NextDeveloper\IAM\Http\Requests\LoginMechanisms\SetPasswordRequest;
 use NextDeveloper\IAM\Services\LoginMechanismsService;
 
 class LoginMechanismsController extends AbstractController
@@ -61,7 +64,7 @@ class LoginMechanismsController extends AbstractController
 
         return $this->withArray(
             [
-            'action_id' =>  $actionId
+                'action_id' => $actionId
             ]
         );
     }
@@ -108,9 +111,9 @@ class LoginMechanismsController extends AbstractController
      */
     public function store(LoginMechanismsCreateRequest $request)
     {
-        if($request->has('validateOnly') && $request->get('validateOnly') == true) {
+        if ($request->has('validateOnly') && $request->get('validateOnly') == true) {
             return [
-                'validation'    =>  'success'
+                'validation' => 'success'
             ];
         }
 
@@ -129,9 +132,9 @@ class LoginMechanismsController extends AbstractController
      */
     public function update($loginMechanismsId, LoginMechanismsUpdateRequest $request)
     {
-        if($request->has('validateOnly') && $request->get('validateOnly') == true) {
+        if ($request->has('validateOnly') && $request->get('validateOnly') == true) {
             return [
-                'validation'    =>  'success'
+                'validation' => 'success'
             ];
         }
 
@@ -155,5 +158,54 @@ class LoginMechanismsController extends AbstractController
     }
 
     // EDIT AFTER HERE - WARNING: ABOVE THIS LINE MAY BE REGENERATED AND YOU MAY LOSE CODE
+
+    /**
+     * Set password for the authenticated user
+     *
+     * This endpoint allows users to set or update their password. When updating,
+     * users can optionally provide their current password for verification.
+     *
+     *
+     * @param SetPasswordRequest $request Request containing password and optional current_password
+     * @return mixed The updated login mechanism or validation response
+     * @throws CannotFindUserException If the user is not authenticated
+     * @throws UnauthorizedException If current password verification fails
+     *
+     * @example
+     * POST /api/iam/login-mechanisms/set-password
+     * {
+     *   "password": "NewSecure123!",
+     *   "current_password": "OldPassword123", // optional, recommended for updates
+     *   "mechanism_name": "password" // optional, defaults to "password"
+     * }
+     */
+    public function setPassword(SetPasswordRequest $request)
+    {
+        // Support validation-only mode
+        if ($request->has('validateOnly') && $request->get('validateOnly')) {
+            return [
+                'validation' => 'success'
+            ];
+        }
+
+        // Get the authenticated user
+        $user = \NextDeveloper\IAM\Helpers\UserHelper::me();
+
+        if (!$user) {
+            throw new CannotFindUserException('User not authenticated. Please log in to set a password.');
+        }
+
+        // Initialize the login mechanisms service
+        $loginService = new LoginMechanismsService($user);
+
+        // Get validated data
+        $data = $request->validated();
+        $mechanismName = $data['mechanism_name'] ?? 'password';
+
+        // Set the password (will throw UnauthorizedException if the current password is wrong)
+        $mechanism = $loginService->setPassword($data, $mechanismName);
+
+        return ResponsableFactory::makeResponse($this, $mechanism);
+    }
 
 }
