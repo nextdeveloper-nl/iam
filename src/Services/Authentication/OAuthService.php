@@ -47,11 +47,8 @@ class OAuthService
             throw OAuthExceptions::invalidSession();
         }
 
-        if(!isset($sessionData['iam_user_id'])) {
-            return false;
-        }
-
-        return [
+        $data = [
+            'has_user' => isset($sessionData['iam_user_id']),
             'is_2fa_enabled' => $sessionData['is_2fa_enabled'] ?? false,
             'is_password_validated' => $sessionData['is_password_validated'] ?? false,
             'is_otp_email_validated' => $sessionData['is_otp_email_validated'] ?? false,
@@ -61,6 +58,12 @@ class OAuthService
                 (isset($sessionData['is_otp_email_validated']) && $sessionData['is_otp_email_validated'] === true)
             )
         ];
+
+        if(!isset($sessionData['iam_user_id'])) {
+            return $data;
+        }
+
+        return $data;
     }
 
     public static function sendOtpEmail($sessionId)
