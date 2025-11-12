@@ -43,8 +43,8 @@ class OAuthService
     {
         $sessionData = Cache::get('auth-session:' . $sessionId);
 
-        if(!$sessionId) {
-            throw OAuthExceptions::invalidSession();
+        if(!$sessionData) {
+            return null;
         }
 
         $data = [
@@ -167,6 +167,10 @@ class OAuthService
 
         if($username)
             $user = UserHelper::getWithUsername($username);
+
+        if(!$user) {
+            throw OAuthExceptions::userNotFound();
+        }
 
         $sessionData['iam_user_id'] = $user->id;
         $sessionData['email'] = $user->email;
