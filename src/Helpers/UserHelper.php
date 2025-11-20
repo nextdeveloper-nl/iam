@@ -94,6 +94,10 @@ class UserHelper
             return Users::withoutGlobalScope(AuthorizationScope::class)->where('id', $userId)->first();
         }
 
+        if(Str::isUuid($userId)) {
+            return Users::where('uuid', $userId)->first();
+        }
+
         return Users::where('id', $userId)->first();
     }
 
@@ -160,6 +164,12 @@ class UserHelper
      */
     public static function getAccountById($accountId): ?Accounts
     {
+        if(Str::isUuid($accountId)) {
+            return Accounts::withoutGlobalScopes()
+                ->where('uuid', $accountId)
+                ->first();
+        }
+
         $account = Accounts::withoutGlobalScopes()
             ->where('id', $accountId)
             ->first();

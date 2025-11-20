@@ -23,14 +23,6 @@ class PublicUsersTransformer extends AbstractUsersTransformer
      */
     public function transform(Users $model)
     {
-        $transformed = Cache::get(
-            CacheHelper::getKey('Users', $model->uuid, 'Transformed')
-        );
-
-//        if($transformed) {
-//            return $transformed;
-//        }
-
         $transformed = parent::transform($model);
 
         unset($transformed['id']);
@@ -57,11 +49,6 @@ class PublicUsersTransformer extends AbstractUsersTransformer
         }
 
         unset($transformed['profile_picture_identity']);
-
-        Cache::set(
-            CacheHelper::getKey('Users', $model->uuid, 'Transformed'),
-            $transformed
-        );
 
         return $transformed;
     }
