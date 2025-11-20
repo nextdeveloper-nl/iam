@@ -151,7 +151,7 @@ class RolesService extends AbstractRolesService
      * @param Roles $role
      * @return bool
      */
-    public static function assignUserToRole(Users $user, Roles $role, Accounts $account = null) : bool
+    public static function assignUserToRole(Users $user, Roles $role, Accounts $account = null, $isRoleActive = null) : bool
     {
         //  No one can be a system admin
         if($role->name == 'system-admin') {
@@ -169,16 +169,22 @@ class RolesService extends AbstractRolesService
             ->where('iam_account_id', $account->id)
             ->first();
 
+        $isActive = true;
+
+        if($isRoleActive !== null) {
+            $isActive = $isRoleActive;
+        }
+
         if(!$relation) {
             $relation = RoleUsers::create([
                 'iam_user_id'       =>  $user->id,
                 'iam_account_id'    =>  $account->id,
                 'iam_role_id'       =>  $role->id,
-                'is_active'         =>  true
+                'is_active'         =>  $isActive
             ]);
         }
 
-        self::setRoleAsActive($relation);
+        if($isActive) self::setRoleAsActive($relation);
 
         return true;
     }
