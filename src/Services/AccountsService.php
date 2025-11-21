@@ -292,7 +292,7 @@ class AccountsService extends AbstractAccountsService
         AccountUsers::firstOrCreate([
             'iam_user_id'       =>  $users->id,
             'iam_account_id'    =>  $accounts->id,
-            'is_active'         =>  true
+            'is_active'         =>  false
         ]);
 
         return true;
