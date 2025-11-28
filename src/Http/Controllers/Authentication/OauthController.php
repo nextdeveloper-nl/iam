@@ -80,6 +80,13 @@ class OauthController extends AbstractController
         return OAuthService::getAuthCode($session);
     }
 
+    public function getToken($session)
+    {
+        $authCode = request()->get('code');
+
+        return OAuthService::getAccessToken($session, $authCode);
+    }
+
     public function validatePassword($sessionId, OauthPasswordValidationRequest $request) {
         try {
             OAuthService::validatePassword(

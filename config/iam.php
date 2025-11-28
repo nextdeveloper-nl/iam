@@ -9,6 +9,10 @@ return [
         PASSWORD_BCRYPT,
         PASSWORD_DEFAULT
     ],
+    'oauth' =>  [
+        //  Default is valid for 180 days
+        'token_valid_until' =>  env('IAM_TOKEN_VALID_UNTIL_INSTANT', 60 * 60 * 24 * 30 * 6),
+    ],
     'auth_envalopes'    =>  [
         'otp-email' =>  env('IAM_AUTH_OTP_EMAIL_ENVELOPE', NewEmailOtpGeneratedEnvelope::class)
     ],
