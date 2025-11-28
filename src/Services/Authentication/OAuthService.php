@@ -261,4 +261,15 @@ class OAuthService
 
         return null;
     }
+
+    public static function getAccessToken($session, $code)
+    {
+        $sessionData = Cache::get('auth-session:' . $session);
+
+        if(!$sessionData || !isset($sessionData['iam_user_id'])) {
+            throw OAuthExceptions::invalidSession();
+        }
+
+        return AccessTokenService::getAccessTokenFromAuthCode($sessionData, $code);
+    }
 }

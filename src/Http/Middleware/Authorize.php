@@ -23,6 +23,13 @@ class Authorize extends Middleware
         $requestUri = $request->getRequestUri();
         $requestMethod = $request->getMethod();
 
+        if(Str::startsWith($requestUri, '/iam/authentication')) {
+            if(config('leo.debug.authorization_roles'))
+                Log::debug('[Authorize] Since the user is trying to login we are not running authorization rules');
+
+            return $next($request);
+        }
+
         if(Str::startsWith($requestUri, '/public')) {
             if(config('leo.debug.authorization_roles'))
                 Log::debug('[Authorize] Request URI starts with /public that is why I am not adding IAM params.');
