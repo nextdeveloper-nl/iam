@@ -2,7 +2,9 @@
 
 namespace NextDeveloper\IAM\Services\Authentication;
 
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 use NextDeveloper\IAM\AuthenticationGrants\OneTimeEmail;
 use NextDeveloper\IAM\AuthenticationGrants\Password;
@@ -205,7 +207,7 @@ class OAuthService
             throw OAuthExceptions::userNotFound();
         }
 
-        $sessionData['user_id'] = $user->id;
+        $sessionData['iam_user_id'] = $user->id;
 
         $mechanism = LoginMechanisms::withoutGlobalScope(AuthorizationScope::class)
             ->where('iam_user_id', $user->id)
@@ -228,7 +230,7 @@ class OAuthService
     {
         $sessionData = Cache::get('auth-session:' . $session);
 
-        if(!$sessionData || !isset($sessionData['user_id'])) {
+        if(!$sessionData || !isset($sessionData['iam_user_id'])) {
             throw OAuthExceptions::invalidSession();
         }
 
@@ -239,10 +241,24 @@ class OAuthService
             throw OAuthExceptions::invalidSession('User is not logged in with any logging mechanism.');
         }
 
-        $authCode = Str::random(128);
+        $validationStatus = self::getValidationStatus($session);
 
-        Cache::put('auth-code:' . $authCode, $sessionData, self::TIMEOUT);
+        if($validationStatus['can_get_auth_code']) {
+            $authCode = uuid_create();
 
-        return $authCode;
+            $authCodeDb = DB::insert('insert into oauth_auth_codes (id, user_id, client_id, scopes, expires_at) values (?, ?, ?, ?, ?)', [
+                $authCode,
+                $sessionData['iam_user_id'],
+                $sessionData['client_id'],
+                json_encode($sessionData['scope']),
+                Carbon::now()->addSeconds(180)
+            ]);
+
+            Cache::put('auth-code:' . $authCode, $sessionData, self::TIMEOUT);
+
+            return $authCode;
+        }
+
+        return null;
     }
 }
