@@ -30,6 +30,10 @@ class UserHelper
 
     private static $isBypassRolesCheck = false;
 
+    private static $cachedUser;
+
+    private static $cachedAccount;
+
     /**
      * This function returns the User object for the current logged in user.
      *
@@ -777,10 +781,30 @@ class UserHelper
         return self::masterAccount(self::getLeoOwner());
     }
 
+    public static function runAsAdmin(callable $callback)
+    {
+        self::setAdminAsCurrentUser();
+
+        try {
+            return $callback();
+        } finally {
+            // Always restore, even if an exception occurs
+            self::revertBackToActualUser();
+        }
+    }
+
     public static function setAdminAsCurrentUser()
     {
+        self::$cachedUser = UserHelper::me();
+        self::$cachedAccount = UserHelper::currentAccount();
+
         UserHelper::setUserById(config('leo.current_user_id'));
         UserHelper::setCurrentAccountById(config('leo.current_account_id'));
+    }
+
+    public static function revertBackToActualUser()
+    {
+        UserHelper::setCurrentUserAndAccount(self::$cachedUser, self::$cachedAccount);
     }
 
     public static function setCurrentUserAndAccount(Users $user, Accounts $account) {
