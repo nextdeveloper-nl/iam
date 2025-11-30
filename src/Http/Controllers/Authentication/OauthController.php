@@ -11,6 +11,7 @@ use NextDeveloper\IAM\Http\Requests\Authentication\OauthOtpEmailValidationReques
 use NextDeveloper\IAM\Http\Requests\Authentication\OauthPasswordValidationRequest;
 use NextDeveloper\IAM\Http\Requests\Authentication\OauthUsernamePasswordLoginRequest;
 use NextDeveloper\IAM\Http\Requests\Authentication\OauthSessionCreateRequest;
+use NextDeveloper\IAM\Services\Authentication\AccessTokenService;
 use NextDeveloper\IAM\Services\Authentication\OAuthService;
 use NextDeveloper\IAM\Services\LoginMechanismsService;
 
@@ -26,6 +27,15 @@ class OauthController extends AbstractController
 
             if($session === null)
                 return ResponseHelper::error('Cannot find oauth app, that is why we cannot create the session');
+
+            $session = [
+                'session_id' => $session,
+                'app_config' => [
+                    'client_id' => $request->validated('client_id'),
+                    'redirect_uri' => $request->validated('redirect_uri'),
+                    'background_url' => config('iam.oauth.app_config.background_image'),
+                ]
+            ];
 
             return ResponseHelper::data($session);
         } catch (OAuthExceptions $e) {
@@ -80,11 +90,11 @@ class OauthController extends AbstractController
         return OAuthService::getAuthCode($session);
     }
 
-    public function getToken($session)
+    public function getToken($clientId)
     {
         $authCode = request()->get('code');
 
-        return OAuthService::getAccessToken($session, $authCode);
+        return AccessTokenService::getAccessTokenFromAuthCode($clientId, $authCode);
     }
 
     public function validatePassword($sessionId, OauthPasswordValidationRequest $request) {

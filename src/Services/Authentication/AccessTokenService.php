@@ -13,21 +13,21 @@ use NextDeveloper\IAM\Exceptions\OAuthExceptions;
 
 class AccessTokenService
 {
-    public static function getAccessTokenFromAuthCode($sessionData, $authCode) : array
+    public static function getAccessTokenFromAuthCode($clientId, $authCode) : array
     {
-        $user = Users::withoutGlobalScope(AuthorizationScope::class)
-            ->where('id', $sessionData['iam_user_id'])
-            ->first();
-
-        if(!$user)
-            throw OAuthExceptions::userNotFound();
-
         $authCode = OauthAuthCodes::where('id', $authCode)->first();
 
         if(!$authCode)
             throw OAuthExceptions::authCodeNotValid();
 
-        $client = OauthClients::where('id', $authCode->client_id)->first();
+        $client = OauthClients::where('id', $clientId)->first();
+
+        $user = Users::withoutGlobalScope(AuthorizationScope::class)
+            ->where('id', $authCode['user_id'])
+            ->first();
+
+        if(!$user)
+            throw OAuthExceptions::userNotFound();
 
         $validUntilSeconds = config('iam.oauth.token_valid_until');
 
@@ -38,7 +38,7 @@ class AccessTokenService
             'id'        =>  $accessToken,
             'user_id'   =>  $user->id,
             'client_id' =>  $client->id,
-            'scopes'    =>  json_encode($sessionData['scope']),
+            'scopes'    =>  $authCode['scope'],
             'revoked'   =>  0,
             'created_at'    =>  Carbon::now()->toDateTimeString(),
             'updated_at'    =>  Carbon::now()->toDateTimeString(),
