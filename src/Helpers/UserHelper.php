@@ -795,8 +795,10 @@ class UserHelper
 
     public static function setAdminAsCurrentUser()
     {
-        self::$cachedUser = UserHelper::me();
-        self::$cachedAccount = UserHelper::currentAccount();
+        if(UserHelper::me()) {
+            self::$cachedUser = UserHelper::me();
+            self::$cachedAccount = UserHelper::currentAccount();
+        }
 
         UserHelper::setUserById(config('leo.current_user_id'));
         UserHelper::setCurrentAccountById(config('leo.current_account_id'));
@@ -804,7 +806,12 @@ class UserHelper
 
     public static function revertBackToActualUser()
     {
-        UserHelper::setCurrentUserAndAccount(self::$cachedUser, self::$cachedAccount);
+        if(self::$cachedUser) {
+            Log::info('[UserHelper] Reverting back to actual user: ' . self::$cachedUser->uuid);
+            UserHelper::setCurrentUserAndAccount(self::$cachedUser, self::$cachedAccount);
+        }
+
+        self::$user = null;
     }
 
     public static function setCurrentUserAndAccount(Users $user, Accounts $account) {
