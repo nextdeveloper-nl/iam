@@ -55,6 +55,7 @@ class IamSuccessManagerRole extends AbstractRole implements IAuthorizationRole
         return [
             'iam_accounts:read',
             'iam_account_types:read',
+            'iam_users:create',
             'iam_users:read',
             'iam_users:update',
             'iam_roles:read',
