@@ -12,6 +12,9 @@ return [
     'oauth' =>  [
         //  Default is valid for 180 days
         'token_valid_until' =>  env('IAM_TOKEN_VALID_UNTIL_INSTANT', 60 * 60 * 24 * 30 * 6),
+        'app_config'    =>  [
+            'background_image'  =>  env('IAM_OAUTH_APP_BACKGROUND_IMAGE', null),
+        ]
     ],
     'auth_envalopes'    =>  [
         'otp-email' =>  env('IAM_AUTH_OTP_EMAIL_ENVELOPE', NewEmailOtpGeneratedEnvelope::class)
