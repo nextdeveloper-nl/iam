@@ -235,7 +235,7 @@ class AccountsService extends AbstractAccountsService
         //(new NewAccountCreated($account))->handle();
 
         //  We need to bypass the create method here because parent will look for uuid instead of an ID
-        return $account;
+        return $account->fresh();
     }
 
     public static function createAccount($accountName, Users $user) : Accounts
