@@ -6,6 +6,7 @@ use App\Helpers\Http\ResponseHelper;
 use NextDeveloper\IAM\Exceptions\OAuthExceptions;
 use NextDeveloper\IAM\Helpers\UserHelper;
 use NextDeveloper\IAM\Http\Controllers\AbstractController;
+use NextDeveloper\IAM\Http\Requests\Authentication\OauthFingerprintCreateRequest;
 use NextDeveloper\IAM\Http\Requests\Authentication\OAuthGetLoginMechanismsRequest;
 use NextDeveloper\IAM\Http\Requests\Authentication\OauthOtpEmailValidationRequest;
 use NextDeveloper\IAM\Http\Requests\Authentication\OauthPasswordValidationRequest;
@@ -56,6 +57,14 @@ class OauthController extends AbstractController
         }
     }
 
+    public function setFingerprint($sessionId, OauthFingerprintCreateRequest $request)
+    {
+        OAuthService::setFingerprint(
+            sessionId: $sessionId,
+            fingerprint: $request->validated()
+        );
+    }
+
     public function usernamePasswordLogin($session, OauthUsernamePasswordLoginRequest $request) {
         try {
             $session = OAuthService::loginWithUsernamePassword(
@@ -85,9 +94,9 @@ class OauthController extends AbstractController
         }
     }
 
-    public function getAuthCode($session)
+    public function getAuthCode($session, OauthFingerprintCreateRequest $request)
     {
-        return OAuthService::getAuthCode($session);
+        return OAuthService::getAuthCode($session, $request->validated());
     }
 
     public function getToken($clientId)

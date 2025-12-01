@@ -41,6 +41,21 @@ class OAuthService
         return $session;
     }
 
+    public static function setFingerprint($sessionId, $fingerprint)
+    {
+        $sessionData = Cache::get('auth-session:' . $sessionId);
+
+        if(!$sessionId) {
+            throw OAuthExceptions::invalidSession();
+        }
+
+        $sessionData['fingerprint'] = $fingerprint;
+
+        Cache::put('auth-session:' . $sessionId, $sessionData, self::TIMEOUT);
+
+        return true;
+    }
+
     public static function getValidationStatus($sessionId)
     {
         $sessionData = Cache::get('auth-session:' . $sessionId);
@@ -226,7 +241,7 @@ class OAuthService
         return $isLoggedIn;
     }
 
-    public static function getAuthCode($session)
+    public static function getAuthCode($session, $fingerprint)
     {
         $sessionData = Cache::get('auth-session:' . $session);
 
@@ -246,12 +261,13 @@ class OAuthService
         if($validationStatus['can_get_auth_code']) {
             $authCode = uuid_create();
 
-            $authCodeDb = DB::insert('insert into oauth_auth_codes (id, user_id, client_id, scopes, expires_at) values (?, ?, ?, ?, ?)', [
+            $authCodeDb = DB::insert('insert into oauth_auth_codes (id, user_id, client_id, scopes, expires_at, fingerprint) values (?, ?, ?, ?, ?, ?)', [
                 $authCode,
                 $sessionData['iam_user_id'],
                 $sessionData['client_id'],
                 json_encode($sessionData['scope']),
-                Carbon::now()->addSeconds(180)
+                Carbon::now()->addSeconds(180),
+                json_encode($fingerprint)
             ]);
 
             Cache::put('auth-code:' . $authCode, $sessionData, self::TIMEOUT);
