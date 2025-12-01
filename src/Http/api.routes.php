@@ -347,8 +347,9 @@ Route::prefix('iam')->group(
                 Route::get('session', [\NextDeveloper\IAM\Http\Controllers\Authentication\OauthController::class, 'createSession']);
 
                 Route::prefix('{session}')->group(function() {
-                    Route::get('auth-code', [\NextDeveloper\IAM\Http\Controllers\Authentication\OauthController::class, 'getAuthCode']);
                     Route::get('login-mechanisms', [\NextDeveloper\IAM\Http\Controllers\Authentication\OauthController::class, 'getLoginMechanisms']);
+
+                    Route::post('fingerprint', [\NextDeveloper\IAM\Http\Controllers\Authentication\OauthController::class, 'setFingerprint']);
 
                     Route::get('send-otp-email', [\NextDeveloper\IAM\Http\Controllers\Authentication\OauthController::class, 'sendOtpEmail']);
 
@@ -357,6 +358,7 @@ Route::prefix('iam')->group(
                     Route::post('validate-password', [\NextDeveloper\IAM\Http\Controllers\Authentication\OauthController::class, 'validatePassword']);
                     Route::post('validate-otp-email', [\NextDeveloper\IAM\Http\Controllers\Authentication\OauthController::class, 'validateOtpEmail']);
 
+                    Route::post('auth-code', [\NextDeveloper\IAM\Http\Controllers\Authentication\OauthController::class, 'getAuthCode']);
                     Route::post('access-token', [\NextDeveloper\IAM\Http\Controllers\Authentication\OauthController::class, 'getToken']);
                 });
             });
