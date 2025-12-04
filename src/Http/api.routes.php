@@ -363,6 +363,15 @@ Route::prefix('iam')->group(
                 });
             });
 
+            Route::prefix('/mechanisms')->group(function() {
+                Route::prefix('/password')->group(function() {
+                    Route::post('/', [\NextDeveloper\IAM\Http\Controllers\Authentication\PasswordController::class, 'updatePassword']);
+                    //  @TODO: Enable forgot/reset password endpoints
+//                Route::post('forgot', [\NextDeveloper\IAM\Http\Controllers\Authentication\PasswordController::class, 'forgotPassword']);
+//                Route::post('reset', [\NextDeveloper\IAM\Http\Controllers\Authentication\PasswordController::class, 'resetPassword']);
+                });
+            });
+
             //  Routes to be made
             /*
             Route::prefix('/google')->group(function() {});
