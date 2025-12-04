@@ -7,6 +7,7 @@ use NextDeveloper\IAM\AuthenticationGrants\OneTimeEmail;
 use NextDeveloper\IAM\Database\Models\LoginMechanisms;
 use NextDeveloper\IAM\Database\Models\Users;
 use NextDeveloper\IAM\Exceptions\UnauthorizedException;
+use NextDeveloper\IAM\Helpers\UserHelper;
 use NextDeveloper\IAM\Services\AbstractServices\AbstractLoginMechanismsService;
 
 /**
@@ -286,5 +287,25 @@ class LoginMechanismsService extends AbstractLoginMechanismsService
             'rehashed_at' => $loginData['password_rehashed_at'] ?? null,
             'mechanism_name' => $mechanismName,
         ];
+    }
+
+    public static function getLoginMechanisms(Users $user = null)
+    {
+        if(!$user) {
+            $user = UserHelper::me();
+        }
+
+        $mechanisms = LoginMechanismsService::getByUserObject($user);
+
+        $mechanismList = [];
+
+        foreach ($mechanisms as $mechanism) {
+            $mechanismList[] = $mechanism->login_mechanism;
+        }
+
+        if(!in_array('OneTimeEmail', $mechanismList))
+            $mechanismList[] = 'OneTimeEmail';
+
+        return $mechanismList;
     }
 }

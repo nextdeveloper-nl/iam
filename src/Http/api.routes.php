@@ -364,6 +364,8 @@ Route::prefix('iam')->group(
             });
 
             Route::prefix('/mechanisms')->group(function() {
+                Route::get('/', [\NextDeveloper\IAM\Http\Controllers\Authentication\MechanismsController::class, 'index']);
+
                 Route::prefix('/password')->group(function() {
                     Route::post('/', [\NextDeveloper\IAM\Http\Controllers\Authentication\PasswordController::class, 'updatePassword']);
                     //  @TODO: Enable forgot/reset password endpoints
