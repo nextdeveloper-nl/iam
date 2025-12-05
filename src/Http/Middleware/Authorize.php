@@ -23,6 +23,23 @@ class Authorize extends Middleware
         $requestUri = $request->getRequestUri();
         $requestMethod = $request->getMethod();
 
+        //  If the request is for an anonymous uri then we can just return the request
+        //  Because this is out of our scope. We are only interested in the requests that are for a module
+        if(config('app.anonymous_uris')) {
+            foreach (config('app.anonymous_uris') as $uri) {
+                if(Str::contains($uri, '*')) {
+                    if(Str::startsWith($request->getRequestUri(), Str::before($uri, '*'))) {
+                        //  This means that the request is for an anonymous uri
+                        return $next($request);
+                    }
+                }
+
+                if($request->getRequestUri() == $uri) {
+                    return $next($request);
+                }
+            }
+        }
+
         if(Str::startsWith($requestUri, '/iam/authentication')) {
             if(config('leo.debug.authorization_roles'))
                 Log::debug('[Authorize] Since the user is trying to login we are not running authorization rules');
