@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 use NextDeveloper\Commons\Common\Cache\CacheHelper;
+use NextDeveloper\Commons\Database\GlobalScopes\LimitScope;
 use NextDeveloper\Commons\Database\Models\Languages;
 use NextDeveloper\Commons\Database\Models\Media;
 use NextDeveloper\IAM\Database\Filters\AccountsQueryFilter;
@@ -793,6 +794,10 @@ class UserHelper
         }
 
         $query = Users::query()
+            ->withoutGlobalScopes([
+                LimitScope::class,
+                AuthorizationScope::class,
+            ])
             ->join('iam_role_user', 'iam_role_user.iam_user_id', '=', 'iam_users.id')
             ->where('iam_role_user.iam_role_id', $role->id)
             ->where('iam_role_user.is_active', 1)
@@ -834,5 +839,28 @@ class UserHelper
 
         $hash = md5(strtolower(trim($email)));
         return "https://www.gravatar.com/avatar/{$hash}?s={$size}&d={$default}";
+    }
+
+    public static function getAccountUsersByRole(Accounts $account, string $roleName, $authorization = true): Collection
+    {
+        $role = RolesService::getRoleByName($roleName);
+
+        if (!$role) {
+            Log::error("[UserHelper] Role with name $roleName not found");
+            return collect();
+        }
+
+        $query = Users::query()
+            ->when($authorization, function ($query) {
+                return $query->withoutGlobalScope(AuthorizationScope::class);
+            })
+            ->join('iam_role_user', 'iam_role_user.iam_user_id', '=', 'iam_users.id')
+            ->where('iam_role_user.iam_role_id', $role->id)
+            ->where('iam_role_user.iam_account_id', $account->id)
+            ->where('iam_role_user.is_active', 1)
+            ->select('iam_users.*')
+            ->distinct();
+
+        return $query->get();
     }
 }
