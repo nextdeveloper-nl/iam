@@ -2,6 +2,7 @@
 
 namespace NextDeveloper\IAM\Helpers;
 
+use App\Models\User;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection as SupportCollection;
@@ -88,7 +89,27 @@ class UserHelper
             ->where('id', $token[0]->user_id)
             ->first();
 
+        $user = self::fixUserPreferences($user);
+
         self::$user = $user;
+
+        return $user;
+    }
+
+    public static function fixUserPreferences(Users $user)
+    {
+        $isUpdated = false;
+
+        if(!$user->common_language_id) {
+            $isUpdated = true;
+            $user->update([
+                'common_language_id' => Languages::where('code', app()->getLocale())->first()->id
+            ]);
+        }
+
+        if($isUpdated) {
+            return $user->fresh();
+        }
 
         return $user;
     }
