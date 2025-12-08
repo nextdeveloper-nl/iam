@@ -3,6 +3,7 @@
 namespace NextDeveloper\IAM\Http\Controllers\Users;
 
 use Illuminate\Http\Request;
+use NextDeveloper\Commons\Database\Models\Languages;
 use NextDeveloper\Commons\Http\Controllers\AbstractController;
 use NextDeveloper\Commons\Http\Response\ResponsableFactory;
 use NextDeveloper\IAM\Database\Filters\UsersQueryFilter;
@@ -23,6 +24,11 @@ class MyUsersController extends AbstractController
      */
     public function index(UsersQueryFilter $filter, Request $request) {
         $me = UserHelper::me();
+
+        if(!$me->common_language_id)
+            $me->update([
+                'common_language_id' => Languages::where('code', app()->getLocale())->first()->id
+            ]);
 
         $me = UsersPerspective::withoutGlobalScope(AuthorizationScope::class)
             ->where('id', $me->id)
