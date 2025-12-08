@@ -53,6 +53,7 @@ return [
             //  and/or added to the team without that domain.
             'allow_external_users' =>  false
         ],
+        'system_user_email' =>  env('SYSTEM_USER_EMAIL', ''),
         'autoadd_users_with_same_domain'    =>  env('AUTOADD_USERS_WITH_SAME_DOMAIN', true)
     ],
 

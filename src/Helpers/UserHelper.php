@@ -4,6 +4,7 @@ namespace NextDeveloper\IAM\Helpers;
 
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Collection as SupportCollection;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -56,11 +57,11 @@ class UserHelper
         $authorization = str_replace('Bearer ', '', $authorization);
 
         //  There is a weird situation where sometimes clients can send null or null as text.
-        if(trim($authorization) == null || trim($authorization) == 'null')
+        if (trim($authorization) == null || trim($authorization) == 'null')
             return null;
 
         try {
-            if(!Str::isUuid($authorization)) {
+            if (!Str::isUuid($authorization)) {
                 return null;
             }
 
@@ -73,7 +74,7 @@ class UserHelper
         }
 
         if (!$token) {
-            if(Str::startsWith(request()->getRequestUri(), '/public/')) {
+            if (Str::startsWith(request()->getRequestUri(), '/public/')) {
                 //  This is a public route, we dont need to log this as error
                 return null;
             }
@@ -94,11 +95,11 @@ class UserHelper
 
     public static function getUserWithId($userId, $skipAccessCheck = false)
     {
-        if($skipAccessCheck) {
+        if ($skipAccessCheck) {
             return Users::withoutGlobalScope(AuthorizationScope::class)->where('id', $userId)->first();
         }
 
-        if(Str::isUuid($userId)) {
+        if (Str::isUuid($userId)) {
             return Users::where('uuid', $userId)->first();
         }
 
@@ -168,7 +169,7 @@ class UserHelper
      */
     public static function getAccountById($accountId): ?Accounts
     {
-        if(Str::isUuid($accountId)) {
+        if (Str::isUuid($accountId)) {
             return Accounts::withoutGlobalScopes()
                 ->where('uuid', $accountId)
                 ->first();
@@ -315,7 +316,7 @@ class UserHelper
         } else
             return null;
 
-        if($relation) {
+        if ($relation) {
             $current = Accounts::withoutGlobalScope(AuthorizationScope::class)
                 ->where('id', $relation->iam_account_id)
                 ->first();
@@ -387,18 +388,18 @@ class UserHelper
     {
         //  This happens when the user is not logged in OR the background process is actually trying to create
         //  this user.
-        if(!UserHelper::currentAccount())
+        if (!UserHelper::currentAccount())
             return false;
 
         $userAccountRelation = AccountUsers::withoutGlobalScope(AuthorizationScope::class)
             ->where([
-                'iam_account_id'    =>  UserHelper::currentAccount()->id,
-                'iam_user_id'       =>  $user->id
+                'iam_account_id' => UserHelper::currentAccount()->id,
+                'iam_user_id' => $user->id
             ])->first();
 
         //  Marking this because we need to know if the user registered is being registered under his master account
         //  If user is related to an account but it's not a master account, then we set;
-        if($userAccountRelation) {
+        if ($userAccountRelation) {
             return true;
         }
 
@@ -411,12 +412,12 @@ class UserHelper
      * @param Users|null $user
      * @return void
      */
-    public static function isTeamOwner(Users $user = null) : bool
+    public static function isTeamOwner(Users $user = null): bool
     {
-        if(!$user)
+        if (!$user)
             $user = self::currentUser();
 
-        if(self::currentAccount()->iam_user_id == $user->id)
+        if (self::currentAccount()->iam_user_id == $user->id)
             return true;
 
         return false;
@@ -428,7 +429,7 @@ class UserHelper
      * @param Users|null $user
      * @return bool
      */
-    public static function isAccountOwner(Users $user = null) : bool
+    public static function isAccountOwner(Users $user = null): bool
     {
         return self::isTeamOwner($user);
     }
@@ -476,9 +477,18 @@ class UserHelper
         return $users;
     }
 
+    public static function getSystemUser() : Users
+    {
+        $users = Users::withoutGlobalScope(AuthorizationScope::class)
+            ->where('email', config('iam.system_user_email'))
+            ->first();
+
+        return $users;
+    }
+
     public static function getWithId($id): ?Users
     {
-        if(Str::isUuid($id)) {
+        if (Str::isUuid($id)) {
             return Users::withoutGlobalScope(AuthorizationScope::class)
                 ->where('uuid', $id)
                 ->first();
@@ -527,7 +537,7 @@ class UserHelper
         $roles = self::getRoles($user);
 
         foreach ($roles as $role) {
-            if(!class_exists($role->class)) {
+            if (!class_exists($role->class)) {
                 continue;
             }
 
@@ -543,13 +553,13 @@ class UserHelper
         return null;
     }
 
-    public static function bypassRolesCheck($bypass = null) : bool
+    public static function bypassRolesCheck($bypass = null): bool
     {
-        if($bypass && is_bool($bypass)) {
+        if ($bypass && is_bool($bypass)) {
             self::$isBypassRolesCheck = $bypass;
         }
 
-        if(self::hasRole('system-admin', self::me()))
+        if (self::hasRole('system-admin', self::me()))
             return true;
 
         return self::$isBypassRolesCheck;
@@ -557,13 +567,13 @@ class UserHelper
 
     public static function can($method, $model, Users $user = null)
     {
-        if(self::bypassRolesCheck())
+        if (self::bypassRolesCheck())
             return true;
 
         if (!$user)
             $user = self::me();
 
-        if(!$user) {
+        if (!$user) {
             Log::error('[UserHelper@can] User is null. This means that the user is not logged in or ' .
                 'the user is not registered in the system. Please check the user registration process.');
 
@@ -584,7 +594,7 @@ class UserHelper
 
             //  If still we dont have role for the related model, this means that the role is not in the default
             //  roles. Thats why we return false.
-            if(!$roleForModel)
+            if (!$roleForModel)
                 return false;
         }
 
@@ -644,8 +654,8 @@ class UserHelper
 
         $roles = RolesService::getUserRoles($user, self::currentAccount($user));
 
-        if(!$roles) {
-            if($user)
+        if (!$roles) {
+            if ($user)
                 Log::error('[UserHelper] Cannot find any roles for user: ' . $user->uuid);
             else
                 Log::error('[UserHelper] Roles are trying to be access when we make this request: ' . request()->getRequestUri());
@@ -654,7 +664,7 @@ class UserHelper
         return $roles;
     }
 
-    public static function dumpRoles(Users $user = null) : void
+    public static function dumpRoles(Users $user = null): void
     {
         $roles = self::getRoles($user);
 
@@ -762,7 +772,7 @@ class UserHelper
 
     public static function getAccountOwner(Accounts|int $accounts): ?Users
     {
-        if(is_int($accounts)) {
+        if (is_int($accounts)) {
             $accounts = Accounts::withoutGlobalScope(AuthorizationScope::class)
                 ->where('id', $accounts)
                 ->first();
@@ -795,7 +805,7 @@ class UserHelper
 
     public static function setAdminAsCurrentUser()
     {
-        if(UserHelper::me()) {
+        if (UserHelper::me()) {
             self::$cachedUser = UserHelper::me();
             self::$cachedAccount = UserHelper::currentAccount();
         }
@@ -806,7 +816,7 @@ class UserHelper
 
     public static function revertBackToActualUser()
     {
-        if(self::$cachedUser) {
+        if (self::$cachedUser) {
             Log::info('[UserHelper] Reverting back to actual user: ' . self::$cachedUser->uuid);
             UserHelper::setCurrentUserAndAccount(self::$cachedUser, self::$cachedAccount);
         }
@@ -814,17 +824,19 @@ class UserHelper
         self::$user = null;
     }
 
-    public static function setCurrentUserAndAccount(Users $user, Accounts $account) {
+    public static function setCurrentUserAndAccount(Users $user, Accounts $account)
+    {
         self::setUserById($user->id);
         self::setCurrentAccountById($account->id);
     }
 
     /**
-     * Get all users that have a specific role.
-     *
-     * @param string $roleName The name of the role to find users for
+     * @param string $roleName
+     * @param Accounts|null $account
+     * @param $authorization
+     * @return SupportCollection
      */
-    public static function getUsersWithRole(string $roleName, Accounts $accounts = null)
+    public static function getUsersWithRole(string $roleName, Accounts $account = null, $authorization = true): SupportCollection
     {
         $role = RolesService::getRoleByName($roleName);
 
@@ -834,14 +846,17 @@ class UserHelper
         }
 
         $query = Users::query()
+            ->when($authorization, function ($query) {
+                return $query->withoutGlobalScope(AuthorizationScope::class);
+            })
             ->join('iam_role_user', 'iam_role_user.iam_user_id', '=', 'iam_users.id')
             ->where('iam_role_user.iam_role_id', $role->id)
             ->where('iam_role_user.is_active', 1)
             ->select('iam_users.*')
             ->distinct();
 
-        if($accounts) {
-            $query->where('iam_role_user.iam_account_id', $accounts->id);
+        if ($account) {
+            $query->where('iam_role_user.iam_account_id', $account->id);
         }
 
         // Get users with a role in one query using join
@@ -852,7 +867,7 @@ class UserHelper
     {
         $profile_picture_url = null;
 
-        if($profilePictureIdentity != null) {
+        if ($profilePictureIdentity != null) {
             $profilePicture = Media::where('id', $profilePictureIdentity)
                 ->first();
 
@@ -860,7 +875,7 @@ class UserHelper
         }
 
         // Use Gravatar as fallback when the profile picture is not available
-        if(!$profile_picture_url) {
+        if (!$profile_picture_url) {
             $profile_picture_url = UserHelper::getGravatarUrl($email ?? null);
         }
 
