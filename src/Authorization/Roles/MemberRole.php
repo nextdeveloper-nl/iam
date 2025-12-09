@@ -44,6 +44,16 @@ class MemberRole extends AbstractRole implements IAuthorizationRole
         $where = [];
         $amISuccessManager = UserHelper::has('success-manager');
 
+        if($model->getTable() == 'iam_accounts') {
+            if(config('leo.debug.authorization_role'))
+                Log::info('[MemberRole] Applying iam_account_id for iam_accounts table');
+
+            $where[] = ['id', UserHelper::currentAccount()->id];
+            $builder->where('id', UserHelper::currentAccount()->id);
+
+            return;
+        }
+
         if($isAccountIdExists) {
             if(config('leo.debug.authorization_role'))
                 Log::info('[MemberRole] Applying iam_account_id');
@@ -69,6 +79,8 @@ class MemberRole extends AbstractRole implements IAuthorizationRole
         } else {
             $builder->where($where);
         }
+
+
     }
 
     /**
