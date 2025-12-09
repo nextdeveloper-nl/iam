@@ -103,7 +103,7 @@ class UserHelper
         if(!$user->common_language_id) {
             $isUpdated = true;
             $user->update([
-                'common_language_id' => Languages::where('code', app()->getLocale())->first()->id
+                'common_language_id' => Languages::withoutGlobalScopes()->where('code', app()->getLocale())->first()->id
             ]);
         }
 
