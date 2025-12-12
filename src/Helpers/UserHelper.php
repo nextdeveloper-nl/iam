@@ -501,7 +501,7 @@ class UserHelper
     public static function getSystemUser() : Users
     {
         $users = Users::withoutGlobalScope(AuthorizationScope::class)
-            ->where('email', config('iam.system_user_email'))
+            ->where('email', config('iam.configuration.system_user_email'))
             ->first();
 
         return $users;
