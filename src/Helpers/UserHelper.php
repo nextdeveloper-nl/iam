@@ -840,6 +840,8 @@ class UserHelper
         if (self::$cachedUser) {
             Log::info('[UserHelper] Reverting back to actual user: ' . self::$cachedUser->uuid);
             UserHelper::setCurrentUserAndAccount(self::$cachedUser, self::$cachedAccount);
+            
+            return;
         }
 
         self::$user = null;
