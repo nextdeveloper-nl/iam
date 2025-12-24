@@ -387,13 +387,13 @@ Route::prefix('iam')->group(
         Route::prefix('my')->group(
             function () {
                 Route::get('/roles', 'Roles\MyRolesController@index');
-                Route::put('/roles', 'Roles\MyRolesController@update');
+                Route::patch('/roles', 'Roles\MyRolesController@update');
 
                 Route::get('/accounts', 'Accounts\MyAccountsController@index');
-                Route::put('/accounts', 'Accounts\MyAccountsController@update');
+                Route::patch('/accounts', 'Accounts\MyAccountsController@update');
 
                 Route::get('/profile', 'Users\MyUsersController@index');
-                Route::put('/profile', 'Users\MyUsersController@update');
+                Route::patch('/profile', 'Users\MyUsersController@update');
             }
         );
     }
