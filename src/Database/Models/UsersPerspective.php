@@ -34,6 +34,7 @@ use NextDeveloper\IAM\Database\Observers\UsersPerspectiveObserver;
  * @property boolean $is_registered
  * @property boolean $is_active
  * @property integer $iam_account_id
+ * @property boolean $is_profile_verified
  * @property \Carbon\Carbon $created_at
  * @property \Carbon\Carbon $updated_at
  * @property \Carbon\Carbon $deleted_at
@@ -73,6 +74,7 @@ class UsersPerspective extends Model
         'profile_picture',
         'is_registered',
         'is_active',
+        'is_profile_verified',
         'iam_account_id',
     ];
 
@@ -107,16 +109,17 @@ class UsersPerspective extends Model
         'birthday' => 'datetime',
         'nin' => 'string',
         'country' => 'string',
-        'common_country_id' =>  'integer',
-        'common_language_id'    =>  'integer',
+        'common_country_id' => 'integer',
+        'common_language_id' => 'integer',
         'language' => 'string',
         'phone_number' => 'string',
         'roles' => \NextDeveloper\Commons\Database\Casts\TextArray::class,
         'tags' => \NextDeveloper\Commons\Database\Casts\TextArray::class,
         'profile_picture' => 'string',
         'is_registered' => 'boolean',
+        'is_profile_verified'   =>  'boolean',
         'is_active' => 'boolean',
-        'has_valid_google_login'    =>  'boolean',
+        'has_valid_google_login' => 'boolean',
         'created_at' => 'datetime',
         'updated_at' => 'datetime',
         'deleted_at' => 'datetime',
