@@ -187,9 +187,31 @@ class UsersService extends AbstractUsersService
         $updated = parent::update($id, $data);
 
         if(array_key_exists('nin', $data)) {
-            NinService::verifyUser($model);
+            //  Unfortunately NIN service is now disabled. Therefor we cannot  validate now. We will validate this
+            //  manually for some time.
+
+            //  NinService::verifyUser($model);
         }
 
         return $updated;
+    }
+
+    /**
+     * This is a special function to approve NIN number and approve the profile. The problem is, sometimes we may not
+     * have the capability to approve users identity information and we need a simple way to make the user approved
+     * to make them work.
+     *
+     * @param $id
+     * @return void
+     */
+    public static function approveProfile($id) {
+        if(UserHelper::has('accounting-admin')) {
+            UserHelper::runAsAdmin(function() use ($id) {
+                $user = UserHelper::getUserWithId($id);
+                $user->update([
+                    'is_profile_verified' => true
+                ]);
+            })
+        }
     }
 }
