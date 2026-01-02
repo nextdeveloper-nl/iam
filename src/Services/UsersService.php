@@ -211,7 +211,7 @@ class UsersService extends AbstractUsersService
                 $user->update([
                     'is_profile_verified' => true
                 ]);
-            })
+            });
         }
     }
 }
