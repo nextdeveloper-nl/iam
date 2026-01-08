@@ -15,6 +15,7 @@ use NextDeveloper\IAM\Database\Models\Users;
 use NextDeveloper\IAM\Database\Scopes\AuthorizationScope;
 use NextDeveloper\IAM\Helpers\UserHelper;
 use NextDeveloper\IAM\Services\AbstractServices\AbstractUsersService;
+use phpDocumentor\Reflection\DocBlock\StandardTagFactory;
 
 /**
  * This class is responsible from managing the data for Users
@@ -48,6 +49,21 @@ class UsersService extends AbstractUsersService
         $role = RolesService::getRole($role);
 
         RolesService::assignUserToRole($user, $role);
+    }
+
+    public static function setDefaultLanguage(Users $user) : Users
+    {
+        $commonLanguageId = $user->common_language_id;
+
+        if(!$commonLanguageId) {
+            $user->update([
+                'common_language_id' => Languages::where('code', 'en')->first()->id
+            ]);
+
+            return $user->fresh();
+        }
+
+        return $user;
     }
 
     /**

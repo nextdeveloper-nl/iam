@@ -120,6 +120,7 @@ class MemberRole extends AbstractRole implements IAuthorizationRole
     {
         return [
             'iam_accounts:read',
+            'iam_accounts:create',
             'iam_account_types:read',
             'iam_users:read',
             'iam_users:create',

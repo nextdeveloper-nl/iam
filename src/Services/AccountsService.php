@@ -7,6 +7,7 @@ use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use NextDeveloper\Accounting\Helpers\AccountingHelper;
+use NextDeveloper\Commons\Database\Models\Countries;
 use NextDeveloper\Commons\Database\Models\Domains;
 use NextDeveloper\Commons\Exceptions\CannotCreateModelException;
 use NextDeveloper\Commons\Helpers\MetaHelper;
@@ -139,6 +140,8 @@ class AccountsService extends AbstractAccountsService
 
     public static function create(array $data) : Accounts
     {
+        $accountType = null;
+
         if(!array_key_exists('iam_user_id', $data)) {
             $user = UserHelper::me();
 
@@ -153,6 +156,12 @@ class AccountsService extends AbstractAccountsService
             $accountType = AccountTypes::withoutGlobalScopes()->where('name', 'Team')->first();
 
             $data['iam_account_type_id'] = $accountType->id;
+        } else {
+            $accountType = AccountTypes::withoutGlobalScopes()->where('uuid', $data['iam_account_type_id'])->first();
+        }
+
+        if($accountType->name == 'Team') {
+
         }
 
         $account = parent::create($data);
@@ -320,5 +329,18 @@ class AccountsService extends AbstractAccountsService
         ])->delete();
 
         return true;
+    }
+
+    public static function fixCommonCountryId(Accounts $account) : Accounts
+    {
+        UserHelper::runAsAdmin(function() use($account) {
+            $country = Countries::where('code', config('leo.default_country_code'))->first();
+
+            $account->update([
+                'common_country_id' => $country->id
+            ]);
+        });
+
+        return $account->fresh();
     }
 }
