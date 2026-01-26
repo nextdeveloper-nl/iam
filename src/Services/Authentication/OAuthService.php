@@ -70,6 +70,7 @@ class OAuthService
             'is_password_validated' => $sessionData['is_password_validated'] ?? false,
             'is_otp_email_validated' => $sessionData['is_otp_email_validated'] ?? false,
             'requires_2fa' => $sessionData['requires_2fa'] ?? false,
+            'redirect_uri' => $sessionData['redirect'] ?? null,
             'can_get_auth_code' => (
                 (isset($sessionData['is_password_validated']) && $sessionData['is_password_validated'] === true) ||
                 (isset($sessionData['is_otp_email_validated']) && $sessionData['is_otp_email_validated'] === true)
@@ -81,6 +82,18 @@ class OAuthService
         }
 
         return $data;
+    }
+
+    public static function setGoogleLoginValidated($session, $user)
+    {
+        $sessionData = Cache::get('auth-session:' . $session);
+
+        $sessionData['iam_user_id'] = $user->id;
+        $sessionData['email'] = $user->email;
+        $sessionData['username'] = $user->username;
+        $sessionData['is_password_validated'] = true;
+
+        Cache::set('auth-session:' . $session, $sessionData, self::TIMEOUT);
     }
 
     public static function sendOtpEmail($sessionId)
