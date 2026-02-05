@@ -65,9 +65,20 @@ class AbstractRole implements Scope
 
         $isPublicExists = \NextDeveloper\Commons\Helpers\DatabaseHelper::isColumnExists($model->getTable(), 'is_public');
 
-        if($method == 'update' && $isPublicExists) {
-            //  Cannot update public objects
-            return false;
+        $isPublic = false;
+
+        if($isPublicExists) {
+            $isPublic = $model->is_public;
+        }
+        
+        if($method == 'update' && $isPublic) {
+            if(!(
+                $model->iam_account_id === UserHelper::currentAccount()->id &&
+                $model->iam_user_id === UserHelper::me()->id
+            )) {
+                //  Cannot update public objects, if you are not the owner
+                return false;
+            }
         }
 
         switch ($method) {
