@@ -15,7 +15,7 @@ class RegistrationService
             return $user;
         }
 
-        $user = UsersService::createWithEmail($email);
+        $user = UsersService::createWithEmail($email, false);
 
         return $user;
     }
