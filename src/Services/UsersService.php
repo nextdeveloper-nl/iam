@@ -73,7 +73,7 @@ class UsersService extends AbstractUsersService
      * @return Users
      * @throws \Exception
      */
-    public static function createWithEmail($email) : Users
+    public static function createWithEmail($email, $addToCurrentAccount = true) : Users
     {
         $user = Users::withoutGlobalScope(AuthorizationScope::class)
             ->where('email', $email)
@@ -85,20 +85,22 @@ class UsersService extends AbstractUsersService
             ]);
         }
 
-        if(UserHelper::currentAccount()) {
-            $checkRelation = AccountUsers::withoutGlobalScope(AuthorizationScope::class)
-                ->where([
-                    'iam_account_id'    =>  UserHelper::currentAccount()->id,
-                    'iam_user_id'       =>  $user->id
-                ])->first();
+        if($addToCurrentAccount) {
+            if (UserHelper::currentAccount()) {
+                $checkRelation = AccountUsers::withoutGlobalScope(AuthorizationScope::class)
+                    ->where([
+                        'iam_account_id' => UserHelper::currentAccount()->id,
+                        'iam_user_id' => $user->id
+                    ])->first();
 
-            //  This is a fix, just to be sure that the current account and the user given is related.
-            if(!$checkRelation) {
-                AccountUsersService::create([
-                    'iam_account_id'    =>  UserHelper::currentAccount()->id,
-                    'iam_user_id'       =>  $user->id,
-                    'is_active'         =>  true
-                ]);
+                //  This is a fix, just to be sure that the current account and the user given is related.
+                if (!$checkRelation) {
+                    AccountUsersService::create([
+                        'iam_account_id' => UserHelper::currentAccount()->id,
+                        'iam_user_id' => $user->id,
+                        'is_active' => true
+                    ]);
+                }
             }
         }
 
