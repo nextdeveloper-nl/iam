@@ -93,6 +93,10 @@ class UserHelper
 
         self::$user = $user;
 
+        if($token[0]->account_id !== null) {
+            self::setCurrentAccountById($token[0]->account_id);
+        }
+
         return $user;
     }
 
