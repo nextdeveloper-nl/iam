@@ -9,6 +9,7 @@ use NextDeveloper\Commons\Http\Traits\Tags;
 use NextDeveloper\IAM\Database\Filters\UserRolesQueryFilter;
 use NextDeveloper\IAM\Database\Models\UserRoles;
 use NextDeveloper\IAM\Http\Controllers\AbstractController;
+use NextDeveloper\IAM\Http\Requests\RoleUsers\UserRolesCreateRequest;
 use NextDeveloper\IAM\Http\Requests\UserRoles\UserRolesCreateRequest;
 use NextDeveloper\IAM\Http\Requests\UserRoles\UserRolesUpdateRequest;
 use NextDeveloper\IAM\Services\UserRolesService;
