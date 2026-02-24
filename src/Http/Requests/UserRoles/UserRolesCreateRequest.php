@@ -4,7 +4,7 @@ namespace NextDeveloper\IAM\Http\Requests\RoleUsers;
 
 use NextDeveloper\Commons\Http\Requests\AbstractFormRequest;
 
-class RoleUsersCreateRequest extends AbstractFormRequest
+class UserRolesCreateRequest extends AbstractFormRequest
 {
 
     /**
@@ -13,6 +13,8 @@ class RoleUsersCreateRequest extends AbstractFormRequest
     public function rules()
     {
         return [
+            'iam_user_id'   =>  'required|exists:users,uuid',
+            'iam_account_id'    =>  'required|exists:accounts,uuid',
             'iam_role_id' => 'required|exists:iam_roles,uuid|uuid',
             'is_active' => 'boolean',
             'role_data' => 'nullable',
