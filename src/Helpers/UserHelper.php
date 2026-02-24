@@ -257,6 +257,7 @@ class UserHelper
 
         $account = Accounts::withoutGlobalScopes()
             ->where('iam_user_id', $user->id)
+            ->orderBy('id', 'asc')
             ->first();
 
         if (!$account && $createAccount) {

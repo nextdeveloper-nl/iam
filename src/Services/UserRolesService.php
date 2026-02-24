@@ -38,6 +38,8 @@ class UserRolesService extends AbstractUserRolesService
 
     public static function create(array $data)
     {
+        //  Here we should check privileges not to create faulty role.
+
         if (array_key_exists('iam_role_id', $data)) {
             $data['iam_role_id'] = DatabaseHelper::uuidToId(
                 '\NextDeveloper\IAM\Database\Models\Roles',
