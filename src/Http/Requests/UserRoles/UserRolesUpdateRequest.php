@@ -4,7 +4,7 @@ namespace NextDeveloper\IAM\Http\Requests\UserRoles;
 
 use NextDeveloper\Commons\Http\Requests\AbstractFormRequest;
 
-class UserRolesCreateRequest extends AbstractFormRequest
+class UserRolesUpdateRequest extends AbstractFormRequest
 {
 
     /**
