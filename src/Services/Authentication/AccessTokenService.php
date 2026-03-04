@@ -3,6 +3,8 @@
 namespace NextDeveloper\IAM\Services\Authentication;
 
 use Carbon\Carbon;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
 use NextDeveloper\Commons\Helpers\RandomHelper;
 use NextDeveloper\IAM\Database\Models\Users;
 use NextDeveloper\IAM\Database\OAuthModels\OauthAccessTokens;
@@ -10,6 +12,7 @@ use NextDeveloper\IAM\Database\OAuthModels\OauthAuthCodes;
 use NextDeveloper\IAM\Database\OAuthModels\OauthClients;
 use NextDeveloper\IAM\Database\Scopes\AuthorizationScope;
 use NextDeveloper\IAM\Exceptions\OAuthExceptions;
+use NextDeveloper\IAM\Helpers\UserHelper;
 
 class AccessTokenService
 {
@@ -96,5 +99,47 @@ class AccessTokenService
         }
 
         return $uniqueId;
+    }
+
+    public static function generateToken($name, $expires_at, $appName = 'My personal application')
+    {
+        $client = DB::table('oauth_clients')->where('user_id', UserHelper::me()->id)->first();
+
+        if (!$client) {
+            $client = self::createApplication($appName);
+        } else {
+            $client = $client->id;
+        }
+
+        $token = DB::table('oauth_access_tokens')->insertGetId([
+            'user_id' => UserHelper::me()->id,
+            'client_id' => $client,
+            'name' => $name,
+            'scopes' => '[]',
+            'account_id'    =>  UserHelper::currentAccount()->id,
+            'created_at' => now(),
+            'updated_at' => now(),
+            'expires_at' => $expires_at
+        ]);
+
+        return [
+            'name' => $name,
+            'token' => $token,
+            'expires_at' => $expires_at
+        ];
+    }
+
+    public static function createApplication($name)
+    {
+        return DB::table('oauth_clients')->insertGetId([
+            'user_id' => UserHelper::me()->id,
+            'account_id' => UserHelper::currentAccount()->id,
+            'name' => $name,
+            'secret' => Str::random(40),
+            'personal_access_client' => 1,
+            'redirect' => 'http://127.0.0.1:8000/callback',
+            'created_at' => now(),
+            'updated_at' => now()
+        ]);
     }
 }
