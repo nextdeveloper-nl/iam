@@ -223,7 +223,7 @@ class UsersService extends AbstractUsersService
      * @return void
      */
     public static function approveProfile($id) {
-        if(UserHelper::has('accounting-admin')) {
+        if(UserHelper::has('accounting-admin') || UserHelper::has('sales-admin')) {
             UserHelper::runAsAdmin(function() use ($id) {
                 $user = UserHelper::getUserWithId($id);
                 $user->update([
