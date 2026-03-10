@@ -9,13 +9,12 @@
         "php": ">=8.2.0",
         "league/fractal": "*",
         "monolog/monolog": "*",
-        "beyondcode/laravel-websockets": "*",
         "laravel/socialite": "*"
     },
     "require-dev": {
-        "illuminate/support": "5.5.*",
-        "illuminate/database": "5.5.*",
-        "illuminate/validation": "5.5.*"
+        "illuminate/support": ">=8.0",
+        "illuminate/database": ">=8.0",
+        "illuminate/validation": ">=8.0"
     },
     "autoload": {
         "psr-4": {
