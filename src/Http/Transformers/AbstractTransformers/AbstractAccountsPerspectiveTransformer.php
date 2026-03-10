@@ -54,27 +54,31 @@ class AbstractAccountsPerspectiveTransformer extends AbstractTransformer
      */
     public function transform(AccountsPerspective $model)
     {
-        $iamUserId = \NextDeveloper\IAM\Database\Models\Users::where('id', $model->iam_user_id)->first();
-        $commonDomainId = \NextDeveloper\Commons\Database\Models\Domains::where('id', $model->common_domain_id)->first();
-
+                                                $iamUserId = \NextDeveloper\IAM\Database\Models\Users::where('id', $model->iam_user_id)->first();
+                                                            $commonDomainId = \NextDeveloper\Commons\Database\Models\Domains::where('id', $model->common_domain_id)->first();
+                                                            $commonCountryId = \NextDeveloper\Commons\Database\Models\Countries::where('id', $model->common_country_id)->first();
+                        
         return $this->buildPayload(
             [
-                'id' => $model->uuid,
-                'name' => $model->name,
-                'description' => $model->description,
-                'phone_number' => $model->phone_number,
-                'account_owner' => $model->account_owner,
-                'iam_user_id' => $iamUserId ? $iamUserId->uuid : null,
-                'account_type' => $model->account_type,
-                'is_active' => $model->is_active,
-                'tags' => $model->tags,
-                'total_user_count' => $model->total_user_count,
-                'registered_user_count' => $model->registered_user_count,
-                'profile_image_url' =>  $model->profile_image_url,
-                'domain_name' => $model->domain_name,
-                'common_domain_id'  => $commonDomainId ? $commonDomainId->uuid : null,
-                'country_name' => $model->country_name,
-                'common_country_id' => $model->common_country_id
+            'id'  =>  $model->uuid,
+            'name'  =>  $model->name,
+            'description'  =>  $model->description,
+            'phone_number'  =>  $model->phone_number,
+            'account_owner'  =>  $model->account_owner,
+            'iam_user_id'  =>  $iamUserId ? $iamUserId->uuid : null,
+            'account_type'  =>  $model->account_type,
+            'is_active'  =>  $model->is_active,
+            'tags'  =>  $model->tags,
+            'total_user_count'  =>  $model->total_user_count,
+            'registered_user_count'  =>  $model->registered_user_count,
+            'domain_name'  =>  $model->domain_name,
+            'common_domain_id'  =>  $commonDomainId ? $commonDomainId->uuid : null,
+            'country_name'  =>  $model->country_name,
+            'profile_image_url'  =>  $model->profile_image_url,
+            'common_country_id'  =>  $commonCountryId ? $commonCountryId->uuid : null,
+            'created_at'  =>  $model->created_at,
+            'updated_at'  =>  $model->updated_at,
+            'deleted_at'  =>  $model->deleted_at,
             ]
         );
     }
@@ -163,5 +167,6 @@ class AbstractAccountsPerspectiveTransformer extends AbstractTransformer
         return $this->collection($addresses, new AddressesTransformer());
     }
     // EDIT AFTER HERE - WARNING: ABOVE THIS LINE MAY BE REGENERATED AND YOU MAY LOSE CODE
+
 
 }

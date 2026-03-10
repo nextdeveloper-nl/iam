@@ -3201,5 +3201,77 @@ return [
         return NextDeveloper\IAM\Database\Models\IamUsersPerspective::findByRef($value);
 },
 
+'iamaccount' => function ($value) {
+        return NextDeveloper\IAM\Database\Models\IamAccount::findByRef($value);
+},
+
+'iamuser' => function ($value) {
+        return NextDeveloper\IAM\Database\Models\IamUser::findByRef($value);
+},
+
+'iamaccounttype' => function ($value) {
+        return NextDeveloper\IAM\Database\Models\IamAccountType::findByRef($value);
+},
+
+'iambackenddirectory' => function ($value) {
+        return NextDeveloper\IAM\Database\Models\IamBackendDirectory::findByRef($value);
+},
+
+'iamrolepermission' => function ($value) {
+        return NextDeveloper\IAM\Database\Models\IamRolePermission::findByRef($value);
+},
+
+'iamloginlog' => function ($value) {
+        return NextDeveloper\IAM\Database\Models\IamLoginLog::findByRef($value);
+},
+
+'iamaccountuser' => function ($value) {
+        return NextDeveloper\IAM\Database\Models\IamAccountUser::findByRef($value);
+},
+
+'iamloginmechanism' => function ($value) {
+        return NextDeveloper\IAM\Database\Models\IamLoginMechanism::findByRef($value);
+},
+
+'iamroleuser' => function ($value) {
+        return NextDeveloper\IAM\Database\Models\IamRoleUser::findByRef($value);
+},
+
+'iampermission' => function ($value) {
+        return NextDeveloper\IAM\Database\Models\IamPermission::findByRef($value);
+},
+
+'iamrole' => function ($value) {
+        return NextDeveloper\IAM\Database\Models\IamRole::findByRef($value);
+},
+
+'iamsshpublickey' => function ($value) {
+        return NextDeveloper\IAM\Database\Models\IamSshPublicKey::findByRef($value);
+},
+
+'iamsshpublickeyevent' => function ($value) {
+        return NextDeveloper\IAM\Database\Models\IamSshPublicKeyEvent::findByRef($value);
+},
+
+'iamaccountusersperspective' => function ($value) {
+        return NextDeveloper\IAM\Database\Models\IamAccountUsersPerspective::findByRef($value);
+},
+
+'iamuseraccount' => function ($value) {
+        return NextDeveloper\IAM\Database\Models\IamUserAccount::findByRef($value);
+},
+
+'iamuserrole' => function ($value) {
+        return NextDeveloper\IAM\Database\Models\IamUserRole::findByRef($value);
+},
+
+'iamaccountsperspective' => function ($value) {
+        return NextDeveloper\IAM\Database\Models\IamAccountsPerspective::findByRef($value);
+},
+
+'iamusersperspective' => function ($value) {
+        return NextDeveloper\IAM\Database\Models\IamUsersPerspective::findByRef($value);
+},
+
 // EDIT AFTER HERE - WARNING: ABOVE THIS LINE MAY BE REGENERATED AND YOU MAY LOSE CODE
 ];

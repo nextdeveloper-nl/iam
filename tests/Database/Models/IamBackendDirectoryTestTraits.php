@@ -9,6 +9,7 @@ use Illuminate\Pagination\LengthAwarePaginator;
 use League\Fractal\Resource\Collection;
 use NextDeveloper\IAM\Database\Filters\IamBackendDirectoryQueryFilter;
 use NextDeveloper\IAM\Services\AbstractServices\AbstractIamBackendDirectoryService;
+use Tests\TestCase;
 
 trait IamBackendDirectoryTestTraits
 {
@@ -713,4 +714,5 @@ trait IamBackendDirectoryTestTraits
         $this->assertTrue(true);
     }
     // EDIT AFTER HERE - WARNING: ABOVE THIS LINE MAY BE REGENERATED AND YOU MAY LOSE CODE
+
 }

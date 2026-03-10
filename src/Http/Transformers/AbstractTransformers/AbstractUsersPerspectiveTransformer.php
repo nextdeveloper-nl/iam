@@ -54,41 +54,41 @@ class AbstractUsersPerspectiveTransformer extends AbstractTransformer
      */
     public function transform(UsersPerspective $model)
     {
-        $iamAccountId = \NextDeveloper\IAM\Database\Models\Accounts::where('id', $model->iam_account_id)->first();
-        $commonCountryId = \NextDeveloper\Commons\Database\Models\Countries::where('id', $model->common_country_id)->first();
-        $commonLanguageId = \NextDeveloper\Commons\Database\Models\Languages::where('id', $model->common_language_id)->first();
-
+                                                $commonCountryId = \NextDeveloper\Commons\Database\Models\Countries::where('id', $model->common_country_id)->first();
+                                                            $commonLanguageId = \NextDeveloper\Commons\Database\Models\Languages::where('id', $model->common_language_id)->first();
+                                                            $iamAccountId = \NextDeveloper\IAM\Database\Models\Accounts::where('id', $model->iam_account_id)->first();
+                        
         return $this->buildPayload(
             [
-                'id' => $model->uuid,
-                'name' => $model->name,
-                'surname' => $model->surname,
-                'email' => $model->email,
-                'fullname' => $model->fullname,
-                'username' => $model->username,
-                'about' => $model->about,
-                'pronoun' => $model->pronoun,
-                'birthday' => $model->birthday,
-                'nin' => $model->nin,
-                'country' => $model->country,
-                'language' => $model->language,
-                'phone_number' => $model->phone_number,
-                'roles' => $model->roles,
-                'tags' => $model->tags,
-                'profile_picture' => $model->profile_picture,
-                'common_country_id' => $commonCountryId ? $commonCountryId->uuid : null,
-                'common_language_id' => $commonLanguageId ? $commonLanguageId->uuid : null,
-                'has_valid_google_login' => $model->has_valid_google_login,
-                'is_registered' => $model->is_registered,
-                'is_nin_verified' => $model->is_nin_verified,
-                'is_email_verified' => $model->is_email_verified,
-                'is_phone_number_verified' => $model->is_phone_number_verified,
-                'is_profile_verified'   =>  $model->is_profile_verified,
-                'is_active' => $model->is_active,
-                'iam_account_id' => $iamAccountId ? $iamAccountId->uuid : null,
-                'created_at' => $model->created_at,
-                'updated_at' => $model->updated_at,
-                'deleted_at' => $model->deleted_at,
+            'id'  =>  $model->uuid,
+            'name'  =>  $model->name,
+            'surname'  =>  $model->surname,
+            'email'  =>  $model->email,
+            'fullname'  =>  $model->fullname,
+            'username'  =>  $model->username,
+            'about'  =>  $model->about,
+            'pronoun'  =>  $model->pronoun,
+            'birthday'  =>  $model->birthday,
+            'nin'  =>  $model->nin,
+            'common_country_id'  =>  $commonCountryId ? $commonCountryId->uuid : null,
+            'country'  =>  $model->country,
+            'common_language_id'  =>  $commonLanguageId ? $commonLanguageId->uuid : null,
+            'language'  =>  $model->language,
+            'phone_number'  =>  $model->phone_number,
+            'tags'  =>  $model->tags,
+            'roles'  =>  $model->roles,
+            'profile_picture'  =>  $model->profile_picture,
+            'has_valid_google_login'  =>  $model->has_valid_google_login,
+            'is_registered'  =>  $model->is_registered,
+            'is_active'  =>  $model->is_active,
+            'is_nin_verified'  =>  $model->is_nin_verified,
+            'is_email_verified'  =>  $model->is_email_verified,
+            'is_phone_number_verified'  =>  $model->is_phone_number_verified,
+            'is_profile_verified'  =>  $model->is_profile_verified,
+            'iam_account_id'  =>  $iamAccountId ? $iamAccountId->uuid : null,
+            'created_at'  =>  $model->created_at,
+            'updated_at'  =>  $model->updated_at,
+            'deleted_at'  =>  $model->deleted_at,
             ]
         );
     }
@@ -177,5 +177,6 @@ class AbstractUsersPerspectiveTransformer extends AbstractTransformer
         return $this->collection($addresses, new AddressesTransformer());
     }
     // EDIT AFTER HERE - WARNING: ABOVE THIS LINE MAY BE REGENERATED AND YOU MAY LOSE CODE
+
 
 }

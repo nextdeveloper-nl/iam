@@ -9,6 +9,7 @@ use Illuminate\Pagination\LengthAwarePaginator;
 use League\Fractal\Resource\Collection;
 use NextDeveloper\IAM\Database\Filters\IamAccountQueryFilter;
 use NextDeveloper\IAM\Services\AbstractServices\AbstractIamAccountService;
+use Tests\TestCase;
 
 trait IamAccountTestTraits
 {
@@ -60,6 +61,7 @@ trait IamAccountTestTraits
                 'name'  =>  'a',
                 'phone_number'  =>  'a',
                 'description'  =>  'a',
+                'profile_image_url'  =>  'a',
                             ],
                 ['http_errors' => false]
             ]
@@ -399,6 +401,25 @@ trait IamAccountTestTraits
         $this->assertTrue(true);
     }
 
+    public function test_iamaccount_event_profile_image_url_filter()
+    {
+        try {
+            $request = new Request(
+                [
+                'profile_image_url'  =>  'a'
+                ]
+            );
+
+            $filter = new IamAccountQueryFilter($request);
+
+            $model = \NextDeveloper\IAM\Database\Models\IamAccount::filter($filter)->first();
+        } catch (\Exception $e) {
+            $this->assertFalse(false, $e->getMessage());
+        }
+
+        $this->assertTrue(true);
+    }
+
     public function test_iamaccount_event_created_at_filter_start()
     {
         try {
@@ -573,4 +594,5 @@ trait IamAccountTestTraits
         $this->assertTrue(true);
     }
     // EDIT AFTER HERE - WARNING: ABOVE THIS LINE MAY BE REGENERATED AND YOU MAY LOSE CODE\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n
+
 }

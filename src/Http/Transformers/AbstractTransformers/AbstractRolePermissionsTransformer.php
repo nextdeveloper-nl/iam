@@ -56,7 +56,7 @@ class AbstractRolePermissionsTransformer extends AbstractTransformer
     {
                                                 $iamRoleId = \NextDeveloper\IAM\Database\Models\Roles::where('id', $model->iam_role_id)->first();
                                                             $iamPermissionId = \NextDeveloper\IAM\Database\Models\Permissions::where('id', $model->iam_permission_id)->first();
-
+                        
         return $this->buildPayload(
             [
             'id'  =>  $model->uuid,
@@ -155,5 +155,6 @@ class AbstractRolePermissionsTransformer extends AbstractTransformer
         return $this->collection($addresses, new AddressesTransformer());
     }
     // EDIT AFTER HERE - WARNING: ABOVE THIS LINE MAY BE REGENERATED AND YOU MAY LOSE CODE
+
 
 }

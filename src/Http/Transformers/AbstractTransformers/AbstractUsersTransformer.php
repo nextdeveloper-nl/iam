@@ -56,7 +56,7 @@ class AbstractUsersTransformer extends AbstractTransformer
     {
                                                 $commonLanguageId = \NextDeveloper\Commons\Database\Models\Languages::where('id', $model->common_language_id)->first();
                                                             $commonCountryId = \NextDeveloper\Commons\Database\Models\Countries::where('id', $model->common_country_id)->first();
-
+                        
         return $this->buildPayload(
             [
             'id'  =>  $model->uuid,
@@ -79,6 +79,10 @@ class AbstractUsersTransformer extends AbstractTransformer
             'profile_picture_identity'  =>  $model->profile_picture_identity,
             'is_registered'  =>  $model->is_registered,
             'is_active'  =>  $model->is_active,
+            'is_nin_verified'  =>  $model->is_nin_verified,
+            'is_email_verified'  =>  $model->is_email_verified,
+            'is_phone_number_verified'  =>  $model->is_phone_number_verified,
+            'is_profile_verified'  =>  $model->is_profile_verified,
             ]
         );
     }
@@ -167,5 +171,6 @@ class AbstractUsersTransformer extends AbstractTransformer
         return $this->collection($addresses, new AddressesTransformer());
     }
     // EDIT AFTER HERE - WARNING: ABOVE THIS LINE MAY BE REGENERATED AND YOU MAY LOSE CODE
+
 
 }

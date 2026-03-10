@@ -13,12 +13,15 @@ class UserRolesCreateRequest extends AbstractFormRequest
     public function rules()
     {
         return [
-            'iam_user_id'   =>  'required|exists:users,uuid',
-            'iam_account_id'    =>  'required|exists:accounts,uuid',
-            'iam_role_id' => 'required|exists:iam_roles,uuid|uuid',
-            'is_active' => 'boolean',
-            'role_data' => 'nullable',
+            'name' => 'nullable|string',
+        'class' => 'nullable|string',
+        'level' => 'nullable|integer',
+        'description' => 'nullable|string',
+        'iam_role_id' => 'nullable|exists:iam_roles,uuid|uuid',
+        'is_active' => 'nullable|boolean',
+        'role_data' => 'nullable',
         ];
     }
     // EDIT AFTER HERE - WARNING: ABOVE THIS LINE MAY BE REGENERATED AND YOU MAY LOSE CODE\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n
+
 }
