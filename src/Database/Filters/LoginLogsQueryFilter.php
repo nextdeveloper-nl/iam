@@ -5,7 +5,7 @@ namespace NextDeveloper\IAM\Database\Filters;
 use Illuminate\Database\Eloquent\Builder;
 use NextDeveloper\Accounts\Database\Models\User;
 use NextDeveloper\Commons\Database\Filters\AbstractQueryFilter;
-
+    
 
 /**
  * This class automatically puts where clause on database so that use can filter
@@ -29,6 +29,18 @@ class LoginLogsQueryFilter extends AbstractQueryFilter
         return $this->builder->where('created_at', '<=', $date);
     }
 
+    //  This is an alias function of createdAt
+    public function created_at_start($value)
+    {
+        return $this->createdAtStart($value);
+    }
+
+    //  This is an alias function of createdAt
+    public function created_at_end($value)
+    {
+        return $this->createdAtEnd($value);
+    }
+
     public function iamUserId($value)
     {
             $iamUser = \NextDeveloper\IAM\Database\Models\Users::where('uuid', $value)->first();
@@ -38,7 +50,9 @@ class LoginLogsQueryFilter extends AbstractQueryFilter
         }
     }
 
+    
     // EDIT AFTER HERE - WARNING: ABOVE THIS LINE MAY BE REGENERATED AND YOU MAY LOSE CODE\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n
+
 
 
 

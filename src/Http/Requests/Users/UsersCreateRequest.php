@@ -27,6 +27,10 @@ class UsersCreateRequest extends AbstractFormRequest
         'tags' => '',
         'profile_picture_identity' => 'nullable|integer',
         'is_active' => 'boolean',
+        'is_nin_verified' => 'boolean',
+        'is_email_verified' => 'boolean',
+        'is_phone_number_verified' => 'boolean',
+        'is_profile_verified' => 'boolean',
         ];
     }
     // EDIT AFTER HERE - WARNING: ABOVE THIS LINE MAY BE REGENERATED AND YOU MAY LOSE CODE\n\n\n\n\n\n\n\n

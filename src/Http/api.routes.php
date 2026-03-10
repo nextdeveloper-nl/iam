@@ -44,27 +44,6 @@ Route::prefix('iam')->group(
             }
         );
 
-        Route::prefix('login-logs')->group(
-            function () {
-                Route::get('/', 'LoginLogs\LoginLogsController@index');
-                Route::get('/actions', 'LoginLogs\LoginLogsController@getActions');
-
-                Route::get('{iam_login_logs}/tags ', 'LoginLogs\LoginLogsController@tags');
-                Route::post('{iam_login_logs}/tags ', 'LoginLogs\LoginLogsController@saveTags');
-                Route::get('{iam_login_logs}/addresses ', 'LoginLogs\LoginLogsController@addresses');
-                Route::post('{iam_login_logs}/addresses ', 'LoginLogs\LoginLogsController@saveAddresses');
-
-                Route::get('/{iam_login_logs}/{subObjects}', 'LoginLogs\LoginLogsController@relatedObjects');
-                Route::get('/{iam_login_logs}', 'LoginLogs\LoginLogsController@show');
-
-                Route::post('/', 'LoginLogs\LoginLogsController@store');
-                Route::post('/{iam_login_logs}/do/{action}', 'LoginLogs\LoginLogsController@doAction');
-
-                Route::patch('/{iam_login_logs}', 'LoginLogs\LoginLogsController@update');
-                Route::delete('/{iam_login_logs}', 'LoginLogs\LoginLogsController@destroy');
-            }
-        );
-
         Route::prefix('account-types')->group(
             function () {
                 Route::get('/', 'AccountTypes\AccountTypesController@index');
@@ -83,27 +62,6 @@ Route::prefix('iam')->group(
 
                 Route::patch('/{iam_account_types}', 'AccountTypes\AccountTypesController@update');
                 Route::delete('/{iam_account_types}', 'AccountTypes\AccountTypesController@destroy');
-            }
-        );
-
-        Route::prefix('account-user')->group(
-            function () {
-                Route::get('/', 'AccountUser\AccountUserController@index');
-                Route::get('/actions', 'AccountUser\AccountUserController@getActions');
-
-                Route::get('{iam_account_user}/tags ', 'AccountUser\AccountUserController@tags');
-                Route::post('{iam_account_user}/tags ', 'AccountUser\AccountUserController@saveTags');
-                Route::get('{iam_account_user}/addresses ', 'AccountUser\AccountUserController@addresses');
-                Route::post('{iam_account_user}/addresses ', 'AccountUser\AccountUserController@saveAddresses');
-
-                Route::get('/{iam_account_user}/{subObjects}', 'AccountUser\AccountUserController@relatedObjects');
-                Route::get('/{iam_account_user}', 'AccountUser\AccountUserController@show');
-
-                Route::post('/', 'AccountUser\AccountUserController@store');
-                Route::post('/{iam_account_user}/do/{action}', 'AccountUser\AccountUserController@doAction');
-
-                Route::patch('/{iam_account_user}', 'AccountUser\AccountUserController@update');
-                Route::delete('/{iam_account_user}', 'AccountUser\AccountUserController@destroy');
             }
         );
 
@@ -128,24 +86,66 @@ Route::prefix('iam')->group(
             }
         );
 
-        Route::prefix('permissions')->group(
+        Route::prefix('role-permission')->group(
             function () {
-                Route::get('/', 'Permissions\PermissionsController@index');
-                Route::get('/actions', 'Permissions\PermissionsController@getActions');
+                Route::get('/', 'RolePermission\RolePermissionController@index');
+                Route::get('/actions', 'RolePermission\RolePermissionController@getActions');
 
-                Route::get('{iam_permissions}/tags ', 'Permissions\PermissionsController@tags');
-                Route::post('{iam_permissions}/tags ', 'Permissions\PermissionsController@saveTags');
-                Route::get('{iam_permissions}/addresses ', 'Permissions\PermissionsController@addresses');
-                Route::post('{iam_permissions}/addresses ', 'Permissions\PermissionsController@saveAddresses');
+                Route::get('{iam_role_permission}/tags ', 'RolePermission\RolePermissionController@tags');
+                Route::post('{iam_role_permission}/tags ', 'RolePermission\RolePermissionController@saveTags');
+                Route::get('{iam_role_permission}/addresses ', 'RolePermission\RolePermissionController@addresses');
+                Route::post('{iam_role_permission}/addresses ', 'RolePermission\RolePermissionController@saveAddresses');
 
-                Route::get('/{iam_permissions}/{subObjects}', 'Permissions\PermissionsController@relatedObjects');
-                Route::get('/{iam_permissions}', 'Permissions\PermissionsController@show');
+                Route::get('/{iam_role_permission}/{subObjects}', 'RolePermission\RolePermissionController@relatedObjects');
+                Route::get('/{iam_role_permission}', 'RolePermission\RolePermissionController@show');
 
-                Route::post('/', 'Permissions\PermissionsController@store');
-                Route::post('/{iam_permissions}/do/{action}', 'Permissions\PermissionsController@doAction');
+                Route::post('/', 'RolePermission\RolePermissionController@store');
+                Route::post('/{iam_role_permission}/do/{action}', 'RolePermission\RolePermissionController@doAction');
 
-                Route::patch('/{iam_permissions}', 'Permissions\PermissionsController@update');
-                Route::delete('/{iam_permissions}', 'Permissions\PermissionsController@destroy');
+                Route::patch('/{iam_role_permission}', 'RolePermission\RolePermissionController@update');
+                Route::delete('/{iam_role_permission}', 'RolePermission\RolePermissionController@destroy');
+            }
+        );
+
+        Route::prefix('login-logs')->group(
+            function () {
+                Route::get('/', 'LoginLogs\LoginLogsController@index');
+                Route::get('/actions', 'LoginLogs\LoginLogsController@getActions');
+
+                Route::get('{iam_login_logs}/tags ', 'LoginLogs\LoginLogsController@tags');
+                Route::post('{iam_login_logs}/tags ', 'LoginLogs\LoginLogsController@saveTags');
+                Route::get('{iam_login_logs}/addresses ', 'LoginLogs\LoginLogsController@addresses');
+                Route::post('{iam_login_logs}/addresses ', 'LoginLogs\LoginLogsController@saveAddresses');
+
+                Route::get('/{iam_login_logs}/{subObjects}', 'LoginLogs\LoginLogsController@relatedObjects');
+                Route::get('/{iam_login_logs}', 'LoginLogs\LoginLogsController@show');
+
+                Route::post('/', 'LoginLogs\LoginLogsController@store');
+                Route::post('/{iam_login_logs}/do/{action}', 'LoginLogs\LoginLogsController@doAction');
+
+                Route::patch('/{iam_login_logs}', 'LoginLogs\LoginLogsController@update');
+                Route::delete('/{iam_login_logs}', 'LoginLogs\LoginLogsController@destroy');
+            }
+        );
+
+        Route::prefix('account-user')->group(
+            function () {
+                Route::get('/', 'AccountUser\AccountUserController@index');
+                Route::get('/actions', 'AccountUser\AccountUserController@getActions');
+
+                Route::get('{iam_account_user}/tags ', 'AccountUser\AccountUserController@tags');
+                Route::post('{iam_account_user}/tags ', 'AccountUser\AccountUserController@saveTags');
+                Route::get('{iam_account_user}/addresses ', 'AccountUser\AccountUserController@addresses');
+                Route::post('{iam_account_user}/addresses ', 'AccountUser\AccountUserController@saveAddresses');
+
+                Route::get('/{iam_account_user}/{subObjects}', 'AccountUser\AccountUserController@relatedObjects');
+                Route::get('/{iam_account_user}', 'AccountUser\AccountUserController@show');
+
+                Route::post('/', 'AccountUser\AccountUserController@store');
+                Route::post('/{iam_account_user}/do/{action}', 'AccountUser\AccountUserController@doAction');
+
+                Route::patch('/{iam_account_user}', 'AccountUser\AccountUserController@update');
+                Route::delete('/{iam_account_user}', 'AccountUser\AccountUserController@destroy');
             }
         );
 
@@ -164,9 +164,6 @@ Route::prefix('iam')->group(
 
                 Route::post('/', 'LoginMechanisms\LoginMechanismsController@store');
                 Route::post('/{iam_login_mechanisms}/do/{action}', 'LoginMechanisms\LoginMechanismsController@doAction');
-
-                // Password management endpoints
-                Route::post('/set-password', 'LoginMechanisms\LoginMechanismsController@setPassword');
 
                 Route::patch('/{iam_login_mechanisms}', 'LoginMechanisms\LoginMechanismsController@update');
                 Route::delete('/{iam_login_mechanisms}', 'LoginMechanisms\LoginMechanismsController@destroy');
@@ -194,6 +191,27 @@ Route::prefix('iam')->group(
             }
         );
 
+        Route::prefix('permissions')->group(
+            function () {
+                Route::get('/', 'Permissions\PermissionsController@index');
+                Route::get('/actions', 'Permissions\PermissionsController@getActions');
+
+                Route::get('{iam_permissions}/tags ', 'Permissions\PermissionsController@tags');
+                Route::post('{iam_permissions}/tags ', 'Permissions\PermissionsController@saveTags');
+                Route::get('{iam_permissions}/addresses ', 'Permissions\PermissionsController@addresses');
+                Route::post('{iam_permissions}/addresses ', 'Permissions\PermissionsController@saveAddresses');
+
+                Route::get('/{iam_permissions}/{subObjects}', 'Permissions\PermissionsController@relatedObjects');
+                Route::get('/{iam_permissions}', 'Permissions\PermissionsController@show');
+
+                Route::post('/', 'Permissions\PermissionsController@store');
+                Route::post('/{iam_permissions}/do/{action}', 'Permissions\PermissionsController@doAction');
+
+                Route::patch('/{iam_permissions}', 'Permissions\PermissionsController@update');
+                Route::delete('/{iam_permissions}', 'Permissions\PermissionsController@destroy');
+            }
+        );
+
         Route::prefix('roles')->group(
             function () {
                 Route::get('/', 'Roles\RolesController@index');
@@ -215,45 +233,66 @@ Route::prefix('iam')->group(
             }
         );
 
-        Route::prefix('role-permission')->group(
+        Route::prefix('ssh-public-keys')->group(
             function () {
-                Route::get('/', 'RolePermission\RolePermissionController@index');
-                Route::get('/actions', 'RolePermission\RolePermissionController@getActions');
+                Route::get('/', 'SshPublicKeys\SshPublicKeysController@index');
+                Route::get('/actions', 'SshPublicKeys\SshPublicKeysController@getActions');
 
-                Route::get('{iam_role_permission}/tags ', 'RolePermission\RolePermissionController@tags');
-                Route::post('{iam_role_permission}/tags ', 'RolePermission\RolePermissionController@saveTags');
-                Route::get('{iam_role_permission}/addresses ', 'RolePermission\RolePermissionController@addresses');
-                Route::post('{iam_role_permission}/addresses ', 'RolePermission\RolePermissionController@saveAddresses');
+                Route::get('{iam_ssh_public_keys}/tags ', 'SshPublicKeys\SshPublicKeysController@tags');
+                Route::post('{iam_ssh_public_keys}/tags ', 'SshPublicKeys\SshPublicKeysController@saveTags');
+                Route::get('{iam_ssh_public_keys}/addresses ', 'SshPublicKeys\SshPublicKeysController@addresses');
+                Route::post('{iam_ssh_public_keys}/addresses ', 'SshPublicKeys\SshPublicKeysController@saveAddresses');
 
-                Route::get('/{iam_role_permission}/{subObjects}', 'RolePermission\RolePermissionController@relatedObjects');
-                Route::get('/{iam_role_permission}', 'RolePermission\RolePermissionController@show');
+                Route::get('/{iam_ssh_public_keys}/{subObjects}', 'SshPublicKeys\SshPublicKeysController@relatedObjects');
+                Route::get('/{iam_ssh_public_keys}', 'SshPublicKeys\SshPublicKeysController@show');
 
-                Route::post('/', 'RolePermission\RolePermissionController@store');
-                Route::post('/{iam_role_permission}/do/{action}', 'RolePermission\RolePermissionController@doAction');
+                Route::post('/', 'SshPublicKeys\SshPublicKeysController@store');
+                Route::post('/{iam_ssh_public_keys}/do/{action}', 'SshPublicKeys\SshPublicKeysController@doAction');
 
-                Route::patch('/{iam_role_permission}', 'RolePermission\RolePermissionController@update');
-                Route::delete('/{iam_role_permission}', 'RolePermission\RolePermissionController@destroy');
+                Route::patch('/{iam_ssh_public_keys}', 'SshPublicKeys\SshPublicKeysController@update');
+                Route::delete('/{iam_ssh_public_keys}', 'SshPublicKeys\SshPublicKeysController@destroy');
             }
         );
 
-        Route::prefix('user-roles')->group(
+        Route::prefix('ssh-public-key-events')->group(
             function () {
-                Route::get('/', 'UserRoles\UserRolesController@index');
-                Route::get('/actions', 'UserRoles\UserRolesController@getActions');
+                Route::get('/', 'SshPublicKeyEvents\SshPublicKeyEventsController@index');
+                Route::get('/actions', 'SshPublicKeyEvents\SshPublicKeyEventsController@getActions');
 
-                Route::get('{iam_user_roles}/tags ', 'UserRoles\UserRolesController@tags');
-                Route::post('{iam_user_roles}/tags ', 'UserRoles\UserRolesController@saveTags');
-                Route::get('{iam_user_roles}/addresses ', 'UserRoles\UserRolesController@addresses');
-                Route::post('{iam_user_roles}/addresses ', 'UserRoles\UserRolesController@saveAddresses');
+                Route::get('{iam_ssh_public_key_events}/tags ', 'SshPublicKeyEvents\SshPublicKeyEventsController@tags');
+                Route::post('{iam_ssh_public_key_events}/tags ', 'SshPublicKeyEvents\SshPublicKeyEventsController@saveTags');
+                Route::get('{iam_ssh_public_key_events}/addresses ', 'SshPublicKeyEvents\SshPublicKeyEventsController@addresses');
+                Route::post('{iam_ssh_public_key_events}/addresses ', 'SshPublicKeyEvents\SshPublicKeyEventsController@saveAddresses');
 
-                Route::get('/{iam_user_roles}/{subObjects}', 'UserRoles\UserRolesController@relatedObjects');
-                Route::get('/{iam_user_roles}', 'UserRoles\UserRolesController@show');
+                Route::get('/{iam_ssh_public_key_events}/{subObjects}', 'SshPublicKeyEvents\SshPublicKeyEventsController@relatedObjects');
+                Route::get('/{iam_ssh_public_key_events}', 'SshPublicKeyEvents\SshPublicKeyEventsController@show');
 
-                Route::post('/', 'UserRoles\UserRolesController@store');
-                Route::post('/{iam_user_roles}/do/{action}', 'UserRoles\UserRolesController@doAction');
+                Route::post('/', 'SshPublicKeyEvents\SshPublicKeyEventsController@store');
+                Route::post('/{iam_ssh_public_key_events}/do/{action}', 'SshPublicKeyEvents\SshPublicKeyEventsController@doAction');
 
-                Route::patch('/{iam_user_roles}', 'UserRoles\UserRolesController@update');
-                Route::delete('/{iam_user_roles}', 'UserRoles\UserRolesController@destroy');
+                Route::patch('/{iam_ssh_public_key_events}', 'SshPublicKeyEvents\SshPublicKeyEventsController@update');
+                Route::delete('/{iam_ssh_public_key_events}', 'SshPublicKeyEvents\SshPublicKeyEventsController@destroy');
+            }
+        );
+
+        Route::prefix('account-users-perspective')->group(
+            function () {
+                Route::get('/', 'AccountUsersPerspective\AccountUsersPerspectiveController@index');
+                Route::get('/actions', 'AccountUsersPerspective\AccountUsersPerspectiveController@getActions');
+
+                Route::get('{iam_account_users_perspective}/tags ', 'AccountUsersPerspective\AccountUsersPerspectiveController@tags');
+                Route::post('{iam_account_users_perspective}/tags ', 'AccountUsersPerspective\AccountUsersPerspectiveController@saveTags');
+                Route::get('{iam_account_users_perspective}/addresses ', 'AccountUsersPerspective\AccountUsersPerspectiveController@addresses');
+                Route::post('{iam_account_users_perspective}/addresses ', 'AccountUsersPerspective\AccountUsersPerspectiveController@saveAddresses');
+
+                Route::get('/{iam_account_users_perspective}/{subObjects}', 'AccountUsersPerspective\AccountUsersPerspectiveController@relatedObjects');
+                Route::get('/{iam_account_users_perspective}', 'AccountUsersPerspective\AccountUsersPerspectiveController@show');
+
+                Route::post('/', 'AccountUsersPerspective\AccountUsersPerspectiveController@store');
+                Route::post('/{iam_account_users_perspective}/do/{action}', 'AccountUsersPerspective\AccountUsersPerspectiveController@doAction');
+
+                Route::patch('/{iam_account_users_perspective}', 'AccountUsersPerspective\AccountUsersPerspectiveController@update');
+                Route::delete('/{iam_account_users_perspective}', 'AccountUsersPerspective\AccountUsersPerspectiveController@destroy');
             }
         );
 
@@ -278,24 +317,24 @@ Route::prefix('iam')->group(
             }
         );
 
-        Route::prefix('account-users-perspective')->group(
+        Route::prefix('user-roles')->group(
             function () {
-                Route::get('/', 'AccountUsersPerspective\AccountUsersPerspectiveController@index');
-                Route::get('/actions', 'AccountUsersPerspective\AccountUsersPerspectiveController@getActions');
+                Route::get('/', 'UserRoles\UserRolesController@index');
+                Route::get('/actions', 'UserRoles\UserRolesController@getActions');
 
-                Route::get('{iam_account_users_perspective}/tags ', 'AccountUsersPerspective\AccountUsersPerspectiveController@tags');
-                Route::post('{iam_account_users_perspective}/tags ', 'AccountUsersPerspective\AccountUsersPerspectiveController@saveTags');
-                Route::get('{iam_account_users_perspective}/addresses ', 'AccountUsersPerspective\AccountUsersPerspectiveController@addresses');
-                Route::post('{iam_account_users_perspective}/addresses ', 'AccountUsersPerspective\AccountUsersPerspectiveController@saveAddresses');
+                Route::get('{iam_user_roles}/tags ', 'UserRoles\UserRolesController@tags');
+                Route::post('{iam_user_roles}/tags ', 'UserRoles\UserRolesController@saveTags');
+                Route::get('{iam_user_roles}/addresses ', 'UserRoles\UserRolesController@addresses');
+                Route::post('{iam_user_roles}/addresses ', 'UserRoles\UserRolesController@saveAddresses');
 
-                Route::get('/{iam_account_users_perspective}/{subObjects}', 'AccountUsersPerspective\AccountUsersPerspectiveController@relatedObjects');
-                Route::get('/{iam_account_users_perspective}', 'AccountUsersPerspective\AccountUsersPerspectiveController@show');
+                Route::get('/{iam_user_roles}/{subObjects}', 'UserRoles\UserRolesController@relatedObjects');
+                Route::get('/{iam_user_roles}', 'UserRoles\UserRolesController@show');
 
-                Route::post('/', 'AccountUsersPerspective\AccountUsersPerspectiveController@store');
-                Route::post('/{iam_account_users_perspective}/do/{action}', 'AccountUsersPerspective\AccountUsersPerspectiveController@doAction');
+                Route::post('/', 'UserRoles\UserRolesController@store');
+                Route::post('/{iam_user_roles}/do/{action}', 'UserRoles\UserRolesController@doAction');
 
-                Route::patch('/{iam_account_users_perspective}', 'AccountUsersPerspective\AccountUsersPerspectiveController@update');
-                Route::delete('/{iam_account_users_perspective}', 'AccountUsersPerspective\AccountUsersPerspectiveController@destroy');
+                Route::patch('/{iam_user_roles}', 'UserRoles\UserRolesController@update');
+                Route::delete('/{iam_user_roles}', 'UserRoles\UserRolesController@destroy');
             }
         );
 
@@ -342,47 +381,75 @@ Route::prefix('iam')->group(
         );
 
         // EDIT AFTER HERE - WARNING: ABOVE THIS LINE MAY BE REGENERATED AND YOU MAY LOSE CODE
-        Route::prefix('/authentication')->group(function() {
-            Route::prefix('oauth')->group(function() {
-                Route::get('session', [\NextDeveloper\IAM\Http\Controllers\Authentication\OauthController::class, 'createSession']);
 
-                Route::prefix('{session}')->group(function() {
-                    Route::get('login-mechanisms', [\NextDeveloper\IAM\Http\Controllers\Authentication\OauthController::class, 'getLoginMechanisms']);
 
-                    Route::post('fingerprint', [\NextDeveloper\IAM\Http\Controllers\Authentication\OauthController::class, 'setFingerprint']);
 
-                    Route::get('send-otp-email', [\NextDeveloper\IAM\Http\Controllers\Authentication\OauthController::class, 'sendOtpEmail']);
 
-                    Route::get('validation-status', [\NextDeveloper\IAM\Http\Controllers\Authentication\OauthController::class, 'getValidationStatus']);
 
-                    Route::post('validate-password', [\NextDeveloper\IAM\Http\Controllers\Authentication\OauthController::class, 'validatePassword']);
-                    Route::post('validate-otp-email', [\NextDeveloper\IAM\Http\Controllers\Authentication\OauthController::class, 'validateOtpEmail']);
 
-                    Route::post('auth-code', [\NextDeveloper\IAM\Http\Controllers\Authentication\OauthController::class, 'getAuthCode']);
-                    Route::post('access-token', [\NextDeveloper\IAM\Http\Controllers\Authentication\OauthController::class, 'getToken']);
-                });
-            });
 
-            Route::prefix('/mechanisms')->group(function() {
-                Route::get('/', [\NextDeveloper\IAM\Http\Controllers\Authentication\MechanismsController::class, 'index']);
 
-                Route::prefix('/password')->group(function() {
-                    Route::post('/', [\NextDeveloper\IAM\Http\Controllers\Authentication\PasswordController::class, 'updatePassword']);
-                    //  @TODO: Enable forgot/reset password endpoints
-//                Route::post('forgot', [\NextDeveloper\IAM\Http\Controllers\Authentication\PasswordController::class, 'forgotPassword']);
-//                Route::post('reset', [\NextDeveloper\IAM\Http\Controllers\Authentication\PasswordController::class, 'resetPassword']);
-                });
-            });
 
-            //  Routes to be made
-            /*
-            Route::prefix('/google')->group(function() {});
-            Route::prefix('/facebook')->group(function() {});
-            Route::prefix('/twitter')->group(function() {});
-            Route::prefix('/linkedin')->group(function() {});
-            Route::prefix('/github')->group(function() {});
-            */
-        });
+
+
+
+
+
+
+
+
+
+        Route::prefix('/authentication')->group(
+            function () {
+                Route::prefix('oauth')->group(
+                    function () {
+                        Route::get('session', [\NextDeveloper\IAM\Http\Controllers\Authentication\OauthController::class, 'createSession']);
+
+                        Route::prefix('{session}')->group(
+                            function () {
+                                Route::get('login-mechanisms', [\NextDeveloper\IAM\Http\Controllers\Authentication\OauthController::class, 'getLoginMechanisms']);
+
+                                Route::post('fingerprint', [\NextDeveloper\IAM\Http\Controllers\Authentication\OauthController::class, 'setFingerprint']);
+
+                                Route::get('send-otp-email', [\NextDeveloper\IAM\Http\Controllers\Authentication\OauthController::class, 'sendOtpEmail']);
+
+                                Route::get('validation-status', [\NextDeveloper\IAM\Http\Controllers\Authentication\OauthController::class, 'getValidationStatus']);
+
+                                Route::post('validate-password', [\NextDeveloper\IAM\Http\Controllers\Authentication\OauthController::class, 'validatePassword']);
+                                Route::post('validate-otp-email', [\NextDeveloper\IAM\Http\Controllers\Authentication\OauthController::class, 'validateOtpEmail']);
+
+                                Route::post('auth-code', [\NextDeveloper\IAM\Http\Controllers\Authentication\OauthController::class, 'getAuthCode']);
+                                Route::post('access-token', [\NextDeveloper\IAM\Http\Controllers\Authentication\OauthController::class, 'getToken']);
+                            }
+                        );
+                    }
+                );
+
+                Route::prefix('/mechanisms')->group(
+                    function () {
+                        Route::get('/', [\NextDeveloper\IAM\Http\Controllers\Authentication\MechanismsController::class, 'index']);
+
+                        Route::prefix('/password')->group(
+                            function () {
+                                Route::post('/', [\NextDeveloper\IAM\Http\Controllers\Authentication\PasswordController::class, 'updatePassword']);
+                                //  @TODO: Enable forgot/reset password endpoints
+                                //                Route::post('forgot', [\NextDeveloper\IAM\Http\Controllers\Authentication\PasswordController::class, 'forgotPassword']);
+                                //                Route::post('reset', [\NextDeveloper\IAM\Http\Controllers\Authentication\PasswordController::class, 'resetPassword']);
+                            }
+                        );
+                    }
+                );
+
+                //  Routes to be made
+                /*
+                Route::prefix('/google')->group(function() {});
+                Route::prefix('/facebook')->group(function() {});
+                Route::prefix('/twitter')->group(function() {});
+                Route::prefix('/linkedin')->group(function() {});
+                Route::prefix('/github')->group(function() {});
+                */
+            }
+        );
 
         Route::prefix('my')->group(
             function () {
@@ -398,3 +465,4 @@ Route::prefix('iam')->group(
         );
     }
 );
+

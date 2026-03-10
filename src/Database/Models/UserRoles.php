@@ -10,6 +10,9 @@ use NextDeveloper\Commons\Database\Traits\HasStates;
 use NextDeveloper\Commons\Database\Traits\Taggable;
 use NextDeveloper\Commons\Database\Traits\UuidId;
 use NextDeveloper\IAM\Database\Observers\UserRolesObserver;
+use Illuminate\Notifications\Notifiable;
+use NextDeveloper\Commons\Database\Traits\HasObject;
+use NextDeveloper\Commons\Database\Traits\RunAsAdministrator;
 
 /**
  * UserRoles model.
@@ -32,7 +35,7 @@ use NextDeveloper\IAM\Database\Observers\UserRolesObserver;
  */
 class UserRoles extends Model
 {
-    use Filterable, UuidId, CleanCache, Taggable, HasStates;
+    use Filterable, UuidId, CleanCache, Taggable, HasStates, RunAsAdministrator, HasObject;
     use SoftDeletes;
 
     public $timestamps = true;
@@ -149,6 +152,7 @@ class UserRoles extends Model
     }
 
     // EDIT AFTER HERE - WARNING: ABOVE THIS LINE MAY BE REGENERATED AND YOU MAY LOSE CODE\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n
+
 
 
 

@@ -135,7 +135,10 @@ class MemberRole extends AbstractRole implements IAuthorizationRole
             'iam_account_users:read',
             'iam_user_accounts:read',
             'iam_account_users:read',
-            'iam_backend_directories:read'
+            'iam_backend_directories:read',
+            'iam_ssh_public_keys:read',
+            'iam_ssh_public_keys:create',
+            'iam_ssh_public_keys:delete',
         ];
     }
 

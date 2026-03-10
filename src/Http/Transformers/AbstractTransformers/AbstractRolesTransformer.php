@@ -54,7 +54,7 @@ class AbstractRolesTransformer extends AbstractTransformer
      */
     public function transform(Roles $model)
     {
-
+            
         return $this->buildPayload(
             [
             'id'  =>  $model->uuid,
@@ -153,5 +153,6 @@ class AbstractRolesTransformer extends AbstractTransformer
         return $this->collection($addresses, new AddressesTransformer());
     }
     // EDIT AFTER HERE - WARNING: ABOVE THIS LINE MAY BE REGENERATED AND YOU MAY LOSE CODE
+
 
 }

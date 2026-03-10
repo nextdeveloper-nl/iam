@@ -9,6 +9,9 @@ use NextDeveloper\Commons\Database\Traits\HasStates;
 use NextDeveloper\Commons\Database\Traits\Taggable;
 use NextDeveloper\Commons\Database\Traits\UuidId;
 use NextDeveloper\IAM\Database\Observers\AccountTypesObserver;
+use Illuminate\Notifications\Notifiable;
+use NextDeveloper\Commons\Database\Traits\HasObject;
+use NextDeveloper\Commons\Database\Traits\RunAsAdministrator;
 
 /**
  * AccountTypes model.
@@ -22,7 +25,7 @@ use NextDeveloper\IAM\Database\Observers\AccountTypesObserver;
  */
 class AccountTypes extends Model
 {
-    use Filterable, UuidId, CleanCache, Taggable, HasStates;
+    use Filterable, UuidId, CleanCache, Taggable, HasStates, RunAsAdministrator, HasObject;
 
     public $timestamps = false;
 
@@ -131,8 +134,9 @@ class AccountTypes extends Model
     {
         return $this->belongsTo(\NextDeveloper\Commons\Database\Models\Countries::class);
     }
-
+    
     // EDIT AFTER HERE - WARNING: ABOVE THIS LINE MAY BE REGENERATED AND YOU MAY LOSE CODE\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n
+
 
 
 

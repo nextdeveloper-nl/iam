@@ -8,6 +8,8 @@ use Illuminate\Pagination\LengthAwarePaginator;
 use League\Fractal\Resource\Collection;
 use NextDeveloper\IAM\Database\Filters\IamRoleUserQueryFilter;
 use NextDeveloper\IAM\Services\AbstractServices\AbstractIamRoleUserService;
+use Tests\TestCase;
+use Illuminate\Http\Request;
 
 trait IamRoleUserTestTraits
 {
@@ -338,4 +340,5 @@ trait IamRoleUserTestTraits
         $this->assertTrue(true);
     }
     // EDIT AFTER HERE - WARNING: ABOVE THIS LINE MAY BE REGENERATED AND YOU MAY LOSE CODE\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n
+
 }

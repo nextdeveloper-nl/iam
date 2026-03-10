@@ -9,6 +9,9 @@ use NextDeveloper\Commons\Database\Traits\HasStates;
 use NextDeveloper\Commons\Database\Traits\Taggable;
 use NextDeveloper\Commons\Database\Traits\UuidId;
 use NextDeveloper\IAM\Database\Observers\PermissionsObserver;
+use Illuminate\Notifications\Notifiable;
+use NextDeveloper\Commons\Database\Traits\HasObject;
+use NextDeveloper\Commons\Database\Traits\RunAsAdministrator;
 
 /**
  * Permissions model.
@@ -28,7 +31,7 @@ use NextDeveloper\IAM\Database\Observers\PermissionsObserver;
  */
 class Permissions extends Model
 {
-    use Filterable, UuidId, CleanCache, Taggable, HasStates;
+    use Filterable, UuidId, CleanCache, Taggable, HasStates, RunAsAdministrator, HasObject;
 
     public $timestamps = true;
 
@@ -145,6 +148,7 @@ class Permissions extends Model
     }
 
     // EDIT AFTER HERE - WARNING: ABOVE THIS LINE MAY BE REGENERATED AND YOU MAY LOSE CODE\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n
+
 
 
 
