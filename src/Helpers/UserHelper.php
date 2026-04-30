@@ -213,11 +213,6 @@ class UserHelper
             ->where('uuid', $uuid)
             ->first();
 
-        $accountUserRelation = AccountUsers::withoutGlobalScope(AuthorizationScope::class)
-            ->where('iam_account_id', $account->id)
-            ->where('iam_user_id', UserHelper::me()->id)
-            ->first();
-
         return $account;
     }
 
