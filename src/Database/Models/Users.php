@@ -336,6 +336,36 @@ class Users extends Model
         return $this->hasMany(\NextDeveloper\IAAS\Database\Models\RepositoryImages::class);
     }
 
+    public function emailAddresses() : \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(\NextDeveloper\Intelligence\Database\Models\EmailAddresses::class);
+    }
+
+    public function mailboxes() : \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(\NextDeveloper\Intelligence\Database\Models\Mailboxes::class);
+    }
+
+    public function socialMedia() : \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(\NextDeveloper\Intelligence\Database\Models\SocialMedia::class);
+    }
+
+    public function notifications() : \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(\NextDeveloper\Communication\Database\Models\Notifications::class);
+    }
+
+    public function remindables() : \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(\NextDeveloper\Communication\Database\Models\Remindables::class);
+    }
+
+    public function userPreferences() : \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(\NextDeveloper\Communication\Database\Models\UserPreferences::class);
+    }
+
     // EDIT AFTER HERE - WARNING: ABOVE THIS LINE MAY BE REGENERATED AND YOU MAY LOSE CODE
 
     use Authenticatable;

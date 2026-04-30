@@ -305,6 +305,61 @@ class Accounts extends Model
         return $this->hasMany(\NextDeveloper\IAAS\Database\Models\RepositoryImages::class);
     }
 
+    public function emailAddresses() : \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(\NextDeveloper\Intelligence\Database\Models\EmailAddresses::class);
+    }
+
+    public function mailboxes() : \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(\NextDeveloper\Intelligence\Database\Models\Mailboxes::class);
+    }
+
+    public function channels() : \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(\NextDeveloper\Communication\Database\Models\Channels::class);
+    }
+
+    public function smtpServers() : \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(\NextDeveloper\Communication\Database\Models\SmtpServers::class);
+    }
+
+    public function contacts() : \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(\NextDeveloper\Communication\Database\Models\Contacts::class);
+    }
+
+    public function bots() : \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(\NextDeveloper\Communication\Database\Models\Bots::class);
+    }
+
+    public function threads() : \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(\NextDeveloper\Communication\Database\Models\Threads::class);
+    }
+
+    public function messages() : \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(\NextDeveloper\Communication\Database\Models\Messages::class);
+    }
+
+    public function unsubscribes() : \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(\NextDeveloper\Communication\Database\Models\Unsubscribes::class);
+    }
+
+    public function notifications() : \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(\NextDeveloper\Communication\Database\Models\Notifications::class);
+    }
+
+    public function remindables() : \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(\NextDeveloper\Communication\Database\Models\Remindables::class);
+    }
+
     // EDIT AFTER HERE - WARNING: ABOVE THIS LINE MAY BE REGENERATED AND YOU MAY LOSE CODE\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n
 
     //    public function users()
