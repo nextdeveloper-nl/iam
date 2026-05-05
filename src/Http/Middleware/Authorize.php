@@ -78,6 +78,7 @@ class Authorize extends Middleware
         //  Commons is a special case because the module is called common in the permissions
         if($module == 'commons') $module = 'common';
         if($module == 'blogs') $module = 'blog';
+        if($module == 'flows') $module = 'flow';
 
         if(strpos($object, '?') !== false) {
             $object = substr($object, 0, strpos($object, '?'));
