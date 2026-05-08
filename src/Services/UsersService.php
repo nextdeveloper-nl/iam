@@ -140,8 +140,9 @@ class UsersService extends AbstractUsersService
         $user = self::createWithoutAccount($data);
 
         //  If we dont have account information, then we automatically add to our current account.
-        if(!$accounts)
-            $accounts = UserHelper::currentAccount();
+        //  WARNING: This creates a problem for the users who are creating users from the admin panel, because they may not have a current account. That is why we are checking if we have account information or not. If we dont have account information, then we try to get current account information. If we dont have current account information, then we dont add the user to any account.
+//        if(!$accounts)
+//            $accounts = UserHelper::currentAccount();
 
         //  If we have any account, then we add the user to account. If we dont have any account, then we dont
         //  create any initial account.

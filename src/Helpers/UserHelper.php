@@ -831,8 +831,10 @@ class UserHelper
             self::$cachedAccount = UserHelper::currentAccount();
         }
 
-        UserHelper::setUserById(config('leo.current_user_id'));
-        UserHelper::setCurrentAccountById(config('leo.current_account_id'));
+        $user = self::getSystemUser();
+        $account = self::getLeoOwnerAccount();
+
+        UserHelper::setCurrentUserAndAccount($user, $account);
     }
 
     public static function revertBackToActualUser()
