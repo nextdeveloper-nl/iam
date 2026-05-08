@@ -809,7 +809,7 @@ class UserHelper
 
     public static function getLeoOwnerAccount(): Accounts
     {
-        return self::masterAccount(self::getLeoOwner());
+        return self::currentAccount(self::getLeoOwner());
     }
 
     public static function runAsAdmin(callable $callback)
