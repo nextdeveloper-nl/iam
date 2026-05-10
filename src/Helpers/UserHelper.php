@@ -881,7 +881,9 @@ class UserHelper
             ->distinct();
 
         if ($account) {
-            $query->where('iam_role_user.iam_account_id', $account->id);
+            $query->where('iam_role_user.iam_account_id', $account->id)
+                  ->join('iam_account_user', 'iam_account_user.iam_user_id', '=', 'iam_users.id')
+                  ->where('iam_account_user.iam_account_id', $account->id);
         }
 
         // Get users with a role in one query using join
