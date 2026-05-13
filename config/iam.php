@@ -3,6 +3,7 @@
 use NextDeveloper\IAM\Envelopes\Authentication\NewEmailOtpGeneratedEnvelope;
 
 return [
+    'leo_owner_email' => env('SYSTEM_USER_EMAIL', 'leo@plusclouds.com'),
     'hash_algorithms' => [
         PASSWORD_ARGON2ID,
         PASSWORD_ARGON2I,
