@@ -804,7 +804,7 @@ class UserHelper
 
     public static function getLeoOwner(): Users
     {
-        return self::getWithEmail(config('leo.leo_owner_email'));
+        return self::getWithEmail(config('iam.leo_owner_email'));
     }
 
     public static function getLeoOwnerAccount(): Accounts
