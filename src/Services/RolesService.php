@@ -70,7 +70,13 @@ class RolesService extends AbstractRolesService
 
     public static function assignDefaultRoles(Users $user, Accounts $account)
     {
-        foreach (config('leo.register.default_roles') as $roleName) {
+        $defaultRoles = config('leo.register.default_roles');
+
+        if(!$defaultRoles) {
+            return;
+        }
+
+        foreach ($defaultRoles as $roleName) {
             $getRole = RolesService::getRoleByName($roleName);
 
             if(!$getRole) {
