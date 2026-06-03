@@ -809,7 +809,20 @@ class UserHelper
 
     public static function getLeoOwnerAccount(): Accounts
     {
-        return self::currentAccount(self::getLeoOwner());
+        $leoOwner = self::getLeoOwner();
+
+        // currentAccount() returns the cached self::$account when set, ignoring the $user
+        // argument entirely. When an account-scoped token is active, that would return the
+        // token owner's account instead of the leo owner's account. Query directly to avoid
+        // the cache.
+        $relation = AccountUsers::withoutGlobalScope(AuthorizationScope::class)
+            ->where('iam_user_id', $leoOwner->id)
+            ->where('is_active', 1)
+            ->first();
+
+        return Accounts::withoutGlobalScope(AuthorizationScope::class)
+            ->where('id', $relation->iam_account_id)
+            ->first();
     }
 
     public static function runAsAdmin(callable $callback)
