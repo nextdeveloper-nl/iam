@@ -166,8 +166,15 @@ class AccountsService extends AbstractAccountsService
 
         $account = parent::create($data);
 
+        $userId = $data['iam_user_id'];
+        if (\Illuminate\Support\Str::isUuid($userId)) {
+            $userId = Users::withoutGlobalScope(\NextDeveloper\IAM\Database\Scopes\AuthorizationScope::class)
+                ->where('uuid', $userId)
+                ->value('id');
+        }
+
         DB::table('iam_account_user')->insert([
-            'iam_user_id'       =>  $data['iam_user_id'],
+            'iam_user_id'       =>  $userId,
             'iam_account_id'    =>  $account->id,
             'is_active'         =>  false,
             'session_data'      =>  null
