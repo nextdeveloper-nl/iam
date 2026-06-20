@@ -113,6 +113,20 @@ class RolesService extends AbstractRolesService
         if(!$account)
             return null;
 
+        if(!$user) {
+            //  $user is null here (eg. queue jobs / NATS handlers with no authenticated request).
+            //  Log the current request() values so we can trace where this call originated from.
+            Log::error('[RolesService@getUserRoles] $user is null. Request values: ' . json_encode([
+                'url' => request()->fullUrl(),
+                'method' => request()->method(),
+                'headers' => request()->headers->all(),
+                'query' => request()->query(),
+                'body' => request()->all(),
+            ]));
+
+            return null;
+        }
+
         $roles = UserRoles::withoutGlobalScope(AuthorizationScope::class)
             // Here we have limits scope because if a user has more than 20 roles,
             // then some of them are not put into account
