@@ -829,9 +829,18 @@ class UserHelper
     {
         self::setAdminAsCurrentUser();
 
+        // Bypassing the role check here is necessary because the elevated identity's
+        // "current account" is whichever account happens to be flagged active for the
+        // system user (see getLeoOwnerAccount()), which is mutable shared state. Without
+        // this, runAsAdmin() would silently lose its admin rights whenever that flag
+        // points at an account where the system user doesn't hold system-admin.
+        $previousBypass = self::$isBypassRolesCheck;
+        self::$isBypassRolesCheck = true;
+
         try {
             return $callback();
         } finally {
+            self::$isBypassRolesCheck = $previousBypass;
             // Always restore, even if an exception occurs
             self::revertBackToActualUser();
         }
