@@ -115,13 +115,26 @@ class RolesService extends AbstractRolesService
 
         if(!$user) {
             //  $user is null here (eg. queue jobs / NATS handlers with no authenticated request).
-            //  Log the current request() values so we can trace where this call originated from.
-            Log::error('[RolesService@getUserRoles] $user is null. Request values: ' . json_encode([
-                'url' => request()->fullUrl(),
-                'method' => request()->method(),
-                'headers' => request()->headers->all(),
-                'query' => request()->query(),
-                'body' => request()->all(),
+            //  request() is unreliable outside an HTTP context: Laravel hands back a freshly
+            //  instantiated default Request (hence the "Symfony" user-agent / localhost URL seen
+            //  in older logs), which tells us nothing about the real caller. A backtrace plus
+            //  explicit console/queue context is what actually identifies where this call came from.
+            $runningInConsole = app()->runningInConsole();
+
+            Log::error('[RolesService@getUserRoles] $user is null. Context: ' . json_encode([
+                'account_uuid' => $account->uuid ?? null,
+                'running_in_console' => $runningInConsole,
+                'console_command' => $runningInConsole ? implode(' ', $_SERVER['argv'] ?? []) : null,
+                'url' => $runningInConsole ? null : request()->fullUrl(),
+                'method' => $runningInConsole ? null : request()->method(),
+                'route' => $runningInConsole ? null : optional(request()->route())->getName(),
+                'action' => $runningInConsole ? null : optional(request()->route())->getActionName(),
+                'trace' => collect(debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 10))
+                    ->skip(1)
+                    ->map(fn($frame) => ($frame['class'] ?? '') . ($frame['type'] ?? '') . $frame['function']
+                        . '() at ' . ($frame['file'] ?? '?') . ':' . ($frame['line'] ?? '?'))
+                    ->values()
+                    ->all(),
             ]));
 
             return null;
