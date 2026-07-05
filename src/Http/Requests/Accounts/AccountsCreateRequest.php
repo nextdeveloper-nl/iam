@@ -20,6 +20,8 @@ class AccountsCreateRequest extends AbstractFormRequest
         'description' => 'nullable|string',
         'iam_account_type_id' => 'required|exists:iam_account_types,uuid|uuid',
         'is_active' => 'boolean',
+        'allow_same_domain_join' => 'boolean',
+        'domain_name' => 'nullable|string',
         'tags' => '',
         'profile_image_url' => 'nullable|string',
         ];

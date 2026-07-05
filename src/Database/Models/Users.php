@@ -366,6 +366,26 @@ class Users extends Model
         return $this->hasMany(\NextDeveloper\Communication\Database\Models\UserPreferences::class);
     }
 
+    public function posts() : \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(\NextDeveloper\Blogs\Database\Models\Posts::class);
+    }
+
+    public function tickets() : \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(\NextDeveloper\Support\Database\Models\Tickets::class);
+    }
+
+    public function ticketComments() : \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(\NextDeveloper\Support\Database\Models\TicketComments::class);
+    }
+
+    public function ticketAudits() : \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(\NextDeveloper\Support\Database\Models\TicketAudits::class);
+    }
+
     // EDIT AFTER HERE - WARNING: ABOVE THIS LINE MAY BE REGENERATED AND YOU MAY LOSE CODE
 
     use Authenticatable;

@@ -68,6 +68,7 @@ class AbstractAccountsPerspectiveTransformer extends AbstractTransformer
             'iam_user_id'  =>  $iamUserId ? $iamUserId->uuid : null,
             'account_type'  =>  $model->account_type,
             'is_active'  =>  $model->is_active,
+            'allow_same_domain_join'  =>  $model->allow_same_domain_join,
             'tags'  =>  $model->tags,
             'total_user_count'  =>  $model->total_user_count,
             'registered_user_count'  =>  $model->registered_user_count,
