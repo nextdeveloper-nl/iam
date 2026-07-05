@@ -70,6 +70,7 @@ class AbstractAccountsTransformer extends AbstractTransformer
             'iam_user_id'  =>  $iamUserId ? $iamUserId->uuid : null,
             'iam_account_type_id'  =>  $iamAccountTypeId ? $iamAccountTypeId->uuid : null,
             'is_active'  =>  $model->is_active,
+            'allow_same_domain_join'  =>  $model->allow_same_domain_join,
             'tags'  =>  $model->tags,
             'created_at'  =>  $model->created_at,
             'updated_at'  =>  $model->updated_at,

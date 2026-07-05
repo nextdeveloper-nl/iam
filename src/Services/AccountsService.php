@@ -64,6 +64,40 @@ class AccountsService extends AbstractAccountsService
                 'Please reach to the account owner');
         }
 
+        //  Panel "Domains" tab sends a plain domain NAME when the account has no domain yet.
+        //  We resolve it to a common_domains row, creating one if it does not exist, and apply
+        //  the resolved integer id AFTER the uuid-based block below (which expects a uuid). The
+        //  domain is attached even if owned by another account (shared domain).
+        $resolvedDomainId = null;
+        if(array_key_exists('domain_name', $data) && $data['domain_name']) {
+            $domain = Domains::withoutGlobalScope(AuthorizationScope::class)
+                ->where('name', $data['domain_name'])
+                ->first();
+
+            if($domain) {
+                //  A domain belongs to a single account (iam_accounts.common_domain_id is unique).
+                //  If it is already claimed by another account, we cannot attach it here.
+                if($domain->iam_account_id && $domain->iam_account_id != $account->id) {
+                    throw new UnauthorizedException('This domain is already claimed by another ' .
+                        'organization and cannot be used for your account.');
+                }
+
+                if(!$domain->iam_account_id) {
+                    $domain->updateQuietly(['iam_account_id' => $account->id]);
+                }
+            } else {
+                $domain = Domains::create([
+                    'name'              =>  $data['domain_name'],
+                    'iam_account_id'    =>  $account->id,
+                    'is_active'         =>  true,
+                ]);
+            }
+
+            $resolvedDomainId = $domain->id;
+        }
+
+        unset($data['domain_name']);
+
         //  Here we are checking if according to the configuration of the system, the user can change the domain or not.
         $canChangeDomain = MetaHelper::get(
             $account,
@@ -90,6 +124,12 @@ class AccountsService extends AbstractAccountsService
                     }
                 }
             }
+        }
+
+        //  Apply the domain resolved from a typed domain name (integer id), bypassing the
+        //  uuid-based block above so a foreign-owned domain can still be attached (shared).
+        if($resolvedDomainId !== null) {
+            $data['common_domain_id'] = $resolvedDomainId;
         }
 
         //  For temporary time only.
@@ -135,7 +175,14 @@ class AccountsService extends AbstractAccountsService
             }
         }
 
-        return parent::update($id, $data);
+        $account = parent::update($id, $data);
+
+        //  If a domain is set and same-domain join is enabled, (re)attach matching-domain users.
+        if($account->common_domain_id && $account->allow_same_domain_join) {
+            Events::fire('same-domain-join-activated:NextDeveloper\IAM\Accounts', $account->fresh());
+        }
+
+        return $account;
     }
 
     public static function create(array $data) : Accounts

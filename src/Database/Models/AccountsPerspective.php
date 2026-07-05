@@ -27,6 +27,7 @@ use NextDeveloper\Commons\Database\Traits\RunAsAdministrator;
  * @property integer $iam_user_id
  * @property string $account_type
  * @property boolean $is_active
+ * @property boolean $allow_same_domain_join
  * @property array $tags
  * @property integer $total_user_count
  * @property integer $registered_user_count
@@ -62,6 +63,7 @@ class AccountsPerspective extends Model
             'iam_user_id',
             'account_type',
             'is_active',
+            'allow_same_domain_join',
             'tags',
             'total_user_count',
             'registered_user_count',
@@ -99,6 +101,7 @@ class AccountsPerspective extends Model
     'account_owner' => 'string',
     'account_type' => 'string',
     'is_active' => 'boolean',
+    'allow_same_domain_join' => 'boolean',
     'tags' => \NextDeveloper\Commons\Database\Casts\TextArray::class,
     'total_user_count' => 'integer',
     'registered_user_count' => 'integer',

@@ -83,7 +83,18 @@ class AccountsQueryFilter extends AbstractQueryFilter
     {
         return $this->isActive($value);
     }
-     
+
+    public function allowSameDomainJoin($value)
+    {
+        return $this->builder->where('allow_same_domain_join', $value);
+    }
+
+        //  This is an alias function of allowSameDomainJoin
+    public function allow_same_domain_join($value)
+    {
+        return $this->allowSameDomainJoin($value);
+    }
+
     public function createdAtStart($date)
     {
         return $this->builder->where('created_at', '>=', $date);

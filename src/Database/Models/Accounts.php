@@ -28,6 +28,7 @@ use NextDeveloper\Commons\Database\Traits\RunAsAdministrator;
  * @property integer $iam_user_id
  * @property integer $iam_account_type_id
  * @property boolean $is_active
+ * @property boolean $allow_same_domain_join
  * @property array $tags
  * @property \Carbon\Carbon $created_at
  * @property \Carbon\Carbon $updated_at
@@ -58,6 +59,7 @@ class Accounts extends Model
             'iam_user_id',
             'iam_account_type_id',
             'is_active',
+            'allow_same_domain_join',
             'tags',
             'profile_image_url',
     ];
@@ -90,6 +92,7 @@ class Accounts extends Model
     'description' => 'string',
     'iam_account_type_id' => 'integer',
     'is_active' => 'boolean',
+    'allow_same_domain_join' => 'boolean',
     'tags' => \NextDeveloper\Commons\Database\Casts\TextArray::class,
     'created_at' => 'datetime',
     'updated_at' => 'datetime',
@@ -358,6 +361,21 @@ class Accounts extends Model
     public function remindables() : \Illuminate\Database\Eloquent\Relations\HasMany
     {
         return $this->hasMany(\NextDeveloper\Communication\Database\Models\Remindables::class);
+    }
+
+    public function posts() : \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(\NextDeveloper\Blogs\Database\Models\Posts::class);
+    }
+
+    public function tickets() : \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(\NextDeveloper\Support\Database\Models\Tickets::class);
+    }
+
+    public function ticketComments() : \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(\NextDeveloper\Support\Database\Models\TicketComments::class);
     }
 
     // EDIT AFTER HERE - WARNING: ABOVE THIS LINE MAY BE REGENERATED AND YOU MAY LOSE CODE\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n
