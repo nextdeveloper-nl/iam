@@ -586,6 +586,28 @@ class UserHelper
         return self::$isBypassRolesCheck;
     }
 
+    /**
+     * Runs $callback with role/policy checks bypassed, without switching the
+     * current user/account (unlike runAsAdmin()). For system-triggered side
+     * effects of an already-authorized action (e.g. writing an audit log entry
+     * as part of a user-permitted operation) where the acting identity must be
+     * preserved for correct attribution.
+     *
+     * Note: bypassRolesCheck(false) does NOT clear the flag (its truthy check
+     * only ever sets it to true), so the flag is saved/restored directly here.
+     */
+    public static function withRolesCheckBypassed(callable $callback)
+    {
+        $previousBypass = self::$isBypassRolesCheck;
+        self::$isBypassRolesCheck = true;
+
+        try {
+            return $callback();
+        } finally {
+            self::$isBypassRolesCheck = $previousBypass;
+        }
+    }
+
     public static function can($method, $model, Users $user = null)
     {
         if (self::bypassRolesCheck())
