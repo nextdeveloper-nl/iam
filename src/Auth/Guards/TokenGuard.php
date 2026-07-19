@@ -59,6 +59,12 @@ class TokenGuard implements Guard
         if($token == null)
             return null;
 
+        //  oauth_access_tokens.id is a uuid column - a non-uuid bearer token (e.g. a token
+        //  minted by another module for its own anonymous endpoints) would otherwise make
+        //  Postgres throw "invalid input syntax for type uuid" instead of just not matching.
+        if(!Str::isUuid($token))
+            return null;
+
         $oauthToken = DB::table('oauth_access_tokens')
             ->select('*')
             ->where('id', $token)
