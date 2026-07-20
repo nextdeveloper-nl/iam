@@ -544,6 +544,10 @@ class UserHelper
         //  If null getRoles will get the current user
         $roles = self::getRoles($user);
 
+        if (!$roles) {
+            return false;
+        }
+
         //  This works correct, if anything goes wrong, look at the database
         foreach ($roles as $role) {
             if ($role->name == $string)
@@ -556,6 +560,10 @@ class UserHelper
     public static function getRoleForModel($model, Users $user = null): ?Roles
     {
         $roles = self::getRoles($user);
+
+        if (!$roles) {
+            return null;
+        }
 
         foreach ($roles as $role) {
             if (!class_exists($role->class)) {
