@@ -17,31 +17,31 @@ class PermissionsQueryFilter extends AbstractQueryFilter
      * @var Builder
      */
     protected $builder;
-    
+
     public function namespace($value)
     {
         return $this->builder->where('namespace', 'ilike', '%' . $value . '%');
     }
 
-        
+
     public function service($value)
     {
         return $this->builder->where('service', 'ilike', '%' . $value . '%');
     }
 
-        
+
     public function method($value)
     {
         return $this->builder->where('method', 'ilike', '%' . $value . '%');
     }
 
-        
+
     public function name($value)
     {
         return $this->builder->where('name', 'ilike', '%' . $value . '%');
     }
 
-    
+
     public function createdBy($value)
     {
         $operator = substr($value, 0, 1);
@@ -60,7 +60,7 @@ class PermissionsQueryFilter extends AbstractQueryFilter
     {
         return $this->createdBy($value);
     }
-    
+
     public function updatedBy($value)
     {
         $operator = substr($value, 0, 1);
@@ -79,7 +79,7 @@ class PermissionsQueryFilter extends AbstractQueryFilter
     {
         return $this->updatedBy($value);
     }
-    
+
     public function isActive($value)
     {
         return $this->builder->where('is_active', $value);
@@ -90,7 +90,7 @@ class PermissionsQueryFilter extends AbstractQueryFilter
     {
         return $this->isActive($value);
     }
-     
+
     public function createdAtStart($date)
     {
         return $this->builder->where('created_at', '>=', $date);

@@ -162,17 +162,17 @@ class Accounts extends Model
     {
         return $this->belongsTo(\NextDeveloper\Commons\Database\Models\Countries::class);
     }
-    
+
     public function domains() : \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
         return $this->belongsTo(\NextDeveloper\Commons\Database\Models\Domains::class);
     }
-    
+
     public function accountTypes() : \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
         return $this->belongsTo(\NextDeveloper\IAM\Database\Models\AccountTypes::class);
     }
-    
+
     public function backendDirectories() : \Illuminate\Database\Eloquent\Relations\HasMany
     {
         return $this->hasMany(\NextDeveloper\IAM\Database\Models\BackendDirectories::class);

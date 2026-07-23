@@ -23,7 +23,7 @@ class RoleUserCreatingEvent
      */
     protected $timestamp = null;
 
-    public function __construct(RoleUsers $model = null) {
+    public function __construct(?RoleUsers $model = null) {
         $this->_model = $model;
     }
 

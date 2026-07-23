@@ -25,7 +25,7 @@ use NextDeveloper\Commons\Exceptions\NotAllowedException;
  */
 class AbstractSshPublicKeysService
 {
-    public static function get(SshPublicKeysQueryFilter $filter = null, array $params = []) : Collection|LengthAwarePaginator
+    public static function get(?SshPublicKeysQueryFilter $filter = null, array $params = []) : Collection|LengthAwarePaginator
     {
         $enablePaginate = array_key_exists('paginate', $params);
 
@@ -190,7 +190,7 @@ class AbstractSshPublicKeysService
                 $data['iam_account_id']
             );
         }
-            
+
         if(!array_key_exists('iam_account_id', $data)) {
             $data['iam_account_id'] = UserHelper::currentAccount()->id;
         }
@@ -200,11 +200,11 @@ class AbstractSshPublicKeysService
                 $data['iam_user_id']
             );
         }
-                    
+
         if(!array_key_exists('iam_user_id', $data)) {
             $data['iam_user_id']    = UserHelper::me()->id;
         }
-            
+
         try {
             $model = SshPublicKeys::create($data);
         } catch(\Exception $e) {
@@ -262,7 +262,7 @@ class AbstractSshPublicKeysService
                 $data['iam_user_id']
             );
         }
-    
+
         try {
             $isUpdated = $model->update($data);
             $model = $model->fresh();

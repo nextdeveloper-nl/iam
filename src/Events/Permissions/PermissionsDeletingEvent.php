@@ -23,7 +23,7 @@ class PermissionsDeletingEvent
      */
     protected $timestamp = null;
 
-    public function __construct(Permissions $model = null) {
+    public function __construct(?Permissions $model = null) {
         $this->_model = $model;
     }
 

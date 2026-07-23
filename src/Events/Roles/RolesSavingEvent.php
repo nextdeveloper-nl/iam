@@ -23,7 +23,7 @@ class RolesSavingEvent
      */
     protected $timestamp = null;
 
-    public function __construct(Roles $model = null) {
+    public function __construct(?Roles $model = null) {
         $this->_model = $model;
     }
 

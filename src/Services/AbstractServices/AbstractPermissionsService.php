@@ -21,7 +21,7 @@ use NextDeveloper\IAM\Database\Models\Permissions;
  */
 class AbstractPermissionsService
 {
-    public static function get(PermissionsQueryFilter $filter = null, array $params = []) : Collection|LengthAwarePaginator
+    public static function get(?PermissionsQueryFilter $filter = null, array $params = []) : Collection|LengthAwarePaginator
     {
         $enablePaginate = array_key_exists('paginate', $params);
 

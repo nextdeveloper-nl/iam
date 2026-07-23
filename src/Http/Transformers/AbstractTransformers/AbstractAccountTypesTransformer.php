@@ -55,7 +55,7 @@ class AbstractAccountTypesTransformer extends AbstractTransformer
     public function transform(AccountTypes $model)
     {
                                                 $commonCountryId = \NextDeveloper\Commons\Database\Models\Countries::where('id', $model->common_country_id)->first();
-                        
+
         return $this->buildPayload(
             [
             'id'  =>  $model->uuid,

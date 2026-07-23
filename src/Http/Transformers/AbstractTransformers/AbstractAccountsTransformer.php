@@ -58,7 +58,7 @@ class AbstractAccountsTransformer extends AbstractTransformer
                                                             $commonCountryId = \NextDeveloper\Commons\Database\Models\Countries::where('id', $model->common_country_id)->first();
                                                             $iamUserId = \NextDeveloper\IAM\Database\Models\Users::where('id', $model->iam_user_id)->first();
                                                             $iamAccountTypeId = \NextDeveloper\IAM\Database\Models\AccountTypes::where('id', $model->iam_account_type_id)->first();
-                        
+
         return $this->buildPayload(
             [
             'id'  =>  $model->uuid,

@@ -23,7 +23,7 @@ class BackendsCreatingEvent
      */
     protected $timestamp = null;
 
-    public function __construct(Backends $model = null) {
+    public function __construct(?Backends $model = null) {
         $this->_model = $model;
     }
 

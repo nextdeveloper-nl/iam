@@ -23,7 +23,7 @@ class AccountUserSavedEvent
      */
     protected $timestamp = null;
 
-    public function __construct(AccountUsers $model = null) {
+    public function __construct(?AccountUsers $model = null) {
         $this->_model = $model;
     }
 

@@ -54,7 +54,7 @@ class AbstractPermissionsTransformer extends AbstractTransformer
      */
     public function transform(Permissions $model)
     {
-            
+
         return $this->buildPayload(
             [
             'id'  =>  $model->uuid,

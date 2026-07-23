@@ -23,7 +23,7 @@ class RolePermissionUpdatedEvent
      */
     protected $timestamp = null;
 
-    public function __construct(RolePermissions $model = null) {
+    public function __construct(?RolePermissions $model = null) {
         $this->_model = $model;
     }
 

@@ -55,7 +55,7 @@ class AbstractLoginMechanismsTransformer extends AbstractTransformer
     public function transform(LoginMechanisms $model)
     {
                                                 $iamUserId = \NextDeveloper\IAM\Database\Models\Users::where('id', $model->iam_user_id)->first();
-                        
+
         return $this->buildPayload(
             [
             'id'  =>  $model->uuid,

@@ -18,13 +18,13 @@ class UserAccountsQueryFilter extends AbstractQueryFilter
      * @var Builder
      */
     protected $builder;
-    
+
     public function name($value)
     {
         return $this->builder->where('name', 'ilike', '%' . $value . '%');
     }
 
-    
+
     public function isActive($value)
     {
         return $this->builder->where('is_active', $value);
@@ -35,7 +35,7 @@ class UserAccountsQueryFilter extends AbstractQueryFilter
     {
         return $this->isActive($value);
     }
-     
+
     public function createdAtStart($date)
     {
         return $this->builder->where('created_at', '>=', $date);
@@ -116,7 +116,7 @@ class UserAccountsQueryFilter extends AbstractQueryFilter
     {
         return $this->commonDomain($value);
     }
-    
+
     public function commonCountryId($value)
     {
             $commonCountry = \NextDeveloper\Commons\Database\Models\Countries::where('uuid', $value)->first();
@@ -131,7 +131,7 @@ class UserAccountsQueryFilter extends AbstractQueryFilter
     {
         return $this->commonCountry($value);
     }
-    
+
     public function iamUserId($value)
     {
             $iamUser = \NextDeveloper\IAM\Database\Models\Users::where('uuid', $value)->first();
@@ -141,7 +141,7 @@ class UserAccountsQueryFilter extends AbstractQueryFilter
         }
     }
 
-    
+
     public function iamAccountId($value)
     {
             $iamAccount = \NextDeveloper\IAM\Database\Models\Accounts::where('uuid', $value)->first();
@@ -151,7 +151,7 @@ class UserAccountsQueryFilter extends AbstractQueryFilter
         }
     }
 
-    
+
     // EDIT AFTER HERE - WARNING: ABOVE THIS LINE MAY BE REGENERATED AND YOU MAY LOSE CODE\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n
 
 

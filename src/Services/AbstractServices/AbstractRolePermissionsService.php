@@ -22,7 +22,7 @@ use NextDeveloper\IAM\Database\Models\RolePermissions;
  */
 class AbstractRolePermissionsService
 {
-    public static function get(RolePermissionsQueryFilter $filter = null, array $params = []) : Collection|LengthAwarePaginator
+    public static function get(?RolePermissionsQueryFilter $filter = null, array $params = []) : Collection|LengthAwarePaginator
     {
         $enablePaginate = array_key_exists('paginate', $params);
 

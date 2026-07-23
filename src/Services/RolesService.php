@@ -31,7 +31,7 @@ class RolesService extends AbstractRolesService
 {
 
     // EDIT AFTER HERE - WARNING: ABOVE THIS LINE MAY BE REGENERATED AND YOU MAY LOSE CODE
-    public static function get(RolesQueryFilter $filter = null, array $params = []) : Collection|LengthAwarePaginator{
+    public static function get(?RolesQueryFilter $filter = null, array $params = []) : Collection|LengthAwarePaginator{
         $roles = UserHelper::getRoles();
 
         $level = 255;
@@ -184,7 +184,7 @@ class RolesService extends AbstractRolesService
      * @param Roles $role
      * @return bool
      */
-    public static function assignUserToRole(Users $user, Roles $role, Accounts $account = null, $isRoleActive = null) : bool
+    public static function assignUserToRole(Users $user, Roles $role, ?Accounts $account = null, $isRoleActive = null) : bool
     {
         //  No one can be a system admin
         if($role->name == 'system-admin') {

@@ -24,7 +24,7 @@ use NextDeveloper\IAM\Helpers\UserHelper;
  */
 class AbstractAccountsOverviewsService
 {
-    public static function get(AccountsOverviewsQueryFilter $filter = null, array $params = []) : Collection|LengthAwarePaginator
+    public static function get(?AccountsOverviewsQueryFilter $filter = null, array $params = []) : Collection|LengthAwarePaginator
     {
         $enablePaginate = array_key_exists('paginate', $params);
 

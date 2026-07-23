@@ -56,7 +56,7 @@ class AbstractSshPublicKeysTransformer extends AbstractTransformer
     {
                                                 $iamAccountId = \NextDeveloper\IAM\Database\Models\Accounts::where('id', $model->iam_account_id)->first();
                                                             $iamUserId = \NextDeveloper\IAM\Database\Models\Users::where('id', $model->iam_user_id)->first();
-                        
+
         return $this->buildPayload(
             [
             'id'  =>  $model->uuid,

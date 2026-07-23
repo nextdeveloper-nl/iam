@@ -17,55 +17,55 @@ class AccountUsersPerspectiveQueryFilter extends AbstractQueryFilter
      * @var Builder
      */
     protected $builder;
-    
+
     public function name($value)
     {
         return $this->builder->where('name', 'ilike', '%' . $value . '%');
     }
 
-        
+
     public function surname($value)
     {
         return $this->builder->where('surname', 'ilike', '%' . $value . '%');
     }
 
-        
+
     public function email($value)
     {
         return $this->builder->where('email', 'ilike', '%' . $value . '%');
     }
 
-        
+
     public function fullname($value)
     {
         return $this->builder->where('fullname', 'ilike', '%' . $value . '%');
     }
 
-        
+
     public function username($value)
     {
         return $this->builder->where('username', 'ilike', '%' . $value . '%');
     }
 
-        
+
     public function about($value)
     {
         return $this->builder->where('about', 'ilike', '%' . $value . '%');
     }
 
-        
+
     public function pronoun($value)
     {
         return $this->builder->where('pronoun', 'ilike', '%' . $value . '%');
     }
 
-        
+
     public function nin($value)
     {
         return $this->builder->where('nin', 'ilike', '%' . $value . '%');
     }
 
-        
+
     public function phoneNumber($value)
     {
         return $this->builder->where('phone_number', 'ilike', '%' . $value . '%');
@@ -76,7 +76,7 @@ class AccountUsersPerspectiveQueryFilter extends AbstractQueryFilter
     {
         return $this->phoneNumber($value);
     }
-    
+
     public function isActive($value)
     {
         return $this->builder->where('is_active', $value);
@@ -87,7 +87,7 @@ class AccountUsersPerspectiveQueryFilter extends AbstractQueryFilter
     {
         return $this->isActive($value);
     }
-     
+
     public function birthdayStart($date)
     {
         return $this->builder->where('birthday', '>=', $date);
@@ -190,7 +190,7 @@ class AccountUsersPerspectiveQueryFilter extends AbstractQueryFilter
     {
         return $this->commonLanguage($value);
     }
-    
+
     public function commonCountryId($value)
     {
             $commonCountry = \NextDeveloper\Commons\Database\Models\Countries::where('uuid', $value)->first();
@@ -205,7 +205,7 @@ class AccountUsersPerspectiveQueryFilter extends AbstractQueryFilter
     {
         return $this->commonCountry($value);
     }
-    
+
     public function iamAccountId($value)
     {
             $iamAccount = \NextDeveloper\IAM\Database\Models\Accounts::where('uuid', $value)->first();
@@ -215,7 +215,7 @@ class AccountUsersPerspectiveQueryFilter extends AbstractQueryFilter
         }
     }
 
-    
+
     // EDIT AFTER HERE - WARNING: ABOVE THIS LINE MAY BE REGENERATED AND YOU MAY LOSE CODE
 
 

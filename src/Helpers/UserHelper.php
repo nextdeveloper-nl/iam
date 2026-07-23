@@ -172,7 +172,7 @@ class UserHelper
      * @param Accounts|null $account
      * @return AccountUsers
      */
-    public static function addUserToCurrentAccount(Users $user, Accounts $account = null): AccountUsers
+    public static function addUserToCurrentAccount(Users $user, ?Accounts $account = null): AccountUsers
     {
         if (!$account)
             $account = self::currentAccount();
@@ -222,7 +222,7 @@ class UserHelper
      * @param Users $user
      * @return \Illuminate\Support\Collection
      */
-    public static function allAccounts(Users $user = null, AccountsQueryFilter $filter = null): \Illuminate\Support\Collection
+    public static function allAccounts(?Users $user = null, ?AccountsQueryFilter $filter = null): \Illuminate\Support\Collection
     {
         $filters = null;
 
@@ -240,7 +240,7 @@ class UserHelper
     /**
      * @throws CannotFindUserException
      */
-    public static function masterAccount(Users $user = null, $createAccount = false): ?Accounts
+    public static function masterAccount(?Users $user = null, $createAccount = false): ?Accounts
     {
         if (!$user) {
             $user = self::me();
@@ -262,7 +262,7 @@ class UserHelper
         return $account;
     }
 
-    public static function getLocale(Users $users = null): Languages
+    public static function getLocale(?Users $users = null): Languages
     {
         if (!$users)
             $users = self::me();
@@ -277,7 +277,7 @@ class UserHelper
      *
      * @return Accounts
      */
-    public static function currentAccount(Users $user = null): ?Accounts
+    public static function currentAccount(?Users $user = null): ?Accounts
     {
         //  :WARNING: Don't forget to change the account when the user changes the account
         if (self::$account)
@@ -354,7 +354,7 @@ class UserHelper
      * @param Accounts $account
      * @return Accounts
      */
-    public static function switchAccountTo(Accounts $account = null): Accounts
+    public static function switchAccountTo(?Accounts $account = null): Accounts
     {
         //  We need to reset the current account object not to create any problems
         self::$account = null;
@@ -433,7 +433,7 @@ class UserHelper
      * @param Users|null $user
      * @return void
      */
-    public static function isTeamOwner(Users $user = null): bool
+    public static function isTeamOwner(?Users $user = null): bool
     {
         if (!$user)
             $user = self::currentUser();
@@ -450,7 +450,7 @@ class UserHelper
      * @param Users|null $user
      * @return bool
      */
-    public static function isAccountOwner(Users $user = null): bool
+    public static function isAccountOwner(?Users $user = null): bool
     {
         return self::isTeamOwner($user);
     }
@@ -557,7 +557,7 @@ class UserHelper
         return false;
     }
 
-    public static function getRoleForModel($model, Users $user = null): ?Roles
+    public static function getRoleForModel($model, ?Users $user = null): ?Roles
     {
         $roles = self::getRoles($user);
 
@@ -616,7 +616,7 @@ class UserHelper
         }
     }
 
-    public static function can($method, $model, Users $user = null)
+    public static function can($method, $model, ?Users $user = null)
     {
         if (self::bypassRolesCheck())
             return true;
@@ -659,7 +659,7 @@ class UserHelper
         return $result;
     }
 
-    public static function currentRole(Users $user = null): ?Roles
+    public static function currentRole(?Users $user = null): ?Roles
     {
         trigger_deprecation('nextdeveloper/iam', '1.0', 'This function is deprecated. ' .
             'No need to switch since all roles are loaded now.');
@@ -698,7 +698,7 @@ class UserHelper
      * @param Users|null $user
      * @return Roles|null
      */
-    public static function getRoles(Users $user = null): ?Collection
+    public static function getRoles(?Users $user = null): ?Collection
     {
         if (!$user)
             $user = self::me();
@@ -715,7 +715,7 @@ class UserHelper
         return $roles;
     }
 
-    public static function dumpRoles(Users $user = null): void
+    public static function dumpRoles(?Users $user = null): void
     {
         $roles = self::getRoles($user);
 
@@ -724,7 +724,7 @@ class UserHelper
         }
     }
 
-    public static function removeFromRole($role, Users $users = null, Accounts $account = null): bool
+    public static function removeFromRole($role, ?Users $users = null, ?Accounts $account = null): bool
     {
         if (!$users)
             $users = self::me();
@@ -740,7 +740,7 @@ class UserHelper
         return true;
     }
 
-    public static function switchToRoleByRoleId(Users $user = null, $roleId): ?Roles
+    public static function switchToRoleByRoleId(?Users $user = null, $roleId): ?Roles
     {
         trigger_deprecation('nextdeveloper/iam', '1.0', 'This function is deprecated. ' .
             'No need to switch since all roles are loaded now.');
@@ -913,7 +913,7 @@ class UserHelper
      * @param $authorization
      * @return SupportCollection
      */
-    public static function getUsersWithRole(string $roleName, Accounts $account = null, $authorization = true): SupportCollection
+    public static function getUsersWithRole(string $roleName, ?Accounts $account = null, $authorization = true): SupportCollection
     {
         $role = RolesService::getRoleByName($roleName);
 
@@ -942,7 +942,7 @@ class UserHelper
         return $query->get();
     }
 
-    public static function getUsersProfilePictureUrl(string $email, string $profilePictureIdentity = null): string
+    public static function getUsersProfilePictureUrl(string $email, ?string $profilePictureIdentity = null): string
     {
         $profile_picture_url = null;
 

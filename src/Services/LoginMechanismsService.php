@@ -289,7 +289,7 @@ class LoginMechanismsService extends AbstractLoginMechanismsService
         ];
     }
 
-    public static function getLoginMechanisms(Users $user = null)
+    public static function getLoginMechanisms(?Users $user = null)
     {
         if(!$user) {
             $user = UserHelper::me();

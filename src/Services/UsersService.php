@@ -28,7 +28,7 @@ class UsersService extends AbstractUsersService
 {
 
     // EDIT AFTER HERE - WARNING: ABOVE THIS LINE MAY BE REGENERATED AND YOU MAY LOSE CODE
-    public static function get(UsersQueryFilter $filter = null, array $params = []) : Collection|LengthAwarePaginator {
+    public static function get(?UsersQueryFilter $filter = null, array $params = []) : Collection|LengthAwarePaginator {
         $user = UserHelper::me();
 
         //  If user not logged in then we dont list users
@@ -136,7 +136,7 @@ class UsersService extends AbstractUsersService
      * @return Users
      * @throws \Exception
      */
-    public static function create(array $data, Accounts $accounts = null) : Users {
+    public static function create(array $data, ?Accounts $accounts = null) : Users {
         $user = self::createWithoutAccount($data);
 
         //  If we dont have account information, then we automatically add to our current account.

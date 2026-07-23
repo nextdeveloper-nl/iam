@@ -23,7 +23,7 @@ use NextDeveloper\IAM\Helpers\UserHelper;
  */
 class AbstractAccountUserPerspectiveService
 {
-    public static function get(AccountUserPerspectiveQueryFilter $filter = null, array $params = []) : Collection|LengthAwarePaginator
+    public static function get(?AccountUserPerspectiveQueryFilter $filter = null, array $params = []) : Collection|LengthAwarePaginator
     {
         $enablePaginate = array_key_exists('paginate', $params);
 

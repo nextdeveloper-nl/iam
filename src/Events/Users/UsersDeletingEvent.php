@@ -23,7 +23,7 @@ class UsersDeletingEvent
      */
     protected $timestamp = null;
 
-    public function __construct(Users $model = null) {
+    public function __construct(?Users $model = null) {
         $this->_model = $model;
     }
 

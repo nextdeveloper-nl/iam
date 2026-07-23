@@ -37,13 +37,13 @@ class SshPublicKeysQueryFilter extends AbstractQueryFilter
      * @var Builder
      */
     protected $builder;
-    
+
     public function name($value)
     {
         return $this->builder->where('name', 'ilike', '%' . $value . '%');
     }
 
-        
+
     public function publicKey($value)
     {
         return $this->builder->where('public_key', 'ilike', '%' . $value . '%');
@@ -54,13 +54,13 @@ class SshPublicKeysQueryFilter extends AbstractQueryFilter
     {
         return $this->publicKey($value);
     }
-        
+
     public function fingerprint($value)
     {
         return $this->builder->where('fingerprint', 'ilike', '%' . $value . '%');
     }
 
-        
+
     public function keyType($value)
     {
         return $this->builder->where('key_type', 'ilike', '%' . $value . '%');
@@ -71,13 +71,13 @@ class SshPublicKeysQueryFilter extends AbstractQueryFilter
     {
         return $this->keyType($value);
     }
-        
+
     public function scope($value)
     {
         return $this->builder->where('scope', 'ilike', '%' . $value . '%');
     }
 
-    
+
     public function isActive($value)
     {
         return $this->builder->where('is_active', $value);
@@ -88,7 +88,7 @@ class SshPublicKeysQueryFilter extends AbstractQueryFilter
     {
         return $this->isActive($value);
     }
-     
+
     public function expiresAtStart($date)
     {
         return $this->builder->where('expires_at', '>=', $date);
@@ -208,7 +208,7 @@ class SshPublicKeysQueryFilter extends AbstractQueryFilter
         }
     }
 
-    
+
     public function iamUserId($value)
     {
             $iamUser = \NextDeveloper\IAM\Database\Models\Users::where('uuid', $value)->first();
@@ -218,6 +218,6 @@ class SshPublicKeysQueryFilter extends AbstractQueryFilter
         }
     }
 
-    
+
     // EDIT AFTER HERE - WARNING: ABOVE THIS LINE MAY BE REGENERATED AND YOU MAY LOSE CODE
 }

@@ -36,7 +36,7 @@ class RolePermissionsQueryFilter extends AbstractQueryFilter
     {
         return $this->createdBy($value);
     }
-    
+
     public function updatedBy($value)
     {
         $operator = substr($value, 0, 1);
@@ -55,7 +55,7 @@ class RolePermissionsQueryFilter extends AbstractQueryFilter
     {
         return $this->updatedBy($value);
     }
-    
+
     public function isActive($value)
     {
         return $this->builder->where('is_active', $value);
@@ -66,7 +66,7 @@ class RolePermissionsQueryFilter extends AbstractQueryFilter
     {
         return $this->isActive($value);
     }
-     
+
     public function createdAtStart($date)
     {
         return $this->builder->where('created_at', '>=', $date);
@@ -125,7 +125,7 @@ class RolePermissionsQueryFilter extends AbstractQueryFilter
     {
         return $this->iamRole($value);
     }
-    
+
     public function iamPermissionId($value)
     {
             $iamPermission = \NextDeveloper\IAM\Database\Models\Permissions::where('uuid', $value)->first();
@@ -140,7 +140,7 @@ class RolePermissionsQueryFilter extends AbstractQueryFilter
     {
         return $this->iamPermission($value);
     }
-    
+
     // EDIT AFTER HERE - WARNING: ABOVE THIS LINE MAY BE REGENERATED AND YOU MAY LOSE CODE\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n
 
 

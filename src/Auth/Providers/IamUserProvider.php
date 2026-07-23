@@ -10,7 +10,7 @@ class IamUserProvider implements UserProvider
 {
     private $model;
 
-    public function __construct(Users $user = null)
+    public function __construct(?Users $user = null)
     {
         $this->model = $user;
     }

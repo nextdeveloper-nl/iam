@@ -45,7 +45,7 @@ class AccountsService extends AbstractAccountsService
      * @param array $params
      * @return \Illuminate\Database\Eloquent\Collection|\Illuminate\Contracts\Pagination\LengthAwarePaginator
      */
-    public static function get(AccountsQueryFilter $filter = null, array $params = []): \Illuminate\Database\Eloquent\Collection|\Illuminate\Contracts\Pagination\LengthAwarePaginator
+    public static function get(?AccountsQueryFilter $filter = null, array $params = []): \Illuminate\Database\Eloquent\Collection|\Illuminate\Contracts\Pagination\LengthAwarePaginator
     {
         $model = Accounts::filter($filter)
             ->where('iam_user_id', UserHelper::me()->id);

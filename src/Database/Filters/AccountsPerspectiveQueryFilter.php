@@ -37,19 +37,19 @@ class AccountsPerspectiveQueryFilter extends AbstractQueryFilter
      * @var Builder
      */
     protected $builder;
-    
+
     public function name($value)
     {
         return $this->builder->where('name', 'ilike', '%' . $value . '%');
     }
 
-        
+
     public function description($value)
     {
         return $this->builder->where('description', 'ilike', '%' . $value . '%');
     }
 
-        
+
     public function phoneNumber($value)
     {
         return $this->builder->where('phone_number', 'ilike', '%' . $value . '%');
@@ -60,7 +60,7 @@ class AccountsPerspectiveQueryFilter extends AbstractQueryFilter
     {
         return $this->phoneNumber($value);
     }
-        
+
     public function accountOwner($value)
     {
         return $this->builder->where('account_owner', 'ilike', '%' . $value . '%');
@@ -71,7 +71,7 @@ class AccountsPerspectiveQueryFilter extends AbstractQueryFilter
     {
         return $this->accountOwner($value);
     }
-        
+
     public function accountType($value)
     {
         return $this->builder->where('account_type', 'ilike', '%' . $value . '%');
@@ -82,7 +82,7 @@ class AccountsPerspectiveQueryFilter extends AbstractQueryFilter
     {
         return $this->accountType($value);
     }
-        
+
     public function domainName($value)
     {
         return $this->builder->where('domain_name', 'ilike', '%' . $value . '%');
@@ -93,7 +93,7 @@ class AccountsPerspectiveQueryFilter extends AbstractQueryFilter
     {
         return $this->domainName($value);
     }
-        
+
     public function countryName($value)
     {
         return $this->builder->where('country_name', 'ilike', '%' . $value . '%');
@@ -104,7 +104,7 @@ class AccountsPerspectiveQueryFilter extends AbstractQueryFilter
     {
         return $this->countryName($value);
     }
-        
+
     public function profileImageUrl($value)
     {
         return $this->builder->where('profile_image_url', 'ilike', '%' . $value . '%');
@@ -115,7 +115,7 @@ class AccountsPerspectiveQueryFilter extends AbstractQueryFilter
     {
         return $this->profileImageUrl($value);
     }
-    
+
     public function totalUserCount($value)
     {
         $operator = substr($value, 0, 1);
@@ -134,7 +134,7 @@ class AccountsPerspectiveQueryFilter extends AbstractQueryFilter
     {
         return $this->totalUserCount($value);
     }
-    
+
     public function registeredUserCount($value)
     {
         $operator = substr($value, 0, 1);
@@ -153,7 +153,7 @@ class AccountsPerspectiveQueryFilter extends AbstractQueryFilter
     {
         return $this->registeredUserCount($value);
     }
-    
+
     public function isActive($value)
     {
         return $this->builder->where('is_active', $value);
@@ -164,7 +164,7 @@ class AccountsPerspectiveQueryFilter extends AbstractQueryFilter
     {
         return $this->isActive($value);
     }
-     
+
     public function createdAtStart($date)
     {
         return $this->builder->where('created_at', '>=', $date);
@@ -240,7 +240,7 @@ class AccountsPerspectiveQueryFilter extends AbstractQueryFilter
         }
     }
 
-    
+
     public function commonDomainId($value)
     {
             $commonDomain = \NextDeveloper\Commons\Database\Models\Domains::where('uuid', $value)->first();
@@ -255,7 +255,7 @@ class AccountsPerspectiveQueryFilter extends AbstractQueryFilter
     {
         return $this->commonDomain($value);
     }
-    
+
     public function commonCountryId($value)
     {
             $commonCountry = \NextDeveloper\Commons\Database\Models\Countries::where('uuid', $value)->first();
@@ -270,7 +270,7 @@ class AccountsPerspectiveQueryFilter extends AbstractQueryFilter
     {
         return $this->commonCountry($value);
     }
-    
+
     // EDIT AFTER HERE - WARNING: ABOVE THIS LINE MAY BE REGENERATED AND YOU MAY LOSE CODE
 
 

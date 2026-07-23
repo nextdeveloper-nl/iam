@@ -26,7 +26,7 @@ class UserRolesService extends AbstractUserRolesService
 
     // EDIT AFTER HERE - WARNING: ABOVE THIS LINE MAY BE REGENERATED AND YOU MAY LOSE CODE
 
-    public static function get(UserRolesQueryFilter $filter = null, array $params = []) : Collection|LengthAwarePaginator{
+    public static function get(?UserRolesQueryFilter $filter = null, array $params = []) : Collection|LengthAwarePaginator{
         $roles = UserRoles::withoutGlobalScope(AuthorizationScope::class)
             ->withoutGlobalScope(LimitScope::class)
             ->filter($filter)

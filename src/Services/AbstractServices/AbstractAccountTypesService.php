@@ -22,7 +22,7 @@ use NextDeveloper\IAM\Database\Models\AccountTypes;
  */
 class AbstractAccountTypesService
 {
-    public static function get(AccountTypesQueryFilter $filter = null, array $params = []) : Collection|LengthAwarePaginator
+    public static function get(?AccountTypesQueryFilter $filter = null, array $params = []) : Collection|LengthAwarePaginator
     {
         $enablePaginate = array_key_exists('paginate', $params);
 

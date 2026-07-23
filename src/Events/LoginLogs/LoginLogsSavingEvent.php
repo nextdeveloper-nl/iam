@@ -23,7 +23,7 @@ class LoginLogsSavingEvent
      */
     protected $timestamp = null;
 
-    public function __construct(LoginLogs $model = null) {
+    public function __construct(?LoginLogs $model = null) {
         $this->_model = $model;
     }
 

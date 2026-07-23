@@ -23,7 +23,7 @@ class LoginMechanismsDeletedEvent
      */
     protected $timestamp = null;
 
-    public function __construct(LoginMechanisms $model = null) {
+    public function __construct(?LoginMechanisms $model = null) {
         $this->_model = $model;
     }
 

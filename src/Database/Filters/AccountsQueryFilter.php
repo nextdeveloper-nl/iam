@@ -38,13 +38,13 @@ class AccountsQueryFilter extends AbstractQueryFilter
      * @var Builder
      */
     protected $builder;
-    
+
     public function name($value)
     {
         return $this->builder->where('name', 'ilike', '%' . $value . '%');
     }
 
-        
+
     public function phoneNumber($value)
     {
         return $this->builder->where('phone_number', 'ilike', '%' . $value . '%');
@@ -55,13 +55,13 @@ class AccountsQueryFilter extends AbstractQueryFilter
     {
         return $this->phoneNumber($value);
     }
-        
+
     public function description($value)
     {
         return $this->builder->where('description', 'ilike', '%' . $value . '%');
     }
 
-        
+
     public function profileImageUrl($value)
     {
         return $this->builder->where('profile_image_url', 'ilike', '%' . $value . '%');
@@ -72,7 +72,7 @@ class AccountsQueryFilter extends AbstractQueryFilter
     {
         return $this->profileImageUrl($value);
     }
-    
+
     public function isActive($value)
     {
         return $this->builder->where('is_active', $value);
@@ -175,7 +175,7 @@ class AccountsQueryFilter extends AbstractQueryFilter
     {
         return $this->commonDomain($value);
     }
-    
+
     public function commonCountryId($value)
     {
             $commonCountry = \NextDeveloper\Commons\Database\Models\Countries::where('uuid', $value)->first();
@@ -190,7 +190,7 @@ class AccountsQueryFilter extends AbstractQueryFilter
     {
         return $this->commonCountry($value);
     }
-    
+
     public function iamUserId($value)
     {
             $iamUser = \NextDeveloper\IAM\Database\Models\Users::where('uuid', $value)->first();
@@ -200,7 +200,7 @@ class AccountsQueryFilter extends AbstractQueryFilter
         }
     }
 
-    
+
     public function iamAccountTypeId($value)
     {
             $iamAccountType = \NextDeveloper\IAM\Database\Models\AccountTypes::where('uuid', $value)->first();
@@ -215,7 +215,7 @@ class AccountsQueryFilter extends AbstractQueryFilter
     {
         return $this->iamAccountType($value);
     }
-    
+
     // EDIT AFTER HERE - WARNING: ABOVE THIS LINE MAY BE REGENERATED AND YOU MAY LOSE CODE\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n
 
 

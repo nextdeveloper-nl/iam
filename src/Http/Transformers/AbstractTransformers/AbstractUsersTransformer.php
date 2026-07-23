@@ -56,7 +56,7 @@ class AbstractUsersTransformer extends AbstractTransformer
     {
                                                 $commonLanguageId = \NextDeveloper\Commons\Database\Models\Languages::where('id', $model->common_language_id)->first();
                                                             $commonCountryId = \NextDeveloper\Commons\Database\Models\Countries::where('id', $model->common_country_id)->first();
-                        
+
         return $this->buildPayload(
             [
             'id'  =>  $model->uuid,

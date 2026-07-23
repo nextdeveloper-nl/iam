@@ -17,13 +17,13 @@ class BackendDirectoriesQueryFilter extends AbstractQueryFilter
      * @var Builder
      */
     protected $builder;
-    
+
     public function name($value)
     {
         return $this->builder->where('name', 'ilike', '%' . $value . '%');
     }
 
-        
+
     public function defaultFilter($value)
     {
         return $this->builder->where('default_filter', 'ilike', '%' . $value . '%');
@@ -34,7 +34,7 @@ class BackendDirectoriesQueryFilter extends AbstractQueryFilter
     {
         return $this->defaultFilter($value);
     }
-        
+
     public function defaultMemberof($value)
     {
         return $this->builder->where('default_memberof', 'ilike', '%' . $value . '%');
@@ -45,7 +45,7 @@ class BackendDirectoriesQueryFilter extends AbstractQueryFilter
     {
         return $this->defaultMemberof($value);
     }
-        
+
     public function defaultGroup($value)
     {
         return $this->builder->where('default_group', 'ilike', '%' . $value . '%');
@@ -56,7 +56,7 @@ class BackendDirectoriesQueryFilter extends AbstractQueryFilter
     {
         return $this->defaultGroup($value);
     }
-        
+
     public function defaultUseridField($value)
     {
         return $this->builder->where('default_userid_field', 'ilike', '%' . $value . '%');
@@ -67,7 +67,7 @@ class BackendDirectoriesQueryFilter extends AbstractQueryFilter
     {
         return $this->defaultUseridField($value);
     }
-        
+
     public function defaultPasswordField($value)
     {
         return $this->builder->where('default_password_field', 'ilike', '%' . $value . '%');
@@ -78,7 +78,7 @@ class BackendDirectoriesQueryFilter extends AbstractQueryFilter
     {
         return $this->defaultPasswordField($value);
     }
-        
+
     public function defaultEmailField($value)
     {
         return $this->builder->where('default_email_field', 'ilike', '%' . $value . '%');
@@ -89,7 +89,7 @@ class BackendDirectoriesQueryFilter extends AbstractQueryFilter
     {
         return $this->defaultEmailField($value);
     }
-        
+
     public function defaultAliasField($value)
     {
         return $this->builder->where('default_alias_field', 'ilike', '%' . $value . '%');
@@ -100,7 +100,7 @@ class BackendDirectoriesQueryFilter extends AbstractQueryFilter
     {
         return $this->defaultAliasField($value);
     }
-        
+
     public function defaultNameField($value)
     {
         return $this->builder->where('default_name_field', 'ilike', '%' . $value . '%');
@@ -111,7 +111,7 @@ class BackendDirectoriesQueryFilter extends AbstractQueryFilter
     {
         return $this->defaultNameField($value);
     }
-        
+
     public function defaultSurnameField($value)
     {
         return $this->builder->where('default_surname_field', 'ilike', '%' . $value . '%');
@@ -122,7 +122,7 @@ class BackendDirectoriesQueryFilter extends AbstractQueryFilter
     {
         return $this->defaultSurnameField($value);
     }
-    
+
     public function isConnected($value)
     {
         return $this->builder->where('is_connected', $value);
@@ -133,7 +133,7 @@ class BackendDirectoriesQueryFilter extends AbstractQueryFilter
     {
         return $this->isConnected($value);
     }
-     
+
     public function isConnectionSecure($value)
     {
         return $this->builder->where('is_connection_secure', $value);
@@ -144,7 +144,7 @@ class BackendDirectoriesQueryFilter extends AbstractQueryFilter
     {
         return $this->isConnectionSecure($value);
     }
-     
+
     public function isUsable($value)
     {
         return $this->builder->where('is_usable', $value);
@@ -155,7 +155,7 @@ class BackendDirectoriesQueryFilter extends AbstractQueryFilter
     {
         return $this->isUsable($value);
     }
-     
+
     public function createdAtStart($date)
     {
         return $this->builder->where('created_at', '>=', $date);
@@ -231,7 +231,7 @@ class BackendDirectoriesQueryFilter extends AbstractQueryFilter
         }
     }
 
-    
+
     public function iaasVirtualMachineId($value)
     {
             $iaasVirtualMachine = \NextDeveloper\IAAS\Database\Models\VirtualMachines::where('uuid', $value)->first();
@@ -246,7 +246,7 @@ class BackendDirectoriesQueryFilter extends AbstractQueryFilter
     {
         return $this->iaasVirtualMachine($value);
     }
-    
+
     // EDIT AFTER HERE - WARNING: ABOVE THIS LINE MAY BE REGENERATED AND YOU MAY LOSE CODE
 
 

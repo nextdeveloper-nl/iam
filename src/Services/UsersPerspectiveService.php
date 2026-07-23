@@ -21,7 +21,7 @@ class UsersPerspectiveService extends AbstractUsersPerspectiveService
 
     // EDIT AFTER HERE - WARNING: ABOVE THIS LINE MAY BE REGENERATED AND YOU MAY LOSE CODE
 
-    public static function get(UsersPerspectiveQueryFilter $filter = null, array $params = []) : Collection|LengthAwarePaginator {
+    public static function get(?UsersPerspectiveQueryFilter $filter = null, array $params = []) : Collection|LengthAwarePaginator {
         $user = UserHelper::me();
 
         //  If user not logged in then we dont list users

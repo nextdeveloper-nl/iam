@@ -24,7 +24,7 @@ class BackendDirectoriesRestoringEvent
      */
     protected $timestamp = null;
 
-    public function __construct(BackendDirectories $model = null)
+    public function __construct(?BackendDirectories $model = null)
     {
         $this->_model = $model;
     }

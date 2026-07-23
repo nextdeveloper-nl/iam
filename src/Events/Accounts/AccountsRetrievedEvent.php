@@ -23,7 +23,7 @@ class AccountsRetrievedEvent
      */
     protected $timestamp = null;
 
-    public function __construct(Accounts $model = null) {
+    public function __construct(?Accounts $model = null) {
         $this->_model = $model;
     }
 
