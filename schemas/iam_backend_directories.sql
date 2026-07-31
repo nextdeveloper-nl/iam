@@ -1,0 +1,32 @@
+-- PostgreSQL
+
+CREATE TABLE iam_backend_directories (
+    id                       bigint NOT NULL DEFAULT nextval('iam_backend_directories_id_seq'::regclass),
+    uuid                     uuid DEFAULT gen_random_uuid(),
+    iam_account_id           bigint NOT NULL,
+    iaas_virtual_machine_id  bigint,
+    name                     text NOT NULL,
+    ldap_server_name         character varying(250),
+    ldap_server_url          character varying(250),
+    ldap_server_port         character varying(250),
+    ldap_base_dn             character varying(250),
+    ldap_bind_username       character varying(250),
+    ldap_bind_password       character varying(250),
+    default_filter           text DEFAULT '(objectclass=*)'::text,
+    default_memberof         text,
+    default_group            text,
+    default_userid_field     text NOT NULL DEFAULT 'uid'::text,
+    default_password_field   text NOT NULL DEFAULT 'userPassword'::text,
+    default_email_field      text NOT NULL DEFAULT 'mail'::text,
+    default_alias_field      text NOT NULL DEFAULT 'cn'::text,
+    default_name_field       text NOT NULL DEFAULT 'givenName'::text,
+    default_surname_field    text NOT NULL DEFAULT 'sn'::text,
+    is_connected             boolean NOT NULL DEFAULT false,
+    is_connection_secure     boolean NOT NULL DEFAULT false,
+    is_usable                boolean NOT NULL DEFAULT false,
+    created_at               timestamp with time zone NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at               timestamp with time zone NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    deleted_at               timestamp with time zone,
+    iam_backend_types        iam_backend_types NOT NULL DEFAULT 'plusclouds-iam'::iam_backend_types,
+    CONSTRAINT iam_backend_directories_pkey PRIMARY KEY (id)
+);
