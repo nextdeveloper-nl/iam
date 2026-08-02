@@ -23,7 +23,7 @@ class AccessTokenService
         if(!$authCode)
             throw OAuthExceptions::authCodeNotValid();
 
-        $client = OauthClients::where('id', $clientId)->first();
+        $client = OauthClients::where('uuid', $clientId)->first();
 
         $user = Users::withoutGlobalScope(AuthorizationScope::class)
             ->where('id', $authCode['user_id'])

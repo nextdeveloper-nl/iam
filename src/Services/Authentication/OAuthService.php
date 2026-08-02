@@ -21,7 +21,7 @@ class OAuthService
     private const TIMEOUT = 3000;
 
     public static function createSession($clientId, $requestUri, $scope = []) :?string {
-        $oauthClient = OauthClients::where('id', $clientId)
+        $oauthClient = OauthClients::where('uuid', $clientId)
             ->where('redirect', $requestUri)
             ->first();
 
