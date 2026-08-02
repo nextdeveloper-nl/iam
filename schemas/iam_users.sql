@@ -6,12 +6,12 @@ CREATE TABLE iam_users (
     name                      text,
     surname                   text,
     email                     text NOT NULL,
-    fullname                  text DEFAULT 
+    fullname                  text GENERATED ALWAYS AS (
 CASE
     WHEN (name IS NULL) THEN surname
     WHEN (surname IS NULL) THEN name
     ELSE ((name || ' '::text) || surname)
-END, -- [ro]
+END) STORED, -- [ro]
     username                  text,
     about                     text, -- [ui:markdown]
     pronoun                   text,

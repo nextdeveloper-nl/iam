@@ -88,22 +88,22 @@ Route::prefix('iam')->group(
 
         Route::prefix('role-permission')->group(
             function () {
-                Route::get('/', 'RolePermission\RolePermissionController@index');
-                Route::get('/actions', 'RolePermission\RolePermissionController@getActions');
+                Route::get('/', 'RolePermissions\RolePermissionsController@index');
+                Route::get('/actions', 'RolePermissions\RolePermissionsController@getActions');
 
-                Route::get('{iam_role_permission}/tags ', 'RolePermission\RolePermissionController@tags');
-                Route::post('{iam_role_permission}/tags ', 'RolePermission\RolePermissionController@saveTags');
-                Route::get('{iam_role_permission}/addresses ', 'RolePermission\RolePermissionController@addresses');
-                Route::post('{iam_role_permission}/addresses ', 'RolePermission\RolePermissionController@saveAddresses');
+                Route::get('{iam_role_permission}/tags ', 'RolePermissions\RolePermissionsController@tags');
+                Route::post('{iam_role_permission}/tags ', 'RolePermissions\RolePermissionsController@saveTags');
+                Route::get('{iam_role_permission}/addresses ', 'RolePermissions\RolePermissionsController@addresses');
+                Route::post('{iam_role_permission}/addresses ', 'RolePermissions\RolePermissionsController@saveAddresses');
 
-                Route::get('/{iam_role_permission}/{subObjects}', 'RolePermission\RolePermissionController@relatedObjects');
-                Route::get('/{iam_role_permission}', 'RolePermission\RolePermissionController@show');
+                Route::get('/{iam_role_permission}/{subObjects}', 'RolePermissions\RolePermissionsController@relatedObjects');
+                Route::get('/{iam_role_permission}', 'RolePermissions\RolePermissionsController@show');
 
-                Route::post('/', 'RolePermission\RolePermissionController@store');
-                Route::post('/{iam_role_permission}/do/{action}', 'RolePermission\RolePermissionController@doAction');
+                Route::post('/', 'RolePermissions\RolePermissionsController@store');
+                Route::post('/{iam_role_permission}/do/{action}', 'RolePermissions\RolePermissionsController@doAction');
 
-                Route::patch('/{iam_role_permission}', 'RolePermission\RolePermissionController@update');
-                Route::delete('/{iam_role_permission}', 'RolePermission\RolePermissionController@destroy');
+                Route::patch('/{iam_role_permission}', 'RolePermissions\RolePermissionsController@update');
+                Route::delete('/{iam_role_permission}', 'RolePermissions\RolePermissionsController@destroy');
             }
         );
 
@@ -130,22 +130,22 @@ Route::prefix('iam')->group(
 
         Route::prefix('account-user')->group(
             function () {
-                Route::get('/', 'AccountUser\AccountUserController@index');
-                Route::get('/actions', 'AccountUser\AccountUserController@getActions');
+                Route::get('/', 'AccountUsers\AccountUsersController@index');
+                Route::get('/actions', 'AccountUsers\AccountUsersController@getActions');
 
-                Route::get('{iam_account_user}/tags ', 'AccountUser\AccountUserController@tags');
-                Route::post('{iam_account_user}/tags ', 'AccountUser\AccountUserController@saveTags');
-                Route::get('{iam_account_user}/addresses ', 'AccountUser\AccountUserController@addresses');
-                Route::post('{iam_account_user}/addresses ', 'AccountUser\AccountUserController@saveAddresses');
+                Route::get('{iam_account_user}/tags ', 'AccountUsers\AccountUsersController@tags');
+                Route::post('{iam_account_user}/tags ', 'AccountUsers\AccountUsersController@saveTags');
+                Route::get('{iam_account_user}/addresses ', 'AccountUsers\AccountUsersController@addresses');
+                Route::post('{iam_account_user}/addresses ', 'AccountUsers\AccountUsersController@saveAddresses');
 
-                Route::get('/{iam_account_user}/{subObjects}', 'AccountUser\AccountUserController@relatedObjects');
-                Route::get('/{iam_account_user}', 'AccountUser\AccountUserController@show');
+                Route::get('/{iam_account_user}/{subObjects}', 'AccountUsers\AccountUsersController@relatedObjects');
+                Route::get('/{iam_account_user}', 'AccountUsers\AccountUsersController@show');
 
-                Route::post('/', 'AccountUser\AccountUserController@store');
-                Route::post('/{iam_account_user}/do/{action}', 'AccountUser\AccountUserController@doAction');
+                Route::post('/', 'AccountUsers\AccountUsersController@store');
+                Route::post('/{iam_account_user}/do/{action}', 'AccountUsers\AccountUsersController@doAction');
 
-                Route::patch('/{iam_account_user}', 'AccountUser\AccountUserController@update');
-                Route::delete('/{iam_account_user}', 'AccountUser\AccountUserController@destroy');
+                Route::patch('/{iam_account_user}', 'AccountUsers\AccountUsersController@update');
+                Route::delete('/{iam_account_user}', 'AccountUsers\AccountUsersController@destroy');
             }
         );
 
@@ -172,22 +172,22 @@ Route::prefix('iam')->group(
 
         Route::prefix('role-user')->group(
             function () {
-                Route::get('/', 'RoleUser\RoleUserController@index');
-                Route::get('/actions', 'RoleUser\RoleUserController@getActions');
+                Route::get('/', 'RoleUsers\RoleUsersController@index');
+                Route::get('/actions', 'RoleUsers\RoleUsersController@getActions');
 
-                Route::get('{iam_role_user}/tags ', 'RoleUser\RoleUserController@tags');
-                Route::post('{iam_role_user}/tags ', 'RoleUser\RoleUserController@saveTags');
-                Route::get('{iam_role_user}/addresses ', 'RoleUser\RoleUserController@addresses');
-                Route::post('{iam_role_user}/addresses ', 'RoleUser\RoleUserController@saveAddresses');
+                Route::get('{iam_role_user}/tags ', 'RoleUsers\RoleUsersController@tags');
+                Route::post('{iam_role_user}/tags ', 'RoleUsers\RoleUsersController@saveTags');
+                Route::get('{iam_role_user}/addresses ', 'RoleUsers\RoleUsersController@addresses');
+                Route::post('{iam_role_user}/addresses ', 'RoleUsers\RoleUsersController@saveAddresses');
 
-                Route::get('/{iam_role_user}/{subObjects}', 'RoleUser\RoleUserController@relatedObjects');
-                Route::get('/{iam_role_user}', 'RoleUser\RoleUserController@show');
+                Route::get('/{iam_role_user}/{subObjects}', 'RoleUsers\RoleUsersController@relatedObjects');
+                Route::get('/{iam_role_user}', 'RoleUsers\RoleUsersController@show');
 
-                Route::post('/', 'RoleUser\RoleUserController@store');
-                Route::post('/{iam_role_user}/do/{action}', 'RoleUser\RoleUserController@doAction');
+                Route::post('/', 'RoleUsers\RoleUsersController@store');
+                Route::post('/{iam_role_user}/do/{action}', 'RoleUsers\RoleUsersController@doAction');
 
-                Route::patch('/{iam_role_user}', 'RoleUser\RoleUserController@update');
-                Route::delete('/{iam_role_user}', 'RoleUser\RoleUserController@destroy');
+                Route::patch('/{iam_role_user}', 'RoleUsers\RoleUsersController@update');
+                Route::delete('/{iam_role_user}', 'RoleUsers\RoleUsersController@destroy');
             }
         );
 
@@ -453,8 +453,9 @@ Route::prefix('iam')->group(
 
         Route::prefix('my')->group(
             function () {
-                Route::get('/roles', 'Roles\MyRolesController@index');
-                Route::patch('/roles', 'Roles\MyRolesController@update');
+                // TODO: Roles\MyRolesController does not exist yet - route disabled until implemented.
+                // Route::get('/roles', 'Roles\MyRolesController@index');
+                // Route::patch('/roles', 'Roles\MyRolesController@update');
 
                 Route::get('/accounts', 'Accounts\MyAccountsController@index');
                 Route::patch('/accounts', 'Accounts\MyAccountsController@update');

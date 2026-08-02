@@ -740,7 +740,7 @@ class UserHelper
         return true;
     }
 
-    public static function switchToRoleByRoleId(?Users $user = null, $roleId): ?Roles
+    public static function switchToRoleByRoleId($roleId, ?Users $user = null): ?Roles
     {
         trigger_deprecation('nextdeveloper/iam', '1.0', 'This function is deprecated. ' .
             'No need to switch since all roles are loaded now.');
