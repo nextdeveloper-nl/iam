@@ -21,6 +21,8 @@ class OAuthService
     private const TIMEOUT = 3000;
 
     public static function createSession($clientId, $requestUri, $scope = []) :?string {
+        $clientId = $clientId ?: config('iam.oauth.default_client_id');
+
         $oauthClient = OauthClients::where('uuid', $clientId)
             ->where('redirect', $requestUri)
             ->first();
@@ -277,8 +279,8 @@ class OAuthService
             $authCodeDb = DB::insert('insert into oauth_auth_codes (id, user_id, client_id, scopes, expires_at, fingerprint) values (?, ?, ?, ?, ?, ?)', [
                 $authCode,
                 $sessionData['iam_user_id'],
-                $sessionData['client_id'],
-                json_encode($sessionData['scope']),
+                $sessionData['client_id'] ?? config('iam.oauth.default_client_id'),
+                json_encode($sessionData['scope'] ?? []),
                 Carbon::now()->addSeconds(180),
                 json_encode($fingerprint)
             ]);

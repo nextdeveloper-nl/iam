@@ -13,6 +13,9 @@ return [
     'oauth' =>  [
         //  Default is valid for 180 days
         'token_valid_until' =>  env('IAM_TOKEN_VALID_UNTIL_INSTANT', 60 * 60 * 24 * 30 * 6),
+        //  Used as a fallback client when a session's client_id is missing
+        //  or a caller doesn't supply one to createSession().
+        'default_client_id' => env('IAM_DEFAULT_OAUTH_CLIENT_ID'),
         'app_config'    =>  [
             'background_image'  =>  env('IAM_OAUTH_APP_BACKGROUND_IMAGE', null),
         ]
