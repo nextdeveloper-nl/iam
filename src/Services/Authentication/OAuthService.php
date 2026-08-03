@@ -23,7 +23,7 @@ class OAuthService
     public static function createSession($clientId, $requestUri, $scope = []) :?string {
         $clientId = $clientId ?: config('iam.oauth.default_client_id');
 
-        $oauthClient = OauthClients::where('uuid', $clientId)
+        $oauthClient = OauthClients::where('id', $clientId)
             ->where('redirect', $requestUri)
             ->first();
 
