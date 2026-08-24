@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
 use NextDeveloper\IAM\Database\Models\Users;
 
-class SystemAdminRole extends AbstractRole implements IAuthorizationRole
+class SystemAdminRole extends AbstractRole implements IAuthorizationRole, RoleToElasticFilterInterface
 {
     public const NAME = 'system-admin';
 
@@ -20,6 +20,15 @@ class SystemAdminRole extends AbstractRole implements IAuthorizationRole
     public function apply(Builder $builder, Model $model)
     {
         // TODO: Implement apply() method.
+    }
+
+    /**
+     * ES counterpart of apply() - which applies no restriction for any table
+     * (system-admin is fully unrestricted). Mirrored exactly.
+     */
+    public function toElasticFilter(Model $modelInstance): ?array
+    {
+        return null;
     }
 
     public function getModule()
