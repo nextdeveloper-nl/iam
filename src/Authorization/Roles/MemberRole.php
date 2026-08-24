@@ -10,7 +10,7 @@ use NextDeveloper\Commons\Helpers\DatabaseHelper;
 use NextDeveloper\IAM\Database\Models\Users;
 use NextDeveloper\IAM\Helpers\UserHelper;
 
-class MemberRole extends AbstractRole implements IAuthorizationRole
+class MemberRole extends AbstractRole implements IAuthorizationRole, RoleToElasticFilterInterface
 {
     public const NAME = 'member';
 
@@ -81,6 +81,53 @@ class MemberRole extends AbstractRole implements IAuthorizationRole
         }
 
 
+    }
+
+    /**
+     * ES counterpart of apply() - mirrors it field-for-field. See apply() for the DB
+     * version this must stay in sync with.
+     */
+    public function toElasticFilter(Model $modelInstance): ?array
+    {
+        if ($modelInstance->getTable() == 'iam_users') {
+            //  Mirrors apply()'s call to the (currently empty/no-op) iamAccountTable() -
+            //  no restriction for this table.
+            return null;
+        }
+
+        if ($modelInstance->getTable() == 'iam_accounts') {
+            return ['term' => ['id' => UserHelper::currentAccount()->uuid]];
+        }
+
+        $isPublicExists = DatabaseHelper::isColumnExists($modelInstance->getTable(), 'is_public');
+        $isAccountIdExists = DatabaseHelper::isColumnExists($modelInstance->getTable(), 'iam_account_id');
+        $isUserIdExists = DatabaseHelper::isColumnExists($modelInstance->getTable(), 'iam_user_id');
+
+        $amISuccessManager = UserHelper::has('success-manager');
+
+        $ownerClauses = [];
+
+        if ($isAccountIdExists) {
+            $ownerClauses[] = ['term' => ['iam_account_id' => UserHelper::currentAccount()->uuid]];
+        }
+
+        if ($isUserIdExists && !$amISuccessManager) {
+            $ownerClauses[] = ['term' => ['iam_user_id' => UserHelper::me()->uuid]];
+        }
+
+        if ($isPublicExists) {
+            return [
+                'bool' => [
+                    'should' => array_merge(
+                        [['term' => ['is_public' => true]]],
+                        $ownerClauses ? [['bool' => ['must' => $ownerClauses]]] : []
+                    ),
+                    'minimum_should_match' => 1,
+                ],
+            ];
+        }
+
+        return $ownerClauses ? ['bool' => ['must' => $ownerClauses]] : null;
     }
 
     /**
