@@ -8,7 +8,7 @@ use Illuminate\Support\Str;
 use NextDeveloper\Commons\Helpers\DatabaseHelper;
 use NextDeveloper\IAM\Database\Models\Users;
 
-class AnonymousRole extends AbstractRole implements IAuthorizationRole
+class AnonymousRole extends AbstractRole implements IAuthorizationRole, RoleToElasticFilterInterface
 {
     public const NAME = 'anonymous';
 
@@ -44,6 +44,34 @@ class AnonymousRole extends AbstractRole implements IAuthorizationRole
                 $builder->whereNull('iam_user_id');
             }
         }
+    }
+
+    /**
+     * ES counterpart of apply() - mirrors it field-for-field. See apply() for the DB
+     * version this must stay in sync with.
+     */
+    public function toElasticFilter(Model $modelInstance): ?array
+    {
+        $isPublicExists = DatabaseHelper::isColumnExists($modelInstance->getTable(), 'is_public');
+
+        if ($isPublicExists) {
+            return ['term' => ['is_public' => true]];
+        }
+
+        $isAccountIdExists = DatabaseHelper::isColumnExists($modelInstance->getTable(), 'iam_account_id');
+        $isUserIdExists = DatabaseHelper::isColumnExists($modelInstance->getTable(), 'iam_user_id');
+
+        $mustNot = [];
+
+        if ($isAccountIdExists) {
+            $mustNot[] = ['exists' => ['field' => 'iam_account_id']];
+        }
+
+        if ($isUserIdExists) {
+            $mustNot[] = ['exists' => ['field' => 'iam_user_id']];
+        }
+
+        return $mustNot ? ['bool' => ['must_not' => $mustNot]] : null;
     }
 
     public function getModule()
