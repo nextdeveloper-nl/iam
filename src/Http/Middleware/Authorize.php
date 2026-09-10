@@ -67,6 +67,18 @@ class Authorize extends Middleware
         if(count($explode) > 2)
             return $next($request);
 
+        //  A single-segment URI has no object part, so it can't map to a module
+        //  resource at all - respond instead of falling through to $explode[1].
+        if(count($explode) < 2) {
+            return response()->json([
+                'errors' => [
+                    'status'  => 404,
+                    'message' => 'Not Found',
+                    'details' => 'There is no such route.'
+                ],
+            ], 404);
+        }
+
         //  Perspective is a special case, we need to remove it from the object name
         if(Str::contains($explode[1], '_perspective')) {
             $explode[1] = str_replace('_perspective', '', $explode[1]);
