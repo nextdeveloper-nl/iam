@@ -13,6 +13,9 @@ return [
     'oauth' =>  [
         //  Default is valid for 180 days
         'token_valid_until' =>  env('IAM_TOKEN_VALID_UNTIL_INSTANT', 60 * 60 * 24 * 30 * 6),
+        //  Every token records expires_at, but requests are only refused after it when this is on.
+        //  Off by default, because tokens issued so far were never held to their expiry.
+        'enforce_token_expiry' => env('IAM_ENFORCE_TOKEN_EXPIRY', false),
         //  Used as a fallback client when a session's client_id is missing
         //  or a caller doesn't supply one to createSession().
         'default_client_id' => env('IAM_DEFAULT_OAUTH_CLIENT_ID'),

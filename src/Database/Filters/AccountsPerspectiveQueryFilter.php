@@ -4,6 +4,7 @@ namespace NextDeveloper\IAM\Database\Filters;
 
 use Illuminate\Database\Eloquent\Builder;
 use NextDeveloper\Commons\Database\Filters\AbstractQueryFilter;
+use NextDeveloper\Commons\Database\Filters\FilterClauses;
             
 
 /**
@@ -20,17 +21,7 @@ class AccountsPerspectiveQueryFilter extends AbstractQueryFilter
      */
     public function tags($values)
     {
-        $tags = explode(',', $values);
-
-        $search = '';
-
-        for($i = 0; $i < count($tags); $i++) {
-            $search .= "'" . trim($tags[$i]) . "',";
-        }
-
-        $search = substr($search, 0, -1);
-
-        return $this->builder->whereRaw('tags @> ARRAY[' . $search . ']');
+        return FilterClauses::tags($this->builder, $values);
     }
 
     /**
@@ -233,42 +224,36 @@ class AccountsPerspectiveQueryFilter extends AbstractQueryFilter
 
     public function iamUserId($value)
     {
-            $iamUser = \NextDeveloper\IAM\Database\Models\Users::where('uuid', $value)->first();
+        return FilterClauses::linkedId($this->builder, 'iam_user_id', \NextDeveloper\IAM\Database\Models\Users::class, $value);
+    }
 
-        if($iamUser) {
-            return $this->builder->where('iam_user_id', '=', $iamUser->id);
-        }
+    //  This is an alias function of iamUserId
+    public function iam_user_id($value)
+    {
+        return $this->iamUserId($value);
     }
 
 
     public function commonDomainId($value)
     {
-            $commonDomain = \NextDeveloper\Commons\Database\Models\Domains::where('uuid', $value)->first();
-
-        if($commonDomain) {
-            return $this->builder->where('common_domain_id', '=', $commonDomain->id);
-        }
+        return FilterClauses::linkedId($this->builder, 'common_domain_id', \NextDeveloper\Commons\Database\Models\Domains::class, $value);
     }
 
         //  This is an alias function of commonDomain
     public function common_domain_id($value)
     {
-        return $this->commonDomain($value);
+        return $this->commonDomainId($value);
     }
 
     public function commonCountryId($value)
     {
-            $commonCountry = \NextDeveloper\Commons\Database\Models\Countries::where('uuid', $value)->first();
-
-        if($commonCountry) {
-            return $this->builder->where('common_country_id', '=', $commonCountry->id);
-        }
+        return FilterClauses::linkedId($this->builder, 'common_country_id', \NextDeveloper\Commons\Database\Models\Countries::class, $value);
     }
 
         //  This is an alias function of commonCountry
     public function common_country_id($value)
     {
-        return $this->commonCountry($value);
+        return $this->commonCountryId($value);
     }
 
     // EDIT AFTER HERE - WARNING: ABOVE THIS LINE MAY BE REGENERATED AND YOU MAY LOSE CODE

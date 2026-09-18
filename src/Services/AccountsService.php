@@ -246,11 +246,18 @@ class AccountsService extends AbstractAccountsService
             return $userAccounts->where('iam_user_id', $user->id)->get();
         }
 
+        $casts = $userAccountModel->getCasts();
+
         foreach ($filters as $key => $value) {
             if($key == 'iam_user_id' || $key == 'iam_account_id')
                 continue;
 
-            if($userAccountModel->getCasts()[$key] == 'string')
+            //  Request parameters that are not columns (paginate, include, per_page, ...) are not
+            //  filters; looking their cast up used to fail the whole request.
+            if(!array_key_exists($key, $casts))
+                continue;
+
+            if($casts[$key] == 'string')
                 $userAccounts = $userAccounts->whereLike($key, '%' . $value . '%');
             else
                 $userAccounts = $userAccounts->where($key, $value);
