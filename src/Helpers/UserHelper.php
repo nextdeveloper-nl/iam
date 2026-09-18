@@ -6,6 +6,7 @@ use App\Models\User;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection as SupportCollection;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -85,6 +86,10 @@ class UserHelper
             return null;
         }
 
+        if (self::isTokenExpired($token[0])) {
+            return null;
+        }
+
         $user = Users::withoutGlobalScopes()
             ->where('id', $token[0]->user_id)
             ->first();
@@ -98,6 +103,19 @@ class UserHelper
         }
 
         return $user;
+    }
+
+    /**
+     * Whether an oauth_access_tokens row is past its expiry and expiry is enforced
+     * (iam.oauth.enforce_token_expiry). A token without an expiry never expires.
+     */
+    public static function isTokenExpired(object $token): bool
+    {
+        if (!config('iam.oauth.enforce_token_expiry') || empty($token->expires_at)) {
+            return false;
+        }
+
+        return Carbon::parse($token->expires_at)->isPast();
     }
 
     public static function fixUserPreferences(Users $user)

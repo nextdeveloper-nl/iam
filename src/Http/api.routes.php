@@ -405,6 +405,8 @@ Route::prefix('iam')->group(
                     function () {
                         Route::get('session', [\NextDeveloper\IAM\Http\Controllers\Authentication\OauthController::class, 'createSession']);
 
+                        Route::post('revoke', [\NextDeveloper\IAM\Http\Controllers\Authentication\OauthController::class, 'revokeToken']);
+
                         Route::prefix('{session}')->group(
                             function () {
                                 Route::get('login-mechanisms', [\NextDeveloper\IAM\Http\Controllers\Authentication\OauthController::class, 'getLoginMechanisms']);

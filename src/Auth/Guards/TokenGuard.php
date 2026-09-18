@@ -10,6 +10,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 use NextDeveloper\IAM\Database\Models\Users;
+use NextDeveloper\IAM\Helpers\UserHelper;
 
 class TokenGuard implements Guard
 {
@@ -73,6 +74,9 @@ class TokenGuard implements Guard
         if(!$oauthToken)
             throw new AuthenticationException('Cannot authenticate the user. Most probably you are using '
                 . 'a wrong token.');
+
+        if(UserHelper::isTokenExpired($oauthToken))
+            return null;
 
         $user = Users::withoutGlobalScopes()
             ->where('id', $oauthToken->user_id)

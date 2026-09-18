@@ -2,8 +2,8 @@
 
 namespace NextDeveloper\IAM\Http\Controllers\Authentication;
 
-use App\Helpers\Http\ResponseHelper;
 use NextDeveloper\IAM\Exceptions\OAuthExceptions;
+use NextDeveloper\IAM\Helpers\ResponseHelper;
 use NextDeveloper\IAM\Helpers\UserHelper;
 use NextDeveloper\IAM\Http\Controllers\AbstractController;
 use NextDeveloper\IAM\Http\Requests\Authentication\OauthFingerprintCreateRequest;
@@ -99,11 +99,29 @@ class OauthController extends AbstractController
         return OAuthService::getAuthCode($session, $request->validated());
     }
 
-    public function getToken($clientId)
+    /**
+     * The path segment is the session the code was issued in, or the id of the client the
+     * session was created for; either has to agree with the client recorded on the code.
+     */
+    public function getToken($sessionOrClientId)
     {
-        $authCode = request()->get('code');
+        try {
+            return AccessTokenService::getAccessTokenFromAuthCode($sessionOrClientId, request()->get('code'));
+        } catch (OAuthExceptions $e) {
+            return ResponseHelper::error($e->getMessage());
+        }
+    }
 
-        return AccessTokenService::getAccessTokenFromAuthCode($clientId, $authCode);
+    /**
+     * Signs out: revokes the token in the `token` field, or the bearer token of the request.
+     */
+    public function revokeToken()
+    {
+        return ResponseHelper::data([
+            'revoked' => AccessTokenService::revokeAccessToken(
+                request()->input('token') ?: request()->bearerToken()
+            )
+        ]);
     }
 
     public function validatePassword($sessionId, OauthPasswordValidationRequest $request) {
