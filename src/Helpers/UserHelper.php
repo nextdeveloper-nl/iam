@@ -38,6 +38,22 @@ class UserHelper
     private static $cachedAccount;
 
     /**
+     * Identity of the model/action pair that most recently failed a can() check,
+     * so exception logging can report which object was denied instead of just the generic message.
+     *
+     * @var array|null
+     */
+    private static $lastDenial;
+
+    /**
+     * @return array|null
+     */
+    public static function getLastDenial(): ?array
+    {
+        return self::$lastDenial;
+    }
+
+    /**
      * This function returns the User object for the current logged in user.
      *
      * @return \Illuminate\Contracts\Auth\Authenticatable|Users|null
@@ -663,16 +679,38 @@ class UserHelper
 
             //  If still we dont have role for the related model, this means that the role is not in the default
             //  roles. Thats why we return false.
-            if (!$roleForModel)
+            if (!$roleForModel) {
+                self::$lastDenial = [
+                    'method'    =>  $method,
+                    'model'     =>  get_class($model),
+                    'table'     =>  $model->getTable(),
+                    'model_id'  =>  $model->id ?? null,
+                    'model_uuid'=>  $model->uuid ?? null,
+                    'user_id'   =>  $user->id,
+                    'reason'    =>  'no role assigned for model',
+                ];
+
                 return false;
+            }
         }
 
         $roleClass = app($roleForModel->class);
 
         $result = $roleClass->checkPolicy($method, $model, $user);
 
-        if (!$result)
+        if (!$result) {
+            self::$lastDenial = [
+                'method'    =>  $method,
+                'model'     =>  get_class($model),
+                'table'     =>  $model->getTable(),
+                'model_id'  =>  $model->id ?? null,
+                'model_uuid'=>  $model->uuid ?? null,
+                'user_id'   =>  $user->id,
+                'role'      =>  get_class($roleClass),
+            ];
+
             Log::warning('[UserHelper@can] User can not do this operation: ' . $method . ' on ' . $model->getTable() . ' with this role: ' . get_class($roleClass));
+        }
 
         return $result;
     }
