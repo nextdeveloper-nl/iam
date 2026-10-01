@@ -13,7 +13,7 @@ class OauthPasswordValidationRequest extends AbstractFormRequest
     public function rules()
     {
         return [
-            'password' => 'string',
+            'password' => 'required|string|max:255',
         ];
     }
 }

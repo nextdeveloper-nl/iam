@@ -23,13 +23,23 @@ class AbstractLogin
     public $className;
 
     /**
-     * Generates a password and updates the login mechanism objects
+     * Generates a random password with a cryptographically secure generator
      *
-     * @param LoginMechanisms $mechanism
+     * @param int $length
      * @return string
      */
-    public static function generateStrongPassword() : string {
-        return '';
+    public static function generateStrongPassword(int $length = 14) : string {
+        //  Letters and numbers only (ambiguous characters removed) so it can be read out or typed easily.
+        $alphabet = 'ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz23456789';
+        $max = strlen($alphabet) - 1;
+
+        $password = '';
+
+        for ($i = 0; $i < $length; $i++) {
+            $password .= $alphabet[random_int(0, $max)];
+        }
+
+        return $password;
     }
 
     /**

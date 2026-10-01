@@ -20,6 +20,8 @@ class OAuthService
 {
     private const TIMEOUT = 3000;
 
+    private const MAX_PASSWORD_ATTEMPTS = 5;
+
     public static function createSession($clientId, $requestUri, $scope = []) :?string {
         $clientId = $clientId ?: config('iam.oauth.default_client_id');
 
@@ -163,26 +165,28 @@ class OAuthService
             throw OAuthExceptions::invalidSession();
         }
 
-        $user = UserHelper::getWithEmail($sessionData['email']);
+        $failedAttempts = $sessionData['failed_password_attempts'] ?? 0;
 
-        $loginMechanisms = LoginMechanismsService::getByUserObject($user);
-
-        $passwordMechanism = null;
-
-        foreach ($loginMechanisms as $mechanism) {
-            if($mechanism->login_mechanism === Password::LOGINNAME) {
-                $passwordMechanism = $mechanism;
-                break;
-            }
+        if($failedAttempts >= self::MAX_PASSWORD_ATTEMPTS) {
+            throw OAuthExceptions::tooManyAttempts();
         }
 
-        if(!$passwordMechanism) {
+        $user = UserHelper::getWithId($sessionData['iam_user_id']);
+
+        if(!$user) {
+            throw OAuthExceptions::userNotFound();
+        }
+
+        $passwordMechanism = Password::findMechanism($user);
+
+        if(!$passwordMechanism || !Password::hasPassword($user)) {
             throw OAuthExceptions::mechanismNotFound();
         }
 
         $isLoggedIn = (new Password())->attempt($passwordMechanism, $password);
 
         $sessionData['is_password_validated'] = $isLoggedIn;
+        $sessionData['failed_password_attempts'] = $isLoggedIn ? 0 : $failedAttempts + 1;
 
         Cache::put('auth-session:' . $sessionId, $sessionData, self::TIMEOUT);
 
@@ -215,45 +219,15 @@ class OAuthService
         $mechanismList = [];
 
         foreach ($mechanisms as $mechanism) {
+            //  A password row without a hash cannot be used to sign in, so it is not offered.
+            if($mechanism->login_mechanism === Password::LOGINNAME && empty($mechanism->login_data['passwordHash'])) {
+                continue;
+            }
+
             $mechanismList[] = $mechanism->login_mechanism;
         }
 
-        return $mechanismList;
-    }
-
-    public static function loginWithUsernamePassword($session, $username, $password)
-    {
-        $sessionData = Cache::get('auth-session:' . $session);
-
-        if(!$sessionData || !isset($sessionData['user_id'])) {
-            throw OAuthExceptions::invalidSession();
-        }
-
-        $user = Users::withoutGlobalScope(AuthorizationScope::class)
-            ->where('username', $username)
-            ->first();
-
-        if(!$user) {
-            throw OAuthExceptions::userNotFound();
-        }
-
-        $sessionData['iam_user_id'] = $user->id;
-
-        $mechanism = LoginMechanisms::withoutGlobalScope(AuthorizationScope::class)
-            ->where('iam_user_id', $user->id)
-            ->where('login_mechanism', Password::LOGINNAME)
-            ->first();
-
-        if(!$mechanism)
-            throw OAuthExceptions::mechanismNotFound();
-
-        $isLoggedIn = (new Password())->attempt($mechanism, $password);
-
-        $sessionData['password_login'] = $isLoggedIn;
-
-        Cache::set('auth-session:' . $session, $sessionData, self::TIMEOUT);
-
-        return $isLoggedIn;
+        return array_values(array_unique($mechanismList));
     }
 
     public static function getAuthCode($session, $fingerprint)

@@ -30,18 +30,15 @@ class Password extends AbstractLogin implements ILoginService
      */
     public function create(Users $user): LoginMechanisms
     {
-        $latestMechanism = self::getLatestMechanism($user);
+        $mechanism = self::findMechanism($user);
 
-        if (!$latestMechanism) {
-            $latestMechanism = self::newLoginMechanism($user);
-
-            $password = $this->generatePassword($latestMechanism);
-            // TODO: Send the password to the user's email
+        if (!$mechanism) {
+            $mechanism = self::newLoginMechanism($user);
         }
 
-        Events::fire('created:NextDeveloper\IAM\LoginMechanisms', $latestMechanism);
+        Events::fire('created:NextDeveloper\IAM\LoginMechanisms', $mechanism);
 
-        return $latestMechanism;
+        return $mechanism;
     }
 
     /**
@@ -54,22 +51,57 @@ class Password extends AbstractLogin implements ILoginService
      */
     public function update(Users $user, mixed $password): bool
     {
-        $latestMechanism = self::getLatestMechanism($user);
+        $mechanism = self::findMechanism($user);
 
-        if (!$latestMechanism) {
-            $latestMechanism = self::newLoginMechanism($user);
+        if (!$mechanism) {
+            $mechanism = self::newLoginMechanism($user);
         }
 
-        $latestMechanism->update([
-            'login_data' => [
-                'passwordHash'  => self::hashPassword($password),
-                'password'      => $password,
-            ]
+        //  Only the hash is kept; the plain password is never stored.
+        $mechanism->update([
+            'login_data'    => [
+                'passwordHash'          => $this->hashPassword((string) $password),
+                'password_updated_at'   => now()->toDateTimeString(),
+            ],
+            'is_latest'     => true,
+            'is_default'    => true,
+            'is_active'     => true,
         ]);
 
-        Events::fire('updated:NextDeveloper\IAM\LoginMechanisms', $latestMechanism);
+        Events::fire('updated:NextDeveloper\IAM\LoginMechanisms', $mechanism);
 
         return true;
+    }
+
+    /**
+     * Returns the password mechanism of the user, whether or not it is flagged as the latest one.
+     * A user has a single password mechanism, so it is updated in place instead of duplicated.
+     *
+     * @param Users $user
+     * @return LoginMechanisms|null
+     */
+    public static function findMechanism(Users $user): ?LoginMechanisms
+    {
+        return LoginMechanisms::withoutGlobalScopes()
+            ->where('iam_user_id', $user->id)
+            ->where('login_mechanism', self::LOGINNAME)
+            ->whereNull('deleted_at')
+            ->orderByDesc('is_latest')
+            ->orderByDesc('id')
+            ->first();
+    }
+
+    /**
+     * Whether the user has a usable password.
+     *
+     * @param Users $user
+     * @return bool
+     */
+    public static function hasPassword(Users $user): bool
+    {
+        $mechanism = self::findMechanism($user);
+
+        return $mechanism && $mechanism->is_active && !empty($mechanism->login_data['passwordHash']);
     }
 
     /**
@@ -101,14 +133,19 @@ class Password extends AbstractLogin implements ILoginService
             $password = $password['password'];
         }
 
-        $isVerified = password_verify($password, $loginData['passwordHash']);
-
-        if (!$isVerified) {
+        if (!is_string($password) || $password === '' || empty($loginData['passwordHash'])) {
             return false;
         }
 
-        $mechanism->is_latest = false;
-        $mechanism->save();
+        if (!password_verify($password, $loginData['passwordHash'])) {
+            return false;
+        }
+
+        //  Upgrade the hash when the configured algorithm changed.
+        if (password_needs_rehash($loginData['passwordHash'], $this->getAvailableHashAlgorithm())) {
+            $loginData['passwordHash'] = $this->hashPassword($password);
+            $mechanism->update(['login_data' => $loginData]);
+        }
 
         return true;
     }
@@ -133,15 +170,12 @@ class Password extends AbstractLogin implements ILoginService
      */
     public function generatePassword(LoginMechanisms $mechanism): string
     {
-        // Generate a random 6-digit password and hash it using Argon2
-        // Suggestions: We can use generateStrongPassword() from the AbstractLogin class
-        $password = random_int(100000, 999999);
-        $hashedPassword = $this->hashPassword($password);
+        $password = self::generateStrongPassword();
 
         $mechanism->update([
             'login_data' => [
-                'passwordHash' => $hashedPassword,
-                'tempPassword' => $password
+                'passwordHash'          => $this->hashPassword($password),
+                'password_updated_at'   => now()->toDateTimeString(),
             ]
         ]);
 
@@ -160,6 +194,10 @@ class Password extends AbstractLogin implements ILoginService
         $mechanism = LoginMechanisms::create([
             'iam_user_id' => $user->id,
             'login_mechanism' => self::LOGINNAME,
+            'login_data' => [],
+            'is_latest' => true,
+            'is_default' => true,
+            'is_active' => true,
         ]);
         return $mechanism;
     }

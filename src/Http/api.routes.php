@@ -38,6 +38,7 @@ Route::prefix('iam')->group(
 
                 Route::post('/', 'Users\UsersController@store');
                 Route::post('/{iam_users}/do/{action}', 'Users\UsersController@doAction');
+                Route::post('/{iam_users}/password', [\NextDeveloper\IAM\Http\Controllers\Authentication\PasswordController::class, 'setPassword']);
 
                 Route::patch('/{iam_users}', 'Users\UsersController@update');
                 Route::delete('/{iam_users}', 'Users\UsersController@destroy');

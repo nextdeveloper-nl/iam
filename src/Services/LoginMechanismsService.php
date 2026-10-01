@@ -109,6 +109,8 @@ class LoginMechanismsService extends AbstractLoginMechanismsService
      * @param string $mechanismName The name of the login mechanism (default: 'password')
      * @return LoginMechanisms The created or updated login mechanism
      * @throws UnauthorizedException If current password verification fails
+     * @deprecated Stores the hash under a lowercase 'password' mechanism that the OAuth sign in never reads.
+     *             Use \NextDeveloper\IAM\Services\Authentication\PasswordService (Password grant) instead.
      * @throws \Exception
      */
     public function setPassword(array $data, string $mechanismName = 'password'): LoginMechanisms
@@ -204,6 +206,8 @@ class LoginMechanismsService extends AbstractLoginMechanismsService
      * @param string $password Plain text password to verify
      * @param string $mechanismName The name of the login mechanism (default: 'password')
      * @return bool True if the password matches, false otherwise
+     * @deprecated Stores the hash under a lowercase 'password' mechanism that the OAuth sign in never reads.
+     *             Use \NextDeveloper\IAM\Services\Authentication\PasswordService (Password grant) instead.
      */
     public function verifyPassword(string $password, string $mechanismName = 'password'): bool
     {

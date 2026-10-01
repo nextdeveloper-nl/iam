@@ -23,6 +23,11 @@ return [
             'background_image'  =>  env('IAM_OAUTH_APP_BACKGROUND_IMAGE', null),
         ]
     ],
+    /**
+     * Roles allowed to set another user's sign in password (POST /iam/users/{user}/password).
+     * Comma separated, e.g. IAM_PASSWORD_ADMIN_ROLES="iam-admin,system-admin,fixlean-admin".
+     */
+    'password_admin_roles' => array_filter(array_map('trim', explode(',', env('IAM_PASSWORD_ADMIN_ROLES', 'iam-admin,system-admin')))),
     'auth_envalopes'    =>  [
         'otp-email' =>  env('IAM_AUTH_OTP_EMAIL_ENVELOPE', NewEmailOtpGeneratedEnvelope::class)
     ],

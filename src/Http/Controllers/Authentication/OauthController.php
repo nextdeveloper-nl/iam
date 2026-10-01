@@ -10,7 +10,6 @@ use NextDeveloper\IAM\Http\Requests\Authentication\OauthFingerprintCreateRequest
 use NextDeveloper\IAM\Http\Requests\Authentication\OAuthGetLoginMechanismsRequest;
 use NextDeveloper\IAM\Http\Requests\Authentication\OauthOtpEmailValidationRequest;
 use NextDeveloper\IAM\Http\Requests\Authentication\OauthPasswordValidationRequest;
-use NextDeveloper\IAM\Http\Requests\Authentication\OauthUsernamePasswordLoginRequest;
 use NextDeveloper\IAM\Http\Requests\Authentication\OauthSessionCreateRequest;
 use NextDeveloper\IAM\Services\Authentication\AccessTokenService;
 use NextDeveloper\IAM\Services\Authentication\OAuthService;
@@ -65,24 +64,6 @@ class OauthController extends AbstractController
         );
     }
 
-    public function usernamePasswordLogin($session, OauthUsernamePasswordLoginRequest $request) {
-        try {
-            $session = OAuthService::loginWithUsernamePassword(
-                session: $session,
-                username: $request->validated('username'),
-                password: $request->validated('password')
-            );
-
-            if($session instanceof \Exception)
-                throw $session;
-
-            //  Returning the session token
-            return ResponseHelper::data($session);
-        } catch (OauthExceptions $e) {
-            return ResponseHelper::error($e->getMessage());
-        }
-    }
-
     public function getValidationStatus($sessionId)
     {
         try {
@@ -126,10 +107,12 @@ class OauthController extends AbstractController
 
     public function validatePassword($sessionId, OauthPasswordValidationRequest $request) {
         try {
-            OAuthService::validatePassword(
-                sessionId: $sessionId,
-                password: $request->validated('password')
-            );
+            return ResponseHelper::data([
+                'is_validated' => OAuthService::validatePassword(
+                    sessionId: $sessionId,
+                    password: $request->validated('password')
+                )
+            ]);
         } catch (OauthExceptions $e) {
             return ResponseHelper::error($e->getMessage());
         }
