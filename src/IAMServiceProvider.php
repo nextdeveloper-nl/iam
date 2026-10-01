@@ -105,6 +105,8 @@ class IAMServiceProvider extends AbstractServiceProvider {
         if ($this->app->runningInConsole()) {
             $this->commands([
                 Console\Commands\RefreshTokenCommand::class,
+                Console\Commands\SetPasswordCommand::class,
+                Console\Commands\GeneratePasswordsCommand::class,
             ]);
         }
     }

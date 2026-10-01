@@ -5,7 +5,7 @@ namespace NextDeveloper\IAM\Http\Requests\Authentication;
 use NextDeveloper\Commons\Http\Requests\AbstractFormRequest;
 use NextDeveloper\IAM\Helpers\UserHelper;
 
-class PasswordUpdateRequest extends AbstractFormRequest
+class PasswordSetRequest extends AbstractFormRequest
 {
     /**
      * The /iam/authentication prefix is skipped by the authentication middleware, so the
@@ -27,8 +27,8 @@ class PasswordUpdateRequest extends AbstractFormRequest
     public function rules()
     {
         return [
-            'current_password'  => 'nullable|string|max:255',
-            'password'          => 'required|string|min:8|max:255|confirmed',
+            //  When left out, a password is generated and returned once in the response.
+            'password'  => 'nullable|string|min:8|max:255',
         ];
     }
 }
