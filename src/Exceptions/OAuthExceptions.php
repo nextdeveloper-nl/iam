@@ -74,7 +74,7 @@ class OAuthExceptions extends \Exception
     }
 
     public static function tooManyAttempts($hint = null, ?Throwable $previous = null) {
-        $errorMessage = I18n::t('Too many wrong password attempts. Please start the sign in again.');
+        $errorMessage = I18n::t('Too many failed sign-in attempts. Please start the sign in again.');
 
         return new static($errorMessage, 3, $previous);
     }
