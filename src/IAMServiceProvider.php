@@ -107,6 +107,7 @@ class IAMServiceProvider extends AbstractServiceProvider {
                 Console\Commands\RefreshTokenCommand::class,
                 Console\Commands\SetPasswordCommand::class,
                 Console\Commands\GeneratePasswordsCommand::class,
+                Console\Commands\QrBadgeCommand::class,
             ]);
         }
     }

@@ -10,6 +10,7 @@ use NextDeveloper\IAM\Http\Requests\Authentication\OauthFingerprintCreateRequest
 use NextDeveloper\IAM\Http\Requests\Authentication\OAuthGetLoginMechanismsRequest;
 use NextDeveloper\IAM\Http\Requests\Authentication\OauthOtpEmailValidationRequest;
 use NextDeveloper\IAM\Http\Requests\Authentication\OauthPasswordValidationRequest;
+use NextDeveloper\IAM\Http\Requests\Authentication\OauthQrBadgeValidationRequest;
 use NextDeveloper\IAM\Http\Requests\Authentication\OauthSessionCreateRequest;
 use NextDeveloper\IAM\Services\Authentication\AccessTokenService;
 use NextDeveloper\IAM\Services\Authentication\OAuthService;
@@ -114,6 +115,27 @@ class OauthController extends AbstractController
                 )
             ]);
         } catch (OauthExceptions $e) {
+            return ResponseHelper::error($e->getMessage());
+        }
+    }
+
+    /**
+     * Signs the session in with a scanned QR badge. Answers whether it was accepted and, when it
+     * was, whose badge it is, so the page can greet the user before redirecting.
+     */
+    public function validateQrBadge($sessionId, OauthQrBadgeValidationRequest $request) {
+        try {
+            $user = OAuthService::validateQrBadge(
+                sessionId: $sessionId,
+                content: $request->validated('badge')
+            );
+
+            return ResponseHelper::data([
+                'is_validated' => (bool) $user,
+                'name' => $user?->fullname ?: $user?->name,
+                'username' => $user?->username,
+            ]);
+        } catch (OAuthExceptions $e) {
             return ResponseHelper::error($e->getMessage());
         }
     }

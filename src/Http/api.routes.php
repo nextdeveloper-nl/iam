@@ -419,6 +419,7 @@ Route::prefix('iam')->group(
                                 Route::get('validation-status', [\NextDeveloper\IAM\Http\Controllers\Authentication\OauthController::class, 'getValidationStatus']);
 
                                 Route::post('validate-password', [\NextDeveloper\IAM\Http\Controllers\Authentication\OauthController::class, 'validatePassword']);
+                                Route::post('validate-qr-badge', [\NextDeveloper\IAM\Http\Controllers\Authentication\OauthController::class, 'validateQrBadge']);
                                 Route::post('validate-otp-email', [\NextDeveloper\IAM\Http\Controllers\Authentication\OauthController::class, 'validateOtpEmail']);
 
                                 Route::post('auth-code', [\NextDeveloper\IAM\Http\Controllers\Authentication\OauthController::class, 'getAuthCode']);

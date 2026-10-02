@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 use NextDeveloper\IAM\AuthenticationGrants\OneTimeEmail;
 use NextDeveloper\IAM\AuthenticationGrants\Password;
+use NextDeveloper\IAM\AuthenticationGrants\QrBadge;
 use NextDeveloper\IAM\Database\Models\LoginMechanisms;
 use NextDeveloper\IAM\Database\Models\OauthClients;
 use NextDeveloper\IAM\Database\Models\Users;
@@ -21,6 +22,8 @@ class OAuthService
     private const TIMEOUT = 3000;
 
     private const MAX_PASSWORD_ATTEMPTS = 5;
+
+    private const MAX_QR_BADGE_ATTEMPTS = 5;
 
     public static function createSession($clientId, $requestUri, $scope = []) :?string {
         $clientId = $clientId ?: config('iam.oauth.default_client_id');
@@ -73,11 +76,13 @@ class OAuthService
             'is_2fa_enabled' => $sessionData['is_2fa_enabled'] ?? false,
             'is_password_validated' => $sessionData['is_password_validated'] ?? false,
             'is_otp_email_validated' => $sessionData['is_otp_email_validated'] ?? false,
+            'is_qr_badge_validated' => $sessionData['is_qr_badge_validated'] ?? false,
             'requires_2fa' => $sessionData['requires_2fa'] ?? false,
             'redirect_uri' => $sessionData['redirect'] ?? null,
             'can_get_auth_code' => (
                 (isset($sessionData['is_password_validated']) && $sessionData['is_password_validated'] === true) ||
-                (isset($sessionData['is_otp_email_validated']) && $sessionData['is_otp_email_validated'] === true)
+                (isset($sessionData['is_otp_email_validated']) && $sessionData['is_otp_email_validated'] === true) ||
+                (isset($sessionData['is_qr_badge_validated']) && $sessionData['is_qr_badge_validated'] === true)
             )
         ];
 
@@ -193,6 +198,46 @@ class OAuthService
         return $isLoggedIn;
     }
 
+    /**
+     * Signs the session in with a scanned QR badge. The badge identifies the user by itself, so
+     * no login-mechanisms step is needed first. Wrong badges are counted per session, like
+     * passwords.
+     */
+    public static function validateQrBadge($sessionId, string $content)
+    {
+        $sessionData = Cache::get('auth-session:' . $sessionId);
+
+        if(!$sessionId || !is_array($sessionData)) {
+            throw OAuthExceptions::invalidSession();
+        }
+
+        $failedAttempts = $sessionData['failed_qr_badge_attempts'] ?? 0;
+
+        if($failedAttempts >= self::MAX_QR_BADGE_ATTEMPTS) {
+            throw OAuthExceptions::tooManyAttempts();
+        }
+
+        $user = QrBadge::userFor($content);
+
+        if(!$user || !$user->is_active) {
+            $sessionData['failed_qr_badge_attempts'] = $failedAttempts + 1;
+
+            Cache::put('auth-session:' . $sessionId, $sessionData, self::TIMEOUT);
+
+            return null;
+        }
+
+        $sessionData['iam_user_id'] = $user->id;
+        $sessionData['email'] = $user->email;
+        $sessionData['username'] = $user->username;
+        $sessionData['is_qr_badge_validated'] = true;
+        $sessionData['failed_qr_badge_attempts'] = 0;
+
+        Cache::put('auth-session:' . $sessionId, $sessionData, self::TIMEOUT);
+
+        return $user;
+    }
+
     public static function getLoginMechanisms($sessionId, $username = null, $email = null){
         $sessionData = Cache::get('auth-session:' . $sessionId);
 
@@ -221,6 +266,11 @@ class OAuthService
         foreach ($mechanisms as $mechanism) {
             //  A password row without a hash cannot be used to sign in, so it is not offered.
             if($mechanism->login_mechanism === Password::LOGINNAME && empty($mechanism->login_data['passwordHash'])) {
+                continue;
+            }
+
+            //  A badge is scanned instead of typing a username, so it is not a step after the username.
+            if($mechanism->login_mechanism === QrBadge::LOGINNAME) {
                 continue;
             }
 
