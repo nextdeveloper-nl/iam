@@ -89,6 +89,40 @@ class RolesService extends AbstractRolesService
     }
 
     /**
+     * Assigns the roles listed in leo.register.owner_roles to the user, only if the user is the owner
+     * of the given account. Does nothing for non-owners. Safe to call repeatedly since
+     * assignUserToRole does not duplicate existing relations.
+     *
+     * @param Users $user
+     * @param Accounts $account
+     * @return void
+     */
+    public static function assignOwnerRoles(Users $user, Accounts $account): void
+    {
+        //  Ownership is defined by the account's iam_user_id, same rule as UserHelper::isAccountOwner()
+        if ($account->iam_user_id != $user->id) {
+            return;
+        }
+
+        $ownerRoles = config('leo.register.owner_roles');
+
+        if (!$ownerRoles) {
+            return;
+        }
+
+        foreach ($ownerRoles as $roleName) {
+            $getRole = RolesService::getRoleByName($roleName);
+
+            if (!$getRole) {
+                Log::error(__METHOD__ . ' | Applying owner roles but cannot find this role; ' . $roleName);
+                continue;
+            }
+
+            RolesService::assignUserToRole($user, $getRole, $account);
+        }
+    }
+
+    /**
      * Returns the role if it exists in database. If not returns null.
      *
      * @param string $role

@@ -418,6 +418,10 @@ class UserHelper
 
             RolesService::assignDefaultRoles($me, $account);
 
+            //  Owner roles are only assigned here and at registration, not in UserHelper::can(), to keep
+            //  that hot path cheap. No-op if the user is not the owner of the account.
+            RolesService::assignOwnerRoles($me, $account);
+
             Cache::delete(
                 CacheHelper::getKey('Users', $me->uuid)
             );
