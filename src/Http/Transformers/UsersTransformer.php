@@ -5,6 +5,8 @@ namespace NextDeveloper\IAM\Http\Transformers;
 use Illuminate\Support\Facades\Cache;
 use NextDeveloper\Commons\Common\Cache\CacheHelper;
 use NextDeveloper\Commons\Database\Models\Media;
+use NextDeveloper\IAM\AuthenticationGrants\Password;
+use NextDeveloper\IAM\AuthenticationGrants\QrBadge;
 use NextDeveloper\IAM\Database\Models\Users;
 use NextDeveloper\IAM\Helpers\UserHelper;
 use NextDeveloper\IAM\Http\Transformers\AbstractTransformers\AbstractUsersTransformer;
@@ -44,6 +46,10 @@ class UsersTransformer extends AbstractUsersTransformer
             CacheHelper::getKey('Users', $model->uuid, 'Transformed'),
             $transformed
         );
+
+        //  Sign-in state changes outside the user record, so it is added after caching.
+        $transformed['has_password'] = Password::hasPassword($model);
+        $transformed['has_qr_badge'] = QrBadge::hasBadge($model);
 
         return $transformed;
     }

@@ -28,6 +28,11 @@ return [
      * Comma separated, e.g. IAM_PASSWORD_ADMIN_ROLES="iam-admin,system-admin,fixlean-admin".
      */
     'password_admin_roles' => array_filter(array_map('trim', explode(',', env('IAM_PASSWORD_ADMIN_ROLES', 'iam-admin,system-admin')))),
+    /**
+     * Roles allowed to issue or revoke another user's QR sign-in badge (POST/DELETE /iam/users/{user}/qr-badge).
+     * Comma separated. When IAM_QR_BADGE_ADMIN_ROLES is not set, the password admin roles are used.
+     */
+    'qr_badge_admin_roles' => array_filter(array_map('trim', explode(',', env('IAM_QR_BADGE_ADMIN_ROLES', env('IAM_PASSWORD_ADMIN_ROLES', 'iam-admin,system-admin'))))),
     'auth_envalopes'    =>  [
         'otp-email' =>  env('IAM_AUTH_OTP_EMAIL_ENVELOPE', NewEmailOtpGeneratedEnvelope::class)
     ],
