@@ -958,7 +958,12 @@ class UserHelper
             return;
         }
 
+        // There was no prior user to restore (e.g. an anonymous request that used
+        // runAsAdmin()). Clear the account too - otherwise it's left pointing at the
+        // admin identity's account while $user is null, which desyncs UserHelper::me()
+        // from UserHelper::currentAccount() for the rest of the request.
         self::$user = null;
+        self::$account = null;
     }
 
     public static function setCurrentUserAndAccount(Users $user, Accounts $account)
