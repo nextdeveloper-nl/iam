@@ -97,16 +97,18 @@ class AccessTokenService
             'expires_at'    =>  $expires
         ]);
 
-        //  Deleting previous tokens
-        $deleteKeys = OauthAccessTokens::where('user_id', $user->id)
-            ->where('id', '!=', $token->id)
-            ->where('client_id', $client->id)
-            ->whereDate('expires_at', '>=', Carbon::now()->toDateTimeString());
+        //  Deleting previous tokens, unless the application lets a user hold several sessions
+        if(config('iam.oauth.single_session', true)) {
+            $deleteKeys = OauthAccessTokens::where('user_id', $user->id)
+                ->where('id', '!=', $token->id)
+                ->where('client_id', $client->id)
+                ->whereDate('expires_at', '>=', Carbon::now()->toDateTimeString());
 
-        if(array_key_exists('fingerprint', $fingerprint))
-            $deleteKeys = $deleteKeys->where('device_fingerprint', $fingerprint['fingerprint']);
+            if(array_key_exists('fingerprint', $fingerprint))
+                $deleteKeys = $deleteKeys->where('device_fingerprint', $fingerprint['fingerprint']);
 
-        $deleteKeys->forceDelete();
+            $deleteKeys->forceDelete();
+        }
 
         $response = [
             'access_token'  =>  $token->id,
