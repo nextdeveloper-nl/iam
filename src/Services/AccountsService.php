@@ -14,7 +14,6 @@ use NextDeveloper\Commons\Helpers\MetaHelper;
 use NextDeveloper\Commons\Helpers\StateHelper;
 use NextDeveloper\Events\Services\Events;
 use NextDeveloper\I18n\Helpers\i18n;
-use NextDeveloper\IAAS\Exceptions\CannotUpdateResourcesException;
 use NextDeveloper\IAM\Database\Filters\AccountsQueryFilter;
 use NextDeveloper\IAM\Database\Models\Accounts;
 use NextDeveloper\IAM\Database\Models\AccountTypes;
@@ -58,7 +57,7 @@ class AccountsService extends AbstractAccountsService
         $account = Accounts::where('uuid', $id)->first();
 
         if(!$account) {
-            new CannotUpdateResourcesException('You are not the owner of this accountor you dont ' .
+            throw new UnauthorizedException('You are not the owner of this account or you dont ' .
                 'have the privilege to update this account. Therefore you cannot ' .
                 'update the account information. Only the account owner can update this information. ' .
                 'Please reach to the account owner');
