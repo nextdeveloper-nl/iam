@@ -40,6 +40,15 @@ return [
     'auth_envalopes'    =>  [
         'otp-email' =>  env('IAM_AUTH_OTP_EMAIL_ENVELOPE', NewEmailOtpGeneratedEnvelope::class)
     ],
+    /**
+     * The e-mail with the sign-in page's one-time code (NewEmailOtpGeneratedEnvelope).
+     * locale: the language it is written in (e.g. "tr"); empty uses the application's locale.
+     * subject: a fixed subject; empty uses the iam::otp-email translation ("Your sign-in code").
+     */
+    'otp_email' => [
+        'locale' => env('IAM_OTP_EMAIL_LOCALE'),
+        'subject' => env('IAM_OTP_EMAIL_SUBJECT'),
+    ],
     'roles' =>  [
         'member'    =>  [
             'AuthorizationModel' => '\NextDeveloper\IAM\Database\Abstract\AuthorizationModel::class'
