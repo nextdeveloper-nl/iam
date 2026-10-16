@@ -9,6 +9,7 @@ use NextDeveloper\IAM\Http\Controllers\AbstractController;
 use NextDeveloper\IAM\Http\Requests\Authentication\OauthFingerprintCreateRequest;
 use NextDeveloper\IAM\Http\Requests\Authentication\OAuthGetLoginMechanismsRequest;
 use NextDeveloper\IAM\Http\Requests\Authentication\OauthOtpEmailValidationRequest;
+use NextDeveloper\IAM\Http\Requests\Authentication\OauthPasswordResetRequest;
 use NextDeveloper\IAM\Http\Requests\Authentication\OauthPasswordValidationRequest;
 use NextDeveloper\IAM\Http\Requests\Authentication\OauthQrBadgeValidationRequest;
 use NextDeveloper\IAM\Http\Requests\Authentication\OauthSessionCreateRequest;
@@ -158,6 +159,23 @@ class OauthController extends AbstractController
                 otp: $request->validated('password')
             ));
         } catch (OauthExceptions $e) {
+            return ResponseHelper::error($e->getMessage());
+        }
+    }
+
+    /**
+     * Forgot password: sets a new password for the session's user once the session has proved the
+     * e-mail address with the one-time code. The session stays signed in.
+     */
+    public function resetPassword($sessionId, OauthPasswordResetRequest $request) {
+        try {
+            return ResponseHelper::data([
+                'updated' => OAuthService::resetPassword(
+                    sessionId: $sessionId,
+                    password: $request->validated('password')
+                )
+            ]);
+        } catch (OAuthExceptions $e) {
             return ResponseHelper::error($e->getMessage());
         }
     }
