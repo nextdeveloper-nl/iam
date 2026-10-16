@@ -26,6 +26,7 @@ class IAMServiceProvider extends AbstractServiceProvider {
         ], 'config');
 
         $this->loadViewsFrom($this->dir.'/../resources/views', 'IAM');
+        $this->loadTranslationsFrom($this->dir.'/../resources/lang', 'iam');
 
 //        $this->bootErrorHandler();
         $this->bootGuard();
