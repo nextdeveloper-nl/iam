@@ -73,6 +73,12 @@ class OAuthExceptions extends \Exception
         return new static($errorMessage, 3, $previous);
     }
 
+    public static function emailNotValidated($hint = null, ?Throwable $previous = null) {
+        $errorMessage = I18n::t('Confirm your e-mail address with the code we sent before setting a new password.');
+
+        return new static($errorMessage, 3, $previous);
+    }
+
     public static function tooManyAttempts($hint = null, ?Throwable $previous = null) {
         $errorMessage = I18n::t('Too many failed sign-in attempts. Please start the sign in again.');
 

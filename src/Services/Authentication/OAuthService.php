@@ -162,6 +162,37 @@ class OAuthService
         return $isLoggedIn;
     }
 
+    /**
+     * Forgot password: sets a new password for the session's user. Only a session that proved the
+     * user's e-mail address with the one-time code may do so; that code is the proof of ownership,
+     * so the current password is not asked for. The user's other sessions are signed out
+     * (PasswordService::setPassword revokes their tokens); this one goes on to its auth code.
+     *
+     * @throws OAuthExceptions When the session is unknown or has not validated the e-mailed code.
+     */
+    public static function resetPassword($sessionId, string $password): bool
+    {
+        $sessionData = Cache::get('auth-session:' . $sessionId);
+
+        if(!$sessionId || !isset($sessionData['iam_user_id'])) {
+            throw OAuthExceptions::invalidSession();
+        }
+
+        if(($sessionData['is_otp_email_validated'] ?? false) !== true) {
+            throw OAuthExceptions::emailNotValidated();
+        }
+
+        $user = UserHelper::getWithId($sessionData['iam_user_id']);
+
+        if(!$user) {
+            throw OAuthExceptions::userNotFound();
+        }
+
+        PasswordService::setPassword($user, $password);
+
+        return true;
+    }
+
     public static function validatePassword($sessionId, $password)
     {
         $sessionData = Cache::get('auth-session:' . $sessionId);
