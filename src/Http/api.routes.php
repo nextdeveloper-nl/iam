@@ -432,6 +432,11 @@ Route::prefix('iam')->group(
                                     Route::post('auth-code', [\NextDeveloper\IAM\Http\Controllers\Authentication\OauthController::class, 'getAuthCode']);
                                 }
 
+                                //  Forgot password: after the e-mailed code, a new password for the session's user.
+                                Route::post('reset-password', [\NextDeveloper\IAM\Http\Controllers\Authentication\OauthController::class, 'resetPassword']);
+
+                                Route::post('auth-code', [\NextDeveloper\IAM\Http\Controllers\Authentication\OauthController::class, 'getAuthCode']);
+
                                 Route::post('access-token', [\NextDeveloper\IAM\Http\Controllers\Authentication\OauthController::class, 'getToken']);
                             }
                         );

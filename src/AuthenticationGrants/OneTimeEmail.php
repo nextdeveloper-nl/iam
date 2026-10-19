@@ -149,7 +149,7 @@ class OneTimeEmail extends AbstractLogin implements ILoginService
 
         $otpEnvelope = config('iam.auth_envalopes.otp-email');
 
-        (new Communicate($user))->sendEnvelopeNow(new $otpEnvelope($mechanism));
+        (new Communicate($user))->sendEnvelopeNow(new $otpEnvelope($mechanism, $user));
 
         Events::fire('otp_generated:NextDeveloper\IAM\LoginMechanisms', $mechanism);
 

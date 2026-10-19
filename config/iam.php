@@ -16,11 +16,18 @@ return [
         //  Every token records expires_at, but requests are only refused after it when this is on.
         //  Off by default, because tokens issued so far were never held to their expiry.
         'enforce_token_expiry' => env('IAM_ENFORCE_TOKEN_EXPIRY', false),
+
         //  The browser-facing sign-in steps of /iam/authentication/oauth (session, login-mechanisms, fingerprint,
         //  send-otp-email, validation-status, validate-*, auth-code). The auth app (auth-v2.1) runs the sign-in itself
         //  and only uses this package as a library, so it turns these off; the API keeps them on until every sign-in
         //  page has moved. `access-token` and `revoke` are not part of it: clients still use them.
         'legacy_login_routes' => env('IAM_LEGACY_LOGIN_ROUTES', true),
+
+        //  When on, signing in removes the user's other live tokens for the same client (only those
+        //  of the same device when the sign-in carries a device fingerprint), so a user holds one
+        //  session per client. Off lets the same user stay signed in from several browsers.
+        'single_session' => env('IAM_OAUTH_SINGLE_SESSION', true),
+
         //  Used as a fallback client when a session's client_id is missing
         //  or a caller doesn't supply one to createSession().
         'default_client_id' => env('IAM_DEFAULT_OAUTH_CLIENT_ID'),
@@ -40,6 +47,15 @@ return [
     'qr_badge_admin_roles' => array_filter(array_map('trim', explode(',', env('IAM_QR_BADGE_ADMIN_ROLES', env('IAM_PASSWORD_ADMIN_ROLES', 'iam-admin,system-admin'))))),
     'auth_envalopes'    =>  [
         'otp-email' =>  env('IAM_AUTH_OTP_EMAIL_ENVELOPE', NewEmailOtpGeneratedEnvelope::class)
+    ],
+    /**
+     * The e-mail with the sign-in page's one-time code (NewEmailOtpGeneratedEnvelope).
+     * locale: the language it is written in (e.g. "tr"); empty uses the application's locale.
+     * subject: a fixed subject; empty uses the iam::otp-email translation ("Your sign-in code").
+     */
+    'otp_email' => [
+        'locale' => env('IAM_OTP_EMAIL_LOCALE'),
+        'subject' => env('IAM_OTP_EMAIL_SUBJECT'),
     ],
     'roles' =>  [
         'member'    =>  [
