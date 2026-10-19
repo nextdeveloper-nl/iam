@@ -83,7 +83,7 @@ class OAuthService
                 (isset($sessionData['is_password_validated']) && $sessionData['is_password_validated'] === true) ||
                 (isset($sessionData['is_otp_email_validated']) && $sessionData['is_otp_email_validated'] === true) ||
                 (isset($sessionData['is_qr_badge_validated']) && $sessionData['is_qr_badge_validated'] === true)
-            )
+            ) && !self::isSecondFactorMissing($sessionData)
         ];
 
         if(!isset($sessionData['iam_user_id'])) {
@@ -91,6 +91,32 @@ class OAuthService
         }
 
         return $data;
+    }
+
+    /**
+     * A user who turned on a second factor (a login mechanism named 2FA..., e.g. an authenticator app) must have
+     * passed it before an auth code is issued, whichever sign-in page is used. The page that checks the factor
+     * records it as `is_totp_validated` in the session; the legacy routes of this package have no such step, so for
+     * these users they cannot finish a sign-in. A QR badge and Google sign-in are single-factor by design.
+     */
+    private static function isSecondFactorMissing(array $sessionData): bool
+    {
+        if(!isset($sessionData['iam_user_id'])) {
+            return false;
+        }
+
+        if(($sessionData['is_totp_validated'] ?? false) === true
+            || ($sessionData['is_qr_badge_validated'] ?? false) === true
+            || ($sessionData['is_google_validated'] ?? false) === true) {
+            return false;
+        }
+
+        return LoginMechanisms::withoutGlobalScopes()
+            ->where('iam_user_id', $sessionData['iam_user_id'])
+            ->where('login_mechanism', 'ilike', '2FA%')
+            ->where('is_active', true)
+            ->whereNull('deleted_at')
+            ->exists();
     }
 
     public static function setGoogleLoginValidated($session, $user)
@@ -101,6 +127,7 @@ class OAuthService
         $sessionData['email'] = $user->email;
         $sessionData['username'] = $user->username;
         $sessionData['is_password_validated'] = true;
+        $sessionData['is_google_validated'] = true;
 
         Cache::set('auth-session:' . $session, $sessionData, self::TIMEOUT);
     }

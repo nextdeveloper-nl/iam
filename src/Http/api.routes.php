@@ -406,28 +406,37 @@ Route::prefix('iam')->group(
             function () {
                 Route::prefix('oauth')->group(
                     function () {
-                        Route::get('session', [\NextDeveloper\IAM\Http\Controllers\Authentication\OauthController::class, 'createSession']);
+                        $legacyLogin = (bool) config('iam.oauth.legacy_login_routes', true);
+
+                        if($legacyLogin) {
+                            Route::get('session', [\NextDeveloper\IAM\Http\Controllers\Authentication\OauthController::class, 'createSession']);
+                        }
 
                         Route::post('revoke', [\NextDeveloper\IAM\Http\Controllers\Authentication\OauthController::class, 'revokeToken']);
 
                         Route::prefix('{session}')->group(
-                            function () {
-                                Route::get('login-mechanisms', [\NextDeveloper\IAM\Http\Controllers\Authentication\OauthController::class, 'getLoginMechanisms']);
+                            function () use ($legacyLogin) {
+                                if($legacyLogin) {
+                                    Route::get('login-mechanisms', [\NextDeveloper\IAM\Http\Controllers\Authentication\OauthController::class, 'getLoginMechanisms']);
 
-                                Route::post('fingerprint', [\NextDeveloper\IAM\Http\Controllers\Authentication\OauthController::class, 'setFingerprint']);
+                                    Route::post('fingerprint', [\NextDeveloper\IAM\Http\Controllers\Authentication\OauthController::class, 'setFingerprint']);
 
-                                Route::get('send-otp-email', [\NextDeveloper\IAM\Http\Controllers\Authentication\OauthController::class, 'sendOtpEmail']);
+                                    Route::get('send-otp-email', [\NextDeveloper\IAM\Http\Controllers\Authentication\OauthController::class, 'sendOtpEmail']);
 
-                                Route::get('validation-status', [\NextDeveloper\IAM\Http\Controllers\Authentication\OauthController::class, 'getValidationStatus']);
+                                    Route::get('validation-status', [\NextDeveloper\IAM\Http\Controllers\Authentication\OauthController::class, 'getValidationStatus']);
 
-                                Route::post('validate-password', [\NextDeveloper\IAM\Http\Controllers\Authentication\OauthController::class, 'validatePassword']);
-                                Route::post('validate-qr-badge', [\NextDeveloper\IAM\Http\Controllers\Authentication\OauthController::class, 'validateQrBadge']);
-                                Route::post('validate-otp-email', [\NextDeveloper\IAM\Http\Controllers\Authentication\OauthController::class, 'validateOtpEmail']);
+                                    Route::post('validate-password', [\NextDeveloper\IAM\Http\Controllers\Authentication\OauthController::class, 'validatePassword']);
+                                    Route::post('validate-qr-badge', [\NextDeveloper\IAM\Http\Controllers\Authentication\OauthController::class, 'validateQrBadge']);
+                                    Route::post('validate-otp-email', [\NextDeveloper\IAM\Http\Controllers\Authentication\OauthController::class, 'validateOtpEmail']);
+
+                                    Route::post('auth-code', [\NextDeveloper\IAM\Http\Controllers\Authentication\OauthController::class, 'getAuthCode']);
+                                }
 
                                 //  Forgot password: after the e-mailed code, a new password for the session's user.
                                 Route::post('reset-password', [\NextDeveloper\IAM\Http\Controllers\Authentication\OauthController::class, 'resetPassword']);
 
                                 Route::post('auth-code', [\NextDeveloper\IAM\Http\Controllers\Authentication\OauthController::class, 'getAuthCode']);
+
                                 Route::post('access-token', [\NextDeveloper\IAM\Http\Controllers\Authentication\OauthController::class, 'getToken']);
                             }
                         );
