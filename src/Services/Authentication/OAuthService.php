@@ -77,12 +77,14 @@ class OAuthService
             'is_password_validated' => $sessionData['is_password_validated'] ?? false,
             'is_otp_email_validated' => $sessionData['is_otp_email_validated'] ?? false,
             'is_qr_badge_validated' => $sessionData['is_qr_badge_validated'] ?? false,
+            'is_passkey_validated' => self::isPasskeyValidated($sessionData),
             'requires_2fa' => $sessionData['requires_2fa'] ?? false,
             'redirect_uri' => $sessionData['redirect'] ?? null,
             'can_get_auth_code' => (
                 (isset($sessionData['is_password_validated']) && $sessionData['is_password_validated'] === true) ||
                 (isset($sessionData['is_otp_email_validated']) && $sessionData['is_otp_email_validated'] === true) ||
-                (isset($sessionData['is_qr_badge_validated']) && $sessionData['is_qr_badge_validated'] === true)
+                (isset($sessionData['is_qr_badge_validated']) && $sessionData['is_qr_badge_validated'] === true) ||
+                self::isPasskeyValidated($sessionData)
             ) && !self::isSecondFactorMissing($sessionData)
         ];
 
@@ -94,10 +96,24 @@ class OAuthService
     }
 
     /**
+     * A passkey sign-in counts only for the user it was verified for. The auth app records that user in
+     * `passkey_validated_user_id` together with the flag; if iam_user_id has since changed (this session was pointed
+     * at another account), the proof is void.
+     */
+    private static function isPasskeyValidated(array $sessionData): bool
+    {
+        return ($sessionData['is_passkey_validated'] ?? false) === true
+            && isset($sessionData['iam_user_id'], $sessionData['passkey_validated_user_id'])
+            && (string) $sessionData['passkey_validated_user_id'] === (string) $sessionData['iam_user_id'];
+    }
+
+    /**
      * A user who turned on a second factor (a login mechanism named 2FA..., e.g. an authenticator app) must have
      * passed it before an auth code is issued, whichever sign-in page is used. The page that checks the factor
      * records it as `is_totp_validated` in the session; the legacy routes of this package have no such step, so for
      * these users they cannot finish a sign-in. A QR badge and Google sign-in are single-factor by design.
+     * A passkey is both factors in one: the auth app sets `is_passkey_validated` (and `passkey_validated_user_id`) only after the authenticator
+     * verified the user with a PIN or biometric.
      */
     private static function isSecondFactorMissing(array $sessionData): bool
     {
@@ -107,6 +123,7 @@ class OAuthService
 
         if(($sessionData['is_totp_validated'] ?? false) === true
             || ($sessionData['is_qr_badge_validated'] ?? false) === true
+            || self::isPasskeyValidated($sessionData)
             || ($sessionData['is_google_validated'] ?? false) === true) {
             return false;
         }
