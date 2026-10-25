@@ -31,6 +31,38 @@ class RolesService extends AbstractRolesService
 {
 
     // EDIT AFTER HERE - WARNING: ABOVE THIS LINE MAY BE REGENERATED AND YOU MAY LOSE CODE
+
+    /**
+     * Roles that can never be assigned through the services or the API (system-viewer exposes platform-wide
+     * system information, so it is only ever set up outside of the application).
+     */
+    public const NON_ASSIGNABLE_ROLES = ['system-admin', 'system-viewer'];
+
+    /**
+     * Roles that are left out of the list of available roles (get()), as they can not be assigned anyway.
+     */
+    public const HIDDEN_ROLES = ['system-viewer'];
+
+    /**
+     * Throws if the given role (uuid or integer id) is one of the NON_ASSIGNABLE_ROLES. Used by the create and
+     * update paths of the user-role services, so the role can not be assigned or swapped in through the API.
+     *
+     * @throws \Exception
+     */
+    public static function assertAssignable($role) : void
+    {
+        if ($role === null || $role === '') {
+            return;
+        }
+
+        $column = is_int($role) || ctype_digit((string) $role) ? 'id' : 'uuid';
+
+        $found = Roles::withoutGlobalScope(AuthorizationScope::class)->where($column, $role)->first();
+
+        if ($found && in_array($found->name, self::NON_ASSIGNABLE_ROLES, true)) {
+            throw new \Exception('The role ' . $found->name . ' can not be assigned to users.');
+        }
+    }
     public static function get(?RolesQueryFilter $filter = null, array $params = []) : Collection|LengthAwarePaginator{
         $roles = UserHelper::getRoles();
 
@@ -45,6 +77,7 @@ class RolesService extends AbstractRolesService
         $roles = Roles::withoutGlobalScope(AuthorizationScope::class)
             ->filter($filter)
             ->where('level', '>=', $level)
+            ->whereNotIn('name', self::HIDDEN_ROLES)
             ->get();
 
         return $roles;
@@ -220,8 +253,8 @@ class RolesService extends AbstractRolesService
      */
     public static function assignUserToRole(Users $user, Roles $role, ?Accounts $account = null, $isRoleActive = null) : bool
     {
-        //  No one can be a system admin
-        if($role->name == 'system-admin') {
+        //  No one can be a system admin or a system viewer
+        if(in_array($role->name, self::NON_ASSIGNABLE_ROLES, true)) {
             return false;
         }
 
