@@ -37,6 +37,27 @@ class RolesService extends AbstractRolesService
      * system information, so it is only ever set up outside of the application).
      */
     public const NON_ASSIGNABLE_ROLES = ['system-admin', 'system-viewer'];
+
+    /**
+     * Throws if the given role (uuid or integer id) is one of the NON_ASSIGNABLE_ROLES. Used by the create and
+     * update paths of the user-role services, so the role can not be assigned or swapped in through the API.
+     *
+     * @throws \Exception
+     */
+    public static function assertAssignable($role) : void
+    {
+        if ($role === null || $role === '') {
+            return;
+        }
+
+        $column = is_int($role) || ctype_digit((string) $role) ? 'id' : 'uuid';
+
+        $found = Roles::withoutGlobalScope(AuthorizationScope::class)->where($column, $role)->first();
+
+        if ($found && in_array($found->name, self::NON_ASSIGNABLE_ROLES, true)) {
+            throw new \Exception('The role ' . $found->name . ' can not be assigned to users.');
+        }
+    }
     public static function get(?RolesQueryFilter $filter = null, array $params = []) : Collection|LengthAwarePaginator{
         $roles = UserHelper::getRoles();
 
