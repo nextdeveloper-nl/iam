@@ -31,6 +31,12 @@ class RolesService extends AbstractRolesService
 {
 
     // EDIT AFTER HERE - WARNING: ABOVE THIS LINE MAY BE REGENERATED AND YOU MAY LOSE CODE
+
+    /**
+     * Roles that can never be assigned through the services or the API (system-viewer exposes platform-wide
+     * system information, so it is only ever set up outside of the application).
+     */
+    public const NON_ASSIGNABLE_ROLES = ['system-admin', 'system-viewer'];
     public static function get(?RolesQueryFilter $filter = null, array $params = []) : Collection|LengthAwarePaginator{
         $roles = UserHelper::getRoles();
 
@@ -220,8 +226,8 @@ class RolesService extends AbstractRolesService
      */
     public static function assignUserToRole(Users $user, Roles $role, ?Accounts $account = null, $isRoleActive = null) : bool
     {
-        //  No one can be a system admin
-        if($role->name == 'system-admin') {
+        //  No one can be a system admin or a system viewer
+        if(in_array($role->name, self::NON_ASSIGNABLE_ROLES, true)) {
             return false;
         }
 

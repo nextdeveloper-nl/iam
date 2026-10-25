@@ -9,6 +9,7 @@ use NextDeveloper\Commons\Helpers\DatabaseHelper;
 use NextDeveloper\Events\Services\Events;
 use NextDeveloper\IAM\Database\Filters\UserRolesQueryFilter;
 use NextDeveloper\IAM\Database\Models\RoleUsers;
+use NextDeveloper\IAM\Database\Models\Roles;
 use NextDeveloper\IAM\Database\Models\UserRoles;
 use NextDeveloper\IAM\Database\Scopes\AuthorizationScope;
 use NextDeveloper\IAM\Helpers\UserHelper;
@@ -46,6 +47,15 @@ class UserRolesService extends AbstractUserRolesService
                 $data['iam_role_id']
             );
         }
+        //  Roles like system-viewer must never be assigned through the API
+        if (array_key_exists('iam_role_id', $data)) {
+            $role = Roles::withoutGlobalScope(AuthorizationScope::class)->where('id', $data['iam_role_id'])->first();
+
+            if ($role && in_array($role->name, RolesService::NON_ASSIGNABLE_ROLES, true)) {
+                throw new \Exception('The role ' . $role->name . ' can not be assigned to users.');
+            }
+        }
+
         if (array_key_exists('iam_user_id', $data)) {
             $data['iam_user_id'] = DatabaseHelper::uuidToId(
                 '\NextDeveloper\IAM\Database\Models\Users',
