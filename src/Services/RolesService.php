@@ -39,6 +39,11 @@ class RolesService extends AbstractRolesService
     public const NON_ASSIGNABLE_ROLES = ['system-admin', 'system-viewer'];
 
     /**
+     * Roles that are left out of the list of available roles (get()), as they can not be assigned anyway.
+     */
+    public const HIDDEN_ROLES = ['system-viewer'];
+
+    /**
      * Throws if the given role (uuid or integer id) is one of the NON_ASSIGNABLE_ROLES. Used by the create and
      * update paths of the user-role services, so the role can not be assigned or swapped in through the API.
      *
@@ -72,6 +77,7 @@ class RolesService extends AbstractRolesService
         $roles = Roles::withoutGlobalScope(AuthorizationScope::class)
             ->filter($filter)
             ->where('level', '>=', $level)
+            ->whereNotIn('name', self::HIDDEN_ROLES)
             ->get();
 
         return $roles;
