@@ -108,6 +108,7 @@ class OAuthService
     }
 
     /**
+
      * A user who turned on a second factor (a login mechanism named 2FA..., e.g. an authenticator app) must have
      * passed it before an auth code is issued, whichever sign-in page is used. The page that checks the factor
      * records it as `is_totp_validated` in the session; the legacy routes of this package have no such step, so for
