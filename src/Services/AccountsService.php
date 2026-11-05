@@ -4,6 +4,7 @@ namespace NextDeveloper\IAM\Services;
 
 use Helpers\InvoiceHelper;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use NextDeveloper\Accounting\Helpers\AccountingHelper;
@@ -230,30 +231,52 @@ class AccountsService extends AbstractAccountsService
     }
 
     /**
-     * Returns the non-login placeholder user that owns unclaimed accounts.
+     * Returns the non-login placeholder user that owns unclaimed accounts, creating it on first use.
      *
      * Unclaimed accounts must not have a NULL owner: AnonymousRole exposes rows whose
-     * iam_user_id is NULL to unauthenticated callers. The placeholder is resolved by its fixed
-     * UUID (iam.configuration.unclaimed_owner_id), never by email, because user emails are
-     * neither unique nor immutable. Fails closed when it is not configured or not found.
+     * iam_user_id is NULL to unauthenticated callers. The placeholder is tracked by UUID in meta
+     * stored on the Leo system user, never found by email, because user emails are neither unique
+     * nor editable-safe (createWithoutAccount() would return any existing user with that email).
+     * It is created with a random undeliverable .invalid address, no password and no memberships.
+     * A lock keeps concurrent workers from creating two.
      *
      * @return Users
      */
     public static function getUnclaimedOwner() : Users
     {
-        $uuid = config('iam.configuration.unclaimed_owner_id');
+        $resolve = function () {
+            $stored = MetaHelper::get(UserHelper::getLeoOwner(), 'unclaimed_owner_id');
+            $uuid   = is_array($stored) ? ($stored['uuid'] ?? null) : null;
 
-        $user = $uuid && \Illuminate\Support\Str::isUuid($uuid)
-            ? Users::withoutGlobalScope(AuthorizationScope::class)->where('uuid', $uuid)->first()
-            : null;
+            return $uuid
+                ? Users::withoutGlobalScope(AuthorizationScope::class)->where('uuid', $uuid)->first()
+                : null;
+        };
 
-        if(!$user) {
-            throw new CannotCreateModelException(
-                'Unclaimed owner user is not configured. Run iam:create-unclaimed-owner and set IAM_UNCLAIMED_OWNER_ID.'
-            );
+        $user = $resolve();
+
+        if($user) {
+            return $user;
         }
 
-        return $user;
+        return Cache::lock('iam:unclaimed-owner', 30)->block(30, function () use ($resolve) {
+            // Another worker may have created it while we waited for the lock.
+            $user = $resolve();
+
+            if($user) {
+                return $user;
+            }
+
+            // Random address guarantees a brand new row, never a pre-registered user.
+            $user = UsersService::createWithoutAccount([
+                'name'  => 'Unclaimed leads',
+                'email' => 'unclaimed-' . \Illuminate\Support\Str::lower(\Illuminate\Support\Str::random(24)) . '@plusclouds.invalid',
+            ]);
+
+            MetaHelper::set(UserHelper::getLeoOwner(), 'unclaimed_owner_id', ['uuid' => $user->uuid]);
+
+            return $user;
+        });
     }
 
     /**
