@@ -230,20 +230,37 @@ class AccountsService extends AbstractAccountsService
     }
 
     /**
-     * Creates an account that has no owner and no iam_account_user row.
+     * Returns the non-login placeholder user that owns unclaimed accounts (found or created).
+     *
+     * Unclaimed accounts must not have a NULL owner: AnonymousRole exposes rows whose
+     * iam_user_id is NULL to unauthenticated callers. The placeholder has no password, is
+     * never added as an account member and is not a privileged user.
+     *
+     * @return Users
+     */
+    public static function getUnclaimedOwner() : Users
+    {
+        return UsersService::createWithoutAccount([
+            'name'  => 'Unclaimed leads',
+            'email' => config('iam.configuration.unclaimed_owner_email', 'unclaimed-leads@plusclouds.invalid'),
+        ]);
+    }
+
+    /**
+     * Creates an account owned by the unclaimed placeholder user, with no iam_account_user row.
      *
      * Used for system-created records (e.g. LeadOcean leads without a usable email) that run
      * under runAsAdmin(). create() would silently make the system user (Leo) the owner and
-     * member of every such account. Here the owner is cleared again right after creation and
-     * any membership that was created for the acting user is removed, so the account stays
-     * ownerless until a real user claims it.
+     * member of every such account. Here the owner is replaced with the placeholder right after
+     * creation and any membership created for the acting user is removed, so the account stays
+     * unclaimed until a real user is attached to it.
      *
      * @param array $data
      * @return Accounts
      */
     public static function createOwnerless(array $data) : Accounts
     {
-        // The abstract service falls back to UserHelper::me() as owner; undone below.
+        // The abstract service falls back to UserHelper::me() as owner; replaced below.
         unset($data['iam_user_id']);
 
         if(!array_key_exists('iam_account_type_id', $data)) {
@@ -254,10 +271,10 @@ class AccountsService extends AbstractAccountsService
 
         $account = parent::create($data);
 
-        // Clear the owner that the abstract service stamped onto the account.
+        // Never NULL: AnonymousRole would expose NULL-owner rows to unauthenticated callers.
         Accounts::withoutGlobalScopes()
             ->where('id', $account->id)
-            ->update(['iam_user_id' => null]);
+            ->update(['iam_user_id' => self::getUnclaimedOwner()->id]);
 
         // Remove any membership the created-event handlers may have given to the acting user.
         DB::table('iam_account_user')
