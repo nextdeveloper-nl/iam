@@ -230,20 +230,30 @@ class AccountsService extends AbstractAccountsService
     }
 
     /**
-     * Returns the non-login placeholder user that owns unclaimed accounts (found or created).
+     * Returns the non-login placeholder user that owns unclaimed accounts.
      *
      * Unclaimed accounts must not have a NULL owner: AnonymousRole exposes rows whose
-     * iam_user_id is NULL to unauthenticated callers. The placeholder has no password, is
-     * never added as an account member and is not a privileged user.
+     * iam_user_id is NULL to unauthenticated callers. The placeholder is resolved by its fixed
+     * UUID (iam.configuration.unclaimed_owner_id), never by email, because user emails are
+     * neither unique nor immutable. Fails closed when it is not configured or not found.
      *
      * @return Users
      */
     public static function getUnclaimedOwner() : Users
     {
-        return UsersService::createWithoutAccount([
-            'name'  => 'Unclaimed leads',
-            'email' => config('iam.configuration.unclaimed_owner_email', 'unclaimed-leads@plusclouds.invalid'),
-        ]);
+        $uuid = config('iam.configuration.unclaimed_owner_id');
+
+        $user = $uuid && \Illuminate\Support\Str::isUuid($uuid)
+            ? Users::withoutGlobalScope(AuthorizationScope::class)->where('uuid', $uuid)->first()
+            : null;
+
+        if(!$user) {
+            throw new CannotCreateModelException(
+                'Unclaimed owner user is not configured. Run iam:create-unclaimed-owner and set IAM_UNCLAIMED_OWNER_ID.'
+            );
+        }
+
+        return $user;
     }
 
     /**

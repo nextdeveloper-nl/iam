@@ -92,6 +92,9 @@ return [
             'allow_external_users' =>  false
         ],
         'system_user_email' =>  env('SYSTEM_USER_EMAIL', ''),
+        //  UUID of the non-login placeholder user that owns unclaimed accounts. Resolved by id, never by
+        //  email (emails are not unique and users can edit them). Create it with iam:create-unclaimed-owner.
+        'unclaimed_owner_id' =>  env('IAM_UNCLAIMED_OWNER_ID', ''),
         'autoadd_users_with_same_domain'    =>  env('AUTOADD_USERS_WITH_SAME_DOMAIN', true)
     ],
 
