@@ -110,6 +110,7 @@ class IAMServiceProvider extends AbstractServiceProvider {
                 Console\Commands\GeneratePasswordsCommand::class,
                 Console\Commands\QrBadgeCommand::class,
                 Console\Commands\AssignOwnerRolesCommand::class,
+                Console\Commands\RemoveSystemUserFromLeadAccountsCommand::class,
             ]);
         }
     }

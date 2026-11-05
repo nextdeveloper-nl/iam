@@ -230,6 +230,44 @@ class AccountsService extends AbstractAccountsService
     }
 
     /**
+     * Creates an account that has no owner and no iam_account_user row.
+     *
+     * Used for system-created records (e.g. LeadOcean leads without a usable email) that run
+     * under runAsAdmin(). create() would silently make the system user (Leo) the owner and
+     * member of every such account. Here the owner is cleared again right after creation and
+     * any membership that was created for the acting user is removed, so the account stays
+     * ownerless until a real user claims it.
+     *
+     * @param array $data
+     * @return Accounts
+     */
+    public static function createOwnerless(array $data) : Accounts
+    {
+        // The abstract service falls back to UserHelper::me() as owner; undone below.
+        unset($data['iam_user_id']);
+
+        if(!array_key_exists('iam_account_type_id', $data)) {
+            $accountType = AccountTypes::withoutGlobalScopes()->where('name', 'Corporate')->first();
+
+            $data['iam_account_type_id'] = $accountType->id;
+        }
+
+        $account = parent::create($data);
+
+        // Clear the owner that the abstract service stamped onto the account.
+        Accounts::withoutGlobalScopes()
+            ->where('id', $account->id)
+            ->update(['iam_user_id' => null]);
+
+        // Remove any membership the created-event handlers may have given to the acting user.
+        DB::table('iam_account_user')
+            ->where('iam_account_id', $account->id)
+            ->delete();
+
+        return $account->fresh();
+    }
+
+    /**
      *
      *
      * @param Users $user
