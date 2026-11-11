@@ -109,7 +109,24 @@ class RolesService extends AbstractRolesService
             return;
         }
 
+        //  Perf: this runs on every /my/current-account call. Previously each default role cost ~4 queries
+        //  (name lookup, relation lookup, update, re-read) even when nothing changed. Now we load the user's
+        //  already-active role names in a single join query and only process the roles that are missing.
+        $activeRoleNames = RoleUsers::withoutGlobalScopes()
+            ->join('iam_roles', 'iam_roles.id', '=', 'iam_role_user.iam_role_id')
+            ->where('iam_role_user.iam_user_id', $user->id)
+            ->where('iam_role_user.iam_account_id', $account->id)
+            ->where('iam_role_user.is_active', true)
+            ->pluck('iam_roles.name')
+            ->map(fn($name) => strtolower($name))
+            ->all();
+
         foreach ($defaultRoles as $roleName) {
+            //  Already assigned and active, nothing to do
+            if(in_array(strtolower($roleName), $activeRoleNames, true)) {
+                continue;
+            }
+
             $getRole = RolesService::getRoleByName($roleName);
 
             if(!$getRole) {
