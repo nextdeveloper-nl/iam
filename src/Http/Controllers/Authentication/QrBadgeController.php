@@ -10,6 +10,7 @@ use NextDeveloper\IAM\Helpers\ResponseHelper;
 use NextDeveloper\IAM\Helpers\UserHelper;
 use NextDeveloper\IAM\Http\Controllers\AbstractController;
 use NextDeveloper\IAM\Http\Requests\Authentication\QrBadgeRequest;
+use NextDeveloper\IAM\Services\Authentication\PasswordService;
 
 class QrBadgeController extends AbstractController
 {
@@ -55,6 +56,11 @@ class QrBadgeController extends AbstractController
 
         if (! $user) {
             abort(404, 'User not found.');
+        }
+
+        //  424: the user is shared with other accounts, so the badge cannot be managed from here
+        if (! PasswordService::canManageCredentials($user)) {
+            abort(424, 'This user belongs to other accounts, so their QR badge cannot be managed from here.');
         }
 
         return $user;

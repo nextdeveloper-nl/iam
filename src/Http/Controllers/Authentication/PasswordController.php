@@ -43,6 +43,11 @@ class PasswordController extends AbstractController
             abort(404, 'User not found.');
         }
 
+        //  424: the user is shared with other accounts, so credentials cannot be managed from here
+        if (!PasswordService::canManageCredentials($user)) {
+            abort(424, 'This user belongs to other accounts, so their password cannot be set from here.');
+        }
+
         $givenPassword = $request->validated('password');
 
         $password = PasswordService::setPassword($user, $givenPassword);

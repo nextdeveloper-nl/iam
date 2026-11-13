@@ -375,6 +375,10 @@ class UserHelper
                             ]);
                         }
                     }
+                } elseif (AccountUsers::withoutGlobalScopes()->where('iam_user_id', $user->id)->exists()) {
+                    //  The user is only linked to accounts as a pending (inactive) team member, e.g. added from
+                    //  Team Members. We must NOT silently create a personal account for them; they get
+                    //  no current account until the invitation is accepted.
                 } else {
                     AccountsService::createInitialAccount($user);
 
