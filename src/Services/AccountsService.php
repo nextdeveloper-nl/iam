@@ -446,11 +446,19 @@ class AccountsService extends AbstractAccountsService
 
     public static function addUserToAccount(Users $users, Accounts $accounts)
     {
-        AccountUsers::firstOrCreate([
-            'iam_user_id'       =>  $users->id,
-            'iam_account_id'    =>  $accounts->id,
-            'is_active'         =>  false
-        ]);
+        // Look the membership up by user + account only. is_active used to be part of the lookup, so a user who was
+        // already an ACTIVE member was not found, the insert hit iam_account_user_unique_index and the request failed
+        // with a 500 (e.g. POST /leo/crm/users for an email that already belongs to the account). is_active is now only
+        // a default for a NEW membership; an existing one is left untouched.
+        AccountUsers::firstOrCreate(
+            [
+                'iam_user_id'       =>  $users->id,
+                'iam_account_id'    =>  $accounts->id,
+            ],
+            [
+                'is_active'         =>  false
+            ]
+        );
 
         return true;
     }
