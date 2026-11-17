@@ -450,7 +450,11 @@ class AccountsService extends AbstractAccountsService
         // already an ACTIVE member was not found, the insert hit iam_account_user_unique_index and the request failed
         // with a 500 (e.g. POST /leo/crm/users for an email that already belongs to the account). is_active is now only
         // a default for a NEW membership; an existing one is left untouched.
-        AccountUsers::firstOrCreate(
+        //
+        // The authorization scope is dropped as well: the caller (a sales person adding a customer's user) is usually
+        // not a member of the target account, so the scoped lookup could not see an existing membership either and
+        // ran into the same unique violation.
+        AccountUsers::withoutGlobalScope(AuthorizationScope::class)->firstOrCreate(
             [
                 'iam_user_id'       =>  $users->id,
                 'iam_account_id'    =>  $accounts->id,
