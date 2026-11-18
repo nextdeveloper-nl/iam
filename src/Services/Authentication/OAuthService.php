@@ -360,7 +360,7 @@ class OAuthService
      * Marks the session as signed in as an AI assistant by its owner (#1306). The only way a session may end up on
      * an AI assistant user; getAuthCode() and the token exchange refuse assistant sessions without this marker.
      */
-    public static function setOwnerSwitchValidated($session, Users $assistant, Users $actor)
+    public static function setOwnerSwitchValidated($session, Users $assistant, Users $actor, ?string $actorTokenId = null)
     {
         $sessionData = Cache::get('auth-session:' . $session);
 
@@ -373,6 +373,7 @@ class OAuthService
         $sessionData['username'] = $assistant->username;
         $sessionData['is_password_validated'] = true;
         $sessionData['switched_by_iam_user_id'] = $actor->id;
+        $sessionData['switched_by_token_id'] = $actorTokenId;
 
         Cache::put('auth-session:' . $session, $sessionData, self::TIMEOUT);
     }

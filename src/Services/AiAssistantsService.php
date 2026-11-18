@@ -121,7 +121,7 @@ class AiAssistantsService
      *
      * @throws UnauthorizedException
      */
-    public static function switchTo(Users $actor, string $assistantUuid, ?string $clientId, string $redirectUri): string
+    public static function switchTo(Users $actor, string $assistantUuid, ?string $clientId, string $redirectUri, ?string $actorTokenId = null): string
     {
         self::assertColumnsExist();
 
@@ -137,7 +137,7 @@ class AiAssistantsService
             throw new UnauthorizedException('Invalid client or redirect.');
         }
 
-        OAuthService::setOwnerSwitchValidated($session, $assistant, $actor);
+        OAuthService::setOwnerSwitchValidated($session, $assistant, $actor, $actorTokenId);
 
         $code = OAuthService::getAuthCode($session, []);
 
@@ -185,7 +185,22 @@ class AiAssistantsService
             throw new UnauthorizedException('This session was not started by switching from a user.');
         }
 
-        $actor = Users::withoutGlobalScopes()->where('id', (int) substr($name, strlen(AccessTokenService::SWITCH_TOKEN_PREFIX)))->first();
+        [$actorId, $actorTokenId] = array_pad(explode(':', substr($name, strlen(AccessTokenService::SWITCH_TOKEN_PREFIX)), 2), 2, '');
+
+        // Tied to the session the user switched with: once that token is gone (logout, password change, revoked) or
+        // expired, the way back is closed and the user has to sign in again, MFA included.
+        $actorTokenAlive = $actorTokenId !== '' && \DB::table('oauth_access_tokens')
+            ->where('id', $actorTokenId)
+            ->where('user_id', (int) $actorId)
+            ->where('revoked', false)
+            ->where('expires_at', '>', now())
+            ->exists();
+
+        if (! $actorTokenAlive) {
+            throw new UnauthorizedException('Your original session has ended. Please sign in again.');
+        }
+
+        $actor = Users::withoutGlobalScopes()->where('id', (int) $actorId)->first();
 
         if (! $actor || $actor->isAiAssistant() || ! self::canSwitch($actor, $assistant)) {
             throw new UnauthorizedException('You can not switch back to this user.');
@@ -239,7 +254,7 @@ class AiAssistantsService
 
         $name = $tokenId ? \DB::table('oauth_access_tokens')->where('id', $tokenId)->where('user_id', $me->id)->value('name') : null;
         $switchedById = is_string($name) && str_starts_with($name, AccessTokenService::SWITCH_TOKEN_PREFIX)
-            ? (int) substr($name, strlen(AccessTokenService::SWITCH_TOKEN_PREFIX))
+            ? (int) explode(':', substr($name, strlen(AccessTokenService::SWITCH_TOKEN_PREFIX)), 2)[0]
             : null;
 
         return [

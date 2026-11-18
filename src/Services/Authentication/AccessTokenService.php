@@ -73,7 +73,8 @@ class AccessTokenService
                 throw OAuthExceptions::authCodeNotValid('AI assistants can not sign in.');
             }
 
-            $switchedBy = (int) $codeContext['switched_by_iam_user_id'];
+            // 'ai-switch:<who switched>:<token id they switched with>'
+            $switchedBy = (int) $codeContext['switched_by_iam_user_id'] . ':' . ($codeContext['switched_by_token_id'] ?? '');
         }
 
         //  Spending the code before the token exists, and only if nobody else spent it first, so two
