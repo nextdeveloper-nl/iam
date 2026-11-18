@@ -54,6 +54,21 @@ class UserHelper
     }
 
     /**
+     * Returns the last denial and clears it, so it can only be reported once. $lastDenial is static state, which
+     * survives between jobs in a long-running queue worker; reading it destructively stops one request's denial
+     * from showing up in a later request's exception log.
+     *
+     * @return array|null
+     */
+    public static function pullLastDenial(): ?array
+    {
+        $denial = self::$lastDenial;
+        self::$lastDenial = null;
+
+        return $denial;
+    }
+
+    /**
      * This function returns the User object for the current logged in user.
      *
      * @return \Illuminate\Contracts\Auth\Authenticatable|Users|null
@@ -360,6 +375,10 @@ class UserHelper
                             ]);
                         }
                     }
+                } elseif (AccountUsers::withoutGlobalScopes()->where('iam_user_id', $user->id)->exists()) {
+                    //  The user is only linked to accounts as a pending (inactive) team member, e.g. added from
+                    //  Team Members. We must NOT silently create a personal account for them; they get
+                    //  no current account until the invitation is accepted.
                 } else {
                     AccountsService::createInitialAccount($user);
 
@@ -656,6 +675,9 @@ class UserHelper
 
     public static function can($method, $model, ?Users $user = null)
     {
+        // every authorization check starts without a denial from an earlier check
+        self::$lastDenial = null;
+
         if (self::bypassRolesCheck())
             return true;
 

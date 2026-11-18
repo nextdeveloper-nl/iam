@@ -4,6 +4,7 @@ namespace NextDeveloper\IAM\Services;
 
 use Helpers\InvoiceHelper;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use NextDeveloper\Accounting\Helpers\AccountingHelper;
@@ -230,6 +231,93 @@ class AccountsService extends AbstractAccountsService
     }
 
     /**
+     * Returns the non-login placeholder user that owns unclaimed accounts, creating it on first use.
+     *
+     * Unclaimed accounts must not have a NULL owner: AnonymousRole exposes rows whose
+     * iam_user_id is NULL to unauthenticated callers. The placeholder is tracked by UUID in meta
+     * stored on the Leo system user, never found by email, because user emails are neither unique
+     * nor editable-safe (createWithoutAccount() would return any existing user with that email).
+     * It is created with a random undeliverable .invalid address, no password and no memberships.
+     * A lock keeps concurrent workers from creating two.
+     *
+     * @return Users
+     */
+    public static function getUnclaimedOwner() : Users
+    {
+        $resolve = function () {
+            $stored = MetaHelper::get(UserHelper::getLeoOwner(), 'unclaimed_owner_id');
+            $uuid   = is_array($stored) ? ($stored['uuid'] ?? null) : null;
+
+            return $uuid
+                ? Users::withoutGlobalScope(AuthorizationScope::class)->where('uuid', $uuid)->first()
+                : null;
+        };
+
+        $user = $resolve();
+
+        if($user) {
+            return $user;
+        }
+
+        return Cache::lock('iam:unclaimed-owner', 30)->block(30, function () use ($resolve) {
+            // Another worker may have created it while we waited for the lock.
+            $user = $resolve();
+
+            if($user) {
+                return $user;
+            }
+
+            // Random address guarantees a brand new row, never a pre-registered user.
+            $user = UsersService::createWithoutAccount([
+                'name'  => 'Unclaimed leads',
+                'email' => 'unclaimed-' . \Illuminate\Support\Str::lower(\Illuminate\Support\Str::random(24)) . '@plusclouds.invalid',
+            ]);
+
+            MetaHelper::set(UserHelper::getLeoOwner(), 'unclaimed_owner_id', ['uuid' => $user->uuid]);
+
+            return $user;
+        });
+    }
+
+    /**
+     * Creates an account owned by the unclaimed placeholder user, with no iam_account_user row.
+     *
+     * Used for system-created records (e.g. LeadOcean leads without a usable email) that run
+     * under runAsAdmin(). create() would silently make the system user (Leo) the owner and
+     * member of every such account. Here the owner is replaced with the placeholder right after
+     * creation and any membership created for the acting user is removed, so the account stays
+     * unclaimed until a real user is attached to it.
+     *
+     * @param array $data
+     * @return Accounts
+     */
+    public static function createOwnerless(array $data) : Accounts
+    {
+        // The abstract service falls back to UserHelper::me() as owner; replaced below.
+        unset($data['iam_user_id']);
+
+        if(!array_key_exists('iam_account_type_id', $data)) {
+            $accountType = AccountTypes::withoutGlobalScopes()->where('name', 'Corporate')->first();
+
+            $data['iam_account_type_id'] = $accountType->id;
+        }
+
+        $account = parent::create($data);
+
+        // Never NULL: AnonymousRole would expose NULL-owner rows to unauthenticated callers.
+        Accounts::withoutGlobalScopes()
+            ->where('id', $account->id)
+            ->update(['iam_user_id' => self::getUnclaimedOwner()->id]);
+
+        // Remove any membership the created-event handlers may have given to the acting user.
+        DB::table('iam_account_user')
+            ->where('iam_account_id', $account->id)
+            ->delete();
+
+        return $account->fresh();
+    }
+
+    /**
      *
      *
      * @param Users $user
@@ -358,11 +446,23 @@ class AccountsService extends AbstractAccountsService
 
     public static function addUserToAccount(Users $users, Accounts $accounts)
     {
-        AccountUsers::firstOrCreate([
-            'iam_user_id'       =>  $users->id,
-            'iam_account_id'    =>  $accounts->id,
-            'is_active'         =>  false
-        ]);
+        // Look the membership up by user + account only. is_active used to be part of the lookup, so a user who was
+        // already an ACTIVE member was not found, the insert hit iam_account_user_unique_index and the request failed
+        // with a 500 (e.g. POST /leo/crm/users for an email that already belongs to the account). is_active is now only
+        // a default for a NEW membership; an existing one is left untouched.
+        //
+        // The authorization scope is dropped as well: the caller (a sales person adding a customer's user) is usually
+        // not a member of the target account, so the scoped lookup could not see an existing membership either and
+        // ran into the same unique violation.
+        AccountUsers::withoutGlobalScope(AuthorizationScope::class)->firstOrCreate(
+            [
+                'iam_user_id'       =>  $users->id,
+                'iam_account_id'    =>  $accounts->id,
+            ],
+            [
+                'is_active'         =>  false
+            ]
+        );
 
         return true;
     }

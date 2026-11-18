@@ -9,6 +9,7 @@ use NextDeveloper\IAM\AuthenticationGrants\Password;
 use NextDeveloper\IAM\AuthenticationGrants\QrBadge;
 use NextDeveloper\IAM\Database\Models\Users;
 use NextDeveloper\IAM\Helpers\UserHelper;
+use NextDeveloper\IAM\Services\Authentication\PasswordService;
 use NextDeveloper\IAM\Http\Transformers\AbstractTransformers\AbstractUsersTransformer;
 
 /**
@@ -50,6 +51,12 @@ class UsersTransformer extends AbstractUsersTransformer
         //  Sign-in state changes outside the user record, so it is added after caching.
         $transformed['has_password'] = Password::hasPassword($model);
         $transformed['has_qr_badge'] = QrBadge::hasBadge($model);
+
+        //  UX flags: false when the user is shared with other accounts, so the panel can hide the actions
+        //  instead of failing (the POST endpoints answer 424 in that case).
+        $canManage = PasswordService::canManageCredentials($model);
+        $transformed['can_set_password'] = $canManage;
+        $transformed['can_issue_qr_badge'] = $canManage;
 
         return $transformed;
     }

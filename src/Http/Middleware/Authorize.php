@@ -153,7 +153,8 @@ class Authorize extends Middleware
 
                 $allowedOperations = $roleObject->allowedOperations();
 
-                if($allowedOperations[0] == "*:*") {
+                //  Roles can grant no operations at all (e.g. read-only system-viewer), so [0] may not exist
+                if(($allowedOperations[0] ?? null) == "*:*") {
                     return $next($request);
                 }
 

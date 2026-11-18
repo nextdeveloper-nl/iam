@@ -31,6 +31,48 @@ class RolesService extends AbstractRolesService
 {
 
     // EDIT AFTER HERE - WARNING: ABOVE THIS LINE MAY BE REGENERATED AND YOU MAY LOSE CODE
+
+    /**
+     * Roles that can never be assigned through the services or the API (system-viewer exposes platform-wide
+     * system information, so it is only ever set up outside of the application).
+     */
+    public const NON_ASSIGNABLE_ROLES = ['system-admin', 'system-viewer'];
+
+    /**
+     * Roles that are left out of the list of available roles (get()), as they can not be assigned anyway.
+     */
+    public const HIDDEN_ROLES = ['system-viewer'];
+
+    /**
+     * Companion roles (#1303): assigning the key role also assigns the listed roles in the same account.
+     * Applied centrally in assignUserToRole() so every path (module enable, CRM account create, panel, API) gets it.
+     * Removal: the companion role is intentionally left in place when the key role is removed (it may be held
+     * for other reasons and there is no record of whether it was added automatically).
+     */
+    public const COMPANION_ROLES = [
+        'sales-manager' => ['flow-manager'],
+    ];
+
+    /**
+     * Throws if the given role (uuid or integer id) is one of the NON_ASSIGNABLE_ROLES. Used by the create and
+     * update paths of the user-role services, so the role can not be assigned or swapped in through the API.
+     *
+     * @throws \Exception
+     */
+    public static function assertAssignable($role) : void
+    {
+        if ($role === null || $role === '') {
+            return;
+        }
+
+        $column = is_int($role) || ctype_digit((string) $role) ? 'id' : 'uuid';
+
+        $found = Roles::withoutGlobalScope(AuthorizationScope::class)->where($column, $role)->first();
+
+        if ($found && in_array($found->name, self::NON_ASSIGNABLE_ROLES, true)) {
+            throw new \Exception('The role ' . $found->name . ' can not be assigned to users.');
+        }
+    }
     public static function get(?RolesQueryFilter $filter = null, array $params = []) : Collection|LengthAwarePaginator{
         $roles = UserHelper::getRoles();
 
@@ -45,6 +87,7 @@ class RolesService extends AbstractRolesService
         $roles = Roles::withoutGlobalScope(AuthorizationScope::class)
             ->filter($filter)
             ->where('level', '>=', $level)
+            ->whereNotIn('name', self::HIDDEN_ROLES)
             ->get();
 
         return $roles;
@@ -76,7 +119,24 @@ class RolesService extends AbstractRolesService
             return;
         }
 
+        //  Perf: this runs on every /my/current-account call. Previously each default role cost ~4 queries
+        //  (name lookup, relation lookup, update, re-read) even when nothing changed. Now we load the user's
+        //  already-active role names in a single join query and only process the roles that are missing.
+        $activeRoleNames = RoleUsers::withoutGlobalScopes()
+            ->join('iam_roles', 'iam_roles.id', '=', 'iam_role_user.iam_role_id')
+            ->where('iam_role_user.iam_user_id', $user->id)
+            ->where('iam_role_user.iam_account_id', $account->id)
+            ->where('iam_role_user.is_active', true)
+            ->pluck('iam_roles.name')
+            ->map(fn($name) => strtolower($name))
+            ->all();
+
         foreach ($defaultRoles as $roleName) {
+            //  Already assigned and active, nothing to do
+            if(in_array(strtolower($roleName), $activeRoleNames, true)) {
+                continue;
+            }
+
             $getRole = RolesService::getRoleByName($roleName);
 
             if(!$getRole) {
@@ -220,8 +280,8 @@ class RolesService extends AbstractRolesService
      */
     public static function assignUserToRole(Users $user, Roles $role, ?Accounts $account = null, $isRoleActive = null) : bool
     {
-        //  No one can be a system admin
-        if($role->name == 'system-admin') {
+        //  No one can be a system admin or a system viewer
+        if(in_array($role->name, self::NON_ASSIGNABLE_ROLES, true)) {
             return false;
         }
 
@@ -252,6 +312,21 @@ class RolesService extends AbstractRolesService
         }
 
         if($isActive) self::setRoleAsActive($relation);
+
+        //  #1303: also give the companion roles in the same account. assignUserToRole() is idempotent,
+        //  so assigning again never creates duplicate iam_role_user rows.
+        foreach(self::COMPANION_ROLES[$role->name] ?? [] as $companionName) {
+            $companion = Roles::withoutGlobalScope(AuthorizationScope::class)
+                ->where('name', $companionName)
+                ->first();
+
+            if(!$companion) {
+                logger()->warning('[RolesService::assignUserToRole] Companion role not found: ' . $companionName);
+                continue;
+            }
+
+            self::assignUserToRole($user, $companion, $account, $isRoleActive);
+        }
 
         return true;
     }
