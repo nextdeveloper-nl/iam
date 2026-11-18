@@ -44,6 +44,16 @@ class RolesService extends AbstractRolesService
     public const HIDDEN_ROLES = ['system-viewer'];
 
     /**
+     * Companion roles (#1303): assigning the key role also assigns the listed roles in the same account.
+     * Applied centrally in assignUserToRole() so every path (module enable, CRM account create, panel, API) gets it.
+     * Removal: the companion role is intentionally left in place when the key role is removed (it may be held
+     * for other reasons and there is no record of whether it was added automatically).
+     */
+    public const COMPANION_ROLES = [
+        'sales-manager' => ['flow-manager'],
+    ];
+
+    /**
      * Throws if the given role (uuid or integer id) is one of the NON_ASSIGNABLE_ROLES. Used by the create and
      * update paths of the user-role services, so the role can not be assigned or swapped in through the API.
      *
@@ -302,6 +312,21 @@ class RolesService extends AbstractRolesService
         }
 
         if($isActive) self::setRoleAsActive($relation);
+
+        //  #1303: also give the companion roles in the same account. assignUserToRole() is idempotent,
+        //  so assigning again never creates duplicate iam_role_user rows.
+        foreach(self::COMPANION_ROLES[$role->name] ?? [] as $companionName) {
+            $companion = Roles::withoutGlobalScope(AuthorizationScope::class)
+                ->where('name', $companionName)
+                ->first();
+
+            if(!$companion) {
+                logger()->warning('[RolesService::assignUserToRole] Companion role not found: ' . $companionName);
+                continue;
+            }
+
+            self::assignUserToRole($user, $companion, $account, $isRoleActive);
+        }
 
         return true;
     }
