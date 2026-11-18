@@ -526,6 +526,16 @@ class UserHelper
      */
     public static function isCoOwner(Users $user, Accounts $account): bool
     {
+        //  A co-owner row only counts while the user is still a member of the account (#1305)
+        $isMember = AccountUsers::withoutGlobalScopes()
+            ->where('iam_user_id', $user->id)
+            ->where('iam_account_id', $account->id)
+            ->exists();
+
+        if (!$isMember) {
+            return false;
+        }
+
         return RoleUsers::withoutGlobalScopes()
             ->where('iam_user_id', $user->id)
             ->where('iam_account_id', $account->id)
@@ -545,6 +555,7 @@ class UserHelper
         }
 
         $coOwnerIds = RoleUsers::withoutGlobalScopes()
+            ->whereIn('iam_user_id', AccountUsers::withoutGlobalScopes()->where('iam_account_id', $accounts->id)->select('iam_user_id'))
             ->where('iam_account_id', $accounts->id)
             ->where('is_active', true)
             ->whereIn('iam_role_id', Roles::withoutGlobalScopes()->where('name', 'account-owner')->select('id'))

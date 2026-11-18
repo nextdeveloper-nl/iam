@@ -498,6 +498,17 @@ class AccountsService extends AbstractAccountsService
             'iam_account_id'    =>  UserHelper::currentAccount()->id
         ])->delete();
 
+        // #1305: a kicked member must not keep co-owner status (or owner-derived roles) in this account
+        $ownerRole = \NextDeveloper\IAM\Database\Models\Roles::withoutGlobalScopes()->where('name', 'account-owner')->first();
+        if($ownerRole) {
+            \NextDeveloper\IAM\Database\Models\RoleUsers::withoutGlobalScopes()
+                ->where('iam_user_id', $user->id)
+                ->where('iam_account_id', UserHelper::currentAccount()->id)
+                ->where('iam_role_id', $ownerRole->id)
+                ->delete();
+        }
+        self::revokeOwnerRoles($user, UserHelper::currentAccount());
+
         return true;
     }
 
@@ -533,9 +544,9 @@ class AccountsService extends AbstractAccountsService
             throw new UnauthorizedException('The user is not a member of this account.');
         }
 
-        $role = \NextDeveloper\IAM\Services\RolesService::getRole(new \NextDeveloper\IAM\Authorization\Roles\AccountOwnerRole());
+        \NextDeveloper\IAM\Services\RolesService::grantAccountOwnerRole($user, $account);
 
-        return \NextDeveloper\IAM\Services\RolesService::assignUserToRole($user, $role, $account);
+        return true;
     }
 
     /**
@@ -567,7 +578,30 @@ class AccountsService extends AbstractAccountsService
                 ->delete();
         }
 
+        // Keep ownership-derived roles in sync: a demoted owner loses leo.register.owner_roles in this account
+        self::revokeOwnerRoles($user, $account);
+
         return true;
+    }
+
+    /**
+     * Removes leo.register.owner_roles of the user in the account (they are only ever granted to owners).
+     */
+    private static function revokeOwnerRoles(Users $user, Accounts $account) : void
+    {
+        $names = config('leo.register.owner_roles') ?: [];
+
+        if(!$names) {
+            return;
+        }
+
+        $ids = \NextDeveloper\IAM\Database\Models\Roles::withoutGlobalScopes()->whereIn('name', $names)->pluck('id');
+
+        \NextDeveloper\IAM\Database\Models\RoleUsers::withoutGlobalScopes()
+            ->where('iam_user_id', $user->id)
+            ->where('iam_account_id', $account->id)
+            ->whereIn('iam_role_id', $ids)
+            ->delete();
     }
 
     /**
@@ -593,7 +627,7 @@ class AccountsService extends AbstractAccountsService
         Accounts::withoutGlobalScopes()->where('id', $account->id)->update(['iam_user_id' => $new->id]);
 
         $role = \NextDeveloper\IAM\Services\RolesService::getRole(new \NextDeveloper\IAM\Authorization\Roles\AccountOwnerRole());
-        \NextDeveloper\IAM\Services\RolesService::assignUserToRole($old, $role, $account);
+        \NextDeveloper\IAM\Services\RolesService::grantAccountOwnerRole($old, $account);
 
         // The new primary owner no longer needs a co-owner row
         \NextDeveloper\IAM\Database\Models\RoleUsers::withoutGlobalScopes()
