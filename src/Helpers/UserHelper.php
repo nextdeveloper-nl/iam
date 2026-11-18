@@ -485,31 +485,79 @@ class UserHelper
     }
 
     /**
-     * Returns true if the give user (if null current user) is the owner of the account. Otherwise returns false.
-     *
-     * @param Users|null $user
-     * @return void
+     * True if the user (default: current user) is the primary owner of the account (default: current account),
+     * i.e. iam_accounts.iam_user_id. Use for primary-owner-only actions (transfer, close, remove another owner).
      */
-    public static function isTeamOwner(?Users $user = null): bool
+    public static function isPrimaryOwner(?Users $user = null, ?Accounts $account = null): bool
     {
-        if (!$user)
-            $user = self::currentUser();
+        $user = $user ?: self::currentUser();
+        $account = $account ?: self::currentAccount();
 
-        if (self::currentAccount()->iam_user_id == $user->id)
-            return true;
-
-        return false;
+        return $account->iam_user_id == $user->id;
     }
 
     /**
-     * Alias of isTeamOwner. Works for both.
-     *
-     * @param Users|null $user
-     * @return bool
+     * True if the user (default: current user) is an owner of the account (default: current account): the primary
+     * owner OR a co-owner holding the account-owner role in that account (#1305). The single owner check;
+     * do not compare iam_accounts.iam_user_id directly.
      */
-    public static function isAccountOwner(?Users $user = null): bool
+    public static function isAccountOwner(?Users $user = null, ?Accounts $account = null): bool
     {
-        return self::isTeamOwner($user);
+        $user = $user ?: self::currentUser();
+        $account = $account ?: self::currentAccount();
+
+        if (self::isPrimaryOwner($user, $account)) {
+            return true;
+        }
+
+        return self::isCoOwner($user, $account);
+    }
+
+    /**
+     * Alias of isAccountOwner, kept for existing callers.
+     */
+    public static function isTeamOwner(?Users $user = null, ?Accounts $account = null): bool
+    {
+        return self::isAccountOwner($user, $account);
+    }
+
+    /**
+     * True if the user holds the account-owner role in the account (primary owner is not implied).
+     */
+    public static function isCoOwner(Users $user, Accounts $account): bool
+    {
+        return RoleUsers::withoutGlobalScopes()
+            ->where('iam_user_id', $user->id)
+            ->where('iam_account_id', $account->id)
+            ->where('is_active', true)
+            ->whereIn('iam_role_id', Roles::withoutGlobalScopes()->where('name', 'account-owner')->select('id'))
+            ->exists();
+    }
+
+    /**
+     * All owners of the account: the primary owner first, then the co-owners. Use for alerts/approvals;
+     * getAccountOwner() stays the primary owner (billing, legal contact).
+     */
+    public static function getAccountOwners(Accounts|int $accounts): Collection
+    {
+        if (is_int($accounts)) {
+            $accounts = Accounts::withoutGlobalScope(AuthorizationScope::class)->where('id', $accounts)->first();
+        }
+
+        $coOwnerIds = RoleUsers::withoutGlobalScopes()
+            ->where('iam_account_id', $accounts->id)
+            ->where('is_active', true)
+            ->whereIn('iam_role_id', Roles::withoutGlobalScopes()->where('name', 'account-owner')->select('id'))
+            ->pluck('iam_user_id')
+            ->all();
+
+        $ids = array_values(array_unique(array_merge([$accounts->iam_user_id], $coOwnerIds)));
+
+        return Users::withoutGlobalScopes()
+            ->whereIn('id', array_filter($ids))
+            ->get()
+            ->sortBy(fn($u) => $u->id == $accounts->iam_user_id ? 0 : 1)
+            ->values();
     }
 
     /**

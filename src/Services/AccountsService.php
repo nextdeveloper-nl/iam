@@ -469,7 +469,8 @@ class AccountsService extends AbstractAccountsService
 
     public static function kickUser($id) : bool
     {
-        if(UserHelper::me()->id != UserHelper::currentAccount()->iam_user_id)
+        // #1305: owners (primary or co-owner) may kick members
+        if(!UserHelper::isAccountOwner())
             return false;
 
         $user = Users::where('uuid', $id)->first();
@@ -480,6 +481,15 @@ class AccountsService extends AbstractAccountsService
         }
 
         if($user->id == UserHelper::me()->id) {
+            return false;
+        }
+
+        // #1305: the primary owner can never be kicked, and removing another owner is primary-owner-only
+        if(UserHelper::isPrimaryOwner($user)) {
+            return false;
+        }
+
+        if(UserHelper::isCoOwner($user, UserHelper::currentAccount()) && !UserHelper::isPrimaryOwner()) {
             return false;
         }
 
@@ -502,5 +512,110 @@ class AccountsService extends AbstractAccountsService
         });
 
         return $account->fresh();
+    }
+
+    /**
+     * Makes a member of the current account a co-owner (#1305). Owner-only. The target must already be a
+     * member of the account; assigns the account-owner role in this account only.
+     *
+     * @throws UnauthorizedException
+     */
+    public static function addCoOwner(string $userUuid) : bool
+    {
+        if(!UserHelper::isAccountOwner()) {
+            throw new UnauthorizedException('Only an owner of the account can add owners.');
+        }
+
+        $account = UserHelper::currentAccount();
+        $user = Users::withoutGlobalScopes()->where('uuid', $userUuid)->first();
+
+        if(!$user || !self::isMemberOf($user, $account)) {
+            throw new UnauthorizedException('The user is not a member of this account.');
+        }
+
+        $role = \NextDeveloper\IAM\Services\RolesService::getRole(new \NextDeveloper\IAM\Authorization\Roles\AccountOwnerRole());
+
+        return \NextDeveloper\IAM\Services\RolesService::assignUserToRole($user, $role, $account);
+    }
+
+    /**
+     * Revokes co-owner status (#1305). Primary-owner-only; the primary owner can not be demoted, so the account
+     * always keeps at least one owner.
+     *
+     * @throws UnauthorizedException
+     */
+    public static function removeCoOwner(string $userUuid) : bool
+    {
+        if(!UserHelper::isPrimaryOwner()) {
+            throw new UnauthorizedException('Only the primary owner can remove an owner.');
+        }
+
+        $account = UserHelper::currentAccount();
+        $user = Users::withoutGlobalScopes()->where('uuid', $userUuid)->first();
+
+        if(!$user || UserHelper::isPrimaryOwner($user, $account)) {
+            throw new UnauthorizedException('The primary owner can not be removed as an owner.');
+        }
+
+        $role = \NextDeveloper\IAM\Database\Models\Roles::withoutGlobalScopes()->where('name', 'account-owner')->first();
+
+        if($role) {
+            \NextDeveloper\IAM\Database\Models\RoleUsers::withoutGlobalScopes()
+                ->where('iam_user_id', $user->id)
+                ->where('iam_account_id', $account->id)
+                ->where('iam_role_id', $role->id)
+                ->delete();
+        }
+
+        return true;
+    }
+
+    /**
+     * Transfers primary ownership to another member (#1305). Primary-owner-only. The previous primary owner
+     * stays on as a co-owner so the account never ends up ownerless.
+     *
+     * @throws UnauthorizedException
+     */
+    public static function transferPrimaryOwnership(string $userUuid) : bool
+    {
+        if(!UserHelper::isPrimaryOwner()) {
+            throw new UnauthorizedException('Only the primary owner can transfer ownership.');
+        }
+
+        $account = UserHelper::currentAccount();
+        $old = UserHelper::me();
+        $new = Users::withoutGlobalScopes()->where('uuid', $userUuid)->first();
+
+        if(!$new || $new->id == $old->id || !self::isMemberOf($new, $account)) {
+            throw new UnauthorizedException('The new owner must be another member of this account.');
+        }
+
+        Accounts::withoutGlobalScopes()->where('id', $account->id)->update(['iam_user_id' => $new->id]);
+
+        $role = \NextDeveloper\IAM\Services\RolesService::getRole(new \NextDeveloper\IAM\Authorization\Roles\AccountOwnerRole());
+        \NextDeveloper\IAM\Services\RolesService::assignUserToRole($old, $role, $account);
+
+        // The new primary owner no longer needs a co-owner row
+        \NextDeveloper\IAM\Database\Models\RoleUsers::withoutGlobalScopes()
+            ->where('iam_user_id', $new->id)
+            ->where('iam_account_id', $account->id)
+            ->where('iam_role_id', $role->id)
+            ->delete();
+
+        \NextDeveloper\IAM\Services\RolesService::assignOwnerRoles($new, $account->fresh());
+
+        return true;
+    }
+
+    /**
+     * True if the user is the owner or an active member of the account.
+     */
+    public static function isMemberOf(Users $user, Accounts $account) : bool
+    {
+        return $account->iam_user_id == $user->id
+            || AccountUsers::withoutGlobalScopes()
+                ->where('iam_account_id', $account->id)
+                ->where('iam_user_id', $user->id)
+                ->exists();
     }
 }
