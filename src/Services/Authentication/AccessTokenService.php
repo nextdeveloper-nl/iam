@@ -17,6 +17,9 @@ use NextDeveloper\IAM\Helpers\UserHelper;
 
 class AccessTokenService
 {
+    /** Token name prefix of a token issued by an AI assistant owner switch (#1306): 'ai-switch:<iam_user_id of who switched>'. */
+    public const SWITCH_TOKEN_PREFIX = 'ai-switch:';
+
     /**
      * Exchanges an authorization code for an access token.
      *
@@ -59,6 +62,21 @@ class AccessTokenService
         if(!$user)
             throw OAuthExceptions::userNotFound();
 
+        // #1306: the code of an AI assistant is only valid when it was issued by the owner switch. Who switched
+        // is recorded on the token (name) so the switch back knows whom to return to.
+        $switchedBy = null;
+
+        if($user->isAiAssistant()) {
+            $codeContext = Cache::get('auth-code:' . $authCode->id);
+
+            if(empty($codeContext['switched_by_iam_user_id'])) {
+                throw OAuthExceptions::authCodeNotValid('AI assistants can not sign in.');
+            }
+
+            // 'ai-switch:<who switched>:<token id they switched with>'
+            $switchedBy = (int) $codeContext['switched_by_iam_user_id'] . ':' . ($codeContext['switched_by_token_id'] ?? '');
+        }
+
         //  Spending the code before the token exists, and only if nobody else spent it first, so two
         //  concurrent exchanges of the same code cannot both succeed.
         $isSpent = OauthAuthCodes::where('id', $authCode->id)
@@ -83,6 +101,7 @@ class AccessTokenService
             'client_id' =>  $client->id,
             'scopes'    =>  $authCode['scopes'],
             'revoked'   =>  0,
+            'name'      =>  $switchedBy ? self::SWITCH_TOKEN_PREFIX . $switchedBy : null,
 
             'user_agent'            =>  array_key_exists('user_agent', $fingerprint) ? $fingerprint['user_agent'] : null,
             'ip_address'            =>  array_key_exists('ip_address', $fingerprint) ? $fingerprint['ip_address'] : null,

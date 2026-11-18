@@ -30,16 +30,19 @@ class SyncSameDomainUsersJob implements ShouldQueue
             return;
         }
 
-        $domain = Domains::withoutGlobalScope(AuthorizationScope::class)
-            ->where('id', $this->account->common_domain_id)
-            ->first();
+        // Every domain of the account counts (leo4#1255), not only the primary one
+        $domains = \NextDeveloper\IAM\Services\AccountDomainsService::forAccount($this->account);
 
-        if (! $domain) {
+        if ($domains->isEmpty()) {
             return;
         }
 
         $users = Users::withoutGlobalScope(AuthorizationScope::class)
-            ->where('email', 'ilike', '%@'.$domain->name)
+            ->where(function ($q) use ($domains) {
+                foreach ($domains as $domain) {
+                    $q->orWhere('email', 'ilike', '%@'.$domain->name);
+                }
+            })
             ->get();
 
         foreach ($users as $user) {
