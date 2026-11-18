@@ -36,12 +36,22 @@ class RolesService extends AbstractRolesService
      * Roles that can never be assigned through the services or the API (system-viewer exposes platform-wide
      * system information, so it is only ever set up outside of the application).
      */
-    public const NON_ASSIGNABLE_ROLES = ['system-admin', 'system-viewer'];
+    public const NON_ASSIGNABLE_ROLES = ['system-admin', 'system-viewer', 'account-owner'];  //  account-owner (#1305) only via AccountsService::addCoOwner() / transferPrimaryOwnership()
 
     /**
      * Roles that are left out of the list of available roles (get()), as they can not be assigned anyway.
      */
-    public const HIDDEN_ROLES = ['system-viewer'];
+    public const HIDDEN_ROLES = ['system-viewer', 'account-owner'];
+
+    /**
+     * Companion roles (#1303): assigning the key role also assigns the listed roles in the same account.
+     * Applied centrally in assignUserToRole() so every path (module enable, CRM account create, panel, API) gets it.
+     * Removal: the companion role is intentionally left in place when the key role is removed (it may be held
+     * for other reasons and there is no record of whether it was added automatically).
+     */
+    public const COMPANION_ROLES = [
+        'sales-manager' => ['flow-manager'],
+    ];
 
     /**
      * Throws if the given role (uuid or integer id) is one of the NON_ASSIGNABLE_ROLES. Used by the create and
@@ -303,7 +313,38 @@ class RolesService extends AbstractRolesService
 
         if($isActive) self::setRoleAsActive($relation);
 
+        //  #1303: also give the companion roles in the same account. assignUserToRole() is idempotent,
+        //  so assigning again never creates duplicate iam_role_user rows.
+        foreach(self::COMPANION_ROLES[$role->name] ?? [] as $companionName) {
+            $companion = Roles::withoutGlobalScope(AuthorizationScope::class)
+                ->where('name', $companionName)
+                ->first();
+
+            if(!$companion) {
+                logger()->warning('[RolesService::assignUserToRole] Companion role not found: ' . $companionName);
+                continue;
+            }
+
+            self::assignUserToRole($user, $companion, $account, $isRoleActive);
+        }
+
         return true;
+    }
+
+    /**
+     * Grants the co-owner marker role (#1305). Deliberately NOT through assignUserToRole()/the generic role APIs
+     * (account-owner is in NON_ASSIGNABLE_ROLES); only AccountsService::addCoOwner() and transferPrimaryOwnership()
+     * call this, after their owner checks.
+     */
+    public static function grantAccountOwnerRole(Users $user, Accounts $account) : void
+    {
+        $role = self::getRole(new \NextDeveloper\IAM\Authorization\Roles\AccountOwnerRole());
+
+        RoleUsers::withoutGlobalScopes()->firstOrCreate([
+            'iam_user_id'    => $user->id,
+            'iam_account_id' => $account->id,
+            'iam_role_id'    => $role->id,
+        ], ['is_active' => true]);
     }
 
     public static function getUserRole(Users $user, Accounts $account) : Roles
