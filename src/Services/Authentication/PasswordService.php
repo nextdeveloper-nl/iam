@@ -59,6 +59,11 @@ class PasswordService
      */
     public static function setPassword(Users $user, ?string $password = null, bool $revokeTokens = true): string
     {
+        // #1306: AI assistants have no password, ever
+        if ($user->isAiAssistant()) {
+            throw new \Exception('AI assistants can not have a password.');
+        }
+
         $password = $password ?: Password::generateStrongPassword();
 
         (new Password())->update($user, $password);

@@ -84,6 +84,9 @@ class Users extends Model
             'is_email_verified',
             'is_phone_number_verified',
             'is_profile_verified',
+            'is_ai_assistant',
+            'owner_iam_user_id',
+            'ai_assistant_purpose',
     ];
 
     /**
@@ -130,6 +133,7 @@ class Users extends Model
     'is_email_verified' => 'boolean',
     'is_phone_number_verified' => 'boolean',
     'is_profile_verified' => 'boolean',
+    'is_ai_assistant' => 'boolean',
     ];
 
     /**
@@ -406,4 +410,13 @@ class Users extends Model
     use SendNotification;
     use SendSMS;
 
+
+    /**
+     * True for an AI (robot) assistant user (#1306): a real user that can never sign in by itself; only its
+     * owner (or an owner of an account they share) can switch to it. False when the column does not exist yet.
+     */
+    public function isAiAssistant(): bool
+    {
+        return (bool) ($this->attributes['is_ai_assistant'] ?? false);
+    }
 }

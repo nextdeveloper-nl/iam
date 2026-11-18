@@ -356,12 +356,40 @@ class OAuthService
         return array_values(array_unique($mechanismList));
     }
 
+    /**
+     * Marks the session as signed in as an AI assistant by its owner (#1306). The only way a session may end up on
+     * an AI assistant user; getAuthCode() and the token exchange refuse assistant sessions without this marker.
+     */
+    public static function setOwnerSwitchValidated($session, Users $assistant, Users $actor)
+    {
+        $sessionData = Cache::get('auth-session:' . $session);
+
+        if(!$sessionData) {
+            throw OAuthExceptions::invalidSession();
+        }
+
+        $sessionData['iam_user_id'] = $assistant->id;
+        $sessionData['email'] = $assistant->email;
+        $sessionData['username'] = $assistant->username;
+        $sessionData['is_password_validated'] = true;
+        $sessionData['switched_by_iam_user_id'] = $actor->id;
+
+        Cache::put('auth-session:' . $session, $sessionData, self::TIMEOUT);
+    }
+
     public static function getAuthCode($session, $fingerprint)
     {
         $sessionData = Cache::get('auth-session:' . $session);
 
         if(!$sessionData || !isset($sessionData['iam_user_id'])) {
             throw OAuthExceptions::invalidSession();
+        }
+
+        // #1306: AI assistants can not sign in; only the owner switch above may point a session at one
+        $sessionUser = Users::withoutGlobalScopes()->where('id', $sessionData['iam_user_id'])->first();
+
+        if($sessionUser?->isAiAssistant() && empty($sessionData['switched_by_iam_user_id'])) {
+            throw OAuthExceptions::invalidSession('AI assistants can not sign in.');
         }
 
         if(

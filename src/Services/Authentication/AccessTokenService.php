@@ -59,6 +59,15 @@ class AccessTokenService
         if(!$user)
             throw OAuthExceptions::userNotFound();
 
+        // #1306: the code of an AI assistant is only valid when it was issued by the owner switch
+        if($user->isAiAssistant()) {
+            $codeContext = Cache::get('auth-code:' . $authCode->id);
+
+            if(empty($codeContext['switched_by_iam_user_id'])) {
+                throw OAuthExceptions::authCodeNotValid('AI assistants can not sign in.');
+            }
+        }
+
         //  Spending the code before the token exists, and only if nobody else spent it first, so two
         //  concurrent exchanges of the same code cannot both succeed.
         $isSpent = OauthAuthCodes::where('id', $authCode->id)
