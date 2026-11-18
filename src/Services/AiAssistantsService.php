@@ -11,6 +11,7 @@ use NextDeveloper\IAM\Database\Models\AccountUsers;
 use NextDeveloper\IAM\Database\Models\Users;
 use NextDeveloper\IAM\Exceptions\UnauthorizedException;
 use NextDeveloper\IAM\Helpers\UserHelper;
+use NextDeveloper\IAM\Services\Authentication\AccessTokenService;
 use NextDeveloper\IAM\Services\Authentication\OAuthService;
 
 /**
@@ -159,6 +160,94 @@ class AiAssistantsService
         ]);
 
         return $code;
+    }
+
+    /**
+     * Returns from the assistant to the user who switched in (#1306): a one-time auth code for that user. The
+     * caller is the assistant (identified by its current token). Who switched is read from the token, so a
+     * shared-account owner who switched into a member's assistant returns to themselves, never to the member.
+     * The assistant token is revoked. Refuses when the token was not issued by a switch, or when the user may no
+     * longer switch to this assistant.
+     *
+     * @throws UnauthorizedException
+     */
+    public static function switchBack(Users $assistant, ?string $tokenId, ?string $clientId, string $redirectUri): string
+    {
+        self::assertColumnsExist();
+
+        if (! $assistant->isAiAssistant() || ! $tokenId) {
+            throw new UnauthorizedException('You are not acting as an AI assistant.');
+        }
+
+        $name = \DB::table('oauth_access_tokens')->where('id', $tokenId)->where('user_id', $assistant->id)->value('name');
+
+        if (! is_string($name) || ! str_starts_with($name, AccessTokenService::SWITCH_TOKEN_PREFIX)) {
+            throw new UnauthorizedException('This session was not started by switching from a user.');
+        }
+
+        $actor = Users::withoutGlobalScopes()->where('id', (int) substr($name, strlen(AccessTokenService::SWITCH_TOKEN_PREFIX)))->first();
+
+        if (! $actor || $actor->isAiAssistant() || ! self::canSwitch($actor, $assistant)) {
+            throw new UnauthorizedException('You can not switch back to this user.');
+        }
+
+        $session = OAuthService::createSession($clientId, $redirectUri);
+
+        if (! $session) {
+            throw new UnauthorizedException('Invalid client or redirect.');
+        }
+
+        OAuthService::setSwitchBackValidated($session, $actor, $assistant);
+
+        $code = OAuthService::getAuthCode($session, []);
+
+        if (! $code) {
+            throw new UnauthorizedException('Could not issue a sign-in code.');
+        }
+
+        // The assistant session ends here
+        \DB::table('oauth_access_tokens')->where('id', $tokenId)->delete();
+
+        CommandLogsService::record([
+            'module' => 'iam',
+            'action' => 'switch-back-from-ai-assistant',
+            'operation' => 'system',
+            'resource' => 'iam_users',
+            'object_type' => 'NextDeveloper\IAM\Users',
+            'object_id' => $assistant->uuid,
+            'context' => [
+                'owner_iam_user_id' => $assistant->owner_iam_user_id,
+                'switched_back_to' => $actor->uuid,
+                'assistant' => $assistant->uuid,
+            ],
+        ]);
+
+        return $code;
+    }
+
+    /**
+     * Who the current session is, for the panel banner (#1306): whether the caller is an AI assistant, its owner
+     * and who switched in (read from the token).
+     *
+     * @return array{is_ai_assistant: bool, assistant?: array, owner_id?: ?string, switched_by_id?: ?string}
+     */
+    public static function status(Users $me, ?string $tokenId): array
+    {
+        if (! $me->isAiAssistant()) {
+            return ['is_ai_assistant' => false];
+        }
+
+        $name = $tokenId ? \DB::table('oauth_access_tokens')->where('id', $tokenId)->where('user_id', $me->id)->value('name') : null;
+        $switchedById = is_string($name) && str_starts_with($name, AccessTokenService::SWITCH_TOKEN_PREFIX)
+            ? (int) substr($name, strlen(AccessTokenService::SWITCH_TOKEN_PREFIX))
+            : null;
+
+        return [
+            'is_ai_assistant' => true,
+            'assistant' => ['id' => $me->uuid, 'name' => $me->name, 'purpose' => $me->ai_assistant_purpose],
+            'owner_id' => Users::withoutGlobalScopes()->where('id', $me->owner_iam_user_id)->value('uuid'),
+            'switched_by_id' => $switchedById ? Users::withoutGlobalScopes()->where('id', $switchedById)->value('uuid') : null,
+        ];
     }
 
     /**

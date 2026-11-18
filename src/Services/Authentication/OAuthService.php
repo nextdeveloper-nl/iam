@@ -377,6 +377,28 @@ class OAuthService
         Cache::put('auth-session:' . $session, $sessionData, self::TIMEOUT);
     }
 
+    /**
+     * Marks the session as the return to the real user after an AI assistant switch (#1306). The user already
+     * signed in (with every factor) to switch in, which the assistant token records, so no factor is asked again.
+     */
+    public static function setSwitchBackValidated($session, Users $actor, Users $assistant)
+    {
+        $sessionData = Cache::get('auth-session:' . $session);
+
+        if(!$sessionData) {
+            throw OAuthExceptions::invalidSession();
+        }
+
+        $sessionData['iam_user_id'] = $actor->id;
+        $sessionData['email'] = $actor->email;
+        $sessionData['username'] = $actor->username;
+        $sessionData['is_password_validated'] = true;
+        $sessionData['is_totp_validated'] = true;
+        $sessionData['switched_back_from_iam_user_id'] = $assistant->id;
+
+        Cache::put('auth-session:' . $session, $sessionData, self::TIMEOUT);
+    }
+
     public static function getAuthCode($session, $fingerprint)
     {
         $sessionData = Cache::get('auth-session:' . $session);
