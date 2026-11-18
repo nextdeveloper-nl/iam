@@ -36,12 +36,12 @@ class RolesService extends AbstractRolesService
      * Roles that can never be assigned through the services or the API (system-viewer exposes platform-wide
      * system information, so it is only ever set up outside of the application).
      */
-    public const NON_ASSIGNABLE_ROLES = ['system-admin', 'system-viewer'];
+    public const NON_ASSIGNABLE_ROLES = ['system-admin', 'system-viewer', 'account-owner'];  //  account-owner (#1305) only via AccountsService::addCoOwner() / transferPrimaryOwnership()
 
     /**
      * Roles that are left out of the list of available roles (get()), as they can not be assigned anyway.
      */
-    public const HIDDEN_ROLES = ['system-viewer'];
+    public const HIDDEN_ROLES = ['system-viewer', 'account-owner'];
 
     /**
      * Companion roles (#1303): assigning the key role also assigns the listed roles in the same account.
@@ -329,6 +329,22 @@ class RolesService extends AbstractRolesService
         }
 
         return true;
+    }
+
+    /**
+     * Grants the co-owner marker role (#1305). Deliberately NOT through assignUserToRole()/the generic role APIs
+     * (account-owner is in NON_ASSIGNABLE_ROLES); only AccountsService::addCoOwner() and transferPrimaryOwnership()
+     * call this, after their owner checks.
+     */
+    public static function grantAccountOwnerRole(Users $user, Accounts $account) : void
+    {
+        $role = self::getRole(new \NextDeveloper\IAM\Authorization\Roles\AccountOwnerRole());
+
+        RoleUsers::withoutGlobalScopes()->firstOrCreate([
+            'iam_user_id'    => $user->id,
+            'iam_account_id' => $account->id,
+            'iam_role_id'    => $role->id,
+        ], ['is_active' => true]);
     }
 
     public static function getUserRole(Users $user, Accounts $account) : Roles
