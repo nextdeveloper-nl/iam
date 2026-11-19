@@ -44,6 +44,65 @@ class RolesService extends AbstractRolesService
     public const HIDDEN_ROLES = ['system-viewer', 'account-owner'];
 
     /**
+     * Roles a customer account owner may see and grant to members of their own account (leo4#1304). Explicit
+     * allow-list: every other role (all *-admin roles, system roles, staff roles) is neither listed nor assignable
+     * for customers.
+     */
+    public const CUSTOMER_ASSIGNABLE_ROLES = [
+        'member',
+        'accounting-user', 'accounting-manager',
+        'affiliate-user', 'agenda-user', 'agreement-user',
+        'ai-user', 'ai-manager',
+        'autoquill-user', 'autoquill-sales-person',
+        'blog-reader', 'blog-author', 'blog-editor', 'blog-sales-person',
+        'cloud-resource-owner', 'cloud-sales-person',
+        'commons-user', 'communication-member',
+        'dns-user', 'dns-manager',
+        'events-user',
+        'flow-user', 'flow-manager',
+        'google-ads-user',
+        'integration-platform-user',
+        'intelligence-user', 'intelligence-sales-person',
+        'ipaas-sales-person',
+        'lms-user',
+        'marketing-manager',
+        'marketplace-user', 'marketplace-vendor', 'marketplace-sales-person',
+        'monitoring-user', 'monitoring-manager',
+        'partnership-user', 'partnership-manager',
+        's3-user', 's3-manager',
+        'sales-person', 'sales-manager',
+        'stay-user',
+        'support-user',
+    ];
+
+    public static function isCustomerAssignable(string $roleName): bool
+    {
+        return in_array(strtolower($roleName), self::CUSTOMER_ASSIGNABLE_ROLES, true);
+    }
+
+    /**
+     * Whether a console process counts as the platform for mayManageAdminRoles(). On by default; tests switch it off
+     * to exercise the request path, since PHPUnit itself runs in the console.
+     */
+    public static bool $consoleIsPlatform = true;
+
+    public static function isAdminRole(string $roleName): bool
+    {
+        return str_ends_with(strtolower($roleName), '-admin');
+    }
+
+    /**
+     * Only the platform itself may hand out or list admin roles: system-admin, a bypassed role check
+     * (UserHelper::runAsAdmin) or the console (seeders, commands).
+     */
+    public static function mayManageAdminRoles(): bool
+    {
+        return (self::$consoleIsPlatform && app()->runningInConsole())
+            || UserHelper::bypassRolesCheck()
+            || UserHelper::hasRole('system-admin');
+    }
+
+    /**
      * Companion roles (#1303): assigning the key role also assigns the listed roles in the same account.
      * Applied centrally in assignUserToRole() so every path (module enable, CRM account create, panel, API) gets it.
      * Removal: the companion role is intentionally left in place when the key role is removed (it may be held
@@ -72,6 +131,14 @@ class RolesService extends AbstractRolesService
         if ($found && in_array($found->name, self::NON_ASSIGNABLE_ROLES, true)) {
             throw new \Exception('The role ' . $found->name . ' can not be assigned to users.');
         }
+
+        // The user-role APIs only hand out customer-assignable roles (leo4#1304). Admin roles, staff roles
+        // (iam-success-manager, support-specialist, ...) and anything not on the allow-list stay with the platform
+        // itself. The admin suffix check is kept as a second line of defence.
+        if ($found && ! self::mayManageAdminRoles()
+            && (self::isAdminRole($found->name) || ! self::isCustomerAssignable($found->name))) {
+            throw new \Exception('The role ' . $found->name . ' can not be assigned to users.');
+        }
     }
     public static function get(?RolesQueryFilter $filter = null, array $params = []) : Collection|LengthAwarePaginator{
         $roles = UserHelper::getRoles();
@@ -84,11 +151,17 @@ class RolesService extends AbstractRolesService
             }
         }
 
-        $roles = Roles::withoutGlobalScope(AuthorizationScope::class)
+        $query = Roles::withoutGlobalScope(AuthorizationScope::class)
             ->filter($filter)
             ->where('level', '>=', $level)
-            ->whereNotIn('name', self::HIDDEN_ROLES)
-            ->get();
+            ->whereNotIn('name', self::HIDDEN_ROLES);
+
+        // Customers only see the roles they may grant, never admin or staff roles (leo4#1304)
+        if (! self::mayManageAdminRoles()) {
+            $query->whereIn('name', self::CUSTOMER_ASSIGNABLE_ROLES);
+        }
+
+        $roles = $query->get();
 
         return $roles;
     }
@@ -282,6 +355,13 @@ class RolesService extends AbstractRolesService
     {
         //  No one can be a system admin or a system viewer
         if(in_array($role->name, self::NON_ASSIGNABLE_ROLES, true)) {
+            return false;
+        }
+
+        //  Admin roles are handed out by the platform only (console, run-as-admin, system-admin), leo4#1304
+        if(self::isAdminRole($role->name) && !self::mayManageAdminRoles()) {
+            Log::warning('[RolesService::assignUserToRole] Refused to assign the admin role ' . $role->name . ' to user ' . $user->uuid);
+
             return false;
         }
 
