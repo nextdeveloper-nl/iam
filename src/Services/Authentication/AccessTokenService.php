@@ -17,7 +17,7 @@ use NextDeveloper\IAM\Helpers\UserHelper;
 
 class AccessTokenService
 {
-    /** Token name prefix of a token issued by an AI assistant owner switch (#1306): 'ai-switch:<iam_user_id of who switched>'. */
+    /** Token name prefix of a token issued by an AI agent owner switch (#1306): 'ai-switch:<iam_user_id of who switched>'. */
     public const SWITCH_TOKEN_PREFIX = 'ai-switch:';
 
     /**
@@ -62,15 +62,15 @@ class AccessTokenService
         if(!$user)
             throw OAuthExceptions::userNotFound();
 
-        // #1306: the code of an AI assistant is only valid when it was issued by the owner switch. Who switched
+        // #1306: the code of an AI agent is only valid when it was issued by the owner switch. Who switched
         // is recorded on the token (name) so the switch back knows whom to return to.
         $switchedBy = null;
 
-        if($user->isAiAssistant()) {
+        if($user->isAiAgent()) {
             $codeContext = Cache::get('auth-code:' . $authCode->id);
 
             if(empty($codeContext['switched_by_iam_user_id'])) {
-                throw OAuthExceptions::authCodeNotValid('AI assistants can not sign in.');
+                throw OAuthExceptions::authCodeNotValid('AI agents can not sign in.');
             }
 
             // 'ai-switch:<who switched>:<token id they switched with>'

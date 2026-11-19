@@ -357,10 +357,10 @@ class OAuthService
     }
 
     /**
-     * Marks the session as signed in as an AI assistant by its owner (#1306). The only way a session may end up on
-     * an AI assistant user; getAuthCode() and the token exchange refuse assistant sessions without this marker.
+     * Marks the session as signed in as an AI agent by its owner (#1306). The only way a session may end up on
+     * an AI agent user; getAuthCode() and the token exchange refuse agent sessions without this marker.
      */
-    public static function setOwnerSwitchValidated($session, Users $assistant, Users $actor, ?string $actorTokenId = null)
+    public static function setOwnerSwitchValidated($session, Users $agent, Users $actor, ?string $actorTokenId = null)
     {
         $sessionData = Cache::get('auth-session:' . $session);
 
@@ -368,9 +368,9 @@ class OAuthService
             throw OAuthExceptions::invalidSession();
         }
 
-        $sessionData['iam_user_id'] = $assistant->id;
-        $sessionData['email'] = $assistant->email;
-        $sessionData['username'] = $assistant->username;
+        $sessionData['iam_user_id'] = $agent->id;
+        $sessionData['email'] = $agent->email;
+        $sessionData['username'] = $agent->username;
         $sessionData['is_password_validated'] = true;
         $sessionData['switched_by_iam_user_id'] = $actor->id;
         $sessionData['switched_by_token_id'] = $actorTokenId;
@@ -379,10 +379,10 @@ class OAuthService
     }
 
     /**
-     * Marks the session as the return to the real user after an AI assistant switch (#1306). The user already
-     * signed in (with every factor) to switch in, which the assistant token records, so no factor is asked again.
+     * Marks the session as the return to the real user after an AI agent switch (#1306). The user already
+     * signed in (with every factor) to switch in, which the agent token records, so no factor is asked again.
      */
-    public static function setSwitchBackValidated($session, Users $actor, Users $assistant)
+    public static function setSwitchBackValidated($session, Users $actor, Users $agent)
     {
         $sessionData = Cache::get('auth-session:' . $session);
 
@@ -395,7 +395,7 @@ class OAuthService
         $sessionData['username'] = $actor->username;
         $sessionData['is_password_validated'] = true;
         $sessionData['is_totp_validated'] = true;
-        $sessionData['switched_back_from_iam_user_id'] = $assistant->id;
+        $sessionData['switched_back_from_iam_user_id'] = $agent->id;
 
         Cache::put('auth-session:' . $session, $sessionData, self::TIMEOUT);
     }
@@ -408,11 +408,11 @@ class OAuthService
             throw OAuthExceptions::invalidSession();
         }
 
-        // #1306: AI assistants can not sign in; only the owner switch above may point a session at one
+        // #1306: AI agents can not sign in; only the owner switch above may point a session at one
         $sessionUser = Users::withoutGlobalScopes()->where('id', $sessionData['iam_user_id'])->first();
 
-        if($sessionUser?->isAiAssistant() && empty($sessionData['switched_by_iam_user_id'])) {
-            throw OAuthExceptions::invalidSession('AI assistants can not sign in.');
+        if($sessionUser?->isAiAgent() && empty($sessionData['switched_by_iam_user_id'])) {
+            throw OAuthExceptions::invalidSession('AI agents can not sign in.');
         }
 
         if(

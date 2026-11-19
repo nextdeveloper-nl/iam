@@ -84,9 +84,11 @@ class Users extends Model
             'is_email_verified',
             'is_phone_number_verified',
             'is_profile_verified',
-            'is_ai_assistant',
+            'is_ai_agent',
+            'is_ai_assistant', // old column name, until the rename DDL is applied
             'owner_iam_user_id',
-            'ai_assistant_purpose',
+            'ai_agent_purpose',
+            'ai_assistant_purpose', // old column name, until the rename DDL is applied
     ];
 
     /**
@@ -133,6 +135,7 @@ class Users extends Model
     'is_email_verified' => 'boolean',
     'is_phone_number_verified' => 'boolean',
     'is_profile_verified' => 'boolean',
+    'is_ai_agent' => 'boolean',
     'is_ai_assistant' => 'boolean',
     ];
 
@@ -412,11 +415,21 @@ class Users extends Model
 
 
     /**
-     * True for an AI (robot) assistant user (#1306): a real user that can never sign in by itself; only its
+     * True for an AI (robot) agent user (#1306): a real user that can never sign in by itself; only its
      * owner (or an owner of an account they share) can switch to it. False when the column does not exist yet.
+     */
+    public function isAiAgent(): bool
+    {
+        return (bool) ($this->attributes['is_ai_agent'] ?? $this->attributes['is_ai_assistant'] ?? false);
+    }
+
+    /**
+     * Old name of isAiAgent(), kept for one release.
+     *
+     * @deprecated use isAiAgent()
      */
     public function isAiAssistant(): bool
     {
-        return (bool) ($this->attributes['is_ai_assistant'] ?? false);
+        return $this->isAiAgent();
     }
 }
