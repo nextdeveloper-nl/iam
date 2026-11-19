@@ -227,7 +227,7 @@ class UsersService extends AbstractUsersService
         if(
             UserHelper::has('accounting-admin') ||
             UserHelper::has('sales-admin') ||
-            UserHelper::has('sales-person') ||
+            //  SECURITY: 'sales-person' removed. Every registered user has it, so anyone could verify any profile.
             UserHelper::has('sales-development-manager') ||
             UserHelper::has('business-development-manager')
         ) {
