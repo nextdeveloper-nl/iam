@@ -60,6 +60,7 @@ class RolesService extends AbstractRolesService
         'dns-user', 'dns-manager',
         'events-user',
         'flow-user', 'flow-manager',
+        'google-ads-user',
         'integration-platform-user',
         'intelligence-user', 'intelligence-sales-person',
         'ipaas-sales-person',
@@ -76,7 +77,7 @@ class RolesService extends AbstractRolesService
 
     public static function isCustomerAssignable(string $roleName): bool
     {
-        return in_array($roleName, self::CUSTOMER_ASSIGNABLE_ROLES, true);
+        return in_array(strtolower($roleName), self::CUSTOMER_ASSIGNABLE_ROLES, true);
     }
 
     /**
@@ -87,7 +88,7 @@ class RolesService extends AbstractRolesService
 
     public static function isAdminRole(string $roleName): bool
     {
-        return str_ends_with($roleName, '-admin');
+        return str_ends_with(strtolower($roleName), '-admin');
     }
 
     /**
@@ -131,8 +132,11 @@ class RolesService extends AbstractRolesService
             throw new \Exception('The role ' . $found->name . ' can not be assigned to users.');
         }
 
-        // Admin roles only through the platform itself (leo4#1304), never through the user-role APIs
-        if ($found && self::isAdminRole($found->name) && ! self::mayManageAdminRoles()) {
+        // The user-role APIs only hand out customer-assignable roles (leo4#1304). Admin roles, staff roles
+        // (iam-success-manager, support-specialist, ...) and anything not on the allow-list stay with the platform
+        // itself. The admin suffix check is kept as a second line of defence.
+        if ($found && ! self::mayManageAdminRoles()
+            && (self::isAdminRole($found->name) || ! self::isCustomerAssignable($found->name))) {
             throw new \Exception('The role ' . $found->name . ' can not be assigned to users.');
         }
     }
