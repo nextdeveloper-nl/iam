@@ -59,6 +59,14 @@ class UserRolesService extends AbstractUserRolesService
         if(!array_key_exists('iam_user_id', $data)) {
             $data['iam_user_id']    = UserHelper::me()->id;
         }
+
+        //  Staff-only roles (e.g. plusclouds-sales-manager) need the right email domain, even for a platform admin
+        $targetRole = \NextDeveloper\IAM\Database\Models\Roles::withoutGlobalScopes()->find($data['iam_role_id'] ?? null);
+        $targetUser = \NextDeveloper\IAM\Database\Models\Users::withoutGlobalScopes()->find($data['iam_user_id']);
+        if ($targetRole && !RolesService::userMayHoldRole($targetRole->name, $targetUser)) {
+            throw new \Exception('The role ' . $targetRole->name . ' can not be assigned to this user.');
+        }
+
         if (array_key_exists('iam_account_id', $data)) {
             $data['iam_account_id'] = DatabaseHelper::uuidToId(
                 '\NextDeveloper\IAM\Database\Models\Accounts',

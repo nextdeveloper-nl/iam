@@ -41,7 +41,7 @@ class RolesService extends AbstractRolesService
     /**
      * Roles that are left out of the list of available roles (get()), as they can not be assigned anyway.
      */
-    public const HIDDEN_ROLES = ['system-viewer', 'account-owner'];
+    public const HIDDEN_ROLES = ['system-viewer', 'account-owner', 'system-admin'];
 
     /**
      * Roles a customer account owner may see and grant to members of their own account (leo4#1304). Explicit
@@ -104,6 +104,33 @@ class RolesService extends AbstractRolesService
         return (self::$consoleIsPlatform && app()->runningInConsole())
             || UserHelper::bypassRolesCheck()
             || UserHelper::hasRole('system-admin');
+    }
+
+    /**
+     * Staff-only roles: role name => the email domain a user must have to hold it. Enforced on every assignment path
+     * (assignUserToRole(), UserRolesService::create()) and again where the role grants a privilege.
+     */
+    public const EMAIL_DOMAIN_RESTRICTED_ROLES = [
+        'plusclouds-sales-manager' => 'plusclouds.com',
+    ];
+
+    /**
+     * Whether the user's email domain allows holding the role. Roles without a domain restriction always pass.
+     * Exact domain match on the part after the last '@' - sub-domains and look-alikes (plusclouds.com.evil.io,
+     * notplusclouds.com) do not pass.
+     */
+    public static function userMayHoldRole(string $roleName, ?Users $user) : bool
+    {
+        $domain = self::EMAIL_DOMAIN_RESTRICTED_ROLES[strtolower($roleName)] ?? null;
+
+        if ($domain === null) {
+            return true;
+        }
+
+        $email = strtolower(trim((string) ($user?->email ?? '')));
+        $at = strrpos($email, '@');
+
+        return $at !== false && substr($email, $at + 1) === $domain;
     }
 
     /**
@@ -365,6 +392,13 @@ class RolesService extends AbstractRolesService
         //  Admin roles are handed out by the platform only (console, run-as-admin, system-admin), leo4#1304
         if(self::isAdminRole($role->name) && !self::mayManageAdminRoles()) {
             Log::warning('[RolesService::assignUserToRole] Refused to assign the admin role ' . $role->name . ' to user ' . $user->uuid);
+
+            return false;
+        }
+
+        //  Staff-only roles need the right email domain (see EMAIL_DOMAIN_RESTRICTED_ROLES)
+        if(!self::userMayHoldRole($role->name, $user)) {
+            Log::warning('[RolesService::assignUserToRole] Refused to assign the role ' . $role->name . ' to user ' . $user->uuid . ': email domain not allowed');
 
             return false;
         }
