@@ -48,10 +48,14 @@ class RolesService extends AbstractRolesService
      * allow-list: every other role (all *-admin roles, system roles, staff roles) is neither listed nor assignable
      * for customers.
      */
+    //  accounting-manager and agreement-user are NOT customer-assignable: accounting-manager's apply() returned live
+    //  payment gateway data of every account; agreement-user is a default role every user already gets at registration.
+    //  Staff and the partner onboarding assign accounting-manager directly. affiliate-user stays assignable; its
+    //  apply() now filters by account (Affiliate package).
     public const CUSTOMER_ASSIGNABLE_ROLES = [
         'member',
-        'accounting-user', 'accounting-manager',
-        'affiliate-user', 'agenda-user', 'agreement-user',
+        'accounting-user',
+        'affiliate-user', 'agenda-user',
         'ai-user', 'ai-manager',
         'autoquill-user', 'autoquill-sales-person',
         'blog-reader', 'blog-author', 'blog-editor', 'blog-sales-person',
